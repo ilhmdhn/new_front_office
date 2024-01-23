@@ -17,13 +17,12 @@ class FingerpintAuth{
             message: 'Device not supported'
         );
       }
-      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Please authenticate to show account balance',options: const AuthenticationOptions(biometricOnly: true));
+      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Ferivikasi sidik jari untuk melanjutkan',options: const AuthenticationOptions(biometricOnly: true));
       return FingeprintResult(
         state: didAuthenticate,
         message: availableBiometrics.toString()
       );
     } catch (e) {
-      print('EKSEPSION');
       return FingeprintResult(
         state: true,
         message: e.toString()
