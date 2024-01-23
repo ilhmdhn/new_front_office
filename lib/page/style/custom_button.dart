@@ -6,10 +6,34 @@ class CustomButtonStyle{
   static ButtonStyle blueStandard(){
     return ElevatedButton.styleFrom(
         backgroundColor: CustomColorStyle.BluePrimary(),
-        padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           textStyle: GoogleFonts.poppins(
-          fontSize: 22,
+          fontSize: 19,
+        ),
+        foregroundColor: Colors.white
+    );
+  }
+
+  static ButtonStyle cancel(){
+    return ElevatedButton.styleFrom(
+        backgroundColor: Colors.redAccent.shade400,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          textStyle: GoogleFonts.poppins(
+          fontSize: 17,
+        ),
+        foregroundColor: Colors.white
+    );
+  }
+
+  static ButtonStyle confirm(){
+    return ElevatedButton.styleFrom(
+        backgroundColor: Colors.green.shade800,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          textStyle: GoogleFonts.poppins(
+          fontSize: 17,
         ),
         foregroundColor: Colors.white
     );

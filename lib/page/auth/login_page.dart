@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
@@ -73,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
+              const SizedBox(height: 20,),
+              ElevatedButton(onPressed: (){ConfigurationDialog().setUrl(context);}, child: Text('Konfigurasi'))
             ]),
       ),
     );
