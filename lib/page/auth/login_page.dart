@@ -3,6 +3,7 @@ import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/encryption.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -59,7 +60,17 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        try {
+                        const password = 'Sandal123';
+                        final encryptedPassword = EncryptionService.encrypt(password);
+                        final decryptionPassword = EncryptionService.decrypt(encryptedPassword);
+
+                        print('password: $password encryptedPassword: $encryptedPassword decryptionPassword: $decryptionPassword '); 
+                        } catch (e) {
+                          print('ERRORRRR '+e.toString());  
+                        }
+                      },
                       style: CustomButtonStyle.blueStandard(),
                       child: const Text('Login')),
                   IconButton(

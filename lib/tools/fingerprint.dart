@@ -1,4 +1,4 @@
-import 'package:front_office_2/model/fingerprint_result.dart';
+import 'package:front_office_2/data/model/fingerprint_result.dart';
 import 'package:local_auth/local_auth.dart';
 
 class FingerpintAuth{

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/model/network.dart';
+import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
@@ -11,13 +11,13 @@ class ConfigurationDialog{
   void setUrl(ctx)async{
     TextEditingController tfIp = TextEditingController();
     TextEditingController tfPort = TextEditingController();
-    BaseUrlModel serverUrl = await PreferencesData().getUrl();
+    BaseUrlModel serverUrl = await PreferencesData.getUrl();
 
-    if(!isNullOrEmpty(serverUrl.ip)){
+    if(isNotNullOrEmpty(serverUrl.ip)){
       tfIp.text = serverUrl.ip!;
     }
 
-    if(!isNullOrEmpty(serverUrl.port)){
+    if(isNotNullOrEmpty(serverUrl.port)){
       tfPort.text = serverUrl.port!;
     }
 
@@ -83,7 +83,7 @@ class ConfigurationDialog{
                       child: const Text('CANCEL')),
                   const SizedBox(width: 20,),
                       ElevatedButton(onPressed: ()async{
-                        await PreferencesData().setUrl(BaseUrlModel(
+                        await PreferencesData.setUrl(BaseUrlModel(
                           ip: tfIp.text,
                           port: tfPort.text
                         ));

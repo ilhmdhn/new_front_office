@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  encrypt: ^5.0.3
   esc_pos_bluetooth: ^0.4.1
   esc_pos_printer: ^4.1.0
   flutter:
