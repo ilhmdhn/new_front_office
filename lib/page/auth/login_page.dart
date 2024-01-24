@@ -3,7 +3,6 @@ import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
-import 'package:front_office_2/tools/encryption.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/toast.dart';
 

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomButtonStyle{
   static ButtonStyle blueStandard(){
     return ElevatedButton.styleFrom(
-        backgroundColor: CustomColorStyle.BluePrimary(),
+        backgroundColor: CustomColorStyle.bluePrimary(),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           textStyle: GoogleFonts.poppins(

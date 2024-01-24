@@ -4,7 +4,11 @@ class CustomColorStyle{
     return CustomColorStyle().hexToColor('#edf2fb');
   }
 
-  static Color BluePrimary(){
+  static Color appBarBackground() {
+    return CustomColorStyle().hexToColor('#2296F3');
+  }
+
+  static Color bluePrimary(){
     return CustomColorStyle().hexToColor('#0066FF');
   }
 

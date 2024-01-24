@@ -21,7 +21,7 @@ class FrontOffice extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LoginPage.nameRoute,
+      initialRoute: MainPage.nameRoute,
       routes: {
         LoginPage.nameRoute: (context) => const LoginPage(),
         MainPage.nameRoute: (context) => const MainPage(),
