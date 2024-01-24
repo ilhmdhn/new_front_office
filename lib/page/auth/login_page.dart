@@ -16,6 +16,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool showPassword = false;
+  TextEditingController tfUser = TextEditingController();
+  TextEditingController tfPassword = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +29,14 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
+                controller: tfUser,
                 decoration: CustomTextfieldStyle.characterNormal(),
               ),
               const SizedBox(
                 height: 29,
               ),
               TextField(
+                controller: tfPassword,
                 obscureText: showPassword? false: true,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
@@ -60,13 +64,9 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async{
                         try {
-                        const password = 'Sandal123';
-                        final encryptedPassword = EncryptionService.encrypt(password);
-                        final decryptionPassword = EncryptionService.decrypt(encryptedPassword);
-
-                        print('password: $password encryptedPassword: $encryptedPassword decryptionPassword: $decryptionPassword '); 
+                          // final loginResult = await Api
                         } catch (e) {
                           print('ERRORRRR '+e.toString());  
                         }
