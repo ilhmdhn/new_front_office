@@ -6,6 +6,7 @@ import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
+import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/status/status_page.dart';
 
 void main() async{
@@ -30,6 +31,7 @@ class FrontOffice extends StatelessWidget {
         StatusPage.nameRoute: (context) => const StatusPage(),
         ReportPage.nameRoute: (context) => const ReportPage(),
         ProfilePage.nameRoute: (context) => const ProfilePage(),
+        PrinterPage.nameRoute: (context) => PrinterPage()
       },
     );
   }

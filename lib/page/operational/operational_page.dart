@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
+import 'package:front_office_2/page/setting/printer_page.dart';
 // import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -7,7 +8,7 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class OperationalPage extends StatefulWidget {
-    static const nameRoute = '/operational';
+  static const nameRoute = '/operational';
   const OperationalPage({super.key});
 
   @override
@@ -75,7 +76,17 @@ class _OperationalPageState extends State<OperationalPage> {
                         color: Colors.green,
                         child: const Text('CHECKIN'),
                       ),
+                    ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, PrinterPage.nameRoute);
+                      },
+                      child: Container(
+                        color: Colors.green,
+                        child: const Text('PRINTER'),
+                      ),
                     )
+                  
                   ],),
                 ]),
             )
