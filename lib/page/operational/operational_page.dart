@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
+// import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class OperationalPage extends StatefulWidget {
     static const nameRoute = '/operational';
@@ -14,6 +18,7 @@ class _OperationalPageState extends State<OperationalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: CustomColorStyle.appBarBackground(),
         foregroundColor: Colors.white,
@@ -59,11 +64,19 @@ class _OperationalPageState extends State<OperationalPage> {
               child: Column(
                 children: [
                   Row(children: [
-                    Container(
-                      color: Colors.green,
-                      child: Text('CHECKIN'),
+                    InkWell(
+                      onTap: ()async{
+                        String? result = await showQRScannerDialog(context);
+                        if(isNotNullOrEmpty(result)){
+                          showToastWarning(result.toString());
+                        }
+                      },
+                      child: Container(
+                        color: Colors.green,
+                        child: const Text('CHECKIN'),
+                      ),
                     )
-                  ],)
+                  ],),
                 ]),
             )
             ],

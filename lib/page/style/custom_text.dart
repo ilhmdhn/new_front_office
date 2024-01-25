@@ -10,6 +10,10 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 19, color: Colors.white, fontWeight: FontWeight.w500);
   }
 
+  static TextStyle whiteStandard(){
+    return GoogleFonts.poppins(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500);
+  }
+
   static TextStyle blackStandard(){
     return GoogleFonts.poppins(fontSize: 14, color: Colors.black);
   }
@@ -18,7 +22,7 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w500);
   }
 
-    static TextStyle blackSemi(){
+  static TextStyle blackSemi(){
     return GoogleFonts.poppins(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600);
   }
 }

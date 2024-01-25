@@ -5,6 +5,7 @@
         android:label="front_office_2"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="stateVisible"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
