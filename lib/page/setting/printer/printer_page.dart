@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import 'dart:developer';
 
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
@@ -125,8 +126,13 @@ class _PrinterPageState extends State<PrinterPage> {
                   Expanded(
                     child: DropdownButton(
                       items: _getDeviceItems(),
-                      onChanged: (BluetoothDevice? value) =>
-                          setState(() => _device = value),
+                      onChanged: (BluetoothDevice? value) {
+                          print('name ${value?.name??'no name'}, address: ${value?.address} ');
+                          setState(() => _device =BluetoothDevice(
+                            'fix printer', 
+                            '02:2A:9F:2C:37:48'
+                            ));
+                            },
                       value: _device,
                     ),
                   ),

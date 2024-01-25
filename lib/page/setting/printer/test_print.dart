@@ -12,6 +12,12 @@ class TestPrint {
 
   sample() async {
     //image max 300px X 300px
+    bool? isConnected = await bluetooth.isConnected;
+    if(isConnected != true){
+      await bluetooth.connect(
+        BluetoothDevice('aaa', '02:2A:9F:2C:37:48')
+      );
+    }
 
     ///image from File path
     // String filename = 'yourlogo.png';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
-import 'package:front_office_2/page/setting/printer_page.dart';
+import 'package:front_office_2/page/setting/printer/printer_page.dart';
 // import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
