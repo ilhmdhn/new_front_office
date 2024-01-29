@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 // import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -85,8 +86,16 @@ class _OperationalPageState extends State<OperationalPage> {
                         color: Colors.green,
                         child: const Text('PRINTER'),
                       ),
-                    )
-                  
+                    ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, LoginPage.nameRoute);
+                      },
+                      child: Container(
+                        color: Colors.green,
+                        child: const Text('LOGIN'),
+                      ),
+                    ) 
                   ],),
                 ]),
             )

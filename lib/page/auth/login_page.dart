@@ -19,80 +19,82 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController tfPassword = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColorStyle.background(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: tfUser,
-                decoration: CustomTextfieldStyle.characterNormal(),
-              ),
-              const SizedBox(
-                height: 29,
-              ),
-              TextField(
-                controller: tfPassword,
-                obscureText: showPassword? false: true,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                    borderSide: const BorderSide(color: Colors.grey, width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                    borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: (){
-                      setState(() {
-                       showPassword = !showPassword;  
-                      });
-                    },
-                    icon: Icon(showPassword? Icons.visibility:Icons.visibility_off),)
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: CustomColorStyle.background(),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  controller: tfUser,
+                  decoration: CustomTextfieldStyle.characterNormal(),
                 ),
-              ),
-              const SizedBox(
-                height: 29,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ElevatedButton(
-                      onPressed: () async{
-                        try {
-                          // final loginResult = await Api
-                        } catch (e) {
-                          print('ERRORRRR '+e.toString());  
+                const SizedBox(
+                  height: 29,
+                ),
+                TextField(
+                  controller: tfPassword,
+                  obscureText: showPassword? false: true,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: (){
+                        setState(() {
+                         showPassword = !showPassword;  
+                        });
+                      },
+                      icon: Icon(showPassword? Icons.visibility:Icons.visibility_off),)
+                  ),
+                ),
+                const SizedBox(
+                  height: 29,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async{
+                          try {
+                            // final loginResult = await Api
+                          } catch (e) {
+                            print('ERRORRRR '+e.toString());  
+                          }
+                        },
+                        style: CustomButtonStyle.blueStandard(),
+                        child: const Text('Login')),
+                    IconButton(
+                      onPressed: () async {
+                        final fingerResult = await FingerpintAuth().requestFingerprintAuth();
+                        if (!fingerResult.state) {
+                          showToastWarning(fingerResult.message.toString());
                         }
                       },
-                      style: CustomButtonStyle.blueStandard(),
-                      child: const Text('Login')),
-                  IconButton(
-                    onPressed: () async {
-                      final fingerResult = await FingerpintAuth().requestFingerprintAuth();
-                      if (!fingerResult.state) {
-                        showToastWarning(fingerResult.message.toString());
-                      }
-                    },
-                    icon: const Icon(Icons.fingerprint_outlined),
-                    iconSize: 56,
-                  )
-                ],
-              ),
-              const SizedBox(height: 20,),
-              InkWell(
-                onTap: (){
-                  ConfigurationDialog().setUrl(context);
-                },
-                child: Text('Konfigurasi'),
-              ),
-            ]),
+                      icon: const Icon(Icons.fingerprint_outlined),
+                      iconSize: 56,
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20,),
+                InkWell(
+                  onTap: (){
+                    ConfigurationDialog().setUrl(context);
+                  },
+                  child: Text('Konfigurasi'),
+                ),
+              ]),
+        ),
       ),
     );
   }

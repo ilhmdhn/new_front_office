@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'dart:developer';
+import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
+  const PrinterPage({super.key});
+  
   @override
-  _PrinterPageState createState() => new _PrinterPageState();
+  State<PrinterPage> createState() => _PrinterPageState();
 }
 
 class _PrinterPageState extends State<PrinterPage> {
@@ -102,84 +105,85 @@ class _PrinterPageState extends State<PrinterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Blue Thermal Printer'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(width: 10),
-                  const Text(
-                    'Device:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Blue Thermal Printer'),
+            backgroundColor: CustomColorStyle.appBarBackground(),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Device:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 30),
-                  Expanded(
-                    child: DropdownButton(
-                      items: _getDeviceItems(),
-                      onChanged: (BluetoothDevice? value) {
-                          print('name ${value?.name??'no name'}, address: ${value?.address} ');
-                          setState(() => _device =BluetoothDevice(
-                            'fix printer', 
-                            '02:2A:9F:2C:37:48'
-                            ));
-                            },
-                      value: _device,
+                    const SizedBox(width: 30),
+                    Expanded(
+                      child: DropdownButton(
+                        items: _getDeviceItems(),
+                        onChanged: (BluetoothDevice? value) {
+                            print('name ${value?.name??'no name'}, address: ${value?.address} ');
+                            setState(() => _device =BluetoothDevice(
+                              'fix printer', 
+                              '02:2A:9F:2C:37:48'
+                              ));
+                              },
+                        value: _device,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  ElevatedButton(
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.brown),
+                      onPressed: () {
+                        initPlatformState();
+                      },
+                      child: const Text(
+                        'Refresh',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: _connected ? Colors.red : Colors.green),
+                      onPressed: _connected ? _disconnect : _connect,
+                      child: Text(
+                        _connected ? 'Disconnect' : 'Connect',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
+                  child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.brown),
                     onPressed: () {
-                      initPlatformState();
+                      testPrint.sample();
                     },
-                    child: const Text(
-                      'Refresh',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: const Text('PRINT TEST',
+                        style: TextStyle(color: Colors.white)),
                   ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: _connected ? Colors.red : Colors.green),
-                    onPressed: _connected ? _disconnect : _connect,
-                    child: Text(
-                      _connected ? 'Disconnect' : 'Connect',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.brown),
-                  onPressed: () {
-                    testPrint.sample();
-                  },
-                  child: const Text('PRINT TEST',
-                      style: TextStyle(color: Colors.white)),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 
@@ -211,7 +215,7 @@ class _PrinterPageState extends State<PrinterPage> {
         }
       });
     } else {
-      show('No device selected.');
+      showToastWarning('No device selected.');
     }
   }
 
@@ -220,19 +224,4 @@ class _PrinterPageState extends State<PrinterPage> {
     setState(() => _connected = false);
   }
 
-  Future show(
-    String message, {
-    Duration duration = const Duration(seconds: 3),
-  }) async {
-    await new Future.delayed(new Duration(milliseconds: 100));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
-        duration: duration,
-      ),
-    );
-  }
 }

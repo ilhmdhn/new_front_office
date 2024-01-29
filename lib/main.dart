@@ -22,7 +22,7 @@ class FrontOffice extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'My App',
+      title: 'Happy Puppy POS',
       initialRoute: MainPage.nameRoute,
       routes: {
         LoginPage.nameRoute: (context) => const LoginPage(),
