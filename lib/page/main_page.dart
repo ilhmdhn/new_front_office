@@ -14,7 +14,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentPageIndex = 0;
+  int currentPageIndex= 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
