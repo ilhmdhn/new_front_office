@@ -11,18 +11,18 @@ class CustomTextStyle{
   }
 
   static TextStyle whiteStandard(){
-    return GoogleFonts.poppins(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500);
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500);
   }
 
   static TextStyle blackStandard(){
-    return GoogleFonts.poppins(fontSize: 14, color: Colors.black);
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.black);
   }
 
   static TextStyle blackMedium(){
-    return GoogleFonts.poppins(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w500);
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500);
   }
 
   static TextStyle blackSemi(){
-    return GoogleFonts.poppins(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600);
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600);
   }
 }

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {
@@ -33,7 +36,9 @@ class _PrinterPageState extends State<PrinterPage> {
     List<BluetoothDevice> devices = [];
     try {
       devices = await bluetooth.getBondedDevices();
-    } on PlatformException {}
+    } on PlatformException {
+      showToastError('Error list bluetooth printer');
+    }
 
     bluetooth.onStateChanged().listen((state) {
       switch (state) {
@@ -108,30 +113,35 @@ class _PrinterPageState extends State<PrinterPage> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Blue Thermal Printer'),
+            title: Text('Printer Setting', style: CustomTextStyle.titleAppBar(),),
             backgroundColor: CustomColorStyle.appBarBackground(),
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
               children: <Widget>[
+                SizedBox(
+                  width: double.infinity,
+                  child: Text('Pilih Bluetooth Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Device:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Device:',
+                        style: CustomTextStyle.blackSemi()
                       ),
                     ),
-                    const SizedBox(width: 30),
+                    const SizedBox(width: 10),
                     Expanded(
+                      flex: 3,
                       child: DropdownButton(
                         items: _getDeviceItems(),
+                        hint: isNullOrEmpty(_getDeviceItems()) ? const Text('No available devices') : null,
                         onChanged: (BluetoothDevice? value) {
-                            print('name ${value?.name??'no name'}, address: ${value?.address} ');
                             setState(() => _device =BluetoothDevice(
                               'fix printer', 
                               '02:2A:9F:2C:37:48'
@@ -140,46 +150,55 @@ class _PrinterPageState extends State<PrinterPage> {
                         value: _device,
                       ),
                     ),
+                    const SizedBox(width: 10),
+                     Expanded(
+                      flex: 1,
+                       child: SizedBox(
+                        height: 36,
+                         child: ElevatedButton(
+                          style: CustomButtonStyle.bluePrimary(),
+                          onPressed: () {
+                            initPlatformState();
+                          },
+                          child: const Text(
+                            'Refresh',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                                             ),
+                       ),
+                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.brown),
-                      onPressed: () {
-                        initPlatformState();
-                      },
-                      child: const Text(
-                        'Refresh',
-                        style: TextStyle(color: Colors.white),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        style: CustomButtonStyle.confirm(),
+                        onPressed: _connected ? _disconnect : _connect,
+                        child: Text(
+                          _connected ? 'Disconnect' : 'Connect',
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: _connected ? Colors.red : Colors.green),
-                      onPressed: _connected ? _disconnect : _connect,
-                      child: Text(
-                        _connected ? 'Disconnect' : 'Connect',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                      style: CustomButtonStyle.bluePrimary(),
+                      onPressed: () {
+                        testPrint.sample();
+                      },
+                      child: const Text('Print Test',
+                          style: TextStyle(color: Colors.white)),
+                                        ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.brown),
-                    onPressed: () {
-                      testPrint.sample();
-                    },
-                    child: const Text('PRINT TEST',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ),
+               
               ],
             ),
           ),
@@ -190,16 +209,14 @@ class _PrinterPageState extends State<PrinterPage> {
   List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
     List<DropdownMenuItem<BluetoothDevice>> items = [];
     if (_devices.isEmpty) {
-      items.add(DropdownMenuItem(
-        child: Text('NONE'),
-      ));
+      items.clear();
     } else {
-      _devices.forEach((device) {
+      for (var device in _devices) {
         items.add(DropdownMenuItem(
-          child: Text(device.name ?? ""),
           value: device,
+          child: Text(device.name.toString()),
         ));
-      });
+      }
     }
     return items;
   }
