@@ -26,7 +26,7 @@ class CustomTextfieldStyle{
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.0),
-        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+        borderSide: const BorderSide(color: Colors.black87, width: 1.0),
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6)
     );

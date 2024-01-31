@@ -1,3 +1,4 @@
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:front_office_2/page/setting/printer/test_print.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -6,7 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/input_formatter.dart';
+import 'package:front_office_2/tools/printer_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {
@@ -122,6 +126,76 @@ class _PrinterPageState extends State<PrinterPage> {
               children: <Widget>[
                 SizedBox(
                   width: double.infinity,
+                  child: Text('Current Printer:', style: CustomTextStyle.blackMedium()),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Printer', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text('RPP02N Printer Bluetooth', style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Connection', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text('Bluetooth/ network', style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Printer Type', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: CustomRadioButton(
+                        selectedBorderColor: Colors.transparent,
+                        unSelectedBorderColor: Colors.transparent,
+                        buttonLables: printerSizeList, 
+                        buttonValues: printerCode,
+                          buttonTextStyle: ButtonTextStyle(
+                          selectedColor: Colors.white,
+                          unSelectedColor: Colors.black,
+                          textStyle: CustomTextStyle.blackStandard()),
+                        autoWidth: true, 
+                        radioButtonValue: (value){
+                          showToastWarning(value.toString());
+                        }, 
+                        unSelectedColor: Colors.white, 
+                        selectedColor: CustomColorStyle.appBarBackground()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 26,),
+                SizedBox(
+                  width: double.infinity,
                   child: Text('Pilih Bluetooth Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
                 ),
                 Row(
@@ -199,6 +273,38 @@ class _PrinterPageState extends State<PrinterPage> {
                   ],
                 ),
                
+                const SizedBox(height: 15,),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text('Setting Network Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        decoration: CustomTextfieldStyle.normalHint('192.168.1.1'),
+                        inputFormatters: [IPAddressInputFormatter()],
+                        textAlign: TextAlign.center,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      )
+                    ),
+                    const SizedBox(width: 16,),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        decoration: CustomTextfieldStyle.normalHint('9100'),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      )
+                    ),
+                    const SizedBox(width: 14,),
+                    ElevatedButton(
+                      onPressed: (){}, 
+                      style: CustomButtonStyle.confirm(),
+                      child: const Text('Connect'))
+                  ],
+                ),
               ],
             ),
           ),
