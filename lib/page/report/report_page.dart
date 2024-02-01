@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -35,7 +36,9 @@ class _ReportPageState extends State<ReportPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.pushNamed(context, MySalesPage.nameRoute);
+                },
                 style: CustomButtonStyle.blueWidth(),
                 child: Text('My Sales', style: CustomTextStyle.whiteSize(19),)),
             ),
