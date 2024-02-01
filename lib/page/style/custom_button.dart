@@ -51,4 +51,17 @@ class CustomButtonStyle{
         foregroundColor: Colors.white
     );
   }
+
+  static ButtonStyle blueWidth(){
+    return ElevatedButton.styleFrom(
+        backgroundColor: Colors.green.shade800,
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          textStyle: GoogleFonts.poppins(
+          fontSize: 18,
+        ),
+        alignment: Alignment.center,
+        foregroundColor: Colors.white
+    );
+  }
 }

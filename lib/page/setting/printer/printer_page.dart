@@ -117,6 +117,9 @@ class _PrinterPageState extends State<PrinterPage> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color:  Colors.white, //change your color here
+            ),
             title: Text('Printer Setting', style: CustomTextStyle.titleAppBar(),),
             backgroundColor: CustomColorStyle.appBarBackground(),
           ),
@@ -177,14 +180,16 @@ class _PrinterPageState extends State<PrinterPage> {
                       flex: 5,
                       child: CustomRadioButton(
                         selectedBorderColor: Colors.transparent,
-                        unSelectedBorderColor: Colors.transparent,
+                        unSelectedBorderColor: CustomColorStyle.appBarBackground(),
+                        enableShape: true,
+                        elevation: 0, // Menghilangkan bayangan
                         buttonLables: printerSizeList, 
                         buttonValues: printerCode,
                           buttonTextStyle: ButtonTextStyle(
                           selectedColor: Colors.white,
                           unSelectedColor: Colors.black,
                           textStyle: CustomTextStyle.blackStandard()),
-                        autoWidth: true, 
+                        autoWidth: true,                        
                         radioButtonValue: (value){
                           showToastWarning(value.toString());
                         }, 
@@ -194,6 +199,8 @@ class _PrinterPageState extends State<PrinterPage> {
                   ],
                 ),
                 const SizedBox(height: 26,),
+                Text('Ganti Printer', style: CustomTextStyle.titleAlertDialog(), textAlign: TextAlign.center,),
+                const SizedBox(height: 7,),
                 SizedBox(
                   width: double.infinity,
                   child: Text('Pilih Bluetooth Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
@@ -213,6 +220,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     Expanded(
                       flex: 3,
                       child: DropdownButton(
+                        isExpanded: true,
                         items: _getDeviceItems(),
                         hint: isNullOrEmpty(_getDeviceItems()) ? const Text('No available devices') : null,
                         onChanged: (BluetoothDevice? value) {
@@ -250,13 +258,13 @@ class _PrinterPageState extends State<PrinterPage> {
                     SizedBox(
                       height: 36,
                       child: ElevatedButton(
-                        style: CustomButtonStyle.confirm(),
-                        onPressed: _connected ? _disconnect : _connect,
-                        child: Text(
-                          _connected ? 'Disconnect' : 'Connect',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
+                      style: CustomButtonStyle.bluePrimary(),
+                      onPressed: () {
+                        testPrint.sample();
+                      },
+                      child: const Text('Pilih Type',
+                          style: TextStyle(color: Colors.white)),
+                                        ),
                     ),
                     const SizedBox(width: 10),
                     SizedBox(
@@ -270,14 +278,27 @@ class _PrinterPageState extends State<PrinterPage> {
                           style: TextStyle(color: Colors.white)),
                                         ),
                     ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        style: CustomButtonStyle.confirm(),
+                        onPressed: _connected ? _disconnect : _connect,
+                        child: Text(
+                          _connected ? 'Disconnect' : 'Connect',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                
-                const SizedBox(height: 15,),
+                const SizedBox(height: 26,),
                 SizedBox(
                   width: double.infinity,
                   child: Text('Setting Network Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
                 ),
+                const SizedBox(height: 12,),
                 Row(
                   children: [
                     Expanded(
@@ -305,6 +326,8 @@ class _PrinterPageState extends State<PrinterPage> {
                       child: const Text('Connect'))
                   ],
                 ),
+                const SizedBox(height: 12,),
+                ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),))
               ],
             ),
           ),
