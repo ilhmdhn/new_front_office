@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:graphic/graphic.dart';
+
+import 'package:fl_chart/fl_chart.dart';
 
 class MySalesPage extends StatelessWidget {
   static const nameRoute = '/MySales';
   const MySalesPage({super.key});
-
+/*
   @override
   Widget build(BuildContext context) {
+
     
     return SafeArea(
       child: Scaffold(
@@ -38,16 +38,16 @@ class MySalesPage extends StatelessWidget {
                       width: double.infinity,
                       child: Chart(  data: const [
                         { 'genre': 'a', 'sold': 1 },
-                        { 'genre': 'b', 'sold': 2 },
-                        { 'genre': 'c', 'sold': 3 },
-                        { 'genre': 'd', 'sold': 4 },
-                        { 'genre': 'e', 'sold': 5 },
-                        { 'genre': 'f', 'sold': 6 },
-                        { 'genre': 'g', 'sold': 7 },
-                        { 'genre': 'h', 'sold': 8 },
-                        { 'genre': 'i', 'sold': 9 },
-                        { 'genre': 'j', 'sold': 10 },
-                        { 'genre': 'k', 'sold': 11 },
+                        { 'genre': 'b', 'sold': 5 },
+                        { 'genre': 'c', 'sold': 8 },
+                        { 'genre': 'd', 'sold': 2 },
+                        { 'genre': 'e', 'sold': 8 },
+                        { 'genre': 'f', 'sold': 1 },
+                        { 'genre': 'g', 'sold': 9 },
+                        { 'genre': 'h', 'sold': 4 },
+                        { 'genre': 'i', 'sold': 7 },
+                        { 'genre': 'j', 'sold': 2 },
+                        { 'genre': 'k', 'sold': 15 },
                         { 'genre': 'l', 'sold': 12 },
                       ],
 
@@ -81,4 +81,61 @@ class MySalesPage extends StatelessWidget {
       ),
     );
   }    
-}
+*/
+@override
+Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1.7,
+      child: BarChart(
+        BarChartData(
+          barGroups: [
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: 1,
+                  color: [Colors.red],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 1,
+              barRods: [
+                BarChartRodData(
+                  y: 2,
+                  colors: [Colors.blue],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 2,
+              barRods: [
+                BarChartRodData(
+                  y: 5,
+                  colors: [Colors.green],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 3,
+              barRods: [
+                BarChartRodData(
+                  y: 4,
+                  colors: [Colors.yellow],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 4,
+              barRods: [
+                BarChartRodData(
+                  y: 6,
+                  colors: [Colors.orange],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }}
