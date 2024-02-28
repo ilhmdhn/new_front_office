@@ -1,4 +1,5 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:front_office_2/page/dialog/select_printer_dialog.dart';
 import 'package:front_office_2/page/setting/printer/test_print.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -260,7 +261,9 @@ class _PrinterPageState extends State<PrinterPage> {
                       child: ElevatedButton(
                       style: CustomButtonStyle.bluePrimary(),
                       onPressed: () {
-                        testPrint.sample();
+                        // testPrint.sample();
+                        final printerIndex = SelectPrinterDialog().setPrinter(context, 1);
+                        showToastWarning(printerIndex.toString());
                       },
                       child: const Text('Pilih Type',
                           style: TextStyle(color: Colors.white)),

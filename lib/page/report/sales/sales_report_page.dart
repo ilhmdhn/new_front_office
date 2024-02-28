@@ -84,58 +84,59 @@ class MySalesPage extends StatelessWidget {
 */
 @override
 Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.7,
-      child: BarChart(
-        BarChartData(
-          barGroups: [
-            BarChartGroupData(
-              x: 0,
-              barRods: [
-                BarChartRodData(
-                  toY: 1,
-                  color: [Colors.red],
-                ),
-              ],
-            ),
-            BarChartGroupData(
-              x: 1,
-              barRods: [
-                BarChartRodData(
-                  y: 2,
-                  colors: [Colors.blue],
-                ),
-              ],
-            ),
-            BarChartGroupData(
-              x: 2,
-              barRods: [
-                BarChartRodData(
-                  y: 5,
-                  colors: [Colors.green],
-                ),
-              ],
-            ),
-            BarChartGroupData(
-              x: 3,
-              barRods: [
-                BarChartRodData(
-                  y: 4,
-                  colors: [Colors.yellow],
-                ),
-              ],
-            ),
-            BarChartGroupData(
-              x: 4,
-              barRods: [
-                BarChartRodData(
-                  y: 6,
-                  colors: [Colors.orange],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return Container();
+    // return AspectRatio(
+    //   aspectRatio: 1.7,
+    //   child: BarChart(
+    //     BarChartData(
+    //       barGroups: [
+    //         BarChartGroupData(
+    //           x: 0,
+    //           barRods: [
+    //             BarChartRodData(
+    //               toY: 1,
+    //               color: [Colors.red],
+    //             ),
+    //           ],
+    //         ),
+    //         BarChartGroupData(
+    //           x: 1,
+    //           barRods: [
+    //             BarChartRodData(
+    //               y: 2,
+    //               colors: [Colors.blue],
+    //             ),
+    //           ],
+    //         ),
+    //         BarChartGroupData(
+    //           x: 2,
+    //           barRods: [
+    //             BarChartRodData(
+    //               y: 5,
+    //               colors: [Colors.green],
+    //             ),
+    //           ],
+    //         ),
+    //         BarChartGroupData(
+    //           x: 3,
+    //           barRods: [
+    //             BarChartRodData(
+    //               y: 4,
+    //               colors: [Colors.yellow],
+    //             ),
+    //           ],
+    //         ),
+    //         BarChartGroupData(
+    //           x: 4,
+    //           barRods: [
+    //             BarChartRodData(
+    //               y: 6,
+    //               colors: [Colors.orange],
+    //             ),
+    //           ],
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }}
