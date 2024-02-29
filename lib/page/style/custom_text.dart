@@ -6,6 +6,10 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 18, color: Colors.black);
   }
 
+    static TextStyle titleAlertDialogSize(int size){
+    return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black);
+  }
+
   static TextStyle titleAppBar(){
     return GoogleFonts.poppins(fontSize: 19, color: Colors.white, fontWeight: FontWeight.w500);
   }

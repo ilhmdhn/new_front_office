@@ -1,4 +1,3 @@
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:front_office_2/page/dialog/select_printer_dialog.dart';
 import 'package:front_office_2/page/setting/printer/test_print.dart';
 import 'package:flutter/material.dart';
@@ -179,23 +178,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: CustomRadioButton(
-                        selectedBorderColor: Colors.transparent,
-                        unSelectedBorderColor: CustomColorStyle.appBarBackground(),
-                        enableShape: true,
-                        elevation: 0, // Menghilangkan bayangan
-                        buttonLables: printerSizeList, 
-                        buttonValues: printerCode,
-                          buttonTextStyle: ButtonTextStyle(
-                          selectedColor: Colors.white,
-                          unSelectedColor: Colors.black,
-                          textStyle: CustomTextStyle.blackStandard()),
-                        autoWidth: true,                        
-                        radioButtonValue: (value){
-                          showToastWarning(value.toString());
-                        }, 
-                        unSelectedColor: Colors.white, 
-                        selectedColor: CustomColorStyle.appBarBackground()),
+                      child: Text('data', style: CustomTextStyle.blackMedium())
                     ),
                   ],
                 ),
@@ -260,10 +243,10 @@ class _PrinterPageState extends State<PrinterPage> {
                       height: 36,
                       child: ElevatedButton(
                       style: CustomButtonStyle.bluePrimary(),
-                      onPressed: () {
+                      onPressed: () async{
                         // testPrint.sample();
-                        final printerIndex = SelectPrinterDialog().setPrinter(context, 1);
-                        showToastWarning(printerIndex.toString());
+                        int? anu = await SelectPrinterDialog().setPrinter(context, 1);
+                        showToastWarning(anu.toString());
                       },
                       child: const Text('Pilih Type',
                           style: TextStyle(color: Colors.white)),
