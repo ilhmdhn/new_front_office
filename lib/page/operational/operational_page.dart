@@ -133,7 +133,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
                                     child: Center(
-                                      child: AutoSizeText('Checkin', style: CustomTextStyle.blackMedium(),),
+                                      child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(30), minFontSize: 12, maxFontSize: 30, maxLines: 1,),
                                     ),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
