@@ -313,7 +313,26 @@ class _PrinterPageState extends State<PrinterPage> {
                   ],
                 ),
                 const SizedBox(height: 12,),
-                ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),))
+                Row(children: [
+                  //nganu
+                                      SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                      style: CustomButtonStyle.bluePrimary(),
+                      onPressed: () async{
+                        // testPrint.sample();
+                        int? anu = await SelectPrinterDialog().setPrinter(context, 1);
+                        showToastWarning(anu.toString());
+                      },
+                      child: const Text('Pilih Type',
+                          style: TextStyle(color: Colors.white)),
+                                        ),
+                    ),
+                    const SizedBox(width: 10,),
+                  SizedBox(
+                    height: 36,
+                    child: ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),)))
+                ],),
               ],
             ),
           ),

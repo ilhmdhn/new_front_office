@@ -30,6 +30,10 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500);
   }
 
+  static TextStyle blackMediumNoSize(){
+    return GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.w500);
+  }
+
   static TextStyle blackSemi(){
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600);
   }

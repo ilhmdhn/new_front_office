@@ -37,9 +37,9 @@ class _MainPageState extends State<MainPage> {
               label: 'Reception'
             ),
             NavigationDestination(
-              icon: Icon(Icons.info_outline, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.info_outline, color: Colors.blue),
-              label: 'Status'
+              icon: Icon(Icons.history, color: Colors.grey.shade800), 
+              selectedIcon: const Icon(Icons.history, color: Colors.blue),
+              label: 'History'
             ),
             NavigationDestination(
               icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
