@@ -1,8 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
+import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 // import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -106,44 +107,60 @@ class _OperationalPageState extends State<OperationalPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                    child: Image.asset('assets/menu_icon/karaoke.png')
-                                  ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(
-                                      child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(30), minFontSize: 12, maxFontSize: 30, maxLines: 1,),
+                          child: InkWell(
+                            child: Container(
+                              height: 83,
+                              decoration: BoxDecoration(
+                              color: Colors.white, // Warna background
+                              borderRadius: BorderRadius.circular(10), // Bentuk border
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                  spreadRadius: 3, // Radius penyebaran shadow
+                                  blurRadius: 7, // Radius blur shadow
+                                  offset: const Offset(0, 3), // Offset shadow
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                      child: Image.asset('assets/menu_icon/karaoke.png')
                                     ),
-                                  )),
-                                const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                              ]),
-                          ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Center(
+                                        child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
+                                      ),
+                                    )),
+                                  const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                ]),
+                            ),
+                            ),
+                            onTap: ()async{
+                              String? result = await showQRScannerDialog(context);
+                              if(isNotNullOrEmpty(result)){
+                                // showToastWarning(result.toString());
+                                final loginResult = await ApiRequest().cekMember(result.toString());
+                                if(loginResult.state != true){
+                                  showToastWarning('gak sukses ${loginResult.message}');
+                                }else{
+                                  Navigator.pushNamed(context, ListRoomTypePage.nameRoute);
+                                }
+                              }
+                            },
                           )
                         ),
                         const SizedBox(width: 12,),
-                                              Expanded(
+                        Expanded(
                           child: Container(
+                            height: 83,
                             decoration: BoxDecoration(
                             color: Colors.white, // Warna background
                             borderRadius: BorderRadius.circular(10), // Bentuk border
@@ -169,7 +186,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumNoSize(),)),
+                                    child: Center(child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -207,7 +224,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 15,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Edit Room Checkin', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -247,7 +264,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Extend', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Extend', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -282,7 +299,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Transfer', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -320,7 +337,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Order', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -355,7 +372,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Bayar', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -393,7 +410,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Checkout', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -428,7 +445,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Clean', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -441,6 +458,7 @@ class _OperationalPageState extends State<OperationalPage> {
                       children: [
                         Expanded(
                           child: Container(
+                            height: 83,
                             decoration: BoxDecoration(
                             color: Colors.white, // Warna background
                             borderRadius: BorderRadius.circular(10), // Bentuk border
@@ -466,7 +484,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('Extend', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -474,8 +492,9 @@ class _OperationalPageState extends State<OperationalPage> {
                           )
                         ),
                         const SizedBox(width: 12,),
-                                              Expanded(
+                          Expanded(
                           child: Container(
+                            height: 83,
                             decoration: BoxDecoration(
                             color: Colors.white, // Warna background
                             borderRadius: BorderRadius.circular(10), // Bentuk border
@@ -501,7 +520,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: Text('List Reservasi', style: CustomTextStyle.blackMedium(),)),
+                                    child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
