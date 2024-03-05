@@ -26,7 +26,7 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
   }
 
   void getData()async{
-        final listRoomResponseResult = await ApiRequest().getListRoomTypeReady();
+    final listRoomResponseResult = await ApiRequest().getListRoomTypeReady();
     if(listRoomResponseResult.isLoading ==false){
       setState(() {
         listRoom = listRoomResponseResult;
