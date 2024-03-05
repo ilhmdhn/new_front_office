@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -151,7 +152,13 @@ class _OperationalPageState extends State<OperationalPage> {
                                 if(loginResult.state != true){
                                   showToastWarning('gak sukses ${loginResult.message}');
                                 }else{
-                                  Navigator.pushNamed(context, ListRoomTypePage.nameRoute);
+                                  if(mounted){
+                                    final checkinParams = CheckinParams(
+                                      memberName: loginResult.data?.fullName??'no name',
+                                      memberCode: loginResult.data?.memberCode??'undefined'
+                                    );
+                                    Navigator.pushNamed(context, ListRoomTypePage.nameRoute, arguments: checkinParams);
+                                  }
                                 }
                               }
                             },
