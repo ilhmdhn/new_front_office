@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
+import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
@@ -78,6 +80,20 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         state: false,
         message: err.toString()
       );
+    }
+  }
+
+  Future<BaseResponse> doCheckin(CheckinParams checkinData)async{
+    try{
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/checkin-direct/direct-checkin-member');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+
+      return RoomListResponse.fromJson(convertedResult);
+    }catch(err){
+
     }
   }
 }
