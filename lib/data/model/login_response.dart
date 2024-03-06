@@ -2,6 +2,7 @@ class LoginResponse{
   bool isLoading;
   bool? state;
   String? message;
+  UserDataModel? data;
 
   LoginResponse({
     this.isLoading = true,

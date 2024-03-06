@@ -26,23 +26,24 @@ class ApiRequest{
     }
   }
 
-  Future<CekMemberResponse> cekMember(String memberCode)async{
-    try{
-      final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/member/membership/$memberCode');
-      final apiResponse = await http.get(url);
-      final convertedResult = json.decode(apiResponse.body);
-
-      return CekMemberResponse.fromJson(convertedResult);
-    }catch(err){
-      return CekMemberResponse(
-        isLoading: false,
-        state: false,
-        message: err.toString()
-      );
-    }
+Future<CekMemberResponse> cekMember(String memberCode) async {
+  try {
+    final serverUrl = await PreferencesData.url();
+    // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+    final url = Uri.parse('http://192.168.1.136:3000/member/membership/$memberCode');
+    final apiResponse = await http.get(url);
+    final convertedResult = json.decode(apiResponse.body);
+    final result = CekMemberResponse.fromJson(convertedResult);
+    return result;
+  } catch (err) {
+    return CekMemberResponse(
+      isLoading: false,
+      state: false,
+      message: 'Terjadi kesalahan saat memproses permintaan: $err',
+    );
   }
+}
+
 
   Future<ListRoomTypeReadyResponse> getListRoomTypeReady()async{
     try{

@@ -137,7 +137,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
                                       child: Center(
-                                        child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
+                                        child: AutoSizeText('Checkin', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,),
                                       ),
                                     )),
                                   const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
@@ -193,7 +193,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Checkin Reservasi', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 2,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -231,7 +231,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 15,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Edit Room Checkin', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -271,7 +271,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Extend', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Extend', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -306,7 +306,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Transfer', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -344,7 +344,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Order', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -379,7 +379,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Bayar', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -417,7 +417,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Checkout', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -452,7 +452,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(21),  maxLines: 1, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Clean', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -491,7 +491,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('Checkin Info', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 2,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),
@@ -527,7 +527,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                   flex: 6,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,)),
+                                    child: Center(child: AutoSizeText('List Reservasi', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 2,)),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),

@@ -96,25 +96,22 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
                                     ),
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 2, minFontSize: 12,),
-                                            AutoSizeText('Room Ready ${listRoomItem[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
-                                          ],
-                                        ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 2, minFontSize: 12,),
+                                          AutoSizeText('Room Ready ${listRoomItem[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
+                                        ],
                                       ),
-                                      const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                                    ]),
-                                ),
+                                    ),
+                                    const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                  ]),
                                 ),
                       );
                     });

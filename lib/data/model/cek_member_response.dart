@@ -12,10 +12,6 @@ class CekMemberResponse{
   });
 
   factory CekMemberResponse.fromJson(Map<String, dynamic> json){
-    if (json['state'] != true){
-      throw json['message'];
-    }
-
     return CekMemberResponse(
       isLoading: false,
       state: json['state'],
@@ -38,10 +34,10 @@ class MemberDataModel{
     this.point
   });
 
-  factory MemberDataModel.fromJson(Map<String, dynamic>json)=>MemberDataModel(
-    memberCode: json['member'],
-    fullName: json['nama_lengkap'],
-    memberType: json['jenis_member'],
-    point: json['point_reward']
+  factory MemberDataModel.fromJson(Map<String, dynamic>?json)=>MemberDataModel(
+    memberCode: json?['member'],
+    fullName: json?['nama_lengkap'],
+    memberType: json?['jenis_member'],
+    point: json?['point_reward']
   );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/checkin_time_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -38,6 +39,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
           title: Text('Tipe Room ${checkinParams.roomType}', style: CustomTextStyle.titleAppBar(),),
             backgroundColor: CustomColorStyle.appBarBackground(),
           ),
+        backgroundColor: CustomColorStyle.background(),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: LayoutBuilder(
@@ -58,8 +60,9 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                 itemCount: listRoomItem.length,
                 itemBuilder: (context, index){
                   return InkWell(
-                    onTap:(){
-                      showToastWarning(listRoomItem[index].roomName.toString());
+                    onTap:()async{
+                      int? result = await CheckinDurationDialog().setCheckinTime(context, listRoomItem[index].roomName.toString());
+                      showToastWarning(result.toString());
                     },
                     child: Container(
                                     decoration: BoxDecoration(
@@ -74,24 +77,21 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                                       ),
                                     ],
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              AutoSizeText(listRoomItem[index].roomCode.toString(), style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
-                                            ],
-                                          ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AutoSizeText(listRoomItem[index].roomCode.toString(), style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
+                                          ],
                                         ),
-                                        const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                                      ]),
-                                  ),
+                                      ),
+                                      const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                    ]),
                                   ),
                   );
                 });
