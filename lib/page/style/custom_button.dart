@@ -76,4 +76,16 @@ class CustomButtonStyle{
         foregroundColor: Colors.white
     );
   }
+
+  static ButtonStyle blueAppbar(){
+    return ElevatedButton.styleFrom(
+        backgroundColor: CustomColorStyle.appBarBackground(),
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          textStyle: GoogleFonts.poppins(
+          fontSize: 14,
+        ),
+        foregroundColor: Colors.white
+    );
+  }
 }

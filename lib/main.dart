@@ -35,8 +35,8 @@ class FrontOffice extends StatelessWidget {
         StatusPage.nameRoute: (context) => const StatusPage(),
         ReportPage.nameRoute: (context) => const ReportPage(),
         ProfilePage.nameRoute: (context) => const ProfilePage(),
-        PrinterPage.nameRoute: (context) => PrinterPage(),
-        MySalesPage.nameRoute: (context) => MySalesPage(),
+        PrinterPage.nameRoute: (context) => const PrinterPage(),
+        MySalesPage.nameRoute: (context) => const MySalesPage(),
         ListRoomTypePage.nameRoute: (context) => const ListRoomTypePage(),
         ListRoomReadyPage.nameRoute: (context) => const ListRoomReadyPage(),
         EditCheckinPage.nameRoute: (context) => const EditCheckinPage()
