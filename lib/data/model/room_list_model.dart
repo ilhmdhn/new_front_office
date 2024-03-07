@@ -31,16 +31,19 @@ class RoomModel{
   String? roomCode;
   String? roomName;
   int? roomCapacity;
+  bool? isRoomCheckin;
 
   RoomModel({
     this.roomCode,
     this.roomName,
-    this.roomCapacity
+    this.roomCapacity,
+    this.isRoomCheckin
   });
 
   factory RoomModel.fromJson(Map<String, dynamic>json)=>RoomModel(
     roomCode: json['kamar'],
     roomName: json['kamar_alias'],
-    roomCapacity: json['kapasitas']
+    roomCapacity: json['kapasitas'],
+    isRoomCheckin: json['status_kamar_ready_untuk_checkin']
   );
 }

@@ -2,6 +2,7 @@ class CheckinParams{
   String chusr;
   int hour;
   int minute;
+  int pax;
   CheckinRoom? checkinRoom;
   CheckinRoomType? checkinRoomType;
   Visitor? visitor;
@@ -10,6 +11,7 @@ class CheckinParams{
     this.chusr = '',
     this.hour = 0,
     this.minute = 0,
+    this.pax = 0,
     this.checkinRoom,
     this.checkinRoomType,
     this.visitor
@@ -65,6 +67,7 @@ class GenerateCheckinParams{
       'chusr': checkinData.chusr,
       'durasi_jam': checkinData.hour,
       'durasi_menit': checkinData.minute,
+      'pax': checkinData.pax,
     }; 
   }
 }

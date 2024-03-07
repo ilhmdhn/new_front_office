@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
+import 'package:front_office_2/data/model/time_pax_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/checkin_time_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -61,7 +62,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                 itemBuilder: (context, index){
                   return InkWell(
                     onTap:()async{
-                      int? result = await CheckinDurationDialog().setCheckinTime(context, listRoomItem[index].roomName.toString());
+                      TimePaxModel? result = await CheckinDurationDialog().setCheckinTime(context, listRoomItem[index].roomName.toString());
                       showToastWarning(result.toString());
                     },
                     child: Container(

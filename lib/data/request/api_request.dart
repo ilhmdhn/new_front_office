@@ -91,9 +91,13 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
 
-      return RoomListResponse.fromJson(convertedResult);
+      return BaseResponse.fromJson(convertedResult);
     }catch(err){
-
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: err.toString()
+      );
     }
   }
 }

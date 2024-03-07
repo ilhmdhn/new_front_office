@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
@@ -73,38 +74,6 @@ class _OperationalPageState extends State<OperationalPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-              /*                  Row(children: [
-                      InkWell(
-                        onTap: ()async{
-                          String? result = await showQRScannerDialog(context);
-                          if(isNotNullOrEmpty(result)){
-                            showToastWarning(result.toString());
-                          }
-                        },
-                        child: Container(
-                          color: Colors.green,
-                          child: const Text('CHECKIN'),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, PrinterPage.nameRoute);
-                        },
-                        child: Container(
-                          color: Colors.green,
-                          child: const Text('PRINTER'),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, LoginPage.nameRoute);
-                        },
-                        child: Container(
-                          color: Colors.green,
-                          child: const Text('LOGIN'),
-                        ),
-                      ) 
-                    ],),*/
                     Row(
                       children: [
                         Expanded(
@@ -218,23 +187,28 @@ class _OperationalPageState extends State<OperationalPage> {
                               ),
                             ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                    child: Image.asset('assets/menu_icon/edit_checkin.png')
-                                  ),
-                                Expanded(
-                                  flex: 15,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Edit Room Checkin', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
-                                  )),
-                                const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                              ]),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, EditCheckinPage.nameRoute);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                      child: Image.asset('assets/menu_icon/edit_checkin.png')
+                                    ),
+                                  Expanded(
+                                    flex: 15,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Center(child: AutoSizeText('Edit Room Checkin', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
+                                    )),
+                                  const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                ]),
+                            ),
                           ),
                           )
                         ),

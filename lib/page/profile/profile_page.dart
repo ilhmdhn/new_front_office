@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-    static const nameRoute = '/profile';
+  static const nameRoute = '/profile';
   const ProfilePage({super.key});
 
   @override
