@@ -1,4 +1,4 @@
-class CheckinParams{
+class CheckinBody{
   String chusr;
   int hour;
   int minute;
@@ -7,7 +7,7 @@ class CheckinParams{
   CheckinRoomType? checkinRoomType;
   Visitor? visitor;
 
-  CheckinParams({
+  CheckinBody({
     this.chusr = '',
     this.hour = 0,
     this.minute = 0,
@@ -50,7 +50,7 @@ class Visitor{
 }
 
 class GenerateCheckinParams{
-  Map<String, dynamic>checkinParams(CheckinParams checkinData){
+  Map<String, dynamic> checkinBodyRequest(CheckinBody checkinData){
     return <String, dynamic> {
       'checkin_room': <String, dynamic>{
         'kamar': checkinData.checkinRoom?.room,

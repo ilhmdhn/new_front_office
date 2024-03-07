@@ -31,7 +31,7 @@ class RoomModel{
   String? roomCode;
   String? roomName;
   int? roomCapacity;
-  bool? isRoomCheckin;
+  int? isRoomCheckin;
 
   RoomModel({
     this.roomCode,

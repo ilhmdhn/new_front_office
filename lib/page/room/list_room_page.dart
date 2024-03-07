@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/time_pax_model.dart';
@@ -63,7 +64,31 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                   return InkWell(
                     onTap:()async{
                       TimePaxModel? result = await CheckinDurationDialog().setCheckinTime(context, listRoomItem[index].roomName.toString());
-                      showToastWarning(result.toString());
+                      if(result != null){
+                        
+                        bool isRoomCheckin = false;
+
+                        if(listRoomItem[index].isRoomCheckin == 1){
+                          isRoomCheckin = true;
+                        }
+                        final checkinResult = ApiRequest().doCheckin(CheckinBody(
+                          chusr: 'ngetest',
+                          hour: result.duration,
+                          minute: 0,
+                          pax: result.pax,
+                          checkinRoom: CheckinRoom(
+                            room: listRoomItem[index].roomCode??''),
+                          checkinRoomType: CheckinRoomType(
+                            roomCapacity: listRoomItem[index].roomCapacity??0,
+                            roomType: checkinParams.roomType??'',
+                            isRoomCheckin: isRoomCheckin
+                          ),
+                          visitor: Visitor(
+                            memberCode: checkinParams.memberCode,
+                            memberName: checkinParams.memberName
+                          )
+                        ));
+                      }
                     },
                     child: Container(
                                     decoration: BoxDecoration(
