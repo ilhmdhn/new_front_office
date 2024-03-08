@@ -3,3 +3,6 @@ List<int> printerCode = [1, 2, 3, 4];
 
 List<String> downPaymentList = ['Non', 'cash', 'debet', 'credit', 'Transfer'];
 List<int> downPaymentCode = [1, 2, 3, 4, 5];
+
+List<String> cardType = ['VISA', 'MASTER', 'BCA', 'MANDIRI', 'LAIN'];
+List<int> cardTypeCode = [1, 2, 3, 4, 5];

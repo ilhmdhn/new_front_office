@@ -20,7 +20,10 @@ class CustomTextfieldStyle{
   static InputDecoration normalHint(hint){
     return InputDecoration(
       hintText: hint,
-      hintStyle: GoogleFonts.poppins(fontSize: 12),
+      hintStyle: GoogleFonts.poppins(
+        fontSize: 14,
+        color: Colors.black,
+        fontWeight: FontWeight.w400),
         focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.0),
         borderSide: const BorderSide(color: Colors.grey, width: 2.0),

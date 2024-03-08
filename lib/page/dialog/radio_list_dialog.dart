@@ -1,22 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:flutter/material.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/tools/list.dart';
+import 'package:front_office_2/page/style/custom_text.dart';
 
-
-class SelectPrinterDialog {
-  Future<int?> setPrinter(BuildContext ctx, int? chooseIndex) async {
+class RadioListDialog{
+  Future<int?> show(BuildContext ctx, String title, int? chooseIndex, List<String> listItem, List<int> listItemCOde){
     return showDialog(
       context: ctx,
-      builder: (BuildContext context) {
+      builder: (BuildContext context){
         return AlertDialog(
           title: Center(
-            child: Text(
-              'Select Printer',
-              style: CustomTextStyle.titleAlertDialogSize(23),
-            ),
+            child: Text(title, style: CustomTextStyle.titleAlertDialogSize(23),),
           ),
           backgroundColor: CustomColorStyle.white(),
           content: SizedBox(
@@ -32,8 +27,8 @@ class SelectPrinterDialog {
                       enableShape: true,
                       horizontal: true,
                       elevation: 0, // Menghilangkan bayangan
-                      buttonLables: printerSizeList, 
-                      buttonValues: printerCode,
+                      buttonLables: listItem, 
+                      buttonValues: listItemCOde,
                         buttonTextStyle: ButtonTextStyle(
                         selectedColor: Colors.white,
                         unSelectedColor: Colors.black,
@@ -69,9 +64,9 @@ class SelectPrinterDialog {
                 )
               ],
             ),
+          
           ),
         );
-      },
-    );
+      });
   }
 }

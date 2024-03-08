@@ -3,6 +3,7 @@ import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
+import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
@@ -96,6 +97,23 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(err){
       return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: err.toString()
+      );
+    }
+  }
+
+  Future<EdcResponse> getEdc()async{
+    try{
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/edc/list-edc');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return EdcResponse.fromJson(convertedResult);
+    }catch(err){
+      return EdcResponse(
         isLoading: false,
         state: false,
         message: err.toString()

@@ -39,6 +39,4 @@ class RoomTypeReadyData{
     roomType: json['jenis_kamar'],
     roomAvailable: json['jumlah_available']
   );
-
-  length() {}
 }
