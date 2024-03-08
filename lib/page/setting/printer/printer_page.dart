@@ -10,7 +10,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
-import 'package:front_office_2/tools/printer_size.dart';
+import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {

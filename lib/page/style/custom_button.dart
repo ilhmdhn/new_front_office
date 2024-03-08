@@ -80,10 +80,10 @@ class CustomButtonStyle{
   static ButtonStyle blueAppbar(){
     return ElevatedButton.styleFrom(
         backgroundColor: CustomColorStyle.appBarBackground(),
-        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: -10, vertical: -10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           textStyle: GoogleFonts.poppins(
-          fontSize: 14,
+          // fontSize: 14,
         ),
         foregroundColor: Colors.white
     );

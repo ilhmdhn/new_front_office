@@ -5,7 +5,7 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:front_office_2/tools/printer_size.dart';
+import 'package:front_office_2/tools/list.dart';
 
 
 class SelectPrinterDialog {
