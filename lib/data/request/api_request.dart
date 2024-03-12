@@ -5,6 +5,8 @@ import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/promo_fnb_response.dart';
+import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -114,6 +116,40 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return EdcResponse.fromJson(convertedResult);
     }catch(err){
       return EdcResponse(
+        isLoading: false,
+        state: false,
+        message: err.toString()
+      );
+    }
+  }
+
+  Future<PromoRoomResponse> getPromoRoom(roomType)async{
+    try{
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/promo/promo-room/$roomType');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoRoomResponse.fromJson(convertedResult);
+    }catch(err){
+      return PromoRoomResponse(
+        isLoading: false,
+        state: false,
+        message: err.toString()
+      );
+    }
+  }
+
+  Future<PromoFnbResponse> getPromoFnB(roomType, roomCode)async{
+    try{
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/promo/promo-food/$roomType/$roomCode');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoFnbResponse.fromJson(convertedResult);
+    }catch(err){
+      return PromoFnbResponse(
         isLoading: false,
         state: false,
         message: err.toString()
