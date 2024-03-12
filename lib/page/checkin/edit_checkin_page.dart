@@ -3,6 +3,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/radio_list_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -179,7 +180,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           ElevatedButton(
                             style: CustomButtonStyle.blueAppbar(),
                             onPressed: ()async{
-                              RadioListDialog().show(context, 'Pilih EDC', 1, edcType, edcTypeCode);
+                              PromoDialog().setPromoRoom(context, 'PR A');
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
@@ -203,12 +204,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           ElevatedButton(
                             style: CustomButtonStyle.blueAppbar(),
                             onPressed: ()async{
-                              final qrCode = await showQRScannerDialog(context);
-                              if(qrCode != null){
-                                setState(() {
-                                  voucherCode = qrCode;
-                                });
-                              }
+                              PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
@@ -355,7 +351,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   Align(alignment: Alignment.centerLeft ,child: Text('Acara', style: CustomTextStyle.blackMedium(),)),
                   TextField(decoration: CustomTextfieldStyle.normalHint('Acara'),),
                     
-                    
+                  ElevatedButton(
+                    onPressed: (){
+
+                    }, 
+                    child: Text('SIMPAN'),
+                    style: CustomButtonStyle.confirm())
                 ],
               ),
             ),
