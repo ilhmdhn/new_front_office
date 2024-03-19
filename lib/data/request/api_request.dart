@@ -108,7 +108,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
 
   Future<EdcResponse> getEdc()async{
     try{
-      final serverUrl = await PreferencesData.url();
+      final serverUrl = await PreferencesData.url(); 
       // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
       final url = Uri.parse('http://192.168.1.136:3000/edc/list-edc');
       final apiResponse = await http.get(url);
