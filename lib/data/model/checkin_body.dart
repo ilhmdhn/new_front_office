@@ -49,6 +49,44 @@ class Visitor{
   });
 }
 
+class EditCheckinBody{
+  String room;
+  int pax;
+  String hp;
+  String dp;
+  String description;
+  String event;
+  String chusr;
+  String voucher;
+  String dpNote;
+  String cardType;
+  String cardName;
+  String cardNo;
+  String cardApproval;
+  String edcMachine;
+  String memberCode;
+  List<String> promo;
+
+  EditCheckinBody({
+    this.room = '',
+    this.pax = 1,
+    this.hp = '',
+    this.dp = '',
+    this.description = '',
+    this.event = '',
+    this.chusr = '',
+    this.voucher = '',
+    this.dpNote = '',
+    this.cardType = '',
+    this.cardName = '',
+    this.cardNo = '',
+    this.cardApproval = '',
+    this.edcMachine = '',
+    this.memberCode = '',
+    this.promo = const []
+  });
+}
+
 class GenerateCheckinParams{
   Map<String, dynamic> checkinBodyRequest(CheckinBody checkinData){
     return <String, dynamic> {
@@ -69,5 +107,35 @@ class GenerateCheckinParams{
       'durasi_menit': checkinData.minute,
       'pax': checkinData.pax,
     }; 
+  }
+
+
+  Map<String, dynamic> editCheckinBodyRequest(EditCheckinBody checkinData){
+    return<String, dynamic>{
+      'room': checkinData.room,
+      'qm1':  '0',
+      'qm2':  '0',
+      'qm3':  checkinData.pax.toString(),
+      'qm4':  '0',
+      'qf1':  '0',
+      'qf2':  '0',
+      'qf3':  '0',
+      'qf4':  '0',
+      'hp': checkinData.hp,
+      'uang_muka':  checkinData.dp,
+      'keterangan': checkinData.description,
+      'event_acara':  checkinData.event,
+      'event_owner':  '',
+      'chusr':  checkinData.chusr,
+      'voucher':  checkinData.voucher,
+      'keterangan_payment_uang_muka': checkinData.dpNote,
+      'input1_jenis_kartu': checkinData.cardType,
+      'input2_nama':  checkinData.cardName,
+      'input3_nomor_kartu': checkinData.cardNo,
+      'input4_nomor_approval':  checkinData.cardApproval,
+      'edc_machine':  checkinData.edcMachine,
+      'member_ref': checkinData.memberCode,
+      'promo': checkinData.promo
+    };
   }
 }

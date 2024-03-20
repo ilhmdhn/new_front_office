@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/time_pax_model.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -153,8 +152,8 @@ class CheckinDurationDialog {
         );
       },
     ).then((value) {
-      completer.complete(value); // Menyelesaikan future dengan nilai yang diterima dari dialog
+      completer.complete(value);
     });
-    return completer.future; // Mengembalikan future untuk mendapatkan nilai int dari dialog
+    return completer.future;
   }
 }
