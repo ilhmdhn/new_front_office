@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/time_pax_model.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -16,7 +18,7 @@ class CheckinDurationDialog {
           title: Center(
             child: Text(
               roomCode,
-              style: CustomTextStyle.titleAlertDialog(),
+              style: CustomTextStyle.titleAlertDialogSize(21),
             ),
           ),
           backgroundColor: Colors.white,
@@ -30,9 +32,10 @@ class CheckinDurationDialog {
                   children: [
                     const SizedBox(height: 16,),
                     Row(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Durasi Jam', style: CustomTextStyle.blackMediumSize(19),),
+                        AutoSizeText('Durasi Jam', style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 11,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -45,15 +48,15 @@ class CheckinDurationDialog {
                                 });
                               },
                               child: SizedBox(
-                                height: 46,
-                                width: 46,
+                                height: 43,
+                                width: 43,
                                 child: Image.asset(
                                   'assets/icon/minus.png'),
                               )
                             ),
-                            const SizedBox(width: 12,),
-                            Text(checkinTime.toString(), style: CustomTextStyle.blackMediumSize(29),),
-                            const SizedBox(width: 12,),
+                            const SizedBox(width: 9,),
+                            AutoSizeText(checkinTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                            const SizedBox(width: 9,),
                             InkWell(
                               onTap: (){
                                 setState((){
@@ -63,8 +66,8 @@ class CheckinDurationDialog {
                                 });
                               },
                               child: SizedBox(
-                                height: 46,
-                                width: 46,
+                                height: 43,
+                                width: 43,
                                 child: Image.asset(
                                   'assets/icon/plus.png'),
                               )
@@ -75,6 +78,7 @@ class CheckinDurationDialog {
                     ),
                     const SizedBox(height: 8,),
                     Row(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('PAX', style: CustomTextStyle.blackMediumSize(19),),
@@ -90,15 +94,15 @@ class CheckinDurationDialog {
                                 });
                               },
                               child: SizedBox(
-                                height: 46,
-                                width: 46,
+                                height: 43,
+                                width: 43,
                                 child: Image.asset(
                                   'assets/icon/minus.png'),
                               )
                             ),
-                            const SizedBox(width: 12,),
-                            Text(pax.toString(), style: CustomTextStyle.blackMediumSize(29),),
-                            const SizedBox(width: 12,),
+                            const SizedBox(width: 9,),
+                            AutoSizeText(pax.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                            const SizedBox(width: 9,),
                             InkWell(
                               onTap: (){
                                 setState((){
@@ -106,8 +110,8 @@ class CheckinDurationDialog {
                                 });
                               },
                               child: SizedBox(
-                                height: 46,
-                                width: 46,
+                                height: 43,
+                                width: 43,
                                 child: Image.asset(
                                   'assets/icon/plus.png'),
                               )

@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
+import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
@@ -37,6 +36,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String chooseEdc = '';
   String chooseCardType = '';
   PromoRoomModel? promoRoom;
+  PromoFnbModel? promoFnb;
 
   @override
   void initState() {
@@ -92,17 +92,17 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('ILHAM DOHAAN', style: CustomTextStyle.blackMedium(),),
-                            Text('000022061122', style: CustomTextStyle.blackMedium(),),
+                            AutoSizeText('ILHAM DOHAAN', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText('000022061122', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                           ],
                         ),
                       ),
-                      Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary(),),
+                      Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
                       Expanded(
                         child: Column(
                           children: [
-                            Text('PR A Xiantiande', style: CustomTextStyle.blackMedium(),),
-                            Text('Sisa 9 Jam 54 Menit', style: CustomTextStyle.blackMedium(),),
+                            AutoSizeText('PR A Xiantiande', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText('Sisa 9 Jam 54 Menit', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                         ],))
                     ],
                   ),
@@ -171,7 +171,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                             voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
                         ],
                       ),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.delete))
                     ],
                   ),
                   const SizedBox(width: 6,), 
@@ -214,7 +213,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         children: [
                           Align(
                             alignment: Alignment.topCenter,
-                            child: AutoSizeText('Promo Room Dipilih', style: CustomTextStyle.blackMedium()),
+                            child: AutoSizeText('PROMO ROOM DIPILIH', style: CustomTextStyle.blackMediumSize(17)),
                           ),
                           Row(
                             children: [
@@ -261,30 +260,90 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ),
                     ),
                   ),
-                  voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                  promoFnb == null?
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Promo FnB', style: CustomTextStyle.blackMedium(),)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Promo FnB', style: CustomTextStyle.blackMedium(),),
+                        ElevatedButton(
+                          style: CustomButtonStyle.blueAppbar(),
+                          onPressed: ()async{
+                            final choosePromo = await PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
+                            if(choosePromo != null){
+                              setState(() {
+                                promoFnb = choosePromo;
+                              });
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                            child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                          ),),
+                      ],
+                    )):Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 0.7,
+                        ),
+                        borderRadius: BorderRadius.circular(10), // Bentuk border
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            style: CustomButtonStyle.blueAppbar(),
-                            onPressed: ()async{
-                              PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                              child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
-                            ),),
-                                            const SizedBox(width: 6,), 
-                                            voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: AutoSizeText('PROMO FOOD DIPILIH', style: CustomTextStyle.blackMediumSize(17)),
+                          ),
+                          Row(
+                            children: [
+                              Text('NAMA  PROMO :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              Expanded(child: AutoSizeText(promoFnb?.promoName??'', style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('VALUE  PROMO :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              Expanded(child: AutoSizeText('${(promoFnb?.promoPercent??0) > 0? '${promoFnb?.promoPercent}%' : ''} ${(promoFnb?.promoIdr??0) > 0? Formatter().formatRupiah((promoFnb?.promoIdr??0).toInt()) : ''}', style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('MASA BERLAKU :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              AutoSizeText('${promoFnb?.timeStart} - ${promoFnb?.timeFinish}', style: CustomTextStyle.blackStandard(), minFontSize: 9,)
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(
+                              onTap: (){
+                                setState(() {
+                                  promoFnb = null;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.shade400,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                                  child: Text('Hapus Promo', style: CustomTextStyle.whiteSize(14),),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.delete))
-                    ],
+                    ),
                   ),
                   Text('UANG MUKA', style: CustomTextStyle.blackMedium(),),
                   CustomRadioButton(
@@ -419,13 +478,16 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Acara', style: CustomTextStyle.blackMedium(),)),
                   TextField(decoration: CustomTextfieldStyle.normalHint('Acara'),),
+                  const SizedBox(height: 12,),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: (){
                     
-                  ElevatedButton(
-                    onPressed: (){
-
-                    }, 
-                    child: Text('SIMPAN'),
-                    style: CustomButtonStyle.confirm())
+                      }, 
+                      child: Text('SIMPAN', style: CustomTextStyle.whiteStandard(),),
+                      style: CustomButtonStyle.confirm()),
+                  )
                 ],
               ),
             ),
