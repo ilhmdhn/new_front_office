@@ -1,7 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
+import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -10,6 +13,7 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/rupiah.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -32,6 +36,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   List<int> edcTypeCode = [];
   String chooseEdc = '';
   String chooseCardType = '';
+  PromoRoomModel? promoRoom;
 
   @override
   void initState() {
@@ -169,31 +174,95 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     IconButton(onPressed: (){}, icon: const Icon(Icons.delete))
                     ],
                   ),
-                                  Align(
+                  const SizedBox(width: 6,), 
+                  promoRoom == null?
+                  Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Promo Room', style: CustomTextStyle.blackMedium(),)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Promo Room', style: CustomTextStyle.blackMedium(),),
+                         ElevatedButton(
+                           style: CustomButtonStyle.blueAppbar(),
+                           onPressed: ()async{
+                             final nganu = await PromoDialog().setPromoRoom(context, 'PR A');
+                             if(nganu != null){  
+                               setState(() {
+                                 promoRoom = nganu;
+                               });
+                             }
+                           },
+                           child: Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                             child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                           ),)
+                      ],
+                    ),
+                  ):Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 0.7,
+                        ),
+                        borderRadius: BorderRadius.circular(10), // Bentuk border
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            style: CustomButtonStyle.blueAppbar(),
-                            onPressed: ()async{
-                              PromoDialog().setPromoRoom(context, 'PR A');
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                              child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
-                            ),),
-                                            const SizedBox(width: 6,), 
-                                            voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: AutoSizeText('Promo Room Dipilih', style: CustomTextStyle.blackMedium()),
+                          ),
+                          Row(
+                            children: [
+                              Text('NAMA  PROMO :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              Expanded(child: AutoSizeText(promoRoom?.promoName??'', style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('VALUE  PROMO :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              Expanded(child: AutoSizeText('${(promoRoom?.promoPercent??0) > 0? '${promoRoom?.promoPercent}%' : ''} ${(promoRoom?.promoIdr??0) > 0? Formatter().formatRupiah((promoRoom?.promoIdr??0).toInt()) : ''}', style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('MASA BERLAKU :', style: CustomTextStyle.blackStandard()),
+                              const SizedBox(width: 5,),
+                              AutoSizeText('${promoRoom?.timeStart} - ${promoRoom?.timeFinish}', style: CustomTextStyle.blackStandard(), minFontSize: 9,)
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(
+                              onTap: (){
+                                setState(() {
+                                  promoRoom = null;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.shade400,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                                  child: Text('Hapus Promo', style: CustomTextStyle.whiteSize(14),),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.delete))
-                    ],
+                    ),
                   ),
-                                  Align(
+                  voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Promo FnB', style: CustomTextStyle.blackMedium(),)),
                   Row(
