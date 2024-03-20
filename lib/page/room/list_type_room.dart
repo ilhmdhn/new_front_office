@@ -43,7 +43,7 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: const IconThemeData(
+        iconTheme: const IconThemeData(
           color:  Colors.white, //change your color here
         ),
         title: Text('List Room Type', style: CustomTextStyle.titleAppBar(),),

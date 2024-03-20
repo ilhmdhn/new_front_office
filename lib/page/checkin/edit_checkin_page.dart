@@ -69,6 +69,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color:  Colors.white, //change your color here
+          ),
           title: Text('Room Checkin', style: CustomTextStyle.titleAppBar(),),
           backgroundColor: CustomColorStyle.appBarBackground(),
         ),
