@@ -3,6 +3,7 @@ import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
@@ -193,6 +194,22 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         state: false,
         message: e.toString(),
         data: []
+      );
+    }
+  }
+
+  Future<DetailCheckinResponse> getDetailRoomCheckin(String roomCode)async{
+    try{
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/checkin/checkin-result/$roomCode');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return DetailCheckinResponse.fromJson(convertedResult);
+    }catch(e){
+      return DetailCheckinResponse(
+        state: false,
+        message: e.toString()
       );
     }
   }

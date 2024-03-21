@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
@@ -37,18 +38,25 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String chooseCardType = '';
   PromoRoomModel? promoRoom;
   PromoFnbModel? promoFnb;
+  DetailCheckinResponse? detailRoom;
+  String roomCode = '';
 
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   getData();
+  //   super.initState();
+  // }
 
   void getData()async{
+    detailRoom = await ApiRequest().getDetailRoomCheckin(roomCode);
+    if(detailRoom?.state != true){
+      showToastError(detailRoom?.message??'Error get room info');
+    }
     dataEdc = await ApiRequest().getEdc();
     if(dataEdc?.state != true){
       showToastError(dataEdc?.message??'Unknown error get edc list');
     }
+    showToastError('room code: ${detailRoom?.data?.roomCode??''} memberName ${detailRoom?.data?.memberCode??''}');
     isLoading = false;
     int nganu =1;
     dataEdc?.data.forEach((x){
@@ -61,11 +69,16 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
       isLoading;
       edcType;
       edcTypeCode;
+      detailRoom;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    roomCode = ModalRoute.of(context)!.settings.arguments as String;
+    if(roomCode != ''&& detailRoom == null){
+      getData();
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -78,6 +91,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         body: isLoading == true?
         const Center(
           child: CircularProgressIndicator(),
+        ):
+        detailRoom?.state !=true?
+        Center(
+          child: Text(detailRoom?.message??'Error get Room Info'),
         ):
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -488,8 +505,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       onPressed: (){
                     
                       }, 
+                      style: CustomButtonStyle.confirm(),
                       child: Text('SIMPAN', style: CustomTextStyle.whiteStandard(),),
-                      style: CustomButtonStyle.confirm()),
+                      ),
                   )
                 ],
               ),

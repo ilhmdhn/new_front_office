@@ -68,15 +68,15 @@ class EditCheckinBody{
   List<String> promo;
 
   EditCheckinBody({
-    this.room = '',
-    this.pax = 1,
-    this.hp = '',
-    this.dp = '',
-    this.description = '',
-    this.event = '',
+    this.room = '',//
+    this.pax = 1,//
+    this.hp = '',//
+    this.dp = '',//
+    this.description = '',//
+    this.event = '',//
     this.chusr = '',
-    this.voucher = '',
-    this.dpNote = '',
+    this.voucher = '',//
+    this.dpNote = '',//
     this.cardType = '',
     this.cardName = '',
     this.cardNo = '',

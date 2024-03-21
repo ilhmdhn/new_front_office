@@ -2,8 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class RoomCheckinListPage extends StatefulWidget {
@@ -16,7 +18,9 @@ class RoomCheckinListPage extends StatefulWidget {
 
 class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
+
   RoomCheckinResponse? roomCheckinResponse;
+  int destination = 0;
 
   void getRoomCheckin(String search)async{
     roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
@@ -38,6 +42,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
   @override
   Widget build(BuildContext context) {
+    destination = ModalRoute.of(context)!.settings.arguments as int;
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
@@ -89,6 +94,9 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                     itemBuilder: (context, index){
                       final roomData = roomCheckinResponse?.data[index];
                       return InkWell(
+                        onTap: (){
+                          movePage(destination, roomData?.room??'');
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
@@ -131,5 +139,11 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
           ),
         ),
       ));
+  }
+
+  void movePage(int code, String roomCode){
+    if(code == 1 && isNotNullOrEmpty(roomCode)){
+      Navigator.pushNamed(context, EditCheckinPage.nameRoute, arguments: roomCode);
+    }
   }
 }

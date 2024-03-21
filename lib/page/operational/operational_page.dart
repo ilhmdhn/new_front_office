@@ -122,7 +122,7 @@ class _OperationalPageState extends State<OperationalPage> {
                                 if(loginResult.state != true){
                                   showToastWarning('gak sukses ${loginResult.message}');
                                 }else{
-                                  if(mounted){
+                                  if(context.mounted){
                                     final checkinParams = CheckinParams(
                                       memberName: loginResult.data?.fullName??'no name',
                                       memberCode: loginResult.data?.memberCode??'undefined'
@@ -190,8 +190,7 @@ class _OperationalPageState extends State<OperationalPage> {
                           ),
                           child: InkWell(
                             onTap: (){
-                              // Navigator.pushNamed(context, EditCheckinPage.nameRoute);
-                              Navigator.pushNamed(context, RoomCheckinListPage.nameRoute);
+                              Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
