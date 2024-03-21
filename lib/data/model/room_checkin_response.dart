@@ -1,12 +1,12 @@
 class RoomCheckinResponse{
   bool state;
   String message;
-  List<ListRoomCheckinModel> data;
+  List<ListRoomCheckinModel>? data;
 
   RoomCheckinResponse({
     this.state = false,
     this.message = '',
-    this.data = const []
+    this.data
   });
 
   factory RoomCheckinResponse.fromJson(Map<String, dynamic>json){

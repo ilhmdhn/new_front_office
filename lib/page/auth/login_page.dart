@@ -98,4 +98,12 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    tfUser.dispose();
+    tfPassword.dispose();
+    super.dispose();
+  }
+
 }

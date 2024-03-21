@@ -21,6 +21,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
   RoomCheckinResponse? roomCheckinResponse;
   int destination = 0;
+      List<ListRoomCheckinModel> listRoomCheckin = [];
 
   void getRoomCheckin(String search)async{
     roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
@@ -31,6 +32,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     
     setState(() {
       roomCheckinResponse;
+      listRoomCheckin = roomCheckinResponse?.data??[];
     });
   }
 
@@ -90,12 +92,12 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                       mainAxisSpacing: 8, // Spasi antar baris
                       childAspectRatio: 6/3
                     ),
-                    itemCount: roomCheckinResponse?.data.length,
+                    itemCount: listRoomCheckin.length,
                     itemBuilder: (context, index){
-                      final roomData = roomCheckinResponse?.data[index];
+                      final roomData = listRoomCheckin[index];
                       return InkWell(
                         onTap: (){
-                          movePage(destination, roomData?.room??'');
+                          movePage(destination, roomData.room);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(6),
@@ -117,7 +119,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                               children: [
                                 Align(
                                   alignment: Alignment.topLeft,
-                                  child: AutoSizeText(roomData?.room??'kode room', style: CustomTextStyle.blackMediumSize(19),  maxLines: 1, minFontSize: 11,),
+                                  child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(19),  maxLines: 1, minFontSize: 11,),
                                 ),
                                 Align(
                                   alignment: Alignment.bottomRight,
@@ -125,8 +127,8 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      AutoSizeText(roomData?.memberName??'nama', style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
-                                      AutoSizeText((roomData?.remainTime??0)>0?'Sisa ${roomData?.remainTime??0} menit': 'WAKTU HABIS', style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
+                                      AutoSizeText(roomData.memberName, style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
+                                      AutoSizeText((roomData.remainTime)>0?'Sisa ${roomData.remainTime} menit': 'WAKTU HABIS', style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
                                     ],
                                   ),
                                 )

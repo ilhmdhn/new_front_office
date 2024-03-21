@@ -583,4 +583,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         ),
       ));
   }
+
+  @override
+  void dispose() {
+    _dpValueController.dispose();
+    descriptionController.dispose();
+    eventController.dispose();
+    super.dispose();
+  }
 }
