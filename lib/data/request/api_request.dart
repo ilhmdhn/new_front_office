@@ -177,7 +177,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }*/
 
-  Future<RoomCheckinResponse> listRoomCheckin(String? search)async{
+  Future<RoomCheckinResponse> getListRoomCheckin(String? search)async{
     try{
       if(isNullOrEmpty(search)){
         search = '';
