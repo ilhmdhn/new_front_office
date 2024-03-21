@@ -159,16 +159,16 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       );
     }
   }
-/*
-  Future<BaseResponse> editCheckin()async{
+
+  Future<BaseResponse> editCheckin(EditCheckinBody editData)async{
     try{
       final serverUrl = await PreferencesData.url();
       // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
       final url = Uri.parse('http://192.168.1.136:3000/checkin-direct/edit-checkin');
-      // final body = GenerateCheckinParams().checkinBodyRequest(checkinData);
-      // final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode(body));
-      // final convertedResult = json.decode(apiResponse.body);
-      // return BaseResponse.fromJson(convertedResult);
+      final body = GenerateCheckinParams().editCheckinBodyRequest(editData);
+      final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode(body));
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
     }catch(err){
       return BaseResponse(
         isLoading: false,
@@ -176,7 +176,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         message: err.toString()
       );
     }
-  }*/
+  }
 
   Future<RoomCheckinResponse> getListRoomCheckin(String? search)async{
     try{

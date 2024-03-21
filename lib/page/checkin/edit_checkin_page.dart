@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
@@ -9,11 +10,13 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/radio_list_dialog.dart';
+import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/formatter.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/rupiah.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -40,12 +43,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   PromoFnbModel? promoFnb;
   DetailCheckinResponse? detailRoom;
   String roomCode = '';
+  bool hasModified = false;
+  DetailCheckinModel? dataCheckin;
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController eventController = TextEditingController();
+  TextEditingController dpValueController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   getData();
-  //   super.initState();
-  // }
 
   void getData()async{
     detailRoom = await ApiRequest().getDetailRoomCheckin(roomCode);
@@ -70,14 +73,20 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
       edcType;
       edcTypeCode;
       detailRoom;
+      dataCheckin = detailRoom?.data;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     roomCode = ModalRoute.of(context)!.settings.arguments as String;
     if(roomCode != ''&& detailRoom == null){
       getData();
+    }
+    if(isLoading == false && hasModified == false){
+        promoRoom = dataCheckin?.promoRoom;
+        promoFnb = dataCheckin?.promoFnb;
+        pax = dataCheckin?.pax??1;
+        hasModified = true;
     }
     return SafeArea(
       child: Scaffold(
@@ -112,8 +121,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       Expanded(
                         child: Column(
                           children: [
-                            AutoSizeText('ILHAM DOHAAN', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                            AutoSizeText('000022061122', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText(dataCheckin!.memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                           ],
                         ),
                       ),
@@ -121,8 +130,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       Expanded(
                         child: Column(
                           children: [
-                            AutoSizeText('PR A Xiantiande', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                            AutoSizeText('Sisa 9 Jam 54 Menit', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText(dataCheckin!.roomCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText('Sisa ${dataCheckin?.hourRemaining} Jam ${dataCheckin?.minuteRemaining} Menit', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                         ],))
                     ],
                   ),
@@ -494,17 +503,58 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   ):const SizedBox(),
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Keterangan', style: CustomTextStyle.blackMedium(),)),
-                  TextField(decoration: CustomTextfieldStyle.normalHint('Keterangan'),),
+                  TextField(decoration: CustomTextfieldStyle.normalHint('Keterangan'), controller: descriptionController,),
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Acara', style: CustomTextStyle.blackMedium(),)),
-                  TextField(decoration: CustomTextfieldStyle.normalHint('Acara'),),
+                  TextField(decoration: CustomTextfieldStyle.normalHint('Acara'), controller: eventController,),
                   const SizedBox(height: 12,),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: (){
-                    
-                      }, 
+                      onPressed: ()async{
+                        setState(() {
+                          isLoading = true;
+                        });
+                        List<String> listPromo = [];
+                        if(isNotNullOrEmpty(promoRoom?.promoName)){
+                          listPromo.add(promoRoom!.promoName!);
+                        }
+                        if(isNotNullOrEmpty(promoFnb?.promoName)){
+                          listPromo.add(promoFnb!.promoName!);
+                        }
+
+                        final params = EditCheckinBody(
+                          room: dataCheckin!.roomCode,
+                          pax: pax,
+                          hp: dataCheckin!.hp,
+                          dp: '',
+                          description: descriptionController.text,
+                          event: eventController.text,
+                          chusr: 'ILHAM',
+                          voucher: '',
+                          dpNote: '',
+                          cardType: '',
+                          cardName: '',
+                          cardNo: '',
+                          cardApproval: '',
+                          edcMachine: '',
+                          memberCode: dataCheckin!.memberCode,
+                          promo: listPromo,
+                        );
+
+                        final editResponse = await ApiRequest().editCheckin(params);
+                        if(editResponse.state == true){
+                          if(context.mounted){
+                            Navigator.pushNamedAndRemoveUntil(context, OperationalPage.nameRoute, (route) => false);
+                          }
+                        }else{
+                          showToastError(editResponse.message??'Error Edit data checkin');
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+
+                      },
                       style: CustomButtonStyle.confirm(),
                       child: Text('SIMPAN', style: CustomTextStyle.whiteStandard(),),
                       ),

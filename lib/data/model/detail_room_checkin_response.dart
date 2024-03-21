@@ -1,5 +1,6 @@
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
+import 'package:front_office_2/tools/helper.dart';
 
 class DetailCheckinResponse{
   bool state;
@@ -69,22 +70,21 @@ class DetailCheckinModel{
       roomCode: json['room'],
       memberName: json['checkin_room']['nama_member'],
       memberCode: json['checkin_room']['kode_member'],
-      // roomAlias: json[''],
-      // minuteRemaining: json[''],
-      // hourRemaining: json[''],
-      // pax: json[''],
-      // promoRoom: json['order_promo_room'][0] == null ? null: PromoRoomModel.fromJson(json['order_promo_room'][0]),
-      // promoFnb: json['order_promo_food'][0] == null? null: PromoFnbModel.fromJson(json['order_promo_food'][0]),
-      // hp: json[''],
-      // downPayment: json[''],
-      // description: json[''],
-      // voucher: json[''],
-      // dpNote: json[''],
-      // cardType: json[''],
-      // cardName: json[''],
-      // cardNo: json[''],
-      // cardApproval: json[''],
-      // edcMachine: json[''],
+      minuteRemaining: json['checkin_room']['sisa_menit_checkin'],
+      hourRemaining: json['checkin_room']['sisa_jam_checkin'],
+      pax: json['checkin_room']['qm3'],
+      promoRoom: isNullOrEmpty(json['order_promo_room']) ? null: PromoRoomModel.fromJson(json['order_promo_room'][0]),
+      promoFnb: isNullOrEmpty(json['order_promo_food'])? null: PromoFnbModel.fromJson(json['order_promo_food'][0]),
+      hp: json['checkin_room']['hp'],
+      downPayment: json['checkin_room']['uang_muka'],
+      description: json['checkin_room']['keterangan'],
+      voucher: json['checkin_room']['voucher'],
+      dpNote: json['checkin_room']['nama_payment_uang_muka'],
+      cardType: json['checkin_room']['input1_jenis_kartu'],
+      cardName: json['checkin_room']['input2_nama'],
+      cardNo: json['checkin_room']['input3_nomor_kartu'],
+      cardApproval: json['checkin_room']['input4_nomor_approval'],
+      edcMachine: json['checkin_room']['edc_machine_'],
     );
   }
 }
