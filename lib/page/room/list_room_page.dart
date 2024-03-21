@@ -47,7 +47,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints){
               int crossAxisCount = 3;   
-              if (constraints.maxWidth < 600) {
+              if (constraints.maxWidth < 580) {
                 crossAxisCount = 2;
               }
               final listRoomItem = listRoom.data;

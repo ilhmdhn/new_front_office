@@ -22,24 +22,20 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
           ),
           title: Text('List Room Checkin', style: CustomTextStyle.titleAppBar(),),
           backgroundColor: CustomColorStyle.appBarBackground(),
-          actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-            },
-          ),
-        ],
         ),
         body: Column(
           children: [
-            SearchBar(
-              hintText: 'Cari Room',
-              surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
-              shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
-              trailing: Iterable.generate(
-                1, (index) => const Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child:  Icon(Icons.search))),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchBar(
+                hintText: 'Cari Room',
+                surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
+                trailing: Iterable.generate(
+                  1, (index) => const Padding(
+                    padding: EdgeInsets.only(right: 5),
+                    child:  Icon(Icons.search))),
+              ),
             ),
             
           ],

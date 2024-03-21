@@ -7,8 +7,10 @@ import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
+import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -174,4 +176,24 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       );
     }
   }*/
+
+  Future<RoomCheckinResponse> listRoomCheckin(String? search)async{
+    try{
+      if(isNullOrEmpty(search)){
+        search = '';
+      }
+      final serverUrl = await PreferencesData.url();
+      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
+      final url = Uri.parse('http://192.168.1.136:3000/room/all-room-checkin?keyword=$search');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return RoomCheckinResponse.fromJson(convertedResult);
+    }catch(e){
+      return RoomCheckinResponse(
+        state: false,
+        message: e.toString(),
+        data: []
+      );
+    }
+  }
 }
