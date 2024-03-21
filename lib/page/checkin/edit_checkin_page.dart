@@ -33,7 +33,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   int dpCode = 1;
   String? voucherCode;
   EdcResponse? dataEdc;
-  final _cashDpController = TextEditingController();
+  final _dpValueController = TextEditingController();
   bool isLoading = true;
   List<String> edcType = [];
   List<int> edcTypeCode = [];
@@ -47,7 +47,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   DetailCheckinModel? dataCheckin;
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
-  TextEditingController dpValueController = TextEditingController();
+  String remainingTime = 'Waktu Habis';
 
 
   void getData()async{
@@ -59,7 +59,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
     if(dataEdc?.state != true){
       showToastError(dataEdc?.message??'Unknown error get edc list');
     }
-    showToastError('room code: ${detailRoom?.data?.roomCode??''} memberName ${detailRoom?.data?.memberCode??''}');
+
     isLoading = false;
     int nganu =1;
     dataEdc?.data.forEach((x){
@@ -87,7 +87,24 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         promoFnb = dataCheckin?.promoFnb;
         pax = dataCheckin?.pax??1;
         hasModified = true;
+        _dpValueController.text = dataCheckin!.downPayment.toString();
     }
+
+    int hourRemaining = (dataCheckin?.hourRemaining??0);
+    int minuteRemaining = (dataCheckin?.minuteRemaining??0);
+
+    if(hourRemaining>0 || minuteRemaining>0){
+      remainingTime = 'Sisa';
+
+      if(hourRemaining>0){
+        remainingTime += ' $hourRemaining Jam';
+      }
+
+      if(dataCheckin!.minuteRemaining>0){
+        remainingTime+= ' $minuteRemaining Menit';
+      }
+    }
+    
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -131,7 +148,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         child: Column(
                           children: [
                             AutoSizeText(dataCheckin!.roomCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                            AutoSizeText('Sisa ${dataCheckin?.hourRemaining} Jam ${dataCheckin?.minuteRemaining} Menit', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                            AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                         ],))
                     ],
                   ),
@@ -401,7 +418,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   ),
                   dpCode == 2?
                   TextField(
-                    controller: _cashDpController,
+                    controller: _dpValueController,
                     keyboardType: TextInputType.number,
                     inputFormatters: [RupiahInputFormatter()],
                     decoration: CustomTextfieldStyle.normalHint('Nominal')
@@ -411,7 +428,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   Column(
                     children: [
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nominal')
@@ -455,21 +472,21 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         ],
                       ),
                                           TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nama')
                       ),
                       const SizedBox(height: 6,),  
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nomor Kartu')
                       ),
                       const SizedBox(height: 6,),
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Kode Approval')
@@ -480,21 +497,21 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   Column(
                     children: [
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nominal')
                       ),
                       const SizedBox(height: 6,),  
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nama Penyetor')
                       ),
                       const SizedBox(height: 6,),
                       TextField(
-                        controller: _cashDpController,
+                        controller: _dpValueController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Bank')
@@ -527,7 +544,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           room: dataCheckin!.roomCode,
                           pax: pax,
                           hp: dataCheckin!.hp,
-                          dp: '',
+                          dp: _dpValueController.text,
                           description: descriptionController.text,
                           event: eventController.text,
                           chusr: 'ILHAM',
