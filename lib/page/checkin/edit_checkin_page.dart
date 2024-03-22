@@ -100,7 +100,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         remainingTime += ' $hourRemaining Jam';
       }
 
-      if(dataCheckin!.minuteRemaining>0){
+      if(minuteRemaining>0){
         remainingTime+= ' $minuteRemaining Menit';
       }
     }

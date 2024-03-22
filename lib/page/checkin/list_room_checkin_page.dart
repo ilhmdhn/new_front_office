@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
+import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -158,6 +159,10 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
   void movePage(int code, String roomCode){
     if(code == 1 && isNotNullOrEmpty(roomCode)){
       Navigator.pushNamed(context, EditCheckinPage.nameRoute, arguments: roomCode);
+    }
+
+    if(code == 2 && isNotNullOrEmpty(roomCode)){
+      Navigator.pushNamed(context, ExtendRoomPage.nameRoute, arguments: roomCode);
     }
   }
 }

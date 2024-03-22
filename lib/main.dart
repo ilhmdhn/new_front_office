@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
+import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
@@ -16,7 +17,7 @@ import 'package:front_office_2/page/status/status_page.dart';
 
 void main() async{
   await dotenv.load(fileName: ".env");
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const FrontOffice());
 }
 
@@ -41,7 +42,8 @@ class FrontOffice extends StatelessWidget {
         ListRoomTypePage.nameRoute: (context) => const ListRoomTypePage(),
         ListRoomReadyPage.nameRoute: (context) => const ListRoomReadyPage(),
         EditCheckinPage.nameRoute: (context) => const EditCheckinPage(),
-        RoomCheckinListPage.nameRoute: (context) => const RoomCheckinListPage()
+        RoomCheckinListPage.nameRoute: (context) => const RoomCheckinListPage(),
+        ExtendRoomPage.nameRoute: (context) => const ExtendRoomPage()
       },
     );
   }
