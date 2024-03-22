@@ -22,8 +22,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
   RoomCheckinResponse? roomCheckinResponse;
   String remaining = 'WAKTU HABIS';
-  int destination = 0;
-      List<ListRoomCheckinModel> listRoomCheckin = [];
+  int destination = 0; List<ListRoomCheckinModel> listRoomCheckin = [];
 
   void getRoomCheckin(String search)async{
     roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
@@ -108,6 +107,8 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                         if(roomData.remainMinute>0){
                           remaining += ' ${roomData.remainMinute} Menit';
                         }
+                      }else{
+                        remaining = 'WAKTU HABIS';
                       }
                       return InkWell(
                         onTap: (){

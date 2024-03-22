@@ -17,14 +17,18 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
 
   TextEditingController _extendController = TextEditingController();
   TextEditingController _reduceController = TextEditingController();
-
   DetailCheckinResponse? detailCheckin;
+  bool isLoading = false;
 
   
   void getData(String roomCode) async{
+    setState(() {
+      isLoading = true;
+    });
     detailCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
     setState(() {
       detailCheckin;
+      isLoading = false;
     });
   }
 
@@ -68,7 +72,7 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
         ),
         body: 
         
-        detailCheckin == null?
+        isLoading == true?
 
         Center(
           child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
@@ -106,6 +110,15 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
               ],
             ),
             const SizedBox(height: 12,),
+
+            Center(
+              child: Text('Durasi Extend', style: CustomTextStyle.blackMedium(),),
+            ),
+            Row(
+              children: [
+                
+              ],
+            )
           ],
         ),
       ));
