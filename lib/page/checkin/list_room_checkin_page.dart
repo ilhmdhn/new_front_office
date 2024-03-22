@@ -20,6 +20,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
 
   RoomCheckinResponse? roomCheckinResponse;
+  String remaining = 'WAKTU HABIS';
   int destination = 0;
       List<ListRoomCheckinModel> listRoomCheckin = [];
 
@@ -95,6 +96,15 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                     itemCount: listRoomCheckin.length,
                     itemBuilder: (context, index){
                       final roomData = listRoomCheckin[index];
+                      if(roomData.remainHour>0 || roomData.remainMinute>0){
+                        remaining = 'Sisa';
+                        if(roomData.remainHour>0){
+                          remaining += ' ${roomData.remainHour} Jam';
+                        }
+                        if(roomData.remainMinute>0){
+                          remaining += ' ${roomData.remainMinute} Menit';
+                        }
+                      }
                       return InkWell(
                         onTap: (){
                           movePage(destination, roomData.room);
@@ -113,8 +123,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                               ),
                             ],
                           ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Align(
@@ -128,7 +137,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       AutoSizeText(roomData.memberName, style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
-                                      AutoSizeText((roomData.remainTime)>0?'Sisa ${roomData.remainTime} menit': 'WAKTU HABIS', style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
+                                      AutoSizeText(remaining, style: CustomTextStyle.blackMediumSize(14),  maxLines: 2, minFontSize: 9,),
                                     ],
                                   ),
                                 )

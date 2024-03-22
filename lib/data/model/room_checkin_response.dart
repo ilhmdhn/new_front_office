@@ -23,12 +23,16 @@ class RoomCheckinResponse{
 class ListRoomCheckinModel{
   String room;
   int remainTime;
+  int remainHour;
+  int remainMinute;
   String memberName;
   String printState;
 
   ListRoomCheckinModel({
     this.room = '',
     this.remainTime = 0,
+    this.remainHour = 0,
+    this.remainMinute = 0,
     this.memberName = '',
     this.printState = '0'
   });
@@ -37,6 +41,8 @@ class ListRoomCheckinModel{
     return ListRoomCheckinModel(
       room: json['kamar'],
       remainTime: json['sisa_checkin'],
+      remainHour: json['sisa_jam_checkin'],
+      remainMinute: json['sisa_menit_checkin'],
       memberName: json['nama_member'],
       printState: json['status_print'],
     );
