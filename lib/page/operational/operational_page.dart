@@ -233,23 +233,28 @@ class _OperationalPageState extends State<OperationalPage> {
                               ),
                             ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                    child: Image.asset('assets/menu_icon/extend.png')
-                                  ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Extend', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
-                                  )),
-                                const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                              ]),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                      child: Image.asset('assets/menu_icon/extend.png')
+                                    ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Center(child: AutoSizeText('Extend', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 1,)),
+                                    )),
+                                  const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                ]),
+                            ),
                           ),
                           )
                         ),

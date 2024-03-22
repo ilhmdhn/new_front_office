@@ -34,6 +34,9 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     setState(() {
       roomCheckinResponse;
       listRoomCheckin = roomCheckinResponse?.data??[];
+      if(destination == 1 || destination == 2){
+        listRoomCheckin = listRoomCheckin.where((item) => item.printState == '0' && item.summaryCode == '').toList();
+      }
     });
   }
 

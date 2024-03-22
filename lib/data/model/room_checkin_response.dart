@@ -27,6 +27,7 @@ class ListRoomCheckinModel{
   int remainMinute;
   String memberName;
   String printState;
+  String summaryCode;
 
   ListRoomCheckinModel({
     this.room = '',
@@ -34,6 +35,7 @@ class ListRoomCheckinModel{
     this.remainHour = 0,
     this.remainMinute = 0,
     this.memberName = '',
+    this.summaryCode = '',
     this.printState = '0'
   });
 
@@ -45,6 +47,7 @@ class ListRoomCheckinModel{
       remainMinute: json['sisa_menit_checkin'],
       memberName: json['nama_member'],
       printState: json['status_print'],
+      summaryCode: json['summary'],
     );
   }
 }
