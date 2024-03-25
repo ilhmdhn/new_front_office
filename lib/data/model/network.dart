@@ -1,8 +1,10 @@
 class BaseUrlModel{
   String? ip;
   String? port;
+  String? outlet;
   BaseUrlModel({
     this.ip,
-    this.port
+    this.port,
+    this.outlet
   });
 }

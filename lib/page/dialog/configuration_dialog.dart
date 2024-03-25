@@ -5,12 +5,14 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class ConfigurationDialog{
 
   void setUrl(ctx)async{
     TextEditingController tfIp = TextEditingController();
     TextEditingController tfPort = TextEditingController();
+    TextEditingController tfOutlet = TextEditingController();
     BaseUrlModel serverUrl = await PreferencesData.getUrl();
 
     if(isNotNullOrEmpty(serverUrl.ip)){
@@ -19,6 +21,10 @@ class ConfigurationDialog{
 
     if(isNotNullOrEmpty(serverUrl.port)){
       tfPort.text = serverUrl.port!;
+    }
+
+    if(isNotNullOrEmpty(serverUrl.outlet)){
+      tfOutlet.text = serverUrl.outlet!;
     }
 
     showDialog(
@@ -74,6 +80,24 @@ class ConfigurationDialog{
                   ),
                   const SizedBox(height: 16,),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(flex: 2,child: Text('OUTLET', style: CustomTextStyle.blackStandard())),
+                      const SizedBox(width: 16,),
+                      Expanded(
+                        flex: 5,
+                        child: SizedBox(
+                          height: 45,
+                          child: TextField(
+                            controller: tfOutlet,
+                            decoration: CustomTextfieldStyle.characterNormal(),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 16,),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(onPressed: (){
@@ -83,12 +107,17 @@ class ConfigurationDialog{
                       child: const Text('CANCEL')),
                   const SizedBox(width: 20,),
                       ElevatedButton(onPressed: ()async{
-                        await PreferencesData.setUrl(BaseUrlModel(
-                          ip: tfIp.text,
-                          port: tfPort.text
-                        ));
-                        if(context.mounted){
-                          Navigator.pop(context);
+                        if(isNotNullOrEmpty(tfIp.text) && isNotNullOrEmpty(tfPort.text) && isNotNullOrEmpty(tfOutlet.text)){
+                          await PreferencesData.setUrl(BaseUrlModel(
+                            ip: tfIp.text,
+                            port: tfPort.text,
+                            outlet: tfOutlet.text
+                          ));
+                          if(context.mounted){
+                            Navigator.pop(context);
+                          }
+                        }else{
+                          showToastWarning('Isi semua field');
                         }
                       }, 
                       style: CustomButtonStyle.confirm(),

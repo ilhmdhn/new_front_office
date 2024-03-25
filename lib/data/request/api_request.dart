@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
-import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
@@ -38,8 +37,7 @@ class ApiRequest{
 Future<CekMemberResponse> cekMember(String memberCode) async {
   try {
     final serverUrl = await PreferencesData.url();
-    // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-    final url = Uri.parse('http://192.168.1.136:3000/member/membership/$memberCode');
+    final url = Uri.parse('$serverUrl/member/membership/$memberCode');
     final apiResponse = await http.get(url);
     final convertedResult = json.decode(apiResponse.body);
     final result = CekMemberResponse.fromJson(convertedResult);
@@ -57,8 +55,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<ListRoomTypeReadyResponse> getListRoomTypeReady()async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/room/all-room-type-ready-grouping');
+      final url = Uri.parse('$serverUrl/room/all-room-type-ready-grouping');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
 
@@ -75,8 +72,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<RoomListResponse> getRoomList(String roomType)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/room/all-room-ready-by-type-grouping/$roomType');
+      final url = Uri.parse('$serverUrl/room/all-room-ready-by-type-grouping/$roomType');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
 
@@ -93,8 +89,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<BaseResponse> doCheckin(CheckinBody checkinData)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/checkin-direct/direct-checkin-member');
+      final url = Uri.parse('$serverUrl/checkin-direct/direct-checkin-member');
       final body = GenerateCheckinParams().checkinBodyRequest(checkinData);
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode(body));
       final convertedResult = json.decode(apiResponse.body);
@@ -112,8 +107,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<EdcResponse> getEdc()async{
     try{
       final serverUrl = await PreferencesData.url(); 
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/edc/list-edc');
+      final url = Uri.parse('$serverUrl/edc/list-edc');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return EdcResponse.fromJson(convertedResult);
@@ -129,8 +123,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<PromoRoomResponse> getPromoRoom(roomType)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/promo/promo-room/$roomType');
+      final url = Uri.parse('$serverUrl/promo/promo-room/$roomType');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return PromoRoomResponse.fromJson(convertedResult);
@@ -146,8 +139,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<PromoFnbResponse> getPromoFnB(roomType, roomCode)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/promo/promo-food/$roomType/$roomCode');
+      final url = Uri.parse('$serverUrl/promo/promo-food/$roomType/$roomCode');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return PromoFnbResponse.fromJson(convertedResult);
@@ -163,8 +155,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<BaseResponse> editCheckin(EditCheckinBody editData)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/checkin-direct/edit-checkin');
+      final url = Uri.parse('$serverUrl/checkin-direct/edit-checkin');
       final body = GenerateCheckinParams().editCheckinBodyRequest(editData);
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode(body));
       final convertedResult = json.decode(apiResponse.body);
@@ -184,8 +175,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         search = '';
       }
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/room/all-room-checkin?keyword=$search');
+      final url = Uri.parse('$serverUrl/room/all-room-checkin?keyword=$search');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return RoomCheckinResponse.fromJson(convertedResult);
@@ -201,8 +191,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<DetailCheckinResponse> getDetailRoomCheckin(String roomCode)async{
     try{
       final serverUrl = await PreferencesData.url();
-      // final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-      final url = Uri.parse('http://192.168.1.136:3000/checkin/checkin-result/$roomCode');
+      final url = Uri.parse('$serverUrl/checkin/checkin-result/$roomCode');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return DetailCheckinResponse.fromJson(convertedResult);

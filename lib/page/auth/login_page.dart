@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -67,9 +68,14 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                         onPressed: () async{
                           try {
-                            // final loginResult = await Api
+                            final loginResult = await ApiRequest().loginFO(tfUser.text, tfPassword.text);
+                            if(loginResult.state == true){
+                              
+                            }else{
+                              showToastWarning(loginResult.message??'Gagal Login');
+                            }
                           } catch (e) {
-                            print('ERRORRRR '+e.toString());  
+                            showToastError('ERRORRRR $e');  
                           }
                         },
                         style: CustomButtonStyle.blueStandard(),
