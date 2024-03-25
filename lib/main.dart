@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,10 +15,19 @@ import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/status/status_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:front_office_2/tools/toast.dart';
+import 'firebase_options.dart';
+
 
 void main() async{
   await dotenv.load(fileName: ".env");
-  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const FrontOffice());
 }
 
@@ -29,7 +39,7 @@ class FrontOffice extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Happy Puppy POS',
-      initialRoute: MainPage.nameRoute,
+      initialRoute: LoginPage.nameRoute,
       routes: {
         LoginPage.nameRoute: (context) => const LoginPage(),
         MainPage.nameRoute: (context) => const MainPage(),
