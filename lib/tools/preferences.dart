@@ -16,8 +16,8 @@ class PreferencesData {
   }
 
   static String getUrl() {
-    final url = _prefs?.getString('SERVER_URL') ?? '';
-    final port = _prefs?.getString('SERVER_PORT') ?? '';
+    final url = _prefs?.getString('SERVER_URL') ?? '192.168.1.136';
+    final port = _prefs?.getString('SERVER_PORT') ?? '3000';
     return 'http://$url:$port';
   }
 
@@ -44,5 +44,10 @@ class PreferencesData {
     final level = _prefs?.getString('USER_LEVEL') ?? '';
     final token = _prefs?.getString('USER_TOKEN') ?? '';
     return UserDataModel(userId: userId, level: level, token: token);
+  }
+
+  static String getUserToken() {
+    final token = _prefs?.getString('USER_TOKEN') ?? '';
+    return token;
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
@@ -10,21 +11,22 @@ import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{
 
   final serverUrl = PreferencesData.getUrl();
-  final user = PreferencesData.getUser();
-  final token = user.token;
-  final headers = {'Content-Type': 'application/json', 'authorization': user.token};
+  final token = PreferencesData.getUserToken();
   
   Future<LoginResponse> loginFO(String userId, String password)async{
     try {
       final url = Uri.parse('$serverUrl/user/login-fo-droid');
-      final apiResponse = await http.post(url, body: json.encode({
+      final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
         'user_id': userId,
         'user_password': password
       }));
@@ -42,7 +44,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   try {
     final serverUrl = PreferencesData.getUrl();
     final url = Uri.parse('$serverUrl/member/membership/$memberCode');
-    final apiResponse = await http.get(url);
+    final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+    if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+    }
     final convertedResult = json.decode(apiResponse.body);
     final result = CekMemberResponse.fromJson(convertedResult);
     return result;
@@ -59,7 +64,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<ListRoomTypeReadyResponse> getListRoomTypeReady()async{
     try{
       final url = Uri.parse('$serverUrl/room/all-room-type-ready-grouping');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
 
       return ListRoomTypeReadyResponse.fromJson(convertedResult);
@@ -75,7 +83,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<RoomListResponse> getRoomList(String roomType)async{
     try{
       final url = Uri.parse('$serverUrl/room/all-room-ready-by-type-grouping/$roomType');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
 
       return RoomListResponse.fromJson(convertedResult);
@@ -92,7 +103,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     try{
       final url = Uri.parse('$serverUrl/checkin-direct/direct-checkin-member');
       final body = GenerateCheckinParams().checkinBodyRequest(checkinData);
-      final apiResponse = await http.post(url, body: json.encode(body));
+      final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(body));
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
 
       return BaseResponse.fromJson(convertedResult);
@@ -108,7 +122,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<EdcResponse> getEdc()async{
     try{ 
       final url = Uri.parse('$serverUrl/edc/list-edc');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return EdcResponse.fromJson(convertedResult);
     }catch(err){
@@ -123,7 +140,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<PromoRoomResponse> getPromoRoom(roomType)async{
     try{
       final url = Uri.parse('$serverUrl/promo/promo-room/$roomType');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return PromoRoomResponse.fromJson(convertedResult);
     }catch(err){
@@ -138,7 +158,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<PromoFnbResponse> getPromoFnB(roomType, roomCode)async{
     try{
       final url = Uri.parse('$serverUrl/promo/promo-food/$roomType/$roomCode');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return PromoFnbResponse.fromJson(convertedResult);
     }catch(err){
@@ -154,7 +177,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     try{
       final url = Uri.parse('$serverUrl/checkin-direct/edit-checkin');
       final body = GenerateCheckinParams().editCheckinBodyRequest(editData);
-      final apiResponse = await http.post(url, body: json.encode(body));
+      final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(body));
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     }catch(err){
@@ -172,7 +198,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         search = '';
       }
       final url = Uri.parse('$serverUrl/room/all-room-checkin?keyword=$search');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return RoomCheckinResponse.fromJson(convertedResult);
     }catch(e){
@@ -187,7 +216,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<DetailCheckinResponse> getDetailRoomCheckin(String roomCode)async{
     try{
       final url = Uri.parse('$serverUrl/checkin/checkin-result/$roomCode');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
       final convertedResult = json.decode(apiResponse.body);
       return DetailCheckinResponse.fromJson(convertedResult);
     }catch(e){
@@ -196,5 +228,10 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         message: e.toString()
       );
     }
+  }
+
+  void loginPage(){
+    showToastWarning('Kembali Login is Mounted?');
+    getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }
 }
