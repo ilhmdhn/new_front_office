@@ -29,8 +29,11 @@ class _LoginPageState extends State<LoginPage> {
     final apiResponse = await ApiRequest().cekSign();
     if(apiResponse.state == true){
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+    }else{
+      setState((){
+        isLoading = false;
+      });
     }
-    isLoading = false;
     super.initState();
   }
 
@@ -138,5 +141,4 @@ class _LoginPageState extends State<LoginPage> {
     tfPassword.dispose();
     super.dispose();
   }
-
 }
