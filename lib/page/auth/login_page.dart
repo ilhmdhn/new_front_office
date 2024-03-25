@@ -6,6 +6,7 @@ import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -21,13 +22,31 @@ class _LoginPageState extends State<LoginPage> {
   bool showPassword = false;
   TextEditingController tfUser = TextEditingController();
   TextEditingController tfPassword = TextEditingController();
+  bool isLoading = true;
+
+  @override
+  Future<void> initState() async{
+    final apiResponse = await ApiRequest().cekSign();
+    if(apiResponse.state == true){
+      getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+    }
+    isLoading = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: CustomColorStyle.background(),
-        body: Padding(
+        body: 
+        
+        isLoading == true?
+        Center(
+          child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
+        ):
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
