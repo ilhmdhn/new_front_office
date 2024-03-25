@@ -1,52 +1,48 @@
-import 'package:front_office_2/data/model/network.dart';
+import 'package:front_office_2/data/model/login_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:front_office_2/data/model/network.dart';
 
-class PreferencesData{
-  
-  static Future<bool> setUrl(BaseUrlModel url)async{
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('SERVER_URL', url.ip.toString());
-    await prefs.setString('SERVER_PORT', url.port.toString());
-    await prefs.setString('OUTLET', url.outlet.toString());
-    return true;
+class PreferencesData {
+  static SharedPreferences? _prefs;
+
+  static Future<void> initialize() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  static Future<BaseUrlModel> getUrl()async{
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('SERVER_URL');
-    final port = prefs.getString('SERVER_PORT');
-    final outlet = prefs.getString('OUTLET');
-    return BaseUrlModel(
-      ip: url,
-      port: port,
-      outlet: outlet
-    );
+  static Future<void> setUrl(BaseUrlModel data) async {
+    _prefs?.setString('SERVER_URL', data.ip!);
+    _prefs?.setString('SERVER_PORT', data.port!);
+    _prefs?.setString('OUTLET', data.outlet!);
   }
 
-  static Future<String> url()async{
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('SERVER_URL');
-    final port = prefs.getString('SERVER_PORT');
-
+  static String getUrl() {
+    final url = _prefs?.getString('SERVER_URL') ?? '';
+    final port = _prefs?.getString('SERVER_PORT') ?? '';
     return 'http://$url:$port';
   }
 
-  static Future<String> outlet()async{
-    final prefs = await SharedPreferences.getInstance();
-    final outlet = prefs.getString('OUTLET');
-
-    return outlet??'HP000';
+  static BaseUrlModel getConfigUrl(){
+    return BaseUrlModel(
+      ip: _prefs?.getString('SERVER_URL'),
+      port: _prefs?.getString('SERVER_PORT'),
+      outlet: _prefs?.getString('OUTLET'),
+    );
   }
 
-  static Future<BaseUrlModel> setUser()async{
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('USER_ID');
-    final port = prefs.getString('USER_LEVEL');
-    final outlet = prefs.getString('OUTLET');
-    return BaseUrlModel(
-      ip: url,
-      port: port,
-      outlet: outlet
-    );
+  static String getOutlet() {
+    return _prefs?.getString('OUTLET') ?? 'HP000';
+  }
+
+  static Future<void> setUser(UserDataModel data) async {
+    _prefs?.setString('USER_ID', data.userId!);
+    _prefs?.setString('USER_LEVEL', data.level!);
+    _prefs?.setString('USER_TOKEN', data.token!);
+  }
+
+  static UserDataModel getUser() {
+    final userId = _prefs?.getString('USER_ID') ?? '';
+    final level = _prefs?.getString('USER_LEVEL') ?? '';
+    final token = _prefs?.getString('USER_TOKEN') ?? '';
+    return UserDataModel(userId: userId, level: level, token: token);
   }
 }

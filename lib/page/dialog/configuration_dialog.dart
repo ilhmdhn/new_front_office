@@ -13,7 +13,7 @@ class ConfigurationDialog{
     TextEditingController tfIp = TextEditingController();
     TextEditingController tfPort = TextEditingController();
     TextEditingController tfOutlet = TextEditingController();
-    BaseUrlModel serverUrl = await PreferencesData.getUrl();
+    BaseUrlModel serverUrl = PreferencesData.getConfigUrl();
 
     if(isNotNullOrEmpty(serverUrl.ip)){
       tfIp.text = serverUrl.ip!;

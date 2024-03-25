@@ -8,6 +8,7 @@ class LoginResponse{
     this.isLoading = true,
     this.state,
     this.message,
+    this.data
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json){
@@ -17,7 +18,8 @@ class LoginResponse{
     return LoginResponse(
       state: json['state'],
       isLoading: false,
-      message: json['message']
+      message: json['message'],
+      data: UserDataModel.fromJson(json['data'])
     );
   }
 }
@@ -25,14 +27,17 @@ class LoginResponse{
 class UserDataModel{
   String? userId;
   String? level;
+  String? token;
 
   UserDataModel({
     this.userId,
-    this.level
+    this.level,
+    this.token
   });
 
   factory UserDataModel.fromJson(Map<String, dynamic> json)=>UserDataModel(
     userId: json['user_id'],
     level: json['level_user'],
+    token: json['token'],
   );
 }
