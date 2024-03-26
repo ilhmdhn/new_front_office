@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -28,6 +29,13 @@ class _LoginPageState extends State<LoginPage> {
   void initState(){
     loginState();
     super.initState();
+  }
+
+  Future<void> insertLogin()async{
+    final response = await CloudRequest.insertLogin();
+    if(response.state != true){
+      showToastError(' Error upload fcm tokent ${response.message}');
+    }
   }
 
   void loginState()async{
@@ -102,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                               await PreferencesData.setUser(
                                 loginResult.data!
                               );
+                              await insertLogin();
                               if(context.mounted){
                                 Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                               }

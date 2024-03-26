@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';

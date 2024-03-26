@@ -17,6 +17,7 @@ import 'package:front_office_2/page/status/status_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
@@ -30,10 +31,11 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  FirebaseTools.initToken();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  
   await PreferencesData.initialize();
   setupLocator();
+  
   runApp(const FrontOffice());
 }
 

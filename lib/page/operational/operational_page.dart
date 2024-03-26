@@ -14,7 +14,9 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OperationalPage extends StatefulWidget {
   static const nameRoute = '/operational';
@@ -471,8 +473,10 @@ class _OperationalPageState extends State<OperationalPage> {
                                 Expanded(
                                   flex: 6,
                                   child: InkWell(
-                                    onTap: (){
-                                      SendNotification.notif();
+                                    onTap: ()async{
+                                      await Permission.phone.request();
+                                      // PreferencesData.clearUser();
+                                      // Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
