@@ -12,6 +12,7 @@ import 'package:front_office_2/page/style/custom_button.dart';
 // import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -469,9 +470,14 @@ class _OperationalPageState extends State<OperationalPage> {
                                   ),
                                 Expanded(
                                   flex: 6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                    child: Center(child: AutoSizeText('Checkin Info', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 2,)),
+                                  child: InkWell(
+                                    onTap: (){
+                                      SendNotification.notif();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Center(child: AutoSizeText('Checkin Info', minFontSize: 10, style: CustomTextStyle.blackMediumSize(21), maxLines: 2,)),
+                                    ),
                                   )),
                                 const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
                               ]),

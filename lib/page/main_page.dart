@@ -4,6 +4,9 @@ import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/status/status_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:front_office_2/tools/permissions.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class MainPage extends StatefulWidget {
   static const nameRoute = '/main';
@@ -15,8 +18,30 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentPageIndex = 0;
+
+  void notifPermissionState()async{
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    if(settings.authorizationStatus.toString() != 'AuthorizationStatus.authorized'){
+      showToastWarningLong('Berikan Izin Notifikasi');
+      Permissions().getNotificationPermission();
+    }
+  }
+  
+
+  
   @override
   Widget build(BuildContext context) {
+    notifPermissionState();
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),

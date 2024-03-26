@@ -25,8 +25,13 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = true;
 
   @override
-  Future<void> initState() async{
-    final apiResponse = await ApiRequest().cekSign();
+  void initState(){
+    loginState();
+    super.initState();
+  }
+
+  void loginState()async{
+        final apiResponse = await ApiRequest().cekSign();
     if(apiResponse.state == true){
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{
@@ -34,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
         isLoading = false;
       });
     }
-    super.initState();
   }
 
   @override

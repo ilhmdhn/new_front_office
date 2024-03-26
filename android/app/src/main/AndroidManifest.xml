@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <application
-        android:label="front_office_2"
+        android:label="Front Office"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateVisible"
