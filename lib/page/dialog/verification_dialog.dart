@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/event_bus.dart';
 import 'package:lottie/lottie.dart';
 
 class VerificationDialog{
@@ -16,6 +17,15 @@ class VerificationDialog{
         bool isConfirmed = false;
         return StatefulBuilder(
           builder: (BuildContext ctxWidget, StateSetter setState){
+            eventBus.on<ConfirmationSignalModel>().listen((event) {
+              if(verificationCode == event.code){
+                if(ctxWidget.mounted && ctx.mounted && ctxDialog.mounted){
+                  setState(() {
+                    isConfirmed = !isConfirmed;
+                  });
+                }
+              }
+            });
             return AlertDialog(
               title: 
               isConfirmed == false?

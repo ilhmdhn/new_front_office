@@ -17,12 +17,12 @@ import 'package:front_office_2/page/status/status_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:event_bus/event_bus.dart';
 
 void main() async{
   await dotenv.load(fileName: ".env");
@@ -35,10 +35,13 @@ void main() async{
   FirebaseTools.initToken();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    if(message.data['type'] == '1'){
-      
+    String? signalType = message.data['type'];
+    String? signalCode = message.data['code'];
+    if(signalType == '1'){
+      eventBus.fire(ConfirmationSignalModel(code: signalCode??''));
+    }else if(signalType == '2'){
+      SendNotification.notif(message);
     }
-    SendNotification.notif(message);
   });
   await PreferencesData.initialize();
   setupLocator();
