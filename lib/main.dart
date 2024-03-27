@@ -22,6 +22,7 @@ import 'package:front_office_2/tools/preferences.dart';
 import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:event_bus/event_bus.dart';
 
 void main() async{
   await dotenv.load(fileName: ".env");
@@ -33,6 +34,12 @@ void main() async{
 
   FirebaseTools.initToken();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if(message.data['type'] == '1'){
+      
+    }
+    SendNotification.notif(message);
+  });
   await PreferencesData.initialize();
   setupLocator();
   
@@ -46,7 +53,7 @@ class FrontOffice extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: 'Happy Puppy POS',
       initialRoute: LoginPage.nameRoute,
       routes: {

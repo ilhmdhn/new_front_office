@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -12,13 +13,13 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class SendNotification {
 
   static Future<void> onDidReceiveBackgroundNotificationResponse(NotificationResponse response) async {
-    getIt<NavigationService>().pushNamedAndRemoveUntil(ExtendRoomPage.nameRoute);
-    showToastWarning(response.payload.toString());
+    final destination = response.payload;
+    getIt<NavigationService>().pushNamedAndRemoveUntil(destination.toString());
   }
 
   static Future<void> onDidReceiveNotificationResponse(NotificationResponse response) async {
-    getIt<NavigationService>().pushNamedAndRemoveUntil(ExtendRoomPage.nameRoute);
-        showToastWarning(response.payload.toString());
+    final destination = response.payload;
+    getIt<NavigationService>().pushNamedAndRemoveUntil(destination.toString());
   }
 
   static void notif(RemoteMessage message) async {
@@ -42,8 +43,6 @@ class SendNotification {
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-        0, 'New Notification', 'Hello, this is a notification!', platformChannelSpecifics,
-        payload: '/room-extend');
+    await flutterLocalNotificationsPlugin.show(0, message.data['Title'], 'Hello, this is a notification!', platformChannelSpecifics, payload: RoomCheckinListPage.nameRoute);
   }
 }
