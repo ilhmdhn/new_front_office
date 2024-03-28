@@ -33,6 +33,8 @@ class DetailCheckinModel{
   PromoRoomModel? promoRoom;
   PromoFnbModel? promoFnb;
   String hp;
+  String invoice;
+  String reception;
   int downPayment;
   String description;
   String voucher;
@@ -56,6 +58,8 @@ class DetailCheckinModel{
     this.hp = '',
     this.downPayment = 0,
     this.description = '',
+    this.invoice = '',
+    this.reception = '',
     this.voucher = '',
     this.dpNote = '',
     this.cardType = '',
@@ -70,6 +74,8 @@ class DetailCheckinModel{
       roomCode: json['room'],
       memberName: json['checkin_room']['nama_member'],
       memberCode: json['checkin_room']['kode_member'],
+      reception: json['checkin_room']['reception'],
+      invoice: json['checkin_room']['invoice'],
       minuteRemaining: json['checkin_room']['sisa_menit_checkin'],
       hourRemaining: json['checkin_room']['sisa_jam_checkin'],
       pax: json['checkin_room']['qm3'],

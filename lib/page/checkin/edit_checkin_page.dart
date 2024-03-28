@@ -7,6 +7,7 @@ import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/radio_list_dialog.dart';
@@ -50,6 +51,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
   String remainingTime = 'Waktu Habis';
+  bool approvalPromoRoomState = false;
 
 
   void getData()async{
@@ -288,11 +290,14 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                               onTap: ()async{
-                                String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
-                                final approvalState = await VerificationDialog.requestVerification(context, uniqueTime);
-                                // setState(() {
-                                //   // promoRoom = null;
-                                // });
+                                if(context.mounted){
+                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , 'Hapus Promo Room')??false;
+                                  if(approvalPromoRoomState == true){
+                                    setState(() {
+                                      promoRoom = null;
+                                    });
+                                  }
+                                }
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -374,10 +379,15 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  promoFnb = null;
-                                });
+                              onTap: ()async{
+                              if(context.mounted){
+                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , 'Hapus Promo FnB')??false;
+                                  if(approvalPromoRoomState == true){
+                                    setState(() {
+                                      promoFnb = null;
+                                    });
+                                  }
+                                }
                               },
                               child: Container(
                                 decoration: BoxDecoration(

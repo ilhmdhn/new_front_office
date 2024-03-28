@@ -42,4 +42,36 @@ class CloudRequest{
       ); 
     }
   }
+
+  static Future<BaseResponse> apporvalRequest(String idApproval, String rcp, String notes)async{
+    try{
+      
+      String outlet = PreferencesData.getOutlet();
+      String userId = PreferencesData.getUser().userId??'';
+
+      final body = {
+      "outlet": outlet,
+      "id": idApproval,
+      "user": userId,
+      "reception": rcp,
+      "note": notes
+      };
+
+      final url = Uri.parse('$baseUrl/approval/request');
+      final apiResponse = await http.post(url, 
+      headers:{'Content-Type': 'application/json',
+              'authorization': token},
+      body: json.encode(body)
+      );
+      
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      ); 
+    }
+  }
+
 }
