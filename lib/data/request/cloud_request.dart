@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -71,6 +72,23 @@ class CloudRequest{
         state: false,
         message: e.toString()
       ); 
+    }
+  }
+
+  static Future<RequestApprovalResponse> approvalList()async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+
+      final url = Uri.parse('http://172.188.42.60:3200/approval/list?outlet=$outlet');
+
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      final convertedResult = json.decode(apiResponse.body);
+      return RequestApprovalResponse.fromJson(convertedResult);
+    }catch(e){
+      return RequestApprovalResponse(
+        state: false,
+        message: e.toString()
+      );
     }
   }
 
