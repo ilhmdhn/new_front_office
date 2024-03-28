@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/event_bus.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
 
 class VerificationDialog{
@@ -65,12 +66,14 @@ class VerificationDialog{
                         ),
                         Flexible(
                           child: ElevatedButton(onPressed: (){
-                            setState(() {
-                              isConfirmed = !isConfirmed;
-                            });
+                            isConfirmed == false?
+                            {
+                              showToastWarning('Belum di konfirmasi')
+                            }
+                            :Navigator.pop(ctx, true);
                           }, 
                           style: CustomButtonStyle.confirm(),
-                          child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
+                          child: AutoSizeText( isConfirmed == false? 'CHECK':'CONFIRM', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
                         ),
                       ],
                     ),
