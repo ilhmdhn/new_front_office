@@ -287,11 +287,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  // promoRoom = null;
-                                  VerificationDialog.requestVerification(context, "aaa");
-                                });
+                              onTap: ()async{
+                                String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
+                                final approvalState = await VerificationDialog.requestVerification(context, uniqueTime);
+                                // setState(() {
+                                //   // promoRoom = null;
+                                // });
                               },
                               child: Container(
                                 decoration: BoxDecoration(

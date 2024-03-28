@@ -4,5 +4,6 @@ EventBus eventBus = EventBus();
 
 class ConfirmationSignalModel{
   String code;
-  ConfirmationSignalModel({required this.code});
+  bool state;
+  ConfirmationSignalModel({required this.code, required this.state});
 }

@@ -15,23 +15,35 @@ class VerificationDialog{
       context: ctx, 
       barrierDismissible: false,
       builder: (BuildContext ctxDialog){
+        bool isLoading = true;
         bool isConfirmed = false;
         return StatefulBuilder(
           builder: (BuildContext ctxWidget, StateSetter setState){
             eventBus.on<ConfirmationSignalModel>().listen((event) {
               if(verificationCode == event.code){
                 if(ctxWidget.mounted && ctx.mounted && ctxDialog.mounted){
-                  setState(() {
-                    isConfirmed = !isConfirmed;
-                  });
+
+                  if(event.state == true){
+                    setState(() {
+                      isLoading = false;
+                      isConfirmed = true;
+                    });
+                  }else{
+                    setState((){
+                      isLoading = false;
+                      isConfirmed = false;
+                    });
+                  }
                 }
               }
             });
             return AlertDialog(
               title: 
-              isConfirmed == false?
-              Center(child: AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialog(), minFontSize: 9,maxLines: 1,)):
-              Center(child: AutoSizeText('Confirmed', style: CustomTextStyle.titleAlertDialog(), minFontSize: 9,maxLines: 1,)),
+              isLoading == true?
+              Center(child: AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)):
+              isConfirmed == true?
+              Center(child: AutoSizeText('Confirmed', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)):
+              Center(child: AutoSizeText('Ditolak', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)),
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
@@ -40,10 +52,11 @@ class VerificationDialog{
                     width: MediaQuery.of(ctx).size.width * 0.50,
                     child: AspectRatio(
                       aspectRatio: 1/1,
-                      child: 
-                      isConfirmed == false?
+                      child: isLoading == true?
                       Lottie.asset('assets/animation/waiting_verification.json'):
-                      Lottie.asset('assets/animation/confirmed.json')
+                      isConfirmed == true?
+                      Lottie.asset('assets/animation/confirmed.json'):
+                      Lottie.asset('assets/animation/reject.json')
                     ),
                   ),
                   const SizedBox(height: 20,),
@@ -66,14 +79,16 @@ class VerificationDialog{
                         ),
                         Flexible(
                           child: ElevatedButton(onPressed: (){
-                            isConfirmed == false?
+                            isLoading == true?
                             {
                               showToastWarning('Belum di konfirmasi')
                             }
-                            :Navigator.pop(ctx, true);
+                            :isConfirmed?
+                            Navigator.pop(ctx, true):
+                            Navigator.pop(ctx, false);
                           }, 
                           style: CustomButtonStyle.confirm(),
-                          child: AutoSizeText( isConfirmed == false? 'CHECK':'CONFIRM', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
+                          child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
                         ),
                       ],
                     ),

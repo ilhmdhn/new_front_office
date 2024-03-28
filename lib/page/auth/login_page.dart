@@ -69,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 TextField(
                   controller: tfUser,
+                  autofillHints: const [AutofillHints.username],
                   decoration: CustomTextfieldStyle.characterNormal(),
                 ),
                 const SizedBox(
@@ -76,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 TextField(
                   controller: tfPassword,
+                  autofillHints: const [AutofillHints.password],
                   obscureText: showPassword? false: true,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
@@ -37,8 +38,12 @@ void main() async{
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String? signalType = message.data['type'];
     String? signalCode = message.data['code'];
+    bool state = false;
+    if(message.data['state'] == 'true'){
+      state = true;
+    }
     if(signalType == '1'){
-      eventBus.fire(ConfirmationSignalModel(code: signalCode??''));
+      eventBus.fire(ConfirmationSignalModel(code: signalCode??'', state: state));
     }else if(signalType == '2'){
       SendNotification.notif(message);
     }
@@ -72,7 +77,8 @@ class FrontOffice extends StatelessWidget {
         ListRoomReadyPage.nameRoute: (context) => const ListRoomReadyPage(),
         EditCheckinPage.nameRoute: (context) => const EditCheckinPage(),
         RoomCheckinListPage.nameRoute: (context) => const RoomCheckinListPage(),
-        ExtendRoomPage.nameRoute: (context) => const ExtendRoomPage()
+        ExtendRoomPage.nameRoute: (context) => const ExtendRoomPage(),
+        ApprovalListPage.nameRoute: (context) => const ApprovalListPage()
       },
     );
   }

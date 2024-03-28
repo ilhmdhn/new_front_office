@@ -7,7 +7,7 @@ class CustomTextStyle{
   }
 
     static TextStyle titleAlertDialogSize(int size){
-    return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black);
+    return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black, fontWeight: FontWeight.w500);
   }
 
   static TextStyle titleAppBar(){
