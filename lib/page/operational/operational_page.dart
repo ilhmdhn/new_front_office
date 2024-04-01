@@ -43,7 +43,21 @@ class OperationalPage extends StatelessWidget {
     final userData = PreferencesData.getUser();
     
     final widget = ButtonMenuWidget(context: context);
-    List<Widget> listMenuWidget = [widget.checkin(), widget.checkinReservation(), widget.editCheckin(), widget.extend(), widget.transfer()];
+    
+    List<Widget> listMenuWidget = [
+      widget.checkin(),
+      widget.checkinReservation(),
+      widget.editCheckin(),
+      widget.extend(),
+      widget.transfer(),
+      widget.order(),
+      widget.bill(),
+      widget.checkout(),
+      widget.clean(),
+      widget.checkinInfo(),
+      widget.reservationList(),
+      widget.approval(0),
+    ];
     
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -98,10 +112,7 @@ class OperationalPage extends StatelessWidget {
               ),
               itemCount: listMenuWidget.length,
               itemBuilder: (context, index){
-                return SizedBox(
-                  width: widthButton,
-                  child: Center(child: AutoSizeText('Checkoutssssssz1233456', style: GoogleFonts.poppins(fontSize: 21, color: Colors.black, fontWeight: FontWeight.w500),  minFontSize: 1, maxLines: 1)),
-                );
+                return listMenuWidget[index];
               }),
           ],
         ),

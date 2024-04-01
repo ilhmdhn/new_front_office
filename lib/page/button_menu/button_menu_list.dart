@@ -567,7 +567,7 @@ class ButtonMenuWidget{
               width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2)),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -622,7 +622,7 @@ class ButtonMenuWidget{
               width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2)),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -635,57 +635,63 @@ class ButtonMenuWidget{
     );
   }
 
-   Widget approval(){
+   Widget approval(int notif){
     final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
     final widthTextButton = ScreenSize.getSizePercent(context, 26);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-
+    if(isNullOrEmpty(notif)){
+      notif = 0;
+    }
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, ApprovalListPage.nameRoute);
       },
-      child: Container(
-        height: 83,
-          width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: widthIconButton,
-                child: Image.asset('assets/menu_icon/fingeprint.png')
+      child: Badge(
+        label: Text(notif.toString()),
+        isLabelVisible: notif>0?true:false,
+        child: Container(
+          height: 83,
+            width: widthButton,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 3,
+                blurRadius: 7,
+                offset: const Offset(0, 3),
               ),
-            SizedBox(
-              width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: spacerpaddingButton,
+              ),
+              SizedBox(
+                width: widthIconButton,
+                  child: Image.asset('assets/menu_icon/fingeprint.png')
+                ),
+              SizedBox(
+                width: widthTextButton,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                  child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                )),
+              SizedBox(
+                width: widthArrowButton,
+                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+              SizedBox(
+                width: spacerpaddingButton,
+              )
+            ]),
+        ),
       ),
     );
   }
