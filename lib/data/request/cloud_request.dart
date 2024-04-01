@@ -113,16 +113,16 @@ class CloudRequest{
     }
   }
 
-    static Future<BaseResponse> rejectApproval(String idApproval)async{
+  static Future<BaseResponse> rejectApproval(String idApproval)async{
     try{
       String outlet = PreferencesData.getOutlet();
       String userId = PreferencesData.getUser().userId??'';
       final url = Uri.parse('$baseUrl/approval/reject/$outlet/$idApproval');
-    
+      
       final apiResponse = await http.put(url, 
         headers:{'Content-Type': 'application/json','authorization': token},
         body: json.encode({
-          'user': userId
+        'user': userId
         })
       );
       final convertedResult = json.decode(apiResponse.body);
@@ -135,4 +135,68 @@ class CloudRequest{
     }
   }
 
+  static Future<BaseResponse> cancelApproval(String idApproval)async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+      final url = Uri.parse('$baseUrl/approval/cancel/$outlet/$idApproval');
+      
+      final apiResponse = await http.put(url, headers:{'Content-Type': 'application/json','authorization': token});
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  static Future<BaseResponse> finishApproval(String idApproval)async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+      final url = Uri.parse('$baseUrl/approval/finish/$outlet/$idApproval');
+      
+      final apiResponse = await http.put(url, 
+        headers:{'Content-Type': 'application/json','authorization': token});
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  static Future<BaseResponse> timeoutApproval(String idApproval)async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+      final url = Uri.parse('$baseUrl/approval/timeout/$outlet/$idApproval');
+      
+      final apiResponse = await http.put(url, headers:{'Content-Type': 'application/json','authorization': token});
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  static Future<BaseResponse> totalApprovalRequest(String idApproval)async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+      final url = Uri.parse('$baseUrl/approval/total/$outlet');
+      
+      final apiResponse = await http.put(url, headers:{'Content-Type': 'application/json','authorization': token});
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
 }

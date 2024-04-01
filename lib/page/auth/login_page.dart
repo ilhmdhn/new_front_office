@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginState()async{
-        final apiResponse = await ApiRequest().cekSign();
+    final apiResponse = await ApiRequest().cekSign();
     if(apiResponse.state == true){
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{

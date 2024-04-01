@@ -15,8 +15,8 @@ class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
 }
-
 class _MainPageState extends State<MainPage> {
+
   int currentPageIndex = 0;
 
   void notifPermissionState()async{
@@ -36,9 +36,7 @@ class _MainPageState extends State<MainPage> {
       Permissions().getNotificationPermission();
     }
   }
-  
-  
-  
+
   @override
   Widget build(BuildContext context) {
     notifPermissionState();
