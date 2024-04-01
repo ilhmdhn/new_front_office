@@ -6,6 +6,7 @@ import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/button_menu/button_menu_list.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -20,6 +21,7 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class OperationalPage extends StatelessWidget {
@@ -28,7 +30,7 @@ class OperationalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spaceCenter = ScreenSize.getSizePercent(context, 4);
+    final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final paddingEdgeSize = ScreenSize.getSizePercent(context, 3);
     final widthButton = ScreenSize.getSizePercent(context, 45);
     final widthTextButton = ScreenSize.getSizePercent(context, 26);
@@ -39,6 +41,10 @@ class OperationalPage extends StatelessWidget {
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     final userData = PreferencesData.getUser();
+    
+    final widget = ButtonMenuWidget(context: context);
+    List<Widget> listMenuWidget = [widget.checkin(), widget.checkinReservation(), widget.editCheckin(), widget.extend(), widget.transfer()];
+    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -50,8 +56,7 @@ class OperationalPage extends StatelessWidget {
         ],
       ),
       backgroundColor: CustomColorStyle.background(),
-      body: Container(
-        width: ScreenSize.getSizePercent(context, 100),
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: paddingEdgeSize),
         child: Column(
           children: [
@@ -66,610 +71,41 @@ class OperationalPage extends StatelessWidget {
                     backgroundImage: Image.asset('assets/icon/user.png').image,
                   ),
                 ),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(userData.userId??'No Named', style: CustomTextStyle.blackMedium()),
-                  Container(
-                    width: double.infinity,
-                    height: 1,
-                    color: Colors.black,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(userData.userId??'No Named', style: CustomTextStyle.blackMedium()),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        color: Colors.black,
+                      ),
+                      Text(userData.level??'Unknown', style: CustomTextStyle.blackMedium()),
+                    ],
                   ),
-                  Text(userData.level??'Unknown', style: CustomTextStyle.blackMedium()),
-                ],
-              ),
-            )
+                )
               ],
             ),
-            SizedBox(height: spaceCenter,),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                width: ScreenSize.getSizePercent(context, 94),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: [
-                        InkWell(
-                          child: Container(
-                            height: 83,
-                            width: widthButton,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/karaoke.png')
-                                ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(
-                                    child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis),
-                                  ),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]),
-                          ),
-                          onTap: ()async{
-                            String? result = await showQRScannerDialog(context);
-                            if(isNotNullOrEmpty(result)){
-                              // showToastWarning(result.toString());
-                              final loginResult = await ApiRequest().cekMember(result.toString());
-                              if(loginResult.state != true){
-                                showToastWarning('gak sukses ${loginResult.message}');
-                              }else{
-                                if(context.mounted){
-                                  final checkinParams = CheckinParams(
-                                    memberName: loginResult.data?.fullName??'no name',
-                                    memberCode: loginResult.data?.memberCode??'undefined'
-                                  );
-                                  Navigator.pushNamed(context, ListRoomTypePage.nameRoute, arguments: checkinParams);
-                                }
-                              }
-                            }
-                          },
-                        ),
-                        SizedBox(width: spaceCenter,),
-                        Container(
-                          height: 83,
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                          color: Colors.white, // Warna background
-                          borderRadius: BorderRadius.circular(10), // Bentuk border
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2), // Warna shadow
-                              spreadRadius: 3, // Radius penyebaran shadow
-                              blurRadius: 7, // Radius blur shadow
-                              offset: const Offset(0, 3), // Offset shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: spacerpaddingButton,
-                            ),
-                            SizedBox(
-                              width: widthIconButton,
-                                child: Image.asset('assets/menu_icon/reservation.png')
-                              ),
-                            SizedBox(
-                              width: widthTextButton,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                child: Center(child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2, overflow: TextOverflow.ellipsis)),
-                              )),
-                            SizedBox(
-                              width: widthArrowButton,
-                              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                            SizedBox(
-                              width: spacerpaddingButton,
-                            )
-                          ]),
-                        ),      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Container(
-                            height: 83,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                ),
-                                SizedBox(
-                                  width: widthIconButton,
-                                    child: Image.asset('assets/menu_icon/edit_checkin.png')
-                                  ),
-                                Flexible(
-                                  flex: 15,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                    child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                  )),
-                                SizedBox(
-                                  width: widthArrowButton,
-                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                )
-                              ]),
-                          ),
-                          )
-                        ),
-                        ],
-                    ),
-                    
-                    const SizedBox(height: 16,),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
-                            },
-                            child: Container(
-                              width: widthButton,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: Colors.white, // Warna background
-                                borderRadius: BorderRadius.circular(10), // Bentuk border
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                    spreadRadius: 3, // Radius penyebaran shadow
-                                    blurRadius: 7, // Radius blur shadow
-                                    offset: const Offset(0, 3), // Offset shadow
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: spacerpaddingButton,
-                                  ),
-                                  SizedBox(
-                                    width: widthIconButton,
-                                    child: Image.asset('assets/menu_icon/extend.png')
-                                  ),
-                                  SizedBox(
-                                    width: widthTextButton,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                      child: Center(child: AutoSizeText('Extend',  style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                    )
-                                  ),
-                                  SizedBox(
-                                    width: widthArrowButton,
-                                    child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                                  SizedBox(width: spacerpaddingButton)
-                                ]
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: spaceCenter,),
-                          Container(
-                            width: widthButton,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white, // Warna background
-                              borderRadius: BorderRadius.circular(10), // Bentuk border
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                  spreadRadius: 3, // Radius penyebaran shadow
-                                  blurRadius: 7, // Radius blur shadow
-                                  offset: const Offset(0, 3), // Offset shadow
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                ),
-                                SizedBox(
-                                  width: widthIconButton,
-                                    child: Image.asset('assets/menu_icon/change.png')
-                                  ),
-                                SizedBox(
-                                  width: widthTextButton,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                    child: Center(child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                  )),
-                                SizedBox(
-                                  width: widthArrowButton,
-                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                )
-                              ]),
-                            ),],
-                      ),
-                    ),
-                    const SizedBox(height: 16,),
-                    Row(
-                      children: [
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/fnb.png')
-                                ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
-                          ),
-                        ),
-                        SizedBox(width: spaceCenter,),
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/bill.png')
-                                ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            
-                          },
-                          child: Container(
-                            width: widthButton,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white, // Warna background
-                              borderRadius: BorderRadius.circular(10), // Bentuk border
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                  spreadRadius: 3, // Radius penyebaran shadow
-                                  blurRadius: 7, // Radius blur shadow
-                                  offset: const Offset(0, 3), // Offset shadow
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                ),
-                                SizedBox(
-                                  width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/checkout.png')
-                                ),
-                                SizedBox(
-                                  width: widthTextButton,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                    child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 9,)),
-                                  )
-                                ),
-                                SizedBox(
-                                  width: widthArrowButton,
-                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                )
-                              ]
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: spaceCenter,),
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                child: Image.asset('assets/menu_icon/clean.png')
-                              ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                )
-                              ),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    Row(
-                      children: [
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          height: 83,
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/room_checkin.png')
-                                ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: InkWell(
-                                  onTap: ()async{
-                                    await Permission.phone.request();
-                                    // PreferencesData.clearUser();
-                                    // Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                    child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2, overflow: TextOverflow.ellipsis)),
-                                  ),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
-                          ),
-                        ),
-                        SizedBox(width: spaceCenter,),
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          height: 83,
-                          decoration: BoxDecoration(
-                          color: Colors.white, // Warna background
-                          borderRadius: BorderRadius.circular(10), // Bentuk border
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2), // Warna shadow
-                              spreadRadius: 3, // Radius penyebaran shadow
-                              blurRadius: 7, // Radius blur shadow
-                              offset: const Offset(0, 3), // Offset shadow
-                            ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                child: Image.asset('assets/menu_icon/list_reservation.png')
-                              ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 2, overflow: TextOverflow.ellipsis)),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, ApprovalListPage.nameRoute);
-                        },
-                        child: Badge(
-                          label: Text('5'),
-                          child: Container(
-                            width: widthButton,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white, // Warna background
-                              borderRadius: BorderRadius.circular(10), // Bentuk border
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                  spreadRadius: 3, // Radius penyebaran shadow
-                                  blurRadius: 7, // Radius blur shadow
-                                  offset: const Offset(0, 3), // Offset shadow
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                ),
-                                SizedBox(
-                                  width: widthIconButton,
-                                    child: Image.asset('assets/menu_icon/fingeprint.png')
-                                  ),
-                                SizedBox(
-                                  width: widthTextButton,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                    child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                  )),
-                                SizedBox(
-                                  width: widthArrowButton,
-                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                                SizedBox(
-                                  width: spacerpaddingButton,
-                                )
-                              ]
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  
-                  ]),
+            const SizedBox(height: 16),
+            GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: spaceCenter,
+                crossAxisSpacing: spaceCenter,
+                childAspectRatio: 20/9
               ),
-            )
-            ],
+              itemCount: listMenuWidget.length,
+              itemBuilder: (context, index){
+                return SizedBox(
+                  width: widthButton,
+                  child: Center(child: AutoSizeText('Checkoutssssssz1233456', style: GoogleFonts.poppins(fontSize: 21, color: Colors.black, fontWeight: FontWeight.w500),  minFontSize: 1, maxLines: 1)),
+                );
+              }),
+          ],
         ),
-      ),
-    );
+      )
+      );
   }
 }
