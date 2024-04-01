@@ -63,7 +63,7 @@ class FrontOffice extends StatelessWidget {
       navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
       debugShowCheckedModeBanner: true,
       title: 'Happy Puppy POS',
-      initialRoute: MainPage.nameRoute,
+      initialRoute: LoginPage.nameRoute,
       routes: {
         LoginPage.nameRoute: (context) => const LoginPage(),
         MainPage.nameRoute: (context) => const MainPage(),

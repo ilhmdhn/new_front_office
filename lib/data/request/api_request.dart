@@ -244,7 +244,6 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   }
 
   void loginPage(){
-    showToastWarning('Kembali Login is Mounted?');
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }
 }

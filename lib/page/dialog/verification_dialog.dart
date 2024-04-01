@@ -12,6 +12,7 @@ import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 class VerificationDialog{
   static Future<bool?> requestVerification(BuildContext ctx, String reception, String note)async{
@@ -84,6 +85,22 @@ class VerificationDialog{
                         isConfirmed == true?
                         Lottie.asset('assets/animation/confirmed.json'):
                         Lottie.asset('assets/animation/reject.json')
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+                    SizedBox(
+                      width: ScreenSize.getSizePercent(ctx, 40),
+                      child: AutoSizeText('Batal otomatis', style: CustomTextStyle.blackStandard(), maxLines: 2, minFontSize: 5, textAlign: TextAlign.center,)),
+                    Center(
+                      child: SlideCountdown(
+                        duration: const Duration(minutes: 2),
+                        decoration: BoxDecoration(
+                           borderRadius: const BorderRadius.all(Radius.circular(20)),
+                          color: CustomColorStyle.appBarBackground(),
+                        ),
+                        onDone: (){
+                          Navigator.pop(ctx, false);
+                        },
                       ),
                     ),
                     const SizedBox(height: 20,),

@@ -57,7 +57,8 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
         itemBuilder:  (lvCtx, index){
           final approval = apiResponse?.data[index];
           return Container(
-            margin: EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+            margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
             decoration:  BoxDecoration(
               color: Colors.white,
               border: Border.all(
@@ -67,26 +68,58 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
               borderRadius: BorderRadius.circular(10), // Bentuk border
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Room Code'),
-                Text(approval?.note??'note'),
+                Text('${approval?.user} (PR A)', style: CustomTextStyle.blackMedium(),),
+                Text(approval?.note??'note', style: CustomTextStyle.blackStandard()),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    ElevatedButton(
-                      onPressed: ()async{
-                      },
-                      style: CustomButtonStyle.confirm(), 
-                      child: Text('Verifikasi', style: CustomTextStyle.whiteStandard())),
-                    IconButton(onPressed: ()async{
-                      final bioResult = await FingerpintAuth().requestFingerprintAuth();
+                    InkWell(
+                      onTap: ()async{
+                        final bioResult = await FingerpintAuth().requestFingerprintAuth();
                         if(bioResult == true){
-                          showToastWarning('disetujui');
-                        }else{
-                          showToastWarning('ditolak');
+                          await CloudRequest.rejectApproval(approval?.idApproval??'');
+                          getData();
                         }
-
-                    }, icon: const Icon(Icons.fingerprint))
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent.shade400,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                          child: Text('Tolak', style: CustomTextStyle.whiteSize(14),),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6,),
+                    InkWell(
+                      onTap: ()async{
+                        final bioResult = await FingerpintAuth().requestFingerprintAuth();
+                        if(bioResult == true){
+                          await CloudRequest.confirmApproval(approval?.idApproval??'');
+                          getData();
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade700,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                              child: Text('Approve', style: CustomTextStyle.whiteSize(14),),
+                            ),
+                            const Icon(Icons.fingerprint, color: Colors.white,)
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 )
               ],

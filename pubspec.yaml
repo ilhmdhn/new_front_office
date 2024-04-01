@@ -54,6 +54,7 @@ dependencies:
   permission_handler: ^11.3.0
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.2.2
+  slide_countdown: ^1.5.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0
