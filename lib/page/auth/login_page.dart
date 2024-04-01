@@ -127,10 +127,6 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text('Login')),
                     IconButton(
                       onPressed: () async {
-                        final fingerResult = await FingerpintAuth().requestFingerprintAuth();
-                        if (!fingerResult.state) {
-                          showToastWarning(fingerResult.message.toString());
-                        }
                       },
                       icon: const Icon(Icons.fingerprint_outlined),
                       iconSize: 56,

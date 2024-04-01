@@ -1,10 +1,10 @@
-import 'package:front_office_2/data/model/fingerprint_result.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:local_auth/local_auth.dart';
 
 class FingerpintAuth{
 
 
-  Future<FingeprintResult> requestFingerprintAuth()async{
+  Future<bool> requestFingerprintAuth()async{
     try {
       final LocalAuthentication auth = LocalAuthentication();
       final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
@@ -12,21 +12,14 @@ class FingerpintAuth{
       final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
 
       if(!canAuthenticateWithBiometrics || !canAuthenticate){
-        return FingeprintResult(
-            state: false,
-            message: 'Device not supported'
-        );
+        showToastError('Perangkat tidak didukung');
+        return false;
       }
       final bool didAuthenticate = await auth.authenticate(localizedReason: 'Ferivikasi sidik jari untuk melanjutkan',options: const AuthenticationOptions(biometricOnly: true));
-      return FingeprintResult(
-        state: didAuthenticate,
-        message: availableBiometrics.toString()
-      );
+      return didAuthenticate;
     } catch (e) {
-      return FingeprintResult(
-        state: true,
-        message: e.toString()
-      );
+      showToastError(e.toString());
+      return false;
     }
   }
 }

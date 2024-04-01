@@ -34,6 +34,8 @@ class OperationalPage extends StatelessWidget {
     final widthTextButton = ScreenSize.getSizePercent(context, 26);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
+    final heightUser = ScreenSize.getSizePercent(context, 3);
+    final heightMenu = ScreenSize.getSizePercent(context, 3);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     final userData = PreferencesData.getUser();
@@ -48,7 +50,8 @@ class OperationalPage extends StatelessWidget {
         ],
       ),
       backgroundColor: CustomColorStyle.background(),
-      body: Padding(
+      body: Container(
+        width: ScreenSize.getSizePercent(context, 100),
         padding: EdgeInsets.symmetric(horizontal: paddingEdgeSize),
         child: Column(
           children: [
@@ -80,9 +83,10 @@ class OperationalPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: spaceCenter,),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                width: ScreenSize.getSizePercent(context, 94),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -422,45 +426,50 @@ class OperationalPage extends StatelessWidget {
                     const SizedBox(height: 16,),
                     Row(
                       children: [
-                        Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                child: Image.asset('assets/menu_icon/checkout.png')
-                              ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 9,)),
+                        InkWell(
+                          onTap: (){
+                            
+                          },
+                          child: Container(
+                            width: widthButton,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Warna background
+                              borderRadius: BorderRadius.circular(10), // Bentuk border
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                  spreadRadius: 3, // Radius penyebaran shadow
+                                  blurRadius: 7, // Radius blur shadow
+                                  offset: const Offset(0, 3), // Offset shadow
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: spacerpaddingButton,
+                                ),
+                                SizedBox(
+                                  width: widthIconButton,
+                                  child: Image.asset('assets/menu_icon/checkout.png')
+                                ),
+                                SizedBox(
+                                  width: widthTextButton,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                                    child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 9,)),
+                                  )
+                                ),
+                                SizedBox(
+                                  width: widthArrowButton,
+                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+                                SizedBox(
+                                  width: spacerpaddingButton,
                                 )
-                              ),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
+                              ]
+                            ),
                           ),
                         ),
                         SizedBox(width: spaceCenter,),
