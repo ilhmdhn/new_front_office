@@ -46,7 +46,7 @@ class OperationalPage extends StatelessWidget {
         foregroundColor: Colors.white,
         title: Text('Operasional', style: CustomTextStyle.titleAppBar(),selectionColor: Colors.white,),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.notifications))
+          IconButton(onPressed: (){}, icon: Badge(label: Text('11') ,child: const Icon(Icons.notifications,)),)
         ],
       ),
       backgroundColor: CustomColorStyle.background(),
@@ -618,44 +618,47 @@ class OperationalPage extends StatelessWidget {
                         onTap: (){
                           Navigator.pushNamed(context, ApprovalListPage.nameRoute);
                         },
-                        child: Container(
-                          width: widthButton,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              ),
-                              SizedBox(
-                                width: widthIconButton,
-                                  child: Image.asset('assets/menu_icon/fingeprint.png')
+                        child: Badge(
+                          label: Text('5'),
+                          child: Container(
+                            width: widthButton,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Warna background
+                              borderRadius: BorderRadius.circular(10), // Bentuk border
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                  spreadRadius: 3, // Radius penyebaran shadow
+                                  blurRadius: 7, // Radius blur shadow
+                                  offset: const Offset(0, 3), // Offset shadow
                                 ),
-                              SizedBox(
-                                width: widthTextButton,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                                  child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                )),
-                              SizedBox(
-                                width: widthArrowButton,
-                                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                              SizedBox(
-                                width: spacerpaddingButton,
-                              )
-                            ]
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: spacerpaddingButton,
+                                ),
+                                SizedBox(
+                                  width: widthIconButton,
+                                    child: Image.asset('assets/menu_icon/fingeprint.png')
+                                  ),
+                                SizedBox(
+                                  width: widthTextButton,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                                    child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                  )),
+                                SizedBox(
+                                  width: widthArrowButton,
+                                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+                                SizedBox(
+                                  width: spacerpaddingButton,
+                                )
+                              ]
+                            ),
                           ),
                         ),
                       ),
