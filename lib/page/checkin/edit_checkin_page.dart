@@ -289,7 +289,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             child: InkWell(
                               onTap: ()async{
                                 if(context.mounted){
-                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , 'Hapus Promo Room')??false;
+                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room')??false;
                                   if(approvalPromoRoomState == true){
                                     setState(() {
                                       promoRoom = null;
@@ -379,7 +379,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             child: InkWell(
                               onTap: ()async{
                               if(context.mounted){
-                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , 'Hapus Promo FnB')??false;
+                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown'), roomCode,'Hapus Promo FnB')??false;
                                   if(approvalPromoRoomState == true){
                                     setState(() {
                                       promoFnb = null;

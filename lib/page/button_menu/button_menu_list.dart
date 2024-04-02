@@ -107,6 +107,14 @@ class ButtonMenuWidget{
             ],
         ),
         ),
+        const SizedBox(height: 8,),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: widthButton,
+            child: approval(0),
+          ),
+        )
       ],
     );
   }

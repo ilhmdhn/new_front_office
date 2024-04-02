@@ -18,7 +18,7 @@ import 'package:lottie/lottie.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 class VerificationDialog{
-  static Future<bool?> requestVerification(BuildContext ctx, String reception, String note)async{
+  static Future<bool?> requestVerification(BuildContext ctx, String reception, String room, String note)async{
 
     final user = PreferencesData.getUser();
 
@@ -30,7 +30,7 @@ class VerificationDialog{
     Completer<bool?> completer = Completer<bool?>();
     String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
     ApprovalCubit approvalCubit = ApprovalCubit();
-    approvalCubit.sendApproval(uniqueTime, reception, note);
+    approvalCubit.sendApproval(uniqueTime, reception, room, note);
     showDialog(
       context: ctx, 
       barrierDismissible: false,

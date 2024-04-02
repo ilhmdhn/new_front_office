@@ -67,7 +67,7 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${approval?.user} (PR A)', style: CustomTextStyle.blackMedium(),),
+                Text('${approval?.user} (${approval?.room})', style: CustomTextStyle.blackMedium(),),
                 Text(approval?.note??'note', style: CustomTextStyle.blackStandard()),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

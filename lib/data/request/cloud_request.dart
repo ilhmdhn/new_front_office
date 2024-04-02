@@ -44,7 +44,7 @@ class CloudRequest{
     }
   }
 
-  static Future<BaseResponse> apporvalRequest(String idApproval, String rcp, String notes)async{
+  static Future<BaseResponse> apporvalRequest(String idApproval, String rcp, String room, String notes)async{
     try{
       
       String outlet = PreferencesData.getOutlet();
@@ -55,6 +55,7 @@ class CloudRequest{
       "id": idApproval,
       "user": userId,
       "reception": rcp,
+      "room": room,
       "note": notes
       };
 

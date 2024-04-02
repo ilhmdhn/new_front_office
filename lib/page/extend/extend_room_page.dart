@@ -1,11 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
-import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -115,62 +117,73 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                   )
                 ],
               ),
-
-
               const SizedBox(height: 16,),
               Align(alignment: Alignment.centerLeft, child: AutoSizeText('Extend Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: (){
-                      setState((){
-                        if(extendTime>0){
-                          --extendTime;
-                        }
-                      });
-                    },
-                    child: SizedBox(
-                      height: 43,
-                      width: 43,
-                      child: Image.asset(
-                        'assets/icon/minus.png'),
-                    )
+                  Expanded(
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            setState((){
+                              if(extendTime>0){
+                                --extendTime;
+                              }
+                            });
+                          },
+                          child: SizedBox(
+                            height: 43,
+                            width: 43,
+                            child: Image.asset(
+                              'assets/icon/minus.png'),
+                          )
+                        ),
+                        const SizedBox(width: 9,),
+                        AutoSizeText(extendTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                        const SizedBox(width: 9,),
+                        InkWell(
+                          onTap: (){
+                            setState((){
+                              if(extendTime < 24){
+                                ++extendTime;
+                              }
+                            });
+                          },
+                          child: SizedBox(
+                            height: 43,
+                            width: 43,
+                            child: Image.asset(
+                              'assets/icon/plus.png'),
+                          )
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 9,),
-                  AutoSizeText(extendTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
-                  const SizedBox(width: 9,),
-                  InkWell(
-                    onTap: (){
-                      setState((){
-                        if(extendTime < 24){
-                          ++extendTime;
-                        }
-                      });
-                    },
-                    child: SizedBox(
-                      height: 43,
-                      width: 43,
-                      child: Image.asset(
-                        'assets/icon/plus.png'),
-                    )
+                  const SizedBox(width: 6,),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: ()async{
+                            final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
+                            if(reduceState.state == true){
+                              if(context.mounted){
+                                Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                              }else{
+                                showToastWarning('Berhasil silahkan kembali');
+                              }
+                            }else{
+                              showToastError(reduceState.message??'Gagal reduce duration');
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: CustomContainerStyle.confirmButton(),
+                            child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),))),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 12,),
-                  ElevatedButton(
-                    onPressed: ()async{
-                      final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
-                      if(reduceState.state == true){
-                        if(context.mounted){
-                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                        }else{
-                          showToastWarning('Berhasil silahkan kembali');
-                        }
-                      }else{
-                        showToastError(reduceState.message??'Gagal reduce duration');
-                      }
-                    },
-                    style: CustomButtonStyle.confirm(),
-                    child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),)),
                 ],
               ),
               const SizedBox(height: 26,),
@@ -178,58 +191,72 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: (){
-                      setState((){
-                        if(reduceTime>0){
-                          --reduceTime;
-                        }
-                      });
-                    },
-                    child: SizedBox(
-                      height: 43,
-                      width: 43,
-                      child: Image.asset(
-                        'assets/icon/minus.png'),
-                    )
+                  Expanded(
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            setState((){
+                              if(reduceTime>0){
+                                --reduceTime;
+                              }
+                            });
+                          },
+                          child: SizedBox(
+                            height: 43,
+                            width: 43,
+                            child: Image.asset(
+                              'assets/icon/minus.png'),
+                          )
+                        ),
+                        const SizedBox(width: 9,),
+                        AutoSizeText('- ${reduceTime.toString()}', style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                        const SizedBox(width: 9,),
+                        InkWell(
+                          onTap: (){
+                            setState((){
+                              if(reduceTime < 24){
+                                ++reduceTime;
+                              }
+                            });
+                          },
+                          child: SizedBox(
+                            height: 43,
+                            width: 43,
+                            child: Image.asset(
+                              'assets/icon/plus.png'),
+                          )
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 9,),
-                  AutoSizeText('- ${reduceTime.toString()}', style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
-                  const SizedBox(width: 9,),
-                  InkWell(
-                    onTap: (){
-                      setState((){
-                        if(reduceTime < 24){
-                          ++reduceTime;
-                        }
-                      });
-                    },
-                    child: SizedBox(
-                      height: 43,
-                      width: 43,
-                      child: Image.asset(
-                        'assets/icon/plus.png'),
-                    )
-                  ),
-                  const SizedBox(width: 12,),
-                  ElevatedButton(
-                    onPressed: ()async{
-                      final biometricResult = await VerificationDialog.requestVerification(context, rcp, 'Reduce Checkin Duration');
-                      if(biometricResult == true){
-                          final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
-                      if(reduceState.state == true){
-                        if(context.mounted){
-                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                        }else{
-                          showToastWarning('Berhasil silahkan kembali');
-                        }
-                      }else{
-                        showToastError(reduceState.message??'Gagal reduce duration');
-                      }
-                      }
-                    },
-                    style: CustomButtonStyle.cancel(),
-                    child: Text('Reduce Duration', style: CustomTextStyle.whiteSize(16),)
+                  const SizedBox(width: 6,),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: ()async{
+                            final biometricResult = await VerificationDialog.requestVerification(context, rcp, roomCode, 'Reduce Checkin Duration');
+                            if(biometricResult == true){
+                                final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
+                            if(reduceState.state == true){
+                              if(context.mounted){
+                                Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                              }else{
+                                showToastWarning('Berhasil silahkan kembali');
+                              }
+                            }else{
+                              showToastError(reduceState.message??'Gagal reduce duration');
+                            }
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: CustomContainerStyle.cancelButton(),
+                            child: Text('Reduce Room', style: CustomTextStyle.whiteSize(16),))
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

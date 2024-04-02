@@ -24,12 +24,14 @@ class ApprovalRequestModel{
   String idApproval;
   String user;
   String reception;
+  String room;
   String note;
 
   ApprovalRequestModel({
     this.idApproval = '',
     this.user = '',
     this.reception = '',
+    this.room = '',
     this.note = ''
   });
 
@@ -38,6 +40,7 @@ class ApprovalRequestModel{
       idApproval: json['id_approval'],
       user: json['user'],
       reception: json['reception'],
+      room: json['room'],
       note: json['note']
     );
   }
