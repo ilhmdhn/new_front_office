@@ -15,7 +15,7 @@ class FingerpintAuth{
         showToastError('Perangkat tidak didukung');
         return false;
       }
-      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Ferivikasi sidik jari untuk melanjutkan',options: const AuthenticationOptions(biometricOnly: true));
+      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Verifikasi Biometric Diperlukan',options: const AuthenticationOptions(biometricOnly: true));
       return didAuthenticate;
     } catch (e) {
       showToastError(e.toString());

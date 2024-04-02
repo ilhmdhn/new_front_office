@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -18,8 +19,6 @@ class ExtendRoomPage extends StatefulWidget {
 
 class _ExtendRoomPageState extends State<ExtendRoomPage> {
 
-  TextEditingController _extendController = TextEditingController();
-  TextEditingController _reduceController = TextEditingController();
   DetailCheckinResponse? detailCheckin;
   bool isLoading = false;
   int extendTime = 0;
@@ -215,7 +214,9 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                   const SizedBox(width: 12,),
                   ElevatedButton(
                     onPressed: ()async{
-                      final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
+                      final biometricResult = await VerificationDialog.requestVerification(context, rcp, 'Reduce Checkin Duration');
+                      if(biometricResult == true){
+                          final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
                       if(reduceState.state == true){
                         if(context.mounted){
                           Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
@@ -224,6 +225,7 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                         }
                       }else{
                         showToastError(reduceState.message??'Gagal reduce duration');
+                      }
                       }
                     },
                     style: CustomButtonStyle.cancel(),
@@ -239,8 +241,8 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
 
   @override
   void dispose() {
-    _extendController.dispose();
-    _reduceController.dispose();
+    // _extendController.dispose();
+    // _reduceController.dispose();
     super.dispose();
   }
 }

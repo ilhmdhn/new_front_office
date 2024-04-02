@@ -10,6 +10,8 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/event_bus.dart';
+import 'package:front_office_2/tools/fingerprint.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
@@ -17,6 +19,14 @@ import 'package:slide_countdown/slide_countdown.dart';
 
 class VerificationDialog{
   static Future<bool?> requestVerification(BuildContext ctx, String reception, String note)async{
+
+    final user = PreferencesData.getUser();
+
+    if(['ACCOUNTING', 'KAPTEN', 'SUPERVISOR'].contains(user.level)){
+      final biometricResult = await FingerpintAuth().requestFingerprintAuth();
+      return biometricResult;
+    }
+
     Completer<bool?> completer = Completer<bool?>();
     String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
     ApprovalCubit approvalCubit = ApprovalCubit();
@@ -49,12 +59,22 @@ class VerificationDialog{
                 }
               });
               return AlertDialog(
+                actionsPadding: const EdgeInsets.all(0),
+                contentPadding: const EdgeInsets.all(0),
+                titlePadding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                buttonPadding: const EdgeInsets.all(0),
+                // insetPadding: const EdgeInsets.all(0),
                 title: 
                 isLoading == true?
-                Center(child: AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)):
+                Column(
+                  children: [
+                    Center(child: AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,)),
+                    // AutoSizeText(note, style: CustomTextStyle.blackMediumSize(19), minFontSize: 12, maxLines: 1,)
+                  ],
+                ):
                 isConfirmed == true?
-                Center(child: AutoSizeText('Confirmed', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)):
-                Center(child: AutoSizeText('Ditolak', style: CustomTextStyle.titleAlertDialogSize(21), minFontSize: 9,maxLines: 1,)),
+                Center(child: AutoSizeText('Confirmed', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,)):
+                Center(child: AutoSizeText('Ditolak', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,)),
                 content: BlocBuilder<ApprovalCubit, BaseResponse>(
                   bloc: approvalCubit,
                   builder: (ctx, response){
@@ -117,20 +137,27 @@ class VerificationDialog{
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Flexible(
-                              child: ElevatedButton(onPressed: (){
+                              child: InkWell(
+                                onTap: (){
                                 setState(() {
                                   CloudRequest.cancelApproval(uniqueTime);
                                   Navigator.pop(ctx, false);
                                 });
                               }, 
-                              style: CustomButtonStyle.cancel(),
-                              child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.shade400,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,))),
                             ),
                             const SizedBox(
-                              width: 20,
+                              width: 12,
                             ),
                             Flexible(
-                              child: ElevatedButton(onPressed: (){
+                              child: InkWell(
+                                onTap: (){
                                 if(isLoading == true){
                                   showToastWarning('Belum di konfirmasi');
                                 }else if(isConfirmed == true){
@@ -141,12 +168,18 @@ class VerificationDialog{
                                   Navigator.pop(ctx, false);
                                 }
                               }, 
-                              style: CustomButtonStyle.confirm(),
-                              child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade700,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,))),
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 12,)
                     ],
                   );
                   }),
