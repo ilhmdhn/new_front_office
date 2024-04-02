@@ -15,6 +15,7 @@ import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/formatter.dart';
@@ -35,7 +36,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   int dpCode = 1;
   String? voucherCode;
   EdcResponse? dataEdc;
-  final _dpValueController = TextEditingController();
   bool isLoading = true;
   List<String> edcType = [];
   List<int> edcTypeCode = [];
@@ -47,11 +47,19 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String roomCode = '';
   bool hasModified = false;
   DetailCheckinModel? dataCheckin;
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController eventController = TextEditingController();
   String remainingTime = 'Waktu Habis';
   bool approvalPromoRoomState = false;
 
+  final _dpValueController = TextEditingController();
+  final _cardNameController = TextEditingController();
+  final _cardNumberController = TextEditingController();
+  final _cardApprovalController = TextEditingController();
+  final _transferBankUserController = TextEditingController();
+  final _transferBankNameController = TextEditingController();
+
+
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController eventController = TextEditingController();
 
   void getData()async{
     detailRoom = await ApiRequest().getDetailRoomCheckin(roomCode);
@@ -484,22 +492,22 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             Text(chooseCardType, style: CustomTextStyle.blackStandard(),)
                         ],
                       ),
-                                          TextField(
-                        controller: _dpValueController,
-                        keyboardType: TextInputType.number,
+                        TextField(
+                        controller: _cardNameController,
+                        keyboardType: TextInputType.text,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nama')
                       ),
                       const SizedBox(height: 6,),  
                       TextField(
-                        controller: _dpValueController,
+                        controller: _cardNumberController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nomor Kartu')
                       ),
                       const SizedBox(height: 6,),
                       TextField(
-                        controller: _dpValueController,
+                        controller: _cardApprovalController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Kode Approval')
@@ -517,15 +525,15 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ),
                       const SizedBox(height: 6,),  
                       TextField(
-                        controller: _dpValueController,
-                        keyboardType: TextInputType.number,
+                        controller: _transferBankUserController,
+                        keyboardType: TextInputType.text,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nama Penyetor')
                       ),
                       const SizedBox(height: 6,),
                       TextField(
-                        controller: _dpValueController,
-                        keyboardType: TextInputType.number,
+                        controller: _transferBankNameController,
+                        keyboardType: TextInputType.text,
                         inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Bank')
                       )  
@@ -540,8 +548,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   const SizedBox(height: 12,),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: ()async{
+                    child: InkWell(
+                      onTap: ()async{
 
                         final isConfirmed = await ConfirmationDialog.confirmation(context, 'Simpan Edit Checkin?');
 
@@ -592,8 +600,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         }
 
                       },
-                      style: CustomButtonStyle.confirm(),
-                      child: Text('SIMPAN', style: CustomTextStyle.whiteStandard(),),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        decoration: CustomContainerStyle.confirmButton(),
+                        child: Center(child: Text('SIMPAN', style: CustomTextStyle.whiteSize(18),))),
                       ),
                   )
                 ],

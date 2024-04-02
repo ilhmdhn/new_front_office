@@ -32,4 +32,19 @@ class CustomContainerStyle{
       ],
     );
   }
+
+  static blueButton(){
+    return BoxDecoration(
+      color: CustomColorStyle.appBarBackground(),
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.6),
+          spreadRadius:2,
+          blurRadius: 7,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    );
+  }
 }

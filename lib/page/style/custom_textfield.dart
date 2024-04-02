@@ -21,7 +21,7 @@ class CustomTextfieldStyle{
     return InputDecoration(
       hintText: hint,
       hintStyle: GoogleFonts.poppins(
-        fontSize: 14,
+        fontSize: 16,
         color: Colors.black,
         fontWeight: FontWeight.w400),
         focusedBorder: OutlineInputBorder(
