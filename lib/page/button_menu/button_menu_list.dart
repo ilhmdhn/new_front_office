@@ -14,18 +14,113 @@ import 'package:front_office_2/tools/toast.dart';
 class ButtonMenuWidget{
   final BuildContext context;
   ButtonMenuWidget({required this.context});
+  final myGroup = AutoSizeGroup();
+  
+  Widget kasirLayout(){
+    final widthButton = ScreenSize.getSizePercent(context, 46);  
+    final spaceCenter = ScreenSize.getSizePercent(context, 2);
+    final widthRow = ScreenSize.getSizePercent(context, 94);
+
+    return Column(
+      children: [
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                height: 83,
+                child: checkin()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                height: 83,
+                child: checkinReservation())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          height: 83,
+          width: widthRow,
+          child: editCheckin(),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: extend()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: transfer())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: order()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: bill())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: checkout()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: clean())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                height: 83,
+                child: checkinInfo()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                height: 83,
+                child: reservationList())
+            ],
+        ),
+        ),
+      ],
+    );
+  }
 
   Widget checkin(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
             child: Container(
-            height: 83,
-            width: widthButton,
+            // height: 83,
+            // width: widthButton,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -53,8 +148,7 @@ class ButtonMenuWidget{
                   width: widthTextButton,
                   child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                  child: Center(
-                    child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(21), minFontSize: 9, maxLines: 1),),
+                  child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, wrapWords: false,maxLines: 1),
                   )
                 ),
                 SizedBox(
@@ -86,10 +180,10 @@ class ButtonMenuWidget{
   }
 
   Widget checkinReservation(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
@@ -98,8 +192,8 @@ class ButtonMenuWidget{
         showToastWarning('Checkin Reservation is coming soon');
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white, // Warna background
@@ -123,11 +217,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/reservation.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2, overflow: TextOverflow.ellipsis)),
+                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: true, softWrap: true,maxLines: 2,),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -142,10 +236,8 @@ class ButtonMenuWidget{
 
   Widget editCheckin(){
 
-    final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
@@ -153,8 +245,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white, // Warna background
@@ -178,11 +270,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/edit_checkin.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Flexible(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Edit Checkin', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2, overflow: TextOverflow.ellipsis)),
+                child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1,)),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -197,10 +289,10 @@ class ButtonMenuWidget{
 
   Widget extend(){
 
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
@@ -208,8 +300,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -233,11 +325,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/extend.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Extend', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Extend', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -251,10 +343,10 @@ class ButtonMenuWidget{
   }
 
   Widget transfer(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
@@ -263,8 +355,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 3);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -288,11 +380,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/change.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Checkouts', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -306,10 +398,10 @@ class ButtonMenuWidget{
   }
 
   Widget order(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -318,8 +410,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -343,11 +435,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/fnb.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -361,10 +453,10 @@ class ButtonMenuWidget{
   }
 
   Widget bill(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -373,8 +465,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -398,11 +490,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/bill.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -416,10 +508,10 @@ class ButtonMenuWidget{
   }
   
   Widget checkout(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -428,8 +520,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -453,11 +545,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/checkout.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false, softWrap: false ,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -471,10 +563,10 @@ class ButtonMenuWidget{
   }
 
   Widget clean(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -483,8 +575,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -508,11 +600,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/clean.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -526,10 +618,10 @@ class ButtonMenuWidget{
   }
 
   Widget checkinInfo(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -538,8 +630,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -563,11 +655,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/room_checkin.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2)),
+                child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -581,10 +673,10 @@ class ButtonMenuWidget{
   }
 
   Widget reservationList(){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -593,8 +685,8 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
       },
       child: Container(
-        height: 83,
-          width: widthButton,
+        // height: 83,
+          // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
           color: Colors.white,
@@ -618,11 +710,11 @@ class ButtonMenuWidget{
               width: widthIconButton,
                 child: Image.asset('assets/menu_icon/list_reservation.png')
               ),
-            SizedBox(
-              width: widthTextButton,
+            Expanded(
+              // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 2)),
+                child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -635,16 +727,14 @@ class ButtonMenuWidget{
     );
   }
 
-   Widget approval(int notif){
-    final widthButton = ScreenSize.getSizePercent(context, 45);
+   Widget approval(int? notif){
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 26);
+    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    if(isNullOrEmpty(notif)){
-      notif = 0;
-    }
+    notif ??= 0;
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, ApprovalListPage.nameRoute);
@@ -653,8 +743,8 @@ class ButtonMenuWidget{
         label: Text(notif.toString()),
         isLabelVisible: notif>0?true:false,
         child: Container(
-          height: 83,
-            width: widthButton,
+          // height: 83,
+            // width: widthButton,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
             color: Colors.white,
@@ -682,7 +772,7 @@ class ButtonMenuWidget{
                 width: widthTextButton,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                  child: Center(child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(21),  minFontSize: 9, maxLines: 1)),
+                  child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
                 )),
               SizedBox(
                 width: widthArrowButton,

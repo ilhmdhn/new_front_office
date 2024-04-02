@@ -40,6 +40,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     notifPermissionState();
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
