@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -166,15 +167,18 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                       children: [
                         InkWell(
                           onTap: ()async{
-                            final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
-                            if(reduceState.state == true){
-                              if(context.mounted){
-                                Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                            final confirm = await ConfirmationDialog.confirmation(context, 'Extend Room?');
+                            if(confirm == true){
+                              final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
+                              if(reduceState.state == true){
+                                if(context.mounted){
+                                  Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                                }else{
+                                  showToastWarning('Berhasil silahkan kembali');
+                                }
                               }else{
-                                showToastWarning('Berhasil silahkan kembali');
-                              }
-                            }else{
-                              showToastError(reduceState.message??'Gagal reduce duration');
+                                showToastError(reduceState.message??'Gagal reduce duration');
+                              } 
                             }
                           },
                           child: Container(

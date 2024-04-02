@@ -7,6 +7,7 @@ import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/radio_list_dialog.dart';
@@ -541,6 +542,13 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: ()async{
+
+                        final isConfirmed = await ConfirmationDialog.confirmation(context, 'Simpan Edit Checkin?');
+
+                        if(isConfirmed != true){
+                          return;
+                        }
+
                         setState(() {
                           isLoading = true;
                         });
