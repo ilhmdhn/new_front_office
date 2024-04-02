@@ -2,9 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class ExtendRoomPage extends StatefulWidget {
   static const nameRoute = '/room-extend';
@@ -46,7 +48,8 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
     String memberCode = detailCheckin?.data?.memberCode??'Belum diisi';
     String room = detailCheckin?.data?.roomCode??'Belum diisi';
     String remainingTime = 'WAKTU HABIS';
-
+    String rcp = detailCheckin?.data?.reception??'NOT SET';
+    
     int hourRemaining = (detailCheckin?.data?.hourRemaining??0);
     int minuteRemaining = (detailCheckin?.data?.minuteRemaining??0);
 
@@ -155,7 +158,17 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                   ),
                   const SizedBox(width: 12,),
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: ()async{
+                      final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
+                      if(reduceState.state == true){
+                        if(context.mounted){
+                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        }else{
+                          showToastWarning('Berhasil silahkan kembali');
+                        }
+                      }else{
+                        showToastError(reduceState.message??'Gagal reduce duration');
+                      }
                     },
                     style: CustomButtonStyle.confirm(),
                     child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),)),
@@ -201,7 +214,17 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                   ),
                   const SizedBox(width: 12,),
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: ()async{
+                      final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
+                      if(reduceState.state == true){
+                        if(context.mounted){
+                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        }else{
+                          showToastWarning('Berhasil silahkan kembali');
+                        }
+                      }else{
+                        showToastError(reduceState.message??'Gagal reduce duration');
+                      }
                     },
                     style: CustomButtonStyle.cancel(),
                     child: Text('Reduce Duration', style: CustomTextStyle.whiteSize(16),)

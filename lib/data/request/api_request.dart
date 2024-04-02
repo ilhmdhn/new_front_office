@@ -230,14 +230,68 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
 
   Future<BaseResponse> cekSign()async{
     try{
+      
       final url = Uri.parse('$serverUrl/sign');
-      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});  
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
         state: false,
         message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> extendRoom(String roomCode, String duration)async{
+    try{
+      String userId = PreferencesData.getUser().userId??'UNKNOWN';
+      final bodyRequest = {
+        "room": roomCode,
+        "durasi_jam": duration,
+        "durasi_menit": "0",
+        "chusr": userId
+      };
+
+      final url = Uri.parse('$serverUrl/checkin-direct/extend-room');
+      final apiResponse = await http.post(url ,headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(bodyRequest));
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString() 
+      );
+    }
+  }
+
+  Future<BaseResponse> reduceRoom(String reception, String duration)async{
+    try{
+      String userId = PreferencesData.getUser().userId??'UNKNOWN';
+      final bodyRequest = {
+        "rcp": reception,
+        "durasi": duration,
+        "chusr": userId
+      };
+
+      final url = Uri.parse('$serverUrl/checkin-direct/reduce_duration');
+      final apiResponse = await http.post(url ,headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(bodyRequest));
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString() 
       );
     }
   }
