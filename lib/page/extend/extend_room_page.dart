@@ -111,9 +111,7 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
             ),
             const SizedBox(height: 12,),
 
-            Center(
-              child: Text('Durasi Extend', style: CustomTextStyle.blackMedium(),),
-            ),
+            Text('Durasi Extend', style: CustomTextStyle.blackMedium(),),
             Row(
               children: [
                 

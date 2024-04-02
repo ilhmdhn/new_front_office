@@ -114,7 +114,6 @@ class ButtonMenuWidget{
   Widget checkin(){
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
@@ -144,8 +143,7 @@ class ButtonMenuWidget{
                   width: widthIconButton,
                   child: Image.asset('assets/menu_icon/karaoke.png')
                 ),
-                SizedBox(
-                  width: widthTextButton,
+                Expanded(
                   child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
                   child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, wrapWords: false,maxLines: 1),
@@ -183,7 +181,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
@@ -292,7 +289,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
@@ -346,7 +342,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
@@ -401,7 +396,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -456,7 +450,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -511,7 +504,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -566,7 +558,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -621,7 +612,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -676,7 +666,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
@@ -731,7 +720,6 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthTextButton = ScreenSize.getSizePercent(context, 25);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     notif ??= 0;
@@ -768,8 +756,7 @@ class ButtonMenuWidget{
                 width: widthIconButton,
                   child: Image.asset('assets/menu_icon/fingeprint.png')
                 ),
-              SizedBox(
-                width: widthTextButton,
+              Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
                   child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),

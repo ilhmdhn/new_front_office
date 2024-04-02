@@ -71,7 +71,6 @@ class PreferencesData {
     try{
       return await DeviceInformation.deviceIMEINumber;
     }catch(e){
-      print('DEBUGGING ERROR $e');
       showToastError(e.toString());
       return 'error $e';
     }

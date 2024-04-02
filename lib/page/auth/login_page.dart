@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
@@ -8,7 +7,6 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
-import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 

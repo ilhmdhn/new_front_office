@@ -10,7 +10,6 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
-import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {
@@ -49,53 +48,53 @@ class _PrinterPageState extends State<PrinterPage> {
         case BlueThermalPrinter.CONNECTED:
           setState(() {
             _connected = true;
-            print("bluetooth device state: connected");
+            showToastWarning("bluetooth device state: connected");
           });
           break;
         case BlueThermalPrinter.DISCONNECTED:
           setState(() {
             _connected = false;
-            print("bluetooth device state: disconnected");
+            showToastWarning("bluetooth device state: disconnected");
           });
           break;
         case BlueThermalPrinter.DISCONNECT_REQUESTED:
           setState(() {
             _connected = false;
-            print("bluetooth device state: disconnect requested");
+            showToastWarning("bluetooth device state: disconnect requested");
           });
           break;
         case BlueThermalPrinter.STATE_TURNING_OFF:
           setState(() {
             _connected = false;
-            print("bluetooth device state: bluetooth turning off");
+            showToastWarning("bluetooth device state: bluetooth turning off");
           });
           break;
         case BlueThermalPrinter.STATE_OFF:
           setState(() {
             _connected = false;
-            print("bluetooth device state: bluetooth off");
+            showToastWarning("bluetooth device state: bluetooth off");
           });
           break;
         case BlueThermalPrinter.STATE_ON:
           setState(() {
             _connected = false;
-            print("bluetooth device state: bluetooth on");
+            showToastWarning("bluetooth device state: bluetooth on");
           });
           break;
         case BlueThermalPrinter.STATE_TURNING_ON:
           setState(() {
             _connected = false;
-            print("bluetooth device state: bluetooth turning on");
+            showToastWarning("bluetooth device state: bluetooth turning on");
           });
           break;
         case BlueThermalPrinter.ERROR:
           setState(() {
             _connected = false;
-            print("bluetooth device state: error");
+            showToastWarning("bluetooth device state: error");
           });
           break;
         default:
-          print(state);
+          showToastWarning(state.toString());
           break;
       }
     });

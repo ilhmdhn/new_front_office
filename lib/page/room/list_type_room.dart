@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';

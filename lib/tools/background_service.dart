@@ -1,9 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
-import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/tools/di.dart';
-import 'package:front_office_2/tools/toast.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
