@@ -325,7 +325,7 @@ class ButtonMenuWidget{
               // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Extend', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
+                child: AutoSizeText('Duration', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
             SizedBox(
               width: widthArrowButton,

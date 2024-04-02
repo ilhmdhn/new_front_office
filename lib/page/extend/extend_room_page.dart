@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 
@@ -19,7 +20,8 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
   TextEditingController _reduceController = TextEditingController();
   DetailCheckinResponse? detailCheckin;
   bool isLoading = false;
-
+  int extendTime = 0;
+  int reduceTime = 0;
   
   void getData(String roomCode) async{
     setState(() {
@@ -82,42 +84,132 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
         Center(
           child: AutoSizeText(detailCheckin?.message??'ERROR GET DATA CHECKIN'),
         ):
-        Column(
-          children: [
-            Center(
-              child: AutoSizeText('INFORMASI CHECKIN', style: CustomTextStyle.blackMediumSize(21), minFontSize: 12, maxLines: 1,),
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      AutoSizeText(memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                      AutoSizeText(memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                    ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Center(
+                child: AutoSizeText('INFORMASI CHECKIN', style: CustomTextStyle.blackMediumSize(21), minFontSize: 12, maxLines: 1,),
+              ),
+              const SizedBox(height: 12,),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        AutoSizeText(memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                        AutoSizeText(memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                      ],
+                    ),
                   ),
-                ),
-                Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
-                Expanded(
-                  child: Column(
-                    children: [
-                      AutoSizeText(room, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                      AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                    ],
+                  Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        AutoSizeText(room, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                        AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                      ],
+                    )
                   )
-                )
-              ],
-            ),
-            const SizedBox(height: 12,),
+                ],
+              ),
 
-            Text('Durasi Extend', style: CustomTextStyle.blackMedium(),),
-            Row(
-              children: [
-                
-              ],
-            )
-          ],
+
+              const SizedBox(height: 16,),
+              Align(alignment: Alignment.centerLeft, child: AutoSizeText('Extend Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      setState((){
+                        if(extendTime>0){
+                          --extendTime;
+                        }
+                      });
+                    },
+                    child: SizedBox(
+                      height: 43,
+                      width: 43,
+                      child: Image.asset(
+                        'assets/icon/minus.png'),
+                    )
+                  ),
+                  const SizedBox(width: 9,),
+                  AutoSizeText(extendTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                  const SizedBox(width: 9,),
+                  InkWell(
+                    onTap: (){
+                      setState((){
+                        if(extendTime < 24){
+                          ++extendTime;
+                        }
+                      });
+                    },
+                    child: SizedBox(
+                      height: 43,
+                      width: 43,
+                      child: Image.asset(
+                        'assets/icon/plus.png'),
+                    )
+                  ),
+                  const SizedBox(width: 12,),
+                  ElevatedButton(
+                    onPressed: (){
+                    },
+                    style: CustomButtonStyle.confirm(),
+                    child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),)),
+                ],
+              ),
+              const SizedBox(height: 26,),
+              Align(alignment: Alignment.centerLeft, child: AutoSizeText('Reduce Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      setState((){
+                        if(reduceTime>0){
+                          --reduceTime;
+                        }
+                      });
+                    },
+                    child: SizedBox(
+                      height: 43,
+                      width: 43,
+                      child: Image.asset(
+                        'assets/icon/minus.png'),
+                    )
+                  ),
+                  const SizedBox(width: 9,),
+                  AutoSizeText('- ${reduceTime.toString()}', style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                  const SizedBox(width: 9,),
+                  InkWell(
+                    onTap: (){
+                      setState((){
+                        if(reduceTime < 24){
+                          ++reduceTime;
+                        }
+                      });
+                    },
+                    child: SizedBox(
+                      height: 43,
+                      width: 43,
+                      child: Image.asset(
+                        'assets/icon/plus.png'),
+                    )
+                  ),
+                  const SizedBox(width: 12,),
+                  ElevatedButton(
+                    onPressed: (){
+                    },
+                    style: CustomButtonStyle.cancel(),
+                    child: Text('Reduce Duration', style: CustomTextStyle.whiteSize(16),)
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ));
   }
