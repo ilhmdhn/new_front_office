@@ -599,7 +599,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           description: descriptionController.text,
                           event: eventController.text,
                           chusr: 'ILHAM',
-                          voucher: edcCode,
+                          voucher: '',
                           dpNote: dpNote,
                           cardType: cardTypeName,
                           cardName: _cardNameController.text,

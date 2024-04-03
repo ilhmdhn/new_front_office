@@ -6,3 +6,6 @@ List<int> downPaymentCode = [1, 2, 3, 4, 5];
 
 List<String> cardType = ['VISA', 'MASTER', 'BCA', 'MANDIRI', 'LAIN'];
 List<int> cardTypeCode = [1, 2, 3, 4, 5];
+
+List<String> transferReason = ['Overpax','Permintaan Tamu','VOD Bermasalah'];
+List<int> transferReasongCode = [1, 2, 3];
