@@ -41,6 +41,7 @@ class DetailCheckinModel{
   String dpNote;
   String cardType;
   String cardName;
+  String guestNotes;
   String cardNo;
   String cardApproval;
   String edcMachine;
@@ -61,6 +62,7 @@ class DetailCheckinModel{
     this.invoice = '',
     this.reception = '',
     this.voucher = '',
+    this.guestNotes = '',
     this.dpNote = '',
     this.cardType = '',
     this.cardName = '',
@@ -84,6 +86,7 @@ class DetailCheckinModel{
       hp: json['checkin_room']['hp'],
       downPayment: json['checkin_room']['uang_muka'],
       description: json['checkin_room']['keterangan'],
+      guestNotes: json['checkin_room']['keterangan_tamu'],
       voucher: json['checkin_room']['voucher'],
       dpNote: json['checkin_room']['nama_payment_uang_muka'],
       cardType: json['checkin_room']['input1_jenis_kartu'],

@@ -20,6 +20,7 @@ class CustomTextfieldStyle{
   static InputDecoration normalHint(hint){
     return InputDecoration(
       hintText: hint,
+      counterText: "",
       hintStyle: GoogleFonts.poppins(
         fontSize: 16,
         color: Colors.black,

@@ -49,7 +49,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   DetailCheckinModel? dataCheckin;
   String remainingTime = 'Waktu Habis';
   bool approvalPromoRoomState = false;
-
+  String chooseEdcName = '';
+  String cardTypeName = "";
+  String dpNote = "";
+  String edcCode = "";
   final _dpValueController = TextEditingController();
   final _cardNameController = TextEditingController();
   final _cardNumberController = TextEditingController();
@@ -115,6 +118,18 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         remainingTime+= ' $minuteRemaining Menit';
       }
     }
+
+    final dpValue = detailRoom?.data?.downPayment;
+
+    _dpValueController.text = dpValue.toString();
+    descriptionController.text = detailRoom?.data?.description??'';
+    eventController.text = detailRoom?.data?.guestNotes??'';
+    edcCode = detailRoom?.data?.edcMachine??'';
+    dpNote = detailRoom?.data?.dpNote??'';
+    cardTypeName = detailRoom?.data?.cardType??'';
+    _cardNameController.text = detailRoom?.data?.cardName??'';
+    _cardNumberController.text = detailRoom?.data?.cardNo??'';
+    _cardApprovalController.text = detailRoom?.data?.cardApproval??'';
     
     return SafeArea(
       child: Scaffold(
@@ -210,9 +225,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     children: [
                       Row(
                         children: [
-                          ElevatedButton(
-                            style: CustomButtonStyle.blueAppbar(),
-                            onPressed: ()async{
+                          InkWell(
+                            onTap: ()async{
                               final qrCode = await showQRScannerDialog(context);
                               if(qrCode != null){
                                 setState(() {
@@ -220,12 +234,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 });
                               }
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                              child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
-                            ),),
-                                            const SizedBox(width: 6,), 
-                                            voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: CustomContainerStyle.blueButton(),
+                              child: Text('Pilih', style: CustomTextStyle.whiteStandard(),)),),
+                            const SizedBox(width: 6,), 
+                            voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
                         ],
                       ),
                     ],
@@ -238,20 +252,21 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Promo Room', style: CustomTextStyle.blackMedium(),),
-                         ElevatedButton(
-                           style: CustomButtonStyle.blueAppbar(),
-                           onPressed: ()async{
-                             final nganu = await PromoDialog().setPromoRoom(context, 'PR A');
-                             if(nganu != null){  
-                               setState(() {
-                                 promoRoom = nganu;
-                               });
-                             }
-                           },
-                           child: Padding(
-                             padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                             child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
-                           ),)
+                        InkWell(
+                          onTap: ()async{
+                            final nganu = await PromoDialog().setPromoRoom(context, 'PR A');
+                            if(nganu != null){  
+                              setState(() {
+                                promoRoom = nganu;
+                              });
+                            }
+                          },
+                          child: Container(
+                            decoration: CustomContainerStyle.blueButton(),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                          ),
+                        )
                       ],
                     ),
                   ):Padding(
@@ -329,9 +344,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Promo FnB', style: CustomTextStyle.blackMedium(),),
-                        ElevatedButton(
-                          style: CustomButtonStyle.blueAppbar(),
-                          onPressed: ()async{
+                        InkWell(
+                          onTap: ()async{
                             final choosePromo = await PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
                             if(choosePromo != null){
                               setState(() {
@@ -339,8 +353,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                               });
                             }
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                          child: Container(
+                            decoration: CustomContainerStyle.blueButton(),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
                           ),),
                       ],
@@ -412,7 +427,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ),
                     ),
                   ),
-                  Text('UANG MUKA', style: CustomTextStyle.blackMedium(),),
+                  /*Text('UANG MUKA', style: CustomTextStyle.blackMedium(),),
                   CustomRadioButton(
                     defaultSelected: dpCode,
                     selectedBorderColor: Colors.transparent,
@@ -432,6 +447,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     radioButtonValue: (value){
                       setState(() {
                         dpCode = value;
+                        dpNote = downPaymentList[value-1];
                       });
                     }, 
                     unSelectedColor: Colors.white, 
@@ -445,8 +461,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     decoration: CustomTextfieldStyle.normalHint('Nominal')
                   ):const SizedBox(),
                   
-                  dpCode == 3 || dpCode == 4?
-                  Column(
+                  if (dpCode == 3 || dpCode == 4) Column(
                     children: [
                       TextField(
                         controller: _dpValueController,
@@ -459,10 +474,15 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         children: [
                           ElevatedButton(
                             onPressed: ()async{
-                              final chooseEdcName = await RadioListDialog().show(context, 'Pilih EDC', 1, edcType, edcTypeCode);
-                              setState(() {
-                                chooseEdc = chooseEdcName.toString();
-                              });
+                              final resultEdc = await RadioListDialog().show(context, 'Pilih EDC', 1, edcType, edcTypeCode);
+                              if(resultEdc != null){
+                                setState(() {
+                                  chooseEdcName = resultEdc;
+                                  final listEdc = dataEdc?.data;
+                                  List<EdcDataModel>? filterEdcCode = listEdc?.where((element) => element.edcName == chooseEdcName).toList();
+                                  edcCode = filterEdcCode?.first.edcNumber as String;
+                                });
+                              }
                             },
                             style: CustomButtonStyle.blueAppbar(),
                             child: Padding(
@@ -470,7 +490,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                               child: Text('Pilih  EDC ', style: CustomTextStyle.whiteStandard(),),
                             )),
                             const SizedBox(width: 12,),
-                            Text(chooseEdc, style: CustomTextStyle.blackStandard(),)
+                            Text(chooseEdcName, style: CustomTextStyle.blackStandard(),)
                         ],
                       ),
                       const SizedBox(height: 6,),  
@@ -482,7 +502,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                               setState(() {
                                 chooseCardType = chooseCardResult.toString();
                               });
-                            },
+                              },
                             style: CustomButtonStyle.blueAppbar(),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -495,25 +515,28 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         TextField(
                         controller: _cardNameController,
                         keyboardType: TextInputType.text,
-                        inputFormatters: [RupiahInputFormatter()],
+                        maxLength: 20,
+                        // inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nama')
                       ),
                       const SizedBox(height: 6,),  
                       TextField(
                         controller: _cardNumberController,
+                        maxLength: 4,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [RupiahInputFormatter()],
+                        // inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Nomor Kartu')
                       ),
                       const SizedBox(height: 6,),
                       TextField(
                         controller: _cardApprovalController,
+                        maxLength: 6,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [RupiahInputFormatter()],
+                        // inputFormatters: [RupiahInputFormatter()],
                         decoration: CustomTextfieldStyle.normalHint('Kode Approval')
                       )   
                     ],
-                  ):const SizedBox(),
+                  ) else const SizedBox(),
                   dpCode == 5?
                   Column(
                     children: [
@@ -539,6 +562,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       )  
                     ],
                   ):const SizedBox(),
+                  */
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Keterangan', style: CustomTextStyle.blackMedium(),)),
                   TextField(decoration: CustomTextfieldStyle.normalHint('Keterangan'), controller: descriptionController,),
@@ -567,7 +591,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         if(isNotNullOrEmpty(promoFnb?.promoName)){
                           listPromo.add(promoFnb!.promoName!);
                         }
-
                         final params = EditCheckinBody(
                           room: dataCheckin!.roomCode,
                           pax: pax,
@@ -576,13 +599,13 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           description: descriptionController.text,
                           event: eventController.text,
                           chusr: 'ILHAM',
-                          voucher: '',
-                          dpNote: '',
-                          cardType: '',
-                          cardName: '',
-                          cardNo: '',
-                          cardApproval: '',
-                          edcMachine: '',
+                          voucher: edcCode,
+                          dpNote: dpNote,
+                          cardType: cardTypeName,
+                          cardName: _cardNameController.text,
+                          cardNo: _cardNumberController.text,
+                          cardApproval: _cardApprovalController.text,
+                          edcMachine: edcCode,
                           memberCode: dataCheckin!.memberCode,
                           promo: listPromo,
                         );
