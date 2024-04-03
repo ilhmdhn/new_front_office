@@ -169,15 +169,15 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                           onTap: ()async{
                             final confirm = await ConfirmationDialog.confirmation(context, 'Extend Room?');
                             if(confirm == true){
-                              final reduceState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
-                              if(reduceState.state == true){
+                              final extendState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
+                              if(extendState.state == true){
                                 if(context.mounted){
                                   Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                                 }else{
                                   showToastWarning('Berhasil silahkan kembali');
                                 }
                               }else{
-                                showToastError(reduceState.message??'Gagal reduce duration');
+                                showToastError(extendState.message??'Gagal reduce duration');
                               } 
                             }
                           },
@@ -240,6 +240,19 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                       children: [
                         InkWell(
                           onTap: ()async{
+
+                            detailCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
+                            int remainingTime = ((detailCheckin?.data?.hourRemaining??0) * 60) + (detailCheckin?.data?.minuteRemaining??0);
+
+                            if( (remainingTime - (reduceTime*60)) <= 10 ){
+                              showToastWarning('Durasi checkin setelah dikurangi harus diatas 10 menit');
+                              return;
+                            }
+
+                            if(!context.mounted){
+                              return;
+                            }
+                            
                             final biometricResult = await VerificationDialog.requestVerification(context, rcp, roomCode, 'Reduce Checkin Duration');
                             if(biometricResult == true){
                                 final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
