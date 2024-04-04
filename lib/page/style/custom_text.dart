@@ -30,6 +30,14 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500);
   }
 
+  static TextStyle cancelOrder(){
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.redAccent.shade700, fontWeight: FontWeight.w500);
+  }
+
+  static TextStyle discountOrder(){
+    return GoogleFonts.poppins(fontSize: 16, color: Colors.amberAccent.shade700, fontWeight: FontWeight.w500);
+  }
+
   static TextStyle blackMediumNoSize(){
     return GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.w500);
   }

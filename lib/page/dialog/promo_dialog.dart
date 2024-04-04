@@ -106,7 +106,7 @@ class PromoDialog {
                                                   )
                                                 : const SizedBox(),
                                             (dataPromo.promoIdr ?? 0) > 0 ? 
-                                              AutoSizeText('Promo idr ${Formatter().formatRupiah(dataPromo.promoIdr ?? 0)})',
+                                              AutoSizeText('Promo idr ${Formatter.formatRupiah(dataPromo.promoIdr ?? 0)})',
                                                 style: CustomTextStyle.blackMediumSize(14),
                                                   minFontSize: 9,
                                               ) : const SizedBox()
@@ -232,7 +232,7 @@ Future<PromoFnbModel?> setPromoFnb(
                                           )
                                     : const SizedBox(),
                                     (promoData.promoIdr ?? 0) > 0 ? 
-                                      AutoSizeText('Promo idr ${Formatter().formatRupiah(promoData.promoIdr ?? 0)})',
+                                      AutoSizeText('Promo idr ${Formatter.formatRupiah(promoData.promoIdr ?? 0)})',
                                         style: CustomTextStyle.blackMediumSize(14), minFontSize: 9,
                                         ) 
                                     : const SizedBox()

@@ -46,8 +46,8 @@ class PreviewBillModel{
       dataRoom: RoomModel.fromJson(json['dataRoom']), 
       dataOrder: List<OrderModel>.from((json['orderData'] as List).map((x) => OrderModel.fromJson(x))), 
       dataCancelOrder: List<CancelOrderModel>.from((json['cancelOrderData'] as List).map((x) => CancelOrderModel.fromJson(x))), 
-      dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoOrderModel.fromJson(x))), 
-      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
+      dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoOrderModel.fromJson(x))), 
+      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent'])
     );
   }
@@ -247,7 +247,7 @@ class PromoOrderModel{
   String orderCode;
   String inventoryCode;
   String promoName;
-  String promoPrice;
+  num promoPrice;
 
   PromoOrderModel({
     required this.orderCode,
