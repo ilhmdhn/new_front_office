@@ -1,22 +1,73 @@
-class BillModel{
+class PreviewBillResponse{
+  bool state;
+  String message;
+  PreviewBillModel? data;
 
+  PreviewBillResponse({
+    required this.state,
+    required this.message,
+    this.data,
+  });
+
+  factory PreviewBillResponse.fromJson(Map<String, dynamic>json){
+    return PreviewBillResponse(
+      state: json['state'],
+      message: json['message'],
+      data: PreviewBillModel.fromJson(json['data'])
+    );
+  }
+}
+class PreviewBillModel{
+  OutletModel dataOutlet;
+  InvoiceModel dataInvoice;
+  RoomModel dataRoom;
+  ServiceTaxPercentModel dataServiceTaxPercent;
+
+  List<OrderModel> dataOrder;
+  List<CancelOrderModel> dataCancelOrder;
+  List<PromoOrderModel> dataPromoOrder;
+  List<PromoCancelOrderModel> dataPromoCancelOrder;
+
+  PreviewBillModel({
+    required this.dataOutlet,
+    required this.dataInvoice,
+    required this.dataRoom,
+    required this.dataOrder,
+    required this.dataCancelOrder,
+    required this.dataPromoOrder,
+    required this.dataPromoCancelOrder,
+    required this.dataServiceTaxPercent,
+  });
+
+  factory PreviewBillModel.fromJson(Map<String, dynamic>json){
+    return PreviewBillModel(
+      dataOutlet: OutletModel.fromJson(json['dataOutlet']), 
+      dataInvoice: InvoiceModel.fromJson( json['dataInvoice']), 
+      dataRoom: RoomModel.fromJson(json['dataRoom']), 
+      dataOrder: List<OrderModel>.from((json['orderData'] as List).map((x) => OrderModel.fromJson(x))), 
+      dataCancelOrder: List<CancelOrderModel>.from((json['cancelOrderData'] as List).map((x) => CancelOrderModel.fromJson(x))), 
+      dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoOrderModel.fromJson(x))), 
+      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
+      dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent'])
+    );
+  }
 }
 
-class DataOutlet{
+class OutletModel{
   String namaOutlet;
   String alamatOutlet;
   String telepon;
   String kota;
 
-  DataOutlet({
+  OutletModel({
     required this.namaOutlet,
     required this.alamatOutlet,
     required this.telepon,
     required this.kota,
   });
 
-  factory DataOutlet.fromJson(Map<String, dynamic>json){
-    return DataOutlet(
+  factory OutletModel.fromJson(Map<String, dynamic>json){
+    return OutletModel(
       namaOutlet: json['nama_outlet'], 
       alamatOutlet: json['alamat_outlet'], 
       telepon: json['telepon'], 
@@ -24,7 +75,7 @@ class DataOutlet{
   }
 }
 
-class InvoiceData{
+class InvoiceModel{
   num sewaRuangan;
   num promo;
   num jumlahRuangan;
@@ -48,7 +99,7 @@ class InvoiceData{
   num uangMuka;
   num jumlahBersih;
 
-  InvoiceData({
+  InvoiceModel({
     required this.sewaRuangan,
     required this.promo,
     required this.jumlahRuangan,
@@ -73,8 +124,8 @@ class InvoiceData{
     required this.jumlahBersih,
   });
 
-  factory InvoiceData.fromJson(Map<String, dynamic>json){
-    return InvoiceData(
+  factory InvoiceModel.fromJson(Map<String, dynamic>json){
+    return InvoiceModel(
       sewaRuangan: json['sewa_ruangan'],
       promo: json['promo'],
       jumlahRuangan: json['jumlah_ruangan'],
@@ -101,7 +152,7 @@ class InvoiceData{
   }
 }
 
-class DataRoom{
+class RoomModel{
   String tanggal;
   String nama;
   String roomCode;
@@ -109,7 +160,7 @@ class DataRoom{
   String checkin;
   String checkout;
 
-  DataRoom({
+  RoomModel({
     required this.tanggal,
     required this.nama,
     required this.roomCode,
@@ -118,8 +169,8 @@ class DataRoom{
     required this.checkout,
   });
 
-  factory DataRoom.fromJson(Map<String, dynamic>json){
-    return DataRoom(
+  factory RoomModel.fromJson(Map<String, dynamic>json){
+    return RoomModel(
       tanggal: json['tanggal'],
       nama: json['nama'],
       roomCode: json['room_code'],
@@ -130,7 +181,7 @@ class DataRoom{
   }
 }
 
-class OrderData{
+class OrderModel{
   String orderCode;
   String inventoryCode;
   String namaItem;
@@ -138,7 +189,7 @@ class OrderData{
   num harga;
   num total;
 
-  OrderData({
+  OrderModel({
   required this.orderCode,
   required this.inventoryCode,
   required this.namaItem,
@@ -147,8 +198,8 @@ class OrderData{
   required this.total,
   });
 
-  factory OrderData.fromJson(Map<String, dynamic>json){
-    return OrderData(
+  factory OrderModel.fromJson(Map<String, dynamic>json){
+    return OrderModel(
       orderCode: json['order_code'], 
       inventoryCode: json['inventory_code'], 
       namaItem: json['nama_item'], 
@@ -159,7 +210,7 @@ class OrderData{
   }
 }
 
-class CancelOrderData{
+class CancelOrderModel{
   String cancelOrderCode;
   String orderCode;
   num harga;
@@ -168,7 +219,7 @@ class CancelOrderData{
   int jumlah;
   num total;
 
-  CancelOrderData({
+  CancelOrderModel({
     required this.cancelOrderCode,
     required this.orderCode,
     required this.harga,
@@ -178,8 +229,9 @@ class CancelOrderData{
     required this.total
   });
 
-  factory CancelOrderData.fromJson(Map<String, dynamic>json){
-    return CancelOrderData(
+  factory CancelOrderModel.fromJson(Map<String, dynamic>json){
+    return CancelOrderModel
+    (
       cancelOrderCode: json['cancel_order_code'], 
       orderCode: json['order_code'], 
       harga: json['harga'], 
@@ -191,21 +243,22 @@ class CancelOrderData{
   }
 }
 
-class PromoOrderData{
+class PromoOrderModel{
   String orderCode;
   String inventoryCode;
   String promoName;
   String promoPrice;
 
-  PromoOrderData({
+  PromoOrderModel({
     required this.orderCode,
     required this.inventoryCode,
     required this.promoName,
     required this.promoPrice,
   });
 
-  factory PromoOrderData.fromJson(Map<String, dynamic>json){
-    return PromoOrderData(
+  factory PromoOrderModel.fromJson(Map<String, dynamic>json){
+    return PromoOrderModel
+    (
       orderCode: json['order_code'], 
       inventoryCode: json['inventory_code'], 
       promoName: json['promo_name'], 
@@ -214,14 +267,14 @@ class PromoOrderData{
   }
 }
 
-class PromoCancelOrder{
+class PromoCancelOrderModel{
   String orderCancelCode;
   String orderCode;
   String inventoryCode;
   String promoName;
   num promoPrice;
 
-  PromoCancelOrder({
+  PromoCancelOrderModel({
     required this.orderCancelCode,
     required this.orderCode,
     required this.inventoryCode,
@@ -229,8 +282,8 @@ class PromoCancelOrder{
     required this.promoPrice,
   });
 
-  factory PromoCancelOrder.fromJson(Map<String, dynamic>json){
-    return PromoCancelOrder(
+  factory PromoCancelOrderModel.fromJson(Map<String, dynamic>json){
+    return PromoCancelOrderModel(
       orderCancelCode: json['order_cancel_code'],
       orderCode: json['order_code'],
       inventoryCode: json['inventory_code'],
@@ -240,25 +293,76 @@ class PromoCancelOrder{
   }
 }
 
-class ServiceTaxPercent{
+class ServiceTaxPercentModel{
   int serviceRoomPercent;
   int taxRoomPercent;
   int serviceFnbPercent;
   int taxFnbPercent;
 
-  ServiceTaxPercent({
+  ServiceTaxPercentModel({
     required this.serviceRoomPercent,
     required this.taxRoomPercent,
     required this.serviceFnbPercent,
     required this.taxFnbPercent,
   });
 
-  factory ServiceTaxPercent.fromJson(Map<String, dynamic>json){
-    return ServiceTaxPercent(
+  factory ServiceTaxPercentModel.fromJson(Map<String, dynamic>json){
+    return ServiceTaxPercentModel(
       serviceRoomPercent: json['service_room_percent'],
       taxRoomPercent: json['tax_room_percent'],
       serviceFnbPercent: json['service_fnb_percent'],
       taxFnbPercent: json['tax_fnb_percent'],
+    );
+  }
+}
+
+class TransferListModel{
+  String room;
+  num transferTotal;
+
+  TransferListModel({
+    required this.room,
+    required this.transferTotal,
+  });
+
+  factory TransferListModel.fromJson(Map<String ,dynamic>json){
+    return TransferListModel(
+      room: json['room'], 
+      transferTotal: json['transferTotal']);
+  }
+}
+
+class TransferModel{
+  OutletModel dataOutlet;
+  InvoiceModel dataInvoice;
+  RoomModel dataRoom;
+  List<OrderModel> dataOrder;
+  List<CancelOrderModel> dataCancelOrder;
+  List<PromoOrderModel> dataPromoOrder;
+  List<PromoCancelOrderModel> dataPromoCancelOrder;
+  ServiceTaxPercentModel dataServiceTaxPercent;
+
+  TransferModel({
+    required this.dataOutlet,
+    required this.dataInvoice,
+    required this.dataRoom,
+    required this.dataOrder,
+    required this.dataCancelOrder,
+    required this.dataPromoOrder,
+    required this.dataPromoCancelOrder,
+    required this.dataServiceTaxPercent,
+  });
+
+  factory TransferModel.fromJson(Map<String, dynamic>json){
+    return TransferModel(
+      dataOutlet: OutletModel.fromJson(json['dataOutlet']), 
+      dataInvoice: InvoiceModel.fromJson( json['dataInvoice']), 
+      dataRoom: RoomModel.fromJson(json['dataRoom']), 
+      dataOrder: List<OrderModel>.from((json['orderData'] as List).map((x) => OrderModel.fromJson(x))), 
+      dataCancelOrder: List<CancelOrderModel>.from((json['cancelOrderData'] as List).map((x) => CancelOrderModel.fromJson(x))), 
+      dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoOrderModel.fromJson(x))), 
+      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
+      dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent'])
     );
   }
 }

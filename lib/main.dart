@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/bill/bill_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/extend/extend_room_page.dart';
@@ -80,7 +81,8 @@ class FrontOffice extends StatelessWidget {
         RoomCheckinListPage.nameRoute: (context) => const RoomCheckinListPage(),
         ExtendRoomPage.nameRoute: (context) => const ExtendRoomPage(),
         ApprovalListPage.nameRoute: (context) => const ApprovalListPage(),
-        TransferReasonPage.nameRoute: (context) => const TransferReasonPage()
+        TransferReasonPage.nameRoute: (context) => const TransferReasonPage(),
+        BillPage.nameRoute: (context) => const BillPage()
       },
     );
   }

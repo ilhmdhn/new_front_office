@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:front_office_2/data/model/base_response.dart';
+import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
@@ -293,6 +294,24 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         state: false,
         message: e.toString() 
       );
+    }
+  }
+
+  Future<PreviewBillResponse> previewBill(String roomCode)async{
+    try{
+      final url = Uri.parse('$serverUrl/mobile-print/view-bill?room=$roomCode');
+      final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return PreviewBillResponse.fromJson(convertedResult);
+    }catch(e){
+      return PreviewBillResponse(
+        state: false, 
+        message: e.toString());
     }
   }
 
