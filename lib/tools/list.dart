@@ -9,3 +9,5 @@ List<int> cardTypeCode = [1, 2, 3, 4, 5];
 
 List<String> transferReason = ['Overpax','Permintaan Tamu','VOD Bermasalah'];
 List<int> transferReasongCode = [1, 2, 3];
+
+List<String> paymentMethodList = ['CASH', 'CREDIT CARD', 'DEBET CARD', 'E-Money', 'COMPLIMENTARY', 'PIUTANG'];

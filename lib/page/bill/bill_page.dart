@@ -2,11 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
-import 'package:front_office_2/tools/helper.dart';
 
 class BillPage extends StatefulWidget {
   static const nameRoute = '/bill';
@@ -199,6 +199,9 @@ class _BillPageState extends State<BillPage> {
                         const SizedBox(width: 5,),
                         Expanded(
                           child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
+                            },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               decoration: CustomContainerStyle.confirmButton(),

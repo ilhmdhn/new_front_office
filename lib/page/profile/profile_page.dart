@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -31,7 +32,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
               }, 
               style: CustomButtonStyle.confirm(),
-              child: Text('Logout', style: CustomTextStyle.whiteStandard(),))
+              child: Text('Logout', style: CustomTextStyle.whiteStandard(),)),
+              ElevatedButton(
+              onPressed: (){
+                PreferencesData.clearUser();
+                Navigator.pushNamed(context, PrinterPage.nameRoute);
+              }, 
+              style: CustomButtonStyle.confirm(),
+              child: Text('Setting', style: CustomTextStyle.whiteStandard(),))
           ],
         ),
       )

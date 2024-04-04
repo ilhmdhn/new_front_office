@@ -41,7 +41,7 @@ class RadioListDialog{
                         radioButtonValue: (value){
                           chooseEdc = listItem[value-1];
                         }, 
-                        unSelectedColor: Colors.white, 
+                        unSelectedColor: Colors.white,
                         selectedColor: CustomColorStyle.appBarBackground()),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
