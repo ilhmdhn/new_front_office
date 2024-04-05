@@ -4,6 +4,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/list.dart';
+import 'package:front_office_2/data/model/edc_response.dart';
 
 class PaymentListDialog{
   static Future<String?> eMoneyList(BuildContext ctx, String? choosed) async {
@@ -124,5 +125,15 @@ class PaymentListDialog{
         );
       }
     );
+  }
+
+  static Future<EdcDataModel?> selectEdc(BuildContext ctx)async{
+    return showDialog(
+      context: ctx, 
+      builder: (BuildContext ctxDialog){
+        return AlertDialog(
+          title: Text('Pilih Edc', style: CustomTextStyle.titleAlertDialog(),),
+        );
+      });
   }
 }
