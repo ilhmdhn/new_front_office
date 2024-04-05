@@ -35,10 +35,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   int pax = 1;
   int dpCode = 1;
   String? voucherCode;
-  EdcResponse? dataEdc;
+  // EdcResponse? dataEdc;
+  // List<String> edcType = [];
+  // List<int> edcTypeCode = [];
   bool isLoading = true;
-  List<String> edcType = [];
-  List<int> edcTypeCode = [];
   String chooseEdc = '';
   String chooseCardType = '';
   PromoRoomModel? promoRoom;
@@ -53,12 +53,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String cardTypeName = "";
   String dpNote = "";
   String edcCode = "";
-  final _dpValueController = TextEditingController();
-  final _cardNameController = TextEditingController();
-  final _cardNumberController = TextEditingController();
-  final _cardApprovalController = TextEditingController();
-  final _transferBankUserController = TextEditingController();
-  final _transferBankNameController = TextEditingController();
+  // final _dpValueController = TextEditingController();
+  // final _cardNameController = TextEditingController();
+  // final _cardNumberController = TextEditingController();
+  // final _cardApprovalController = TextEditingController();
+  // final _transferBankUserController = TextEditingController();
+  // final _transferBankNameController = TextEditingController();
 
 
   TextEditingController descriptionController = TextEditingController();
@@ -69,23 +69,23 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
     if(detailRoom?.state != true){
       showToastError(detailRoom?.message??'Error get room info');
     }
-    dataEdc = await ApiRequest().getEdc();
-    if(dataEdc?.state != true){
-      showToastError(dataEdc?.message??'Unknown error get edc list');
-    }
+    // dataEdc = await ApiRequest().getEdc();
+    // if(dataEdc?.state != true){
+    //   showToastError(dataEdc?.message??'Unknown error get edc list');
+    // }
 
     isLoading = false;
-    int nganu =1;
-    dataEdc?.data.forEach((x){
-      edcType.add(x.edcName??'unknown');
-      edcTypeCode.add(nganu);
-      nganu++;
-    });
+    // int nganu =1;
+    // dataEdc?.data.forEach((x){
+    //   edcType.add(x.edcName??'unknown');
+    //   edcTypeCode.add(nganu);
+      // nganu++;
+    // });
     setState(() {
-      dataEdc;
+      // dataEdc;
       isLoading;
-      edcType;
-      edcTypeCode;
+      // edcType;
+      // edcTypeCode;
       detailRoom;
       dataCheckin = detailRoom?.data;
     });
@@ -101,7 +101,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         promoFnb = dataCheckin?.promoFnb;
         pax = dataCheckin?.pax??1;
         hasModified = true;
-        _dpValueController.text = dataCheckin!.downPayment.toString();
+        // _dpValueController.text = dataCheckin!.downPayment.toString();
     }
 
     int hourRemaining = (dataCheckin?.hourRemaining??0);
@@ -119,17 +119,17 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
       }
     }
 
-    final dpValue = detailRoom?.data?.downPayment;
+    // final dpValue = detailRoom?.data?.downPayment;
 
-    _dpValueController.text = dpValue.toString();
+    // _dpValueController.text = dpValue.toString();
     descriptionController.text = detailRoom?.data?.description??'';
     eventController.text = detailRoom?.data?.guestNotes??'';
     edcCode = detailRoom?.data?.edcMachine??'';
     dpNote = detailRoom?.data?.dpNote??'';
     cardTypeName = detailRoom?.data?.cardType??'';
-    _cardNameController.text = detailRoom?.data?.cardName??'';
-    _cardNumberController.text = detailRoom?.data?.cardNo??'';
-    _cardApprovalController.text = detailRoom?.data?.cardApproval??'';
+    // _cardNameController.text = detailRoom?.data?.cardName??'';
+    // _cardNumberController.text = detailRoom?.data?.cardNo??'';
+    // _cardApprovalController.text = detailRoom?.data?.cardApproval??'';
     
     return SafeArea(
       child: Scaffold(
@@ -595,17 +595,17 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           room: dataCheckin!.roomCode,
                           pax: pax,
                           hp: dataCheckin!.hp,
-                          dp: _dpValueController.text,
+                          dp: "",
                           description: descriptionController.text,
                           event: eventController.text,
                           chusr: 'ILHAM',
                           voucher: '',
-                          dpNote: dpNote,
-                          cardType: cardTypeName,
-                          cardName: _cardNameController.text,
-                          cardNo: _cardNumberController.text,
-                          cardApproval: _cardApprovalController.text,
-                          edcMachine: edcCode,
+                          dpNote: "",
+                          cardType: "",
+                          cardName: "",
+                          cardNo: "",
+                          cardApproval: "",
+                          edcMachine: "",
                           memberCode: dataCheckin!.memberCode,
                           promo: listPromo,
                         );
@@ -639,7 +639,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
 
   @override
   void dispose() {
-    _dpValueController.dispose();
+    // _dpValueController.dispose();
     descriptionController.dispose();
     eventController.dispose();
     super.dispose();
