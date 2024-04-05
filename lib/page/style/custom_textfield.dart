@@ -26,7 +26,7 @@ class CustomTextfieldStyle{
         color: Colors.black,
         fontWeight: FontWeight.w400),
         focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(8.0),
         borderSide: const BorderSide(color: Colors.grey, width: 2.0),
       ),
       enabledBorder: OutlineInputBorder(
