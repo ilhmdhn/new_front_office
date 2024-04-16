@@ -1,12 +1,15 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/payment_params.dart';
 import 'package:front_office_2/page/dialog/payment_list_dialog.dart';
+import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/rupiah.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class PaymentPage extends StatefulWidget {
   static const nameRoute = '/payment';
@@ -23,10 +26,14 @@ class _PaymentPageState extends State<PaymentPage> {
   num nominal = 0;
   String eMoneyChoosed = 'DANA';
   String piutangChoosed = 'PEMEGANG SAHAM OUTLET';
+  String edcChoosed = '';
+  String cardChoosed = '';
   TextEditingController nominalController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController noPaymentController = TextEditingController();
   TextEditingController approvalPaymentController = TextEditingController();
+  List<PaymentDetail> paymentList = List.empty();
+
   @override
   Widget build(BuildContext context) {
     roomCode = ModalRoute.of(context)!.settings.arguments as String;
@@ -85,11 +92,18 @@ class _PaymentPageState extends State<PaymentPage> {
                               Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
                               const SizedBox(width: 12,),
                               InkWell(
-                                onTap: (){},
+                                onTap: ()async{
+                                  final choosed = await CardPaymentDialog().edcMachine(context);
+                                  if(choosed != null){
+                                    setState(() {
+                                      edcChoosed = choosed;
+                                    });
+                                  }
+                                },
                                 child: Container(
                                   padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: CustomContainerStyle.blueButton(),
-                                  child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                                  child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                 ),
                               )
                             ],
@@ -99,14 +113,21 @@ class _PaymentPageState extends State<PaymentPage> {
                         Expanded(
                           child: Row(
                             children: [
-                              Text('Tipe', style: CustomTextStyle.blackMedium()),
+                              Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
                               const SizedBox(width: 12,),
                               InkWell(
-                                onTap: (){},
+                                onTap: ()async{
+                                  final choosed = await CardPaymentDialog().cardType(context);
+                                  if(choosed != null){
+                                    setState(() {
+                                      cardChoosed = choosed;
+                                    });
+                                  }
+                                },
                                 child: Container(
                                   padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: CustomContainerStyle.blueButton(),
-                                  child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                                  child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                 ),
                               )
                             ],
@@ -144,11 +165,18 @@ class _PaymentPageState extends State<PaymentPage> {
                               Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
                               const SizedBox(width: 12,),
                               InkWell(
-                                onTap: (){},
+                                onTap: ()async{
+                                  final choosed = await CardPaymentDialog().edcMachine(context);
+                                  if(choosed != null){
+                                    setState(() {
+                                      edcChoosed = choosed;
+                                    });
+                                  }
+                                },
                                 child: Container(
                                   padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: CustomContainerStyle.blueButton(),
-                                  child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                                  child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                 ),
                               )
                             ],
@@ -158,14 +186,21 @@ class _PaymentPageState extends State<PaymentPage> {
                         Expanded(
                           child: Row(
                             children: [
-                              Text('Tipe', style: CustomTextStyle.blackMedium()),
+                              Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
                               const SizedBox(width: 12,),
                               InkWell(
-                                onTap: (){},
+                                onTap: ()async{
+                                  final choosed = await CardPaymentDialog().cardType(context);
+                                  if(choosed != null){
+                                    setState(() {
+                                      cardChoosed = choosed;
+                                    });
+                                  }
+                                },
                                 child: Container(
                                   padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: CustomContainerStyle.blueButton(),
-                                  child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                                  child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                 ),
                               )
                             ],
@@ -296,16 +331,21 @@ class _PaymentPageState extends State<PaymentPage> {
               const SizedBox(height: 6,),
               Align(
                 alignment: Alignment.centerRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  decoration: CustomContainerStyle.blueButton(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add_outlined, color: Colors.white,),
-                      const SizedBox(width: 6,),
-                      Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
-                    ],
+                child: InkWell(
+                  onTap: (){
+                    showToastWarning('NGETESSS');
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    decoration: CustomContainerStyle.blueButton(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add_outlined, color: Colors.white,),
+                        const SizedBox(width: 6,),
+                        Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
+                      ],
+                    ),
                   ),
                 ),
               )

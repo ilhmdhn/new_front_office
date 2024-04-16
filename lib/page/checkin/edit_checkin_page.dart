@@ -10,7 +10,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
-import 'package:front_office_2/page/dialog/radio_list_dialog.dart';
+import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
