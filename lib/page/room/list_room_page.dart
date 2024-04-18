@@ -9,6 +9,7 @@ import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/checkin_time_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ListRoomReadyPage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                       });
 
                       final checkinResult = await ApiRequest().doCheckin(CheckinBody(
-                        chusr: 'ngetest',
+                        chusr: PreferencesData.getUser().userId??'UNKNOWN',
                         hour: result.duration,
                         minute: 0,
                         pax: result.pax,

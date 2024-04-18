@@ -1,3 +1,6 @@
+import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
+import 'package:front_office_2/tools/helper.dart';
+
 class RoomCheckinResponse{
   bool state;
   String message;
@@ -10,11 +13,15 @@ class RoomCheckinResponse{
   });
 
   factory RoomCheckinResponse.fromJson(Map<String, dynamic>json){
+    List<RoomCheckinListPage> roomList = [];
+    if(isNotNullOrEmpty(json['data'])){
+      roomList = json['data'];
+    }
     return RoomCheckinResponse(
       state: json['state'],
       message: json['message'],
       data: List<ListRoomCheckinModel>.from(
-        (json['data'] as List).map((x) => ListRoomCheckinModel.fromJson(x))
+        (roomList as List).map((x) => ListRoomCheckinModel.fromJson(x))
       )
     );
   }

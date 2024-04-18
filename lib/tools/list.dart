@@ -9,7 +9,7 @@ List<String> cardTypeList = ['VISA', 'MASTER', 'BCA', 'MANDIRI', 'LAIN'];
 List<String> transferReason = ['Overpax','Permintaan Tamu','VOD Bermasalah'];
 List<int> transferReasongCode = [1, 2, 3];
 
-List<String> paymentMethodList = ['CASH', 'CREDIT CARD', 'DEBET CARD', 'E-Money', 'COMPLIMENTARY', 'PIUTANG'];
+List<String> paymentMethodList = ['CASH', 'CREDIT CARD', 'DEBET CARD', 'E-MONEY', 'COMPLIMENTARY', 'PIUTANG'];
 
 List<String> eMoneyValueList = ['DANA', 'OVO', 'GOPAY', 'QRIS', 'SHOPEE PAY', 'LINK AJA'];
 List<String> piutangValueList = ['PEMEGANG SAHAM OUTLET', 'PEMEGANG SAHAM WARALABA', 'OUTLET', 'KONSUMEN TERDAFTAR', 'ADVANCED'];

@@ -315,6 +315,24 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<BaseResponse> pay(Map<String, dynamic> params)async{
+    try{
+      final url = Uri.parse('$serverUrl/payment/add');
+      final apiResponse = await http.post(url , body: json.encode(params), headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false, 
+        message: e.toString());
+    }
+  }
+
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }
