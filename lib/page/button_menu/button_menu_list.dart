@@ -517,7 +517,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
+        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
       },
       child: Container(
         // height: 83,
@@ -571,7 +571,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
+        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
       },
       child: Container(
         // height: 83,
@@ -625,7 +625,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
+        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
         // height: 83,
@@ -679,7 +679,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
+        showToastWarning('List Reservation is Cooming Soon');
       },
       child: Container(
         // height: 83,

@@ -2,6 +2,6 @@
     return value == null || value.isEmpty;
   }
 
-  bool isNotNullOrEmpty(String? value) {
+  bool isNotNullOrEmpty(value) {
     return value != null && value.isNotEmpty;
   }

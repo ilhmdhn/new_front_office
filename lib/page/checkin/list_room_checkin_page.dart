@@ -10,6 +10,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:lottie/lottie.dart';
 
 class RoomCheckinListPage extends StatefulWidget {
   static const nameRoute = '/list-room-checkin';
@@ -24,10 +25,16 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
   RoomCheckinResponse? roomCheckinResponse;
   String remaining = 'WAKTU HABIS';
-  int destination = 0; List<ListRoomCheckinModel> listRoomCheckin = [];
+  String searchRoom = '';
+  int destination = 0; 
+  List<ListRoomCheckinModel> listRoomCheckin = [];
 
   void getRoomCheckin(String search)async{
-    roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
+    if(destination != 6){
+      roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
+    }else if (destination == 6){
+      roomCheckinResponse = await ApiRequest().getListRoomPaidd(search);
+    }
     
     if(roomCheckinResponse?.state != true){
       showToastError(roomCheckinResponse?.message??'Error get list room checkin');
@@ -36,8 +43,14 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     setState(() {
       roomCheckinResponse;
       listRoomCheckin = roomCheckinResponse?.data??[];
-      if(destination == 1 || destination == 2){
+      if(destination == 1 || destination == 2 || destination == 3 || destination == 4){
         listRoomCheckin = listRoomCheckin.where((item) => item.printState == '0' && item.summaryCode == '').toList();
+      }else if(destination == 5){
+        listRoomCheckin = listRoomCheckin.where((item) => isNullOrEmpty(item.summaryCode)).toList();
+      }else if(destination == 6){
+        listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
+      }else if(destination == 7){
+        listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
       }
     });
   }
@@ -68,6 +81,18 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
         const Center(
           child: CircularProgressIndicator(),
         ):
+
+        isNullOrEmpty(listRoomCheckin) && isNullOrEmpty(searchRoom)?
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LottieBuilder.asset('assets/animation/empty.json', height: 226, width: 226,),
+              const SizedBox(height: 12,),
+              Text('Empty', style: CustomTextStyle.blackMedium(),),
+            ],
+          ),
+        ):
         
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -77,6 +102,10 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                 hintText: 'Cari Room',
                 surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
                 shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
+                onChanged: ((value){
+                  searchRoom = value;
+                  getRoomCheckin(searchRoom);
+                }),
                 trailing: Iterable.generate(
                   1, (index) => const Padding(
                     padding: EdgeInsets.only(right: 5),

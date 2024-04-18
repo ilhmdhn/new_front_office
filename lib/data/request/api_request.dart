@@ -212,6 +212,27 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<RoomCheckinResponse> getListRoomPaidd(String? search)async{
+    try{
+      if(isNullOrEmpty(search)){
+        search = '';
+      }
+      final url = Uri.parse('$serverUrl/room/all-room-paid?keyword=$search');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
+      final convertedResult = json.decode(apiResponse.body);
+      return RoomCheckinResponse.fromJson(convertedResult);
+    }catch(e){
+      return RoomCheckinResponse(
+        state: false,
+        message: e.toString(),
+        data: []
+      );
+    }
+  }
+
   Future<DetailCheckinResponse> getDetailRoomCheckin(String roomCode)async{
     try{
       final url = Uri.parse('$serverUrl/checkin/checkin-result/$roomCode');

@@ -7,6 +7,7 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -38,7 +39,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginState()async{
     final apiResponse = await ApiRequest().cekSign();
-    if(apiResponse.state == true){
+    final user = PreferencesData.getUser();
+    if(apiResponse.state == true && isNotNullOrEmpty(user.userId) && isNotNullOrEmpty(user.level) && isNotNullOrEmpty(user.token) ){
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{
       setState((){

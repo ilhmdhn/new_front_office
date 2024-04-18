@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/payment_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/payment_list_dialog.dart';
 import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
@@ -625,9 +626,16 @@ class _PaymentPageState extends State<PaymentPage> {
                       const Expanded(child: SizedBox()),
                       InkWell(
                         onTap: ()async{
-                          if(minusPay < 1 ){
-
+                          if(minusPay > 0 ){
+                            showToastWarning('Pembayaran Kurang');
+                            return;
                           }
+                          
+                          final confirmationState = await ConfirmationDialog.confirmation(context, 'Bayar Room $roomCode');
+                          if(confirmationState != true){
+                            return;
+                          }
+
                           final anu = GeneratePaymentParams.generatePaymentParams(sendEmail, roomCode, paymentList);
                           final paymentResult = await ApiRequest().pay(anu);
 
