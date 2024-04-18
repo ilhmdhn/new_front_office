@@ -4,7 +4,9 @@ import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/bill_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/extend/extend_room_page.dart';
+import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
@@ -28,12 +30,15 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
   String searchRoom = '';
   int destination = 0; 
   List<ListRoomCheckinModel> listRoomCheckin = [];
+  bool isLoaded = false;
 
   void getRoomCheckin(String search)async{
-    if(destination != 6){
+    if(destination >0 && destination < 6){
       roomCheckinResponse = await ApiRequest().getListRoomCheckin(search);
     }else if (destination == 6){
-      roomCheckinResponse = await ApiRequest().getListRoomPaidd(search);
+      roomCheckinResponse = await ApiRequest().getListRoomPaid(search);
+    }else if(destination == 7){
+      roomCheckinResponse = await ApiRequest().getListRoomCheckout(search);
     }
     
     if(roomCheckinResponse?.state != true){
@@ -53,17 +58,17 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
         listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
       }
     });
-  }
 
-  @override
-  void initState() {
-    getRoomCheckin('');
-    super.initState();
+    isLoaded = true;
   }
 
   @override
   Widget build(BuildContext context) {
     destination = ModalRoute.of(context)!.settings.arguments as int;
+    if(destination != 0 && isLoaded == false){
+      getRoomCheckin('');
+    }
+    print('destination $destination');
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
@@ -188,7 +193,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
       ));
   }
 
-  void movePage(int code, String roomCode){
+  void movePage(int code, String roomCode)async{
     if(code == 1 && isNotNullOrEmpty(roomCode)){
       Navigator.pushNamed(context, EditCheckinPage.nameRoute, arguments: roomCode);
     }
@@ -203,6 +208,43 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
     if(code == 5 && isNotNullOrEmpty(roomCode)){
       Navigator.pushNamed(context, BillPage.nameRoute, arguments: roomCode);
+    }
+
+    if(code == 6 && isNotNullOrEmpty(roomCode)){
+      final confirmCheckout = await ConfirmationDialog.confirmation(context, 'Checkout Room $roomCode?');
+      if(confirmCheckout != true){
+        return;
+      }
+
+      final checkoutState = await ApiRequest().checkout(roomCode);
+
+      if(checkoutState.state != true){
+        showToastError('Gagal checout room ${checkoutState.message}');
+        return;
+      }
+      BuildContext ctxNya = context;
+      if(ctxNya.mounted){
+        Navigator.pushNamedAndRemoveUntil(ctxNya, MainPage.nameRoute, (route) => false);
+      }
+    }
+
+    if(code == 7 && isNotNullOrEmpty(roomCode)){
+
+      final confirmCheckout = await ConfirmationDialog.confirmation(context, 'Clean Room $roomCode?');
+      if(confirmCheckout != true){
+        return;
+      }
+
+      final checkoutState = await ApiRequest().checkout(roomCode);
+
+      if(checkoutState.state != true){
+        showToastError('Gagal checout room ${checkoutState.message}');
+        return;
+      }
+      BuildContext ctxNya = context;
+      if(ctxNya.mounted){
+        Navigator.pushNamedAndRemoveUntil(ctxNya, MainPage.nameRoute, (route) => false);
+      }
     }
   }
 }

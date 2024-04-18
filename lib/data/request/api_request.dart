@@ -196,6 +196,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       if(isNullOrEmpty(search)){
         search = '';
       }
+            print('DEBUGGING CHECKIN');
       final url = Uri.parse('$serverUrl/room/all-room-checkin?keyword=$search');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -212,12 +213,35 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-  Future<RoomCheckinResponse> getListRoomPaidd(String? search)async{
+  Future<RoomCheckinResponse> getListRoomPaid(String? search)async{
     try{
       if(isNullOrEmpty(search)){
         search = '';
       }
+            print('DEBUGGING CHECKOUT');
       final url = Uri.parse('$serverUrl/room/all-room-paid?keyword=$search');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
+      final convertedResult = json.decode(apiResponse.body);
+      return RoomCheckinResponse.fromJson(convertedResult);
+    }catch(e){
+      return RoomCheckinResponse(
+        state: false,
+        message: e.toString(),
+        data: []
+      );
+    }
+  }
+
+  Future<RoomCheckinResponse> getListRoomCheckout(String? search)async{
+    try{
+      if(isNullOrEmpty(search)){
+        search = '';
+      }
+      print('DEBUGGING CLEAN');
+      final url = Uri.parse('$serverUrl/room/all-room-checkout?keyword=$search');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
           loginPage();
@@ -351,6 +375,31 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse(
         state: false, 
         message: e.toString());
+    }
+  }
+
+  Future<BaseResponse> checkout(String room)async{
+    try{
+      final url = Uri.parse('$serverUrl/room/checkout');
+
+      final checkinBody = {
+        'room': room,
+        'chusr': PreferencesData.getUser().userId
+      };
+
+      final apiResponse = await http.post(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
     }
   }
 
