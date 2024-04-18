@@ -55,7 +55,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
       }else if(destination == 6){
         listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
       }else if(destination == 7){
-        listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
+        // listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.c)).toList();
       }
     });
 
@@ -229,21 +229,27 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     }
 
     if(code == 7 && isNotNullOrEmpty(roomCode)){
-
-      final confirmCheckout = await ConfirmationDialog.confirmation(context, 'Clean Room $roomCode?');
+      BuildContext ctxNya = context;
+      if(!ctxNya.mounted){
+        showToastWarning('Ulangi clean room');
+        return;
+      }
+      final confirmCheckout = await ConfirmationDialog.confirmation(ctxNya, 'Clean Room $roomCode?');
       if(confirmCheckout != true){
         return;
       }
 
-      final checkoutState = await ApiRequest().checkout(roomCode);
+      final checkoutState = await ApiRequest().clean(roomCode);
 
       if(checkoutState.state != true){
         showToastError('Gagal checout room ${checkoutState.message}');
         return;
       }
-      BuildContext ctxNya = context;
+
       if(ctxNya.mounted){
         Navigator.pushNamedAndRemoveUntil(ctxNya, MainPage.nameRoute, (route) => false);
+      }else{
+        showToastWarning('BERHASIL CLEAN ROOM');
       }
     }
   }
