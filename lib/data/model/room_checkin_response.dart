@@ -1,6 +1,4 @@
-import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/toast.dart';
 
 class RoomCheckinResponse{
   bool state;

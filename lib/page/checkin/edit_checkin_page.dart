@@ -1,27 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
-import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
-import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
-import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/list.dart';
-import 'package:front_office_2/tools/rupiah.dart';
 import 'package:front_office_2/tools/toast.dart';
 class EditCheckinPage extends StatefulWidget {
   static const nameRoute = '/edit-checkin';
@@ -35,9 +29,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   int pax = 1;
   int dpCode = 1;
   String? voucherCode;
-  // EdcResponse? dataEdc;
-  // List<String> edcType = [];
-  // List<int> edcTypeCode = [];
   bool isLoading = true;
   String chooseEdc = '';
   String chooseCardType = '';
@@ -53,13 +44,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String cardTypeName = "";
   String dpNote = "";
   String edcCode = "";
-  // final _dpValueController = TextEditingController();
-  // final _cardNameController = TextEditingController();
-  // final _cardNumberController = TextEditingController();
-  // final _cardApprovalController = TextEditingController();
-  // final _transferBankUserController = TextEditingController();
-  // final _transferBankNameController = TextEditingController();
-
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
@@ -69,23 +53,11 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
     if(detailRoom?.state != true){
       showToastError(detailRoom?.message??'Error get room info');
     }
-    // dataEdc = await ApiRequest().getEdc();
-    // if(dataEdc?.state != true){
-    //   showToastError(dataEdc?.message??'Unknown error get edc list');
-    // }
+
 
     isLoading = false;
-    // int nganu =1;
-    // dataEdc?.data.forEach((x){
-    //   edcType.add(x.edcName??'unknown');
-    //   edcTypeCode.add(nganu);
-      // nganu++;
-    // });
     setState(() {
-      // dataEdc;
       isLoading;
-      // edcType;
-      // edcTypeCode;
       detailRoom;
       dataCheckin = detailRoom?.data;
     });
@@ -101,7 +73,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         promoFnb = dataCheckin?.promoFnb;
         pax = dataCheckin?.pax??1;
         hasModified = true;
-        // _dpValueController.text = dataCheckin!.downPayment.toString();
     }
 
     int hourRemaining = (dataCheckin?.hourRemaining??0);
@@ -119,17 +90,11 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
       }
     }
 
-    // final dpValue = detailRoom?.data?.downPayment;
-
-    // _dpValueController.text = dpValue.toString();
     descriptionController.text = detailRoom?.data?.description??'';
     eventController.text = detailRoom?.data?.guestNotes??'';
     edcCode = detailRoom?.data?.edcMachine??'';
     dpNote = detailRoom?.data?.dpNote??'';
     cardTypeName = detailRoom?.data?.cardType??'';
-    // _cardNameController.text = detailRoom?.data?.cardName??'';
-    // _cardNumberController.text = detailRoom?.data?.cardNo??'';
-    // _cardApprovalController.text = detailRoom?.data?.cardApproval??'';
     
     return SafeArea(
       child: Scaffold(
@@ -312,12 +277,23 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                               onTap: ()async{
-                                if(context.mounted){
-                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room')??false;
-                                  if(approvalPromoRoomState == true){
-                                    setState(() {
-                                      promoRoom = null;
-                                    });
+                                if(dataCheckin?.promoRoom == null){
+                                  setState(() {
+                                    promoRoom = null;
+                                  });
+                                }else{
+                                  if(context.mounted){
+                                    approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room')??false;
+                                    if(approvalPromoRoomState == true){
+                                      final state = await ApiRequest().removePromoRoom(dataCheckin?.reception??'');
+                                      if(state.state != true){
+                                        showToastError('Gagal menghapus promo room ${state.message}');
+                                        return;
+                                      }
+                                      setState(() {
+                                        promoRoom = null;
+                                      });
+                                    }
                                   }
                                 }
                               },
@@ -402,14 +378,25 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                               onTap: ()async{
-                              if(context.mounted){
+                              if(dataCheckin?.promoFnb == null){
+                                setState(() {
+                                  promoFnb = null;
+                                });
+                              }else{
+                                if(context.mounted){
                                   approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown'), roomCode,'Hapus Promo FnB')??false;
                                   if(approvalPromoRoomState == true){
+                                    final removeState = await ApiRequest().removePromoFood(dataCheckin?.reception??'');
+                                    if(removeState.state != true){
+                                      showToastError('Gagal hapus promo food ${removeState.message}');
+                                      return;
+                                    }
                                     setState(() {
                                       promoFnb = null;
                                     });
                                   }
-                                }
+                                } 
+                              }
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -427,148 +414,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ),
                     ),
                   ),
-                  /*Text('UANG MUKA', style: CustomTextStyle.blackMedium(),),
-                  CustomRadioButton(
-                    defaultSelected: dpCode,
-                    selectedBorderColor: Colors.transparent,
-                    unSelectedBorderColor: CustomColorStyle.appBarBackground(),
-                    enableShape: true,
-                    horizontal: false,
-                    padding: 0,
-                    elevation: 0, // Menghilangkan bayangan
-                    buttonLables: downPaymentList, 
-                    buttonValues: downPaymentCode,
-                    buttonTextStyle: ButtonTextStyle(
-                      selectedColor: Colors.white,
-                      unSelectedColor: Colors.black,
-                      textStyle: CustomTextStyle.blackStandard()
-                    ),
-                    autoWidth: true,                        
-                    radioButtonValue: (value){
-                      setState(() {
-                        dpCode = value;
-                        dpNote = downPaymentList[value-1];
-                      });
-                    }, 
-                    unSelectedColor: Colors.white, 
-                    selectedColor: CustomColorStyle.appBarBackground()
-                  ),
-                  dpCode == 2?
-                  TextField(
-                    controller: _dpValueController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [RupiahInputFormatter()],
-                    decoration: CustomTextfieldStyle.normalHint('Nominal')
-                  ):const SizedBox(),
-                  
-                  if (dpCode == 3 || dpCode == 4) Column(
-                    children: [
-                      TextField(
-                        controller: _dpValueController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Nominal')
-                      ),
-                      const SizedBox(height: 6,),  
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: ()async{
-                              final resultEdc = await RadioListDialog().show(context, 'Pilih EDC', 1, edcType, edcTypeCode);
-                              if(resultEdc != null){
-                                setState(() {
-                                  chooseEdcName = resultEdc;
-                                  final listEdc = dataEdc?.data;
-                                  List<EdcDataModel>? filterEdcCode = listEdc?.where((element) => element.edcName == chooseEdcName).toList();
-                                  edcCode = filterEdcCode?.first.edcNumber as String;
-                                });
-                              }
-                            },
-                            style: CustomButtonStyle.blueAppbar(),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Text('Pilih  EDC ', style: CustomTextStyle.whiteStandard(),),
-                            )),
-                            const SizedBox(width: 12,),
-                            Text(chooseEdcName, style: CustomTextStyle.blackStandard(),)
-                        ],
-                      ),
-                      const SizedBox(height: 6,),  
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: ()async{
-                              final chooseCardResult = await RadioListDialog().show(context, 'Pilih Kartu', 1, cardType, cardTypeCode);
-                              setState(() {
-                                chooseCardType = chooseCardResult.toString();
-                              });
-                              },
-                            style: CustomButtonStyle.blueAppbar(),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Text('Pilih Kartu', style: CustomTextStyle.whiteStandard(),),
-                            )),
-                            const SizedBox(width: 12,),
-                            Text(chooseCardType, style: CustomTextStyle.blackStandard(),)
-                        ],
-                      ),
-                        TextField(
-                        controller: _cardNameController,
-                        keyboardType: TextInputType.text,
-                        maxLength: 20,
-                        // inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Nama')
-                      ),
-                      const SizedBox(height: 6,),  
-                      TextField(
-                        controller: _cardNumberController,
-                        maxLength: 4,
-                        keyboardType: TextInputType.number,
-                        // inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Nomor Kartu')
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        controller: _cardApprovalController,
-                        maxLength: 6,
-                        keyboardType: TextInputType.number,
-                        // inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Kode Approval')
-                      )   
-                    ],
-                  ) else const SizedBox(),
-                  dpCode == 5?
-                  Column(
-                    children: [
-                      TextField(
-                        controller: _dpValueController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Nominal')
-                      ),
-                      const SizedBox(height: 6,),  
-                      TextField(
-                        controller: _transferBankUserController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Nama Penyetor')
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        controller: _transferBankNameController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [RupiahInputFormatter()],
-                        decoration: CustomTextfieldStyle.normalHint('Bank')
-                      )  
-                    ],
-                  ):const SizedBox(),
-                  */
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Keterangan', style: CustomTextStyle.blackMedium(),)),
-                  TextField(decoration: CustomTextfieldStyle.normalHint('Keterangan'), controller: descriptionController,),
+                  TextField(decoration: CustomTextfieldStyle.normalHint(''), controller: descriptionController,),
                   const SizedBox(height: 12,),
                   Align(alignment: Alignment.centerLeft ,child: Text('Acara', style: CustomTextStyle.blackMedium(),)),
-                  TextField(decoration: CustomTextfieldStyle.normalHint('Acara'), controller: eventController,),
+                  TextField(decoration: CustomTextfieldStyle.normalHint(''), controller: eventController,),
                   const SizedBox(height: 12,),
                   SizedBox(
                     width: double.infinity,
@@ -639,7 +490,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
 
   @override
   void dispose() {
-    // _dpValueController.dispose();
     descriptionController.dispose();
     eventController.dispose();
     super.dispose();

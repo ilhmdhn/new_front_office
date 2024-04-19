@@ -21,7 +21,7 @@ class CustomContainerStyle{
   static cancelButton(){
     return BoxDecoration(
       color: Colors.redAccent.shade400,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.6),

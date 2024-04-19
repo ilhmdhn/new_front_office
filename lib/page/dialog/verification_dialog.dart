@@ -68,7 +68,6 @@ class VerificationDialog{
                 Column(
                   children: [
                     Center(child: AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,)),
-                    // AutoSizeText(note, style: CustomTextStyle.blackMediumSize(19), minFontSize: 12, maxLines: 1,)
                   ],
                 ):
                 isConfirmed == true?
