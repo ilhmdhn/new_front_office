@@ -280,6 +280,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString()
       );
@@ -307,6 +308,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString() 
       );
@@ -333,6 +335,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString() 
       );
@@ -370,6 +373,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
         state: false, 
         message: e.toString());
     }
@@ -394,13 +398,14 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString()
       );
     }
   }
 
-    Future<BaseResponse> clean(String room)async{
+  Future<BaseResponse> clean(String room)async{
     try{
       final url = Uri.parse('$serverUrl/room/clean');
 
@@ -419,6 +424,47 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> removePromoRoom(String rcpCode)async{
+    try{
+      final url = Uri.parse('$serverUrl/checkin-direct/remove_promo?rcp=$rcpCode');
+      final apiResponse = await http.delete(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> removePromoFood(String rcpCode)async{
+    try{
+      final url = Uri.parse('$serverUrl/checkin-direct/remove-promo-fnb/$rcpCode');
+      final apiResponse = await http.delete(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString()
       );

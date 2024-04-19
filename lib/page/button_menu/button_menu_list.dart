@@ -625,7 +625,8 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
+        showToastWarning('Checkin Info Cooming Soon');
+        // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
         // height: 83,

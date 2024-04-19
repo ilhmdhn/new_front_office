@@ -28,6 +28,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
   RoomCheckinResponse? roomCheckinResponse;
   String remaining = 'WAKTU HABIS';
   String searchRoom = '';
+  String appBarTitle = '';
   int destination = 0; 
   List<ListRoomCheckinModel> listRoomCheckin = [];
   bool isLoaded = false;
@@ -49,12 +50,16 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
       roomCheckinResponse;
       listRoomCheckin = roomCheckinResponse?.data??[];
       if(destination == 1 || destination == 2 || destination == 3 || destination == 4){
+        appBarTitle = 'List Room Checkin';
         listRoomCheckin = listRoomCheckin.where((item) => item.printState == '0' && item.summaryCode == '').toList();
       }else if(destination == 5){
+        appBarTitle = 'Payment Room';
         listRoomCheckin = listRoomCheckin.where((item) => isNullOrEmpty(item.summaryCode)).toList();
       }else if(destination == 6){
+        appBarTitle = 'Checkout Room';
         listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.summaryCode)).toList();
       }else if(destination == 7){
+        appBarTitle = 'Clean Room';
         // listRoomCheckin = listRoomCheckin.where((item) => isNotNullOrEmpty(item.c)).toList();
       }
     });
@@ -68,7 +73,6 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     if(destination != 0 && isLoaded == false){
       getRoomCheckin('');
     }
-    print('destination $destination');
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
@@ -76,7 +80,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
           iconTheme: const IconThemeData(
             color:  Colors.white, //change your color here
           ),
-          title: Text('List Room Checkin', style: CustomTextStyle.titleAppBar(),),
+          title: Text(appBarTitle, style: CustomTextStyle.titleAppBar(),),
           backgroundColor: CustomColorStyle.appBarBackground(),
         ),
         body: 
