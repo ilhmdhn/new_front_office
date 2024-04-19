@@ -18,38 +18,35 @@ class ConfirmationDialog{
           backgroundColor: Colors.white,
           title: Center(child: AutoSizeText(title, style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 12,)),
           actions: [
-            SizedBox(
-              width: ScreenSize.getSizePercent(ctx, 75),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, false);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: CustomContainerStyle.cancelButton(),
-                        child: AutoSizeText('Cancel', minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(ctx, false);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.cancelButton(),
+                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
                     ),
                   ),
-                  const SizedBox(width: 6,),
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, true);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: CustomContainerStyle.confirmButton(),
-                        child: AutoSizeText('Konfirmasi', minFontSize: 1, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
-                      ),
+                ),
+                const SizedBox(width: 6,),
+                Expanded(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(ctx, true);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.confirmButton(),
+                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         );

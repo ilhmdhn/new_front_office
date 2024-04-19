@@ -45,10 +45,13 @@ void main() async{
     if(message.data['state'] == 'true'){
       state = true;
     }
+
     if(signalType == '1'){
       eventBus.fire(ConfirmationSignalModel(code: signalCode??'', state: state));
     }else if(signalType == '2'){
       SendNotification.notif(message);
+    }else if(signalType == '3'){
+      eventBus.fire(RefreshApprovalCount());
     }
   });
   await PreferencesData.initialize();

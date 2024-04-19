@@ -4,21 +4,37 @@ import 'package:front_office_2/page/bloc/notif_bloc.dart';
 import 'package:front_office_2/page/button_menu/button_menu_list.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 
-class OperationalPage extends StatelessWidget {
+class OperationalPage extends StatefulWidget {
   static const nameRoute = '/operational';
   const OperationalPage({super.key});
+
+  @override
+  State<OperationalPage> createState() => _OperationalPageState();
+}
+
+class _OperationalPageState extends State<OperationalPage> {
+
+  ApprovalCountCubit approvalCubit = ApprovalCountCubit();
+
+  @override
+  void didChangeDependencies() {
+    approvalCubit.getData();
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final paddingEdgeSize = ScreenSize.getSizePercent(context, 3);
     final userData = PreferencesData.getUser();
-    ApprovalCountCubit approvalCubit = ApprovalCountCubit();
-    
     final widget = ButtonMenuWidget(context: context);
-    approvalCubit.getData();
+    eventBus.on<RefreshApprovalCount>().listen((event) {
+      approvalCubit.getData();
+    });
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
