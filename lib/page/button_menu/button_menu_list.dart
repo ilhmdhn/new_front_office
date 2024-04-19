@@ -16,7 +16,7 @@ class ButtonMenuWidget{
   ButtonMenuWidget({required this.context});
   final myGroup = AutoSizeGroup();
   
-  Widget kasirLayout(){
+  Widget kasirLayout(String approvalCount){
     final widthButton = ScreenSize.getSizePercent(context, 46);  
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final widthRow = ScreenSize.getSizePercent(context, 94);
@@ -112,7 +112,7 @@ class ButtonMenuWidget{
           alignment: Alignment.centerLeft,
           child: SizedBox(
             width: widthButton,
-            child: approval(0),
+            child: approval(approvalCount),
           ),
         )
       ],
@@ -725,20 +725,21 @@ class ButtonMenuWidget{
     );
   }
 
-   Widget approval(int? notif){
+   Widget approval(String notif){
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    notif ??= 0;
+    int? notifCount = int.tryParse(notif);
+    notifCount ??= 0;
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, ApprovalListPage.nameRoute);
       },
       child: Badge(
-        label: Text(notif.toString()),
-        isLabelVisible: notif>0?true:false,
+        label: Text(notifCount.toString()),
+        isLabelVisible: notifCount>0?true:false,
         child: Container(
           // height: 83,
             // width: widthButton,

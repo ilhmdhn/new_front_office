@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:front_office_2/page/bloc/notif_bloc.dart';
 import 'package:front_office_2/page/button_menu/button_menu_list.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -13,9 +15,10 @@ class OperationalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final paddingEdgeSize = ScreenSize.getSizePercent(context, 3);
     final userData = PreferencesData.getUser();
+    ApprovalCountCubit approvalCubit = ApprovalCountCubit();
     
     final widget = ButtonMenuWidget(context: context);
-    
+    approvalCubit.getData();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -59,7 +62,11 @@ class OperationalPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            widget.kasirLayout()
+            BlocBuilder(
+            bloc: approvalCubit,
+            builder: (BuildContext ctxApproval, state){
+              return widget.kasirLayout(state.toString());
+            }),
           ],
         ),
       )

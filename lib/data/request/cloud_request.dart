@@ -185,12 +185,12 @@ class CloudRequest{
     }
   }
 
-  static Future<BaseResponse> totalApprovalRequest(String idApproval)async{
+  static Future<BaseResponse> totalApprovalRequest(String outlet)async{
     try{
       String outlet = PreferencesData.getOutlet();
       final url = Uri.parse('$baseUrl/approval/total/$outlet');
       
-      final apiResponse = await http.put(url, headers:{'Content-Type': 'application/json','authorization': token});
+      final apiResponse = await http.get(url, headers:{'Content-Type': 'application/json','authorization': token});
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
