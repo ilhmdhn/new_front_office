@@ -270,6 +270,7 @@ class ButtonMenuWidget{
                   if(context.mounted){
                     final checkinParams = CheckinParams(
                             memberName: loginResult.data?.fullName??'no name',
+                            photo: loginResult.data?.photo??'https://adm.happypuppy.id/uploads/empty',
                             memberCode: loginResult.data?.memberCode??'undefined'
                     );
                     Navigator.pushNamed(context, ListRoomTypePage.nameRoute, arguments: checkinParams);

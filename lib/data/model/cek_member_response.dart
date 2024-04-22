@@ -26,18 +26,21 @@ class MemberDataModel{
   String? fullName;
   String? memberType;
   num? point;
+  String? photo;
 
   MemberDataModel({
     this.memberCode,
     this.fullName,
     this.memberType,
-    this.point
+    this.point,
+    this.photo
   });
 
   factory MemberDataModel.fromJson(Map<String, dynamic>?json)=>MemberDataModel(
     memberCode: json?['member'],
     fullName: json?['nama_lengkap'],
     memberType: json?['jenis_member'],
-    point: json?['point_reward']
+    point: json?['point_reward'],
+    photo: json?['photo_url']
   );
 }
