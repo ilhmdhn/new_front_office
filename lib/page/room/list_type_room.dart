@@ -7,7 +7,6 @@ import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/toast.dart';
-import 'package:lottie/lottie.dart';
 
 class ListRoomTypePage extends StatefulWidget {
   static const nameRoute = '/list-room-type';
@@ -56,6 +55,7 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 55,
@@ -63,9 +63,10 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
                       backgroundImage: Image.asset('assets/icon/user.png').image,
                     ),
                   ),
-                  const SizedBox(width: 12,),
+                  const SizedBox(width: 6,),
                   Column(
                     children: [
+                      const SizedBox(height: 3,),
                       Text(checkinArgs.memberName??'', style: CustomTextStyle.blackMedium()),
                     ],
                   ),
