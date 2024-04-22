@@ -122,6 +122,7 @@ class VerificationDialog{
                           onDone: ()async{
                             final timeOutState = await  CloudRequest.timeoutApproval(uniqueTime);
                             if(timeOutState.state == true && ctx.mounted){
+                              CloudRequest.cancelApproval(uniqueTime);
                               showToastWarning('Permintaan Dibatalkan');
                               Navigator.pop(ctx, false);
                             }
