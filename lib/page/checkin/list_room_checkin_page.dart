@@ -12,6 +12,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
 
@@ -108,18 +109,21 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              SearchBar(
-                hintText: 'Cari Room',
-                surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
-                shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
-                onChanged: ((value){
-                  searchRoom = value;
-                  getRoomCheckin(searchRoom);
-                }),
-                trailing: Iterable.generate(
-                  1, (index) => const Padding(
-                    padding: EdgeInsets.only(right: 5),
-                    child:  Icon(Icons.search))),
+              SizedBox(
+                height: ScreenSize.getHeightPercent(context, 10),
+                child: SearchBar(
+                  hintText: 'Cari Room',
+                  surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                  shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
+                  onChanged: ((value){
+                    searchRoom = value;
+                    getRoomCheckin(searchRoom);
+                  }),
+                  trailing: Iterable.generate(
+                    1, (index) => const Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child:  Icon(Icons.search))),
+                ),
               ),
               const SizedBox(height: 11,),
               LayoutBuilder(
