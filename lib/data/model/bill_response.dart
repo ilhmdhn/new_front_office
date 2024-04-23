@@ -10,6 +10,9 @@ class PreviewBillResponse{
   });
 
   factory PreviewBillResponse.fromJson(Map<String, dynamic>json){
+    if(json['state'] != true){
+      throw json['message'];
+    }
     return PreviewBillResponse(
       state: json['state'],
       message: json['message'],

@@ -44,3 +44,21 @@ class FnBModel{
     );
   }
 }
+
+class OrderModel{
+  String invCode;
+  int qty;
+  String note;
+  num price;
+  String name;
+  int location;
+
+  OrderModel({
+    this.invCode = '',
+    this.qty = 1,
+    this.note = '',
+    this.price = 0,
+    this.name = '',
+    this.location = 1,
+  });
+}

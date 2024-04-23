@@ -1,11 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
+import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListFnbPage extends StatefulWidget {
@@ -23,6 +27,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
   final TextEditingController _searchController = TextEditingController();
   String roomCode = '';
   bool isLoading = true;
+
 
   @override
   void initState() {
@@ -56,7 +61,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
     }
   }
 
-  List<FnBModel> listOrder = List.empty(growable: true);
+  List<OrderModel> listOrder = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -73,44 +78,120 @@ class _ListFnbPageState extends State<ListFnbPage> {
         child: PagedListView(
           pagingController: _fnbPagingController,
           builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: (context, item, index) {
+            itemBuilder: (ctxPaging, item, index) {
               final fnb = item as FnBModel;
-              return SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText(fnb.name.toString(), style: CustomTextStyle.blackStandard(), minFontSize: 11, maxLines: 1,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(Formatter.formatRupiah(fnb.price??0), style: CustomTextStyle.blackStandard(),),
-                        InkWell(
-                          onTap: (){
-                            listOrder.add(
-                              FnBModel(
-                                invCode: item.invCode,
-                                name: item.name,
-                                price: item.price,
-                                location: item.location,
-                                globalId: item.globalId
-                              )
-                            );
-                          },
-                          child: Container(
-                            decoration: CustomContainerStyle.blueButton(),
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                            child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
+              final indexAdded = listOrder.indexWhere(((element) => element.invCode == item.invCode));
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AutoSizeText(fnb.name.toString(), style: CustomTextStyle.blackMedium(), minFontSize: 11, maxLines: 1,),
+                      const SizedBox(height: 8,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(Formatter.formatRupiah(fnb.price??0), style: CustomTextStyle.blackStandard(),),
+                          indexAdded != -1 ?
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: ()async{
+                                  if(listOrder[indexAdded].qty>1){
+                                    listOrder[indexAdded].qty = listOrder[indexAdded].qty - 1;
+                                  }else{
+                                      final state = await ConfirmationDialog.confirmation(ctxPaging, 'Hapus ${listOrder[indexAdded].name}?');
+                                      if(state == true){
+                                        listOrder.removeAt(indexAdded);
+                                      }
+                                  }
+                                  setState((){
+                                    listOrder;
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 43,
+                                  width: 43,
+                                  child: Image.asset(
+                                    'assets/icon/minus.png'),
+                                )
+                              ),
+                              const SizedBox(width: 9,),
+                              AutoSizeText(listOrder[indexAdded].qty.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                              const SizedBox(width: 9,),
+                              InkWell(
+                                onTap: (){
+                                  setState((){
+                                      listOrder[indexAdded].qty = listOrder[indexAdded].qty + 1;
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 43,
+                                  width: 43,
+                                  child: Image.asset(
+                                    'assets/icon/plus.png'),
+                                )
+                              ),
+                            ],
+                          ):
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                              listOrder.add(
+                                OrderModel(
+                                  invCode: item.invCode??'',
+                                  qty: 1,
+                                  note: '',
+                                  price: item.price??0,
+                                  name: item.name ??'',
+                                  location: item.location??0
+                                )
+                              );
+                              });
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.blueButton(),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                              child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },
           ),
         ),
       ),
+      floatingActionButton: 
+      isNotNullOrEmpty(listOrder)?
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          height: ScreenSize.getHeightPercent(context, 12),
+          width: double.infinity,
+          decoration: CustomContainerStyle.confirmButton(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText('Order 0 items', style: CustomTextStyle.whiteStandard(),),
+              const RotatedBox(
+                quarterTurns: 90,
+                child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
+            ],
+          ),
+        ),
+      ): const SizedBox(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
