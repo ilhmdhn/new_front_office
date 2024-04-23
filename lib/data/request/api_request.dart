@@ -5,6 +5,7 @@ import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
+import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
@@ -464,6 +465,26 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<FnBResultModel> fnbPage(int page, String category, String search)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/inventory/list-paging?page=$page&size=10&category=$category&search=$search');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return FnBResultModel.fromJson(convertedResult);
+    }catch(e){
+      return FnBResultModel(
         isLoading: false,
         state: false,
         message: e.toString()

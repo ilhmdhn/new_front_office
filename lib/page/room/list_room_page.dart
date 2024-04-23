@@ -25,16 +25,15 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
   RoomListResponse listRoom = RoomListResponse();
   CheckinParams checkinParams = CheckinParams();
   bool isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    checkinParams = ModalRoute.of(context)?.settings.arguments as CheckinParams;
-    getData(checkinParams.roomType.toString());
-    super.didChangeDependencies();
-  }
+  bool gettedData = false;
 
   @override
   Widget build(BuildContext contextz) {
+    checkinParams = ModalRoute.of(context)?.settings.arguments as CheckinParams;
+    if(gettedData == false){
+      getData(checkinParams.roomType.toString());
+      gettedData = true;
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
