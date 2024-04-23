@@ -9,7 +9,7 @@ class FingerpintAuth{
       final LocalAuthentication auth = LocalAuthentication();
       final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
       final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-      final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+      // final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
 
       if(!canAuthenticateWithBiometrics || !canAuthenticate){
         showToastError('Perangkat tidak didukung');

@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: (){
                     ConfigurationDialog().setUrl(context);
                   },
-                  child: Text('Konfigurasi'),
+                  child: const Text('Konfigurasi'),
                 ),
               ]),
         ),

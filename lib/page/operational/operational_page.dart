@@ -42,7 +42,7 @@ class _OperationalPageState extends State<OperationalPage> {
         foregroundColor: Colors.white,
         title: Text('Operasional', style: CustomTextStyle.titleAppBar(),selectionColor: Colors.white,),
         actions: [
-          IconButton(onPressed: (){}, icon: const Badge(label: Text('10') ,child: const Icon(Icons.notifications,)),)
+          IconButton(onPressed: (){}, icon: const Badge(label: Text('10') ,child: Icon(Icons.notifications,)),)
         ],
       ),
       backgroundColor: CustomColorStyle.background(),
