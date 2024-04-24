@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
@@ -7,6 +8,7 @@ import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
@@ -486,6 +488,25 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }catch(e){
       return FnBResultModel(
         isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<OrderResponse> getOrder(String roomCode)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/room/$roomCode/order');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return OrderResponse.fromJson(convertedResult);
+    }catch(e){
+      return OrderResponse(
         state: false,
         message: e.toString()
       );

@@ -47,4 +47,32 @@ class CustomContainerStyle{
       ],
     );
   }
+  static barInactive(){
+    return BoxDecoration(
+      color: Colors.grey.shade300,
+      // borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.6),
+          spreadRadius:1,
+          // blurRadius: 7,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    );
+  }
+  static barActive(){
+    return BoxDecoration(
+      color: CustomColorStyle.appBarBackground(),
+      // borderRadius: BorderRadius.circular(10),
+      // boxShadow: [
+        // BoxShadow(
+          // color: Colors.grey.withOpacity(0.6),
+          // spreadRadius:2,
+          // blurRadius: 7,
+          // offset: const Offset(0, 3),
+        // ),
+      // ],
+    );
+  }
 }
