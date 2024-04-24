@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/main_page.dart';
+import 'package:front_office_2/page/order/cancel_page.dart';
+import 'package:front_office_2/page/order/confirm_page.dart';
+import 'package:front_office_2/page/order/done_page.dart';
 import 'package:front_office_2/page/order/list_fnb_page.dart';
+import 'package:front_office_2/page/order/send_order_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 
@@ -32,6 +36,10 @@ class _FnbMainPageState extends State<FnbMainPage> {
         body: PageView(
           children: [
             ListFnbPage(),
+            SendOrderPage(),
+            ConfirmOrderPage(),
+            DoneOrderPage(),
+            CancelOrderPage()
           ],
         ),
       ),
