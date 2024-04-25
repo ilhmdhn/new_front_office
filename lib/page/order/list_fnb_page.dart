@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/dialog/fnb_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -198,21 +199,31 @@ class _ListFnbPageState extends State<ListFnbPage> {
       ),
       floatingActionButton: 
       isNotNullOrEmpty(listOrder)?
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-          height: ScreenSize.getHeightPercent(context, 12),
-          width: double.infinity,
-          decoration: CustomContainerStyle.confirmButton(),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText('Order 0 items', style: CustomTextStyle.whiteStandard(),),
-              const RotatedBox(
-                quarterTurns: 90,
-                child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
-            ],
+      InkWell(
+        onTap: ()async{
+          final nganu = await FnBDialog.order(context, listOrder, roomCode);
+          if(nganu == true){
+            setState(() {
+              listOrder.clear();
+            });
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            height: ScreenSize.getHeightPercent(context, 12),
+            width: double.infinity,
+            decoration: CustomContainerStyle.confirmButton(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AutoSizeText('Order 0 items', style: CustomTextStyle.whiteStandard(),),
+                const RotatedBox(
+                  quarterTurns: 90,
+                  child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
+              ],
+            ),
           ),
         ),
       ): const SizedBox(),

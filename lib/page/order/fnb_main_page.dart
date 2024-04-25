@@ -45,27 +45,30 @@ class _FnbMainPageState extends State<FnbMainPage> {
               color: Colors.white,
               width: double.infinity,
               height: ScreenSize.getHeightPercent(context, 10),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: namePage.length,
-                shrinkWrap: true,
-                itemBuilder: (ctxPager, index){
-                  return InkWell(
-                    onTap: (){
-                      slideController.animateToPage(
-                        index,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Container(
-                      height: ScreenSize.getHeightPercent(context, 10),
-                      decoration: activePageIndex == index? CustomContainerStyle.barActive(): CustomContainerStyle.barInactive(),
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      child: Center(child: Text(namePage[index], style: activePageIndex == index? CustomTextStyle.whiteSize(16):CustomTextStyle.blackMedium(),)),
-                    ),
-                  );
-                }),
+              child: Align(
+                alignment: Alignment.center,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: namePage.length,
+                  shrinkWrap: true,
+                  itemBuilder: (ctxPager, index){
+                    return InkWell(
+                      onTap: (){
+                        slideController.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Container(
+                        height: ScreenSize.getHeightPercent(context, 10),
+                        decoration: activePageIndex == index? CustomContainerStyle.barActive(): CustomContainerStyle.barInactive(),
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                        child: Center(child: Text(namePage[index], style: activePageIndex == index? CustomTextStyle.whiteSize(16):CustomTextStyle.blackMedium(),)),
+                      ),
+                    );
+                  }),
+              ),
             ),
             Flexible(
               child: PageView(
