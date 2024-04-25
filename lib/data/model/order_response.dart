@@ -28,6 +28,8 @@ class OrderedModel{
   String? invCode;
   int? qty;
   String? idGlobal;
+  int? location;
+  String? orderState;
   String? name;
   String? notes;
   num? price;
@@ -37,6 +39,8 @@ class OrderedModel{
     this.invCode,
     this.qty,
     this.idGlobal,
+    this.location,
+    this.orderState,
     this.name,
     this.notes,
     this.price
@@ -47,7 +51,9 @@ class OrderedModel{
       sol: json['order_sol'],
       invCode: json['order_inventory'],
       qty: json['order_quantity'],
+      orderState: json['order_state'],
       idGlobal: json['order_inventory_id_global'],
+      location: json['order_location'],
       name: json['order_inventory_nama'],
       notes: json['order_notes'],
       price: json['order_price']

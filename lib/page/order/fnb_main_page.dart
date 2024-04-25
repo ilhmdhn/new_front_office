@@ -79,7 +79,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
                 children: [
                   ListFnbPage(),
                   SendOrderPage(roomCode: roomCode,),
-                  ConfirmOrderPage(),
+                  ConfirmOrderPage(roomCode: roomCode),
                   DoneOrderPage(),
                   CancelOrderPage()
                 ],

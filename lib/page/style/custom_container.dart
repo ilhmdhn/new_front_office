@@ -47,6 +47,14 @@ class CustomContainerStyle{
       ],
     );
   }
+
+  static whiteList(){
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+    );
+  }
+
   static barInactive(){
     return BoxDecoration(
       color: Colors.grey.shade300,
