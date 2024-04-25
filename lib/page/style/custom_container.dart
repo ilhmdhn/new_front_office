@@ -55,6 +55,13 @@ class CustomContainerStyle{
     );
   }
 
+  static cancelList(){
+    return BoxDecoration(
+      color: Colors.pink,
+      borderRadius: BorderRadius.circular(10),
+    );
+  }
+
   static barInactive(){
     return BoxDecoration(
       color: Colors.grey.shade300,

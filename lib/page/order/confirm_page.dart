@@ -72,7 +72,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
               children: [
                 Container(
                     decoration: CustomContainerStyle.whiteList(),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
                         Row(

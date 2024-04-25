@@ -11,7 +11,6 @@ import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/order/fnb_main_page.dart';
-import 'package:front_office_2/page/order/list_fnb_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/report/sales/sales_report_page.dart';

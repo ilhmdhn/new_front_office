@@ -80,8 +80,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
                   ListFnbPage(),
                   SendOrderPage(roomCode: roomCode,),
                   ConfirmOrderPage(roomCode: roomCode),
-                  DoneOrderPage(),
-                  CancelOrderPage()
+                  DoneOrderPage(roomCode: roomCode),
+                  CancelOrderPage(roomCode: roomCode)
                 ],
               ),
             ),
