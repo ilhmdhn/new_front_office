@@ -2,22 +2,75 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
 class FnBDialog{
   
+  static Future<String?> note(BuildContext ctx, String name, String note){
+    Completer<String?> completer = Completer<String?>();
+    showDialog(
+      context: ctx, 
+      builder: (ctxDialog){
+        TextEditingController tfNoteController = TextEditingController();
+        tfNoteController.text = note;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: AutoSizeText('Tulis Catatan Pesanan $name', style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: CustomTextfieldStyle.characterNormal(),
+                controller: tfNoteController,
+              ),
+              const SizedBox(height: 6,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Flexible(
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pop(ctx, null);
+                      },
+                      child: Container(
+                        decoration: CustomContainerStyle.cancelButton(),
+                        padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                        child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 19,),
+                  Flexible(
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pop(ctx, tfNoteController.text);
+                      },
+                      child: Container(
+                        decoration: CustomContainerStyle.confirmButton(),
+                        padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                        child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      }).then((value) => completer.complete(value));
+      return completer.future;
+  }
+
   static Future<bool?> order(BuildContext ctx, List<OrderModel> orderlist, String outlet)async{
     final user = PreferencesData.getUser();
 
     Completer<bool?> completer = Completer<bool?>();
-
     showDialog(
       context: ctx,
       barrierDismissible: false,
@@ -26,6 +79,9 @@ class FnBDialog{
           canPop: false,
           child: StatefulBuilder(
             builder: (ctxWidget, StateSetter setState){
+              if(orderlist.isEmpty){
+                Navigator.pop(ctx, true);
+              }
               return AlertDialog(
                 backgroundColor: Colors.white,
                 actionsPadding: const EdgeInsets.all(0),
@@ -109,8 +165,13 @@ class FnBDialog{
                                         Row(
                                           children: [
                                             InkWell(
-                                              onTap: (){
-                      
+                                              onTap: ()async{
+                                                final noteResult = await note(ctx, order.name, order.note);
+                                                if(noteResult != null){
+                                                  setState((){
+                                                    orderlist[index].note = noteResult;
+                                                  });
+                                                }
                                               },
                                               child: const Icon(Icons.notes),
                                             ),
