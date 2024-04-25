@@ -12,7 +12,8 @@ import 'package:front_office_2/tools/screen_size.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListFnbPage extends StatefulWidget {
-  const ListFnbPage({super.key});
+  final String roomCode;
+  const ListFnbPage({super.key, required this.roomCode});
 
   @override
   State<ListFnbPage> createState() => _ListFnbPageState();

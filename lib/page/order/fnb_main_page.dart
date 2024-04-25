@@ -30,7 +30,6 @@ class _FnbMainPageState extends State<FnbMainPage> {
   @override
   Widget build(BuildContext context) {
     roomCode = ModalRoute.of(context)!.settings.arguments as String;
-    print('DEBUGGING $activePageIndex');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -77,8 +76,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
                   });
                 },
                 children: [
-                  ListFnbPage(),
-                  SendOrderPage(roomCode: roomCode,),
+                  ListFnbPage(roomCode: roomCode),
+                  SendOrderPage(roomCode: roomCode),
                   ConfirmOrderPage(roomCode: roomCode),
                   DoneOrderPage(roomCode: roomCode),
                   CancelOrderPage(roomCode: roomCode)
