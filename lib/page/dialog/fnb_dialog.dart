@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class FnBDialog{
   
@@ -67,7 +69,7 @@ class FnBDialog{
       return completer.future;
   }
 
-  static Future<bool?> order(BuildContext ctx, List<OrderModel> orderlist, String outlet)async{
+  static Future<bool?> order(BuildContext ctx, List<OrderModel> orderlist, String roomCode)async{
     final user = PreferencesData.getUser();
 
     Completer<bool?> completer = Completer<bool?>();
@@ -208,8 +210,16 @@ class FnBDialog{
                           const SizedBox(width: 19,),
                           Flexible(
                             child: InkWell(
-                              onTap: (){
-                                Navigator.pop(ctx, false);
+                              onTap: ()async{
+
+                                final checkinDetail = await ApiRequest().getDetailRoomCheckin(roomCode);
+
+                                if(checkinDetail.state != true){
+                                  showToastError(checkinDetail.message);
+                                  Navigator.pop(ctx, false);
+                                }
+                                
+                                Navigator.pop(ctx, true);
                               },
                               child: Container(
                                 decoration: CustomContainerStyle.confirmButton(),

@@ -66,6 +66,12 @@ class _ListFnbPageState extends State<ListFnbPage> {
   @override
   Widget build(BuildContext context) {
     roomCode = ModalRoute.of(context)!.settings.arguments as String;
+    int totalItems = 0;
+
+    for (var element in listOrder) {
+      totalItems += element.qty;
+    }
+
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body:
@@ -218,7 +224,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AutoSizeText('Order 0 items', style: CustomTextStyle.whiteStandard(),),
+                AutoSizeText('Order $totalItems items', style: CustomTextStyle.whiteStandard(),),
                 const RotatedBox(
                   quarterTurns: 90,
                   child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
