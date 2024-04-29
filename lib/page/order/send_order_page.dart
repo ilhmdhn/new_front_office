@@ -21,23 +21,34 @@ class SendOrderPage extends StatefulWidget {
 class _SendOrderPageState extends State<SendOrderPage> {
 
   OrderResponse? apiResult;
+  List<OrderedModel> listOrdered = List.empty(growable: true);
 
   void getData()async{
     apiResult = await ApiRequest().getOrder(widget.roomCode);
-
     if(isNotNullOrEmpty(apiResult?.data)){
-      apiResult?.data?.sort((a, b) {
-        // Mengurutkan berdasarkan sol
-        int solComparison = a.sol!.compareTo(b.sol!);
+
+      listOrdered =  apiResult?.data?.where((element) => element.orderState == '1' || element.orderState == '2' || element.orderState == '3').toList()??List.empty();
+
+      listOrdered.sort((a, b) {
+        // Mengurutkan berdasarkan order state secara ascending
+        int orderStateComparison = a.sol!.compareTo(b.sol!);
+        if (orderStateComparison != 0) {
+          return orderStateComparison;
+        }
+
+        // Jika order state sama, maka urutkan berdasarkan sol secara descending
+        int solComparison = b.sol!.compareTo(a.sol!);
         if (solComparison != 0) {
           return solComparison;
         }
-        // Jika sol sama, maka urutkan berdasarkan name
-        return a.name!.compareTo(b.name!);
+
+        // Jika sol sama, maka urutkan berdasarkan queue secara ascending
+        return a.queue!.compareTo(b.queue!);
       });
     }
 
     setState(() {
+      listOrdered;
       apiResult;
     });
   }
@@ -60,21 +71,21 @@ class _SendOrderPageState extends State<SendOrderPage> {
       AddOnWidget.loading():
       apiResult?.state != true?
       AddOnWidget.error(apiResult?.message):
-      isNullOrEmpty(apiResult?.data)?
+      isNullOrEmpty(listOrdered)?
       AddOnWidget.empty():
       Padding(
         padding: const EdgeInsets.all(8),
         child: ListView.builder(
-          itemCount: apiResult?.data?.length,
+          itemCount: listOrdered.length,
           shrinkWrap: true,
           itemBuilder: (ctxList, index){
-            OrderedModel order = apiResult!.data![index];
+            OrderedModel order = listOrdered[index];
             final isInitiated = listSol.where((element) => element == order.sol).toList();
             listSol.add(order.sol??'');
             return Column(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                   color: Colors.white,
                   child: Column(
                     children: [

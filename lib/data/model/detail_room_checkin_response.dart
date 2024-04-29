@@ -23,10 +23,12 @@ class DetailCheckinResponse{
 }
 
 class DetailCheckinModel{
+  String roomType;
   String roomCode;
   String memberName;
   String memberCode;
   String roomAlias;
+  int checkinMinute;
   int minuteRemaining;
   int hourRemaining;
   int pax;
@@ -47,10 +49,12 @@ class DetailCheckinModel{
   String edcMachine;
 
   DetailCheckinModel({
+    this.roomType = '',
     this.roomCode = '',
     this.memberName = '',
     this.memberCode ='',
     this.roomAlias =' ',
+    this.checkinMinute = 0,
     this.minuteRemaining = 0,
     this.hourRemaining = 0,
     this.pax = 0,
@@ -73,7 +77,9 @@ class DetailCheckinModel{
 
   factory DetailCheckinModel.fromJson(Map<String, dynamic>json){
     return DetailCheckinModel(
+      roomType: json['checkin_room']['jenis_kamar'],
       roomCode: json['room'],
+      checkinMinute: json['checkin_room']['durasi_checkin'],
       memberName: json['checkin_room']['nama_member'],
       memberCode: json['checkin_room']['kode_member'],
       reception: json['checkin_room']['reception'],

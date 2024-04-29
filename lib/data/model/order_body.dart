@@ -4,15 +4,16 @@ import 'package:device_information/device_information.dart';
 
 class GenerateOrderParams{
 
-  static Map<String, dynamic> orderParams(String roomCode, String rcp, String roomType, int checkinDuration, List<OrderModel> orderData){
+  static Future<Map<String, dynamic>> orderParams(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     final chusr = PreferencesData.getUser().userId;
-    final deviceId = DeviceInformation.deviceModel;
+    final deviceId = await DeviceInformation.deviceModel;
     List<String> invCodeList = List.empty(growable: true);
     List<String> qtyList = List.empty(growable: true);
     List<String> noteList = List.empty(growable: true);
     List<String> priceList = List.empty(growable: true);
     List<String> nameList = List.empty(growable: true);
     List<String> locationList = List.empty(growable: true);
+
     for (var item in orderData){
       invCodeList.add(item.invCode);
       qtyList.add(item.qty.toString());

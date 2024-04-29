@@ -28,6 +28,7 @@ class OrderedModel{
   String? invCode;
   int? qty;
   String? idGlobal;
+  int? queue;
   int? location;
   String? orderState;
   int? cancelQty;
@@ -39,6 +40,7 @@ class OrderedModel{
     this.sol,
     this.invCode,
     this.qty,
+    this.queue,
     this.idGlobal,
     this.location,
     this.orderState,
@@ -52,6 +54,7 @@ class OrderedModel{
     return OrderedModel(
       sol: json['order_sol'],
       invCode: json['order_inventory'],
+      queue: json['order_urutan'],
       qty: json['order_quantity'],
       orderState: json['order_state'],
       cancelQty: json['order_qty_cancel'],

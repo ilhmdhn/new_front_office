@@ -61,7 +61,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
     }
   }
 
-  List<OrderModel> listOrder = List.empty(growable: true);
+  List<SendOrderModel> listOrder = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +173,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
                                   onTap: (){
                                     setState(() {
                                     listOrder.add(
-                                      OrderModel(
+                                      SendOrderModel(
                                         invCode: item.invCode??'',
                                         qty: 1,
                                         note: '',

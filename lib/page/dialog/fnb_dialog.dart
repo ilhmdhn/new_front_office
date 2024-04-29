@@ -69,7 +69,7 @@ class FnBDialog{
       return completer.future;
   }
 
-  static Future<bool?> order(BuildContext ctx, List<OrderModel> orderlist, String roomCode)async{
+  static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode)async{
     final user = PreferencesData.getUser();
 
     Completer<bool?> completer = Completer<bool?>();
@@ -218,7 +218,17 @@ class FnBDialog{
                                   showToastError(checkinDetail.message);
                                   Navigator.pop(ctx, false);
                                 }
-                                
+                                final rcp = checkinDetail.data?.reception??'';
+                                final roomType = checkinDetail.data?.roomType??'';
+                                final checkinMinute = checkinDetail.data?.checkinMinute??0;
+
+                                final orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
+
+                                if(orderState.state != true){
+                                  showToastError(orderState.message.toString());
+                                  Navigator.pop(ctx, false);
+                                }
+
                                 Navigator.pop(ctx, true);
                               },
                               child: Container(

@@ -8,6 +8,7 @@ import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
@@ -507,6 +508,31 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return OrderResponse.fromJson(convertedResult);
     }catch(e){
       return OrderResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/order/single/room/sol/sod');
+      print('DEBUGGING 1');
+      final bodyParams = await GenerateOrderParams.orderParams(roomCode, rcp, roomType, checkinDuration, orderData);
+      print('DEBUGGING 2');
+      print('DEBUGGING PARAMS $bodyParams');
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      print('DEBUGGING 3');
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      print('DEBUGGING 4');
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
         state: false,
         message: e.toString()
       );

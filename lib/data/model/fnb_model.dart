@@ -45,7 +45,7 @@ class FnBModel{
   }
 }
 
-class OrderModel{
+class SendOrderModel{
   String invCode;
   int qty;
   String note;
@@ -53,7 +53,7 @@ class OrderModel{
   String name;
   int location;
 
-  OrderModel({
+  SendOrderModel({
     this.invCode = '',
     this.qty = 1,
     this.note = '',
