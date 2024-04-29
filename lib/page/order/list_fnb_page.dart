@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
@@ -13,8 +14,8 @@ import 'package:front_office_2/tools/screen_size.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListFnbPage extends StatefulWidget {
-  final String roomCode;
-  const ListFnbPage({super.key, required this.roomCode});
+  final DetailCheckinModel detailCheckin;
+  const ListFnbPage({super.key, required this.detailCheckin});
 
   @override
   State<ListFnbPage> createState() => _ListFnbPageState();
@@ -25,9 +26,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
   final PagingController _fnbPagingController = PagingController(firstPageKey: 1);
   String category = '';
   String _searchFnb = '';
-  String roomCode = '';
   bool isLoading = true;
-
 
   @override
   void initState() {
@@ -65,8 +64,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
 
   @override
   Widget build(BuildContext context) {
-    roomCode = ModalRoute.of(context)!.settings.arguments as String;
     int totalItems = 0;
+    String roomCode = widget.detailCheckin.roomCode;
 
     for (var element in listOrder) {
       totalItems += element.qty;

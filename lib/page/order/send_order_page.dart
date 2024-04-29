@@ -1,18 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/dialog/fnb_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SendOrderPage extends StatefulWidget {
-  final String roomCode;
-  const SendOrderPage({super.key, required this.roomCode});
+  final DetailCheckinModel detailCheckin;
+  const SendOrderPage({super.key, required this.detailCheckin});
 
   @override
   State<SendOrderPage> createState() => _SendOrderPageState();
@@ -22,34 +25,61 @@ class _SendOrderPageState extends State<SendOrderPage> {
 
   OrderResponse? apiResult;
   List<OrderedModel> listOrdered = List.empty(growable: true);
+  List<OrderedModel> listOrderedFix = List.empty(growable: true);
+
+  bool isLoading = true;
 
   void getData()async{
-    apiResult = await ApiRequest().getOrder(widget.roomCode);
+    setState(() {
+      isLoading = true;
+    });
+    listOrderedFix = [];
+    apiResult = await ApiRequest().getOrder(widget.detailCheckin.roomCode);
     if(isNotNullOrEmpty(apiResult?.data)){
 
       listOrdered =  apiResult?.data?.where((element) => element.orderState == '1' || element.orderState == '2' || element.orderState == '3').toList()??List.empty();
 
-      listOrdered.sort((a, b) {
-        // Mengurutkan berdasarkan order state secara ascending
-        int orderStateComparison = a.sol!.compareTo(b.sol!);
-        if (orderStateComparison != 0) {
-          return orderStateComparison;
-        }
+    listOrdered.sort((a, b) {
+       // Mengurutkan berdasarkan orderState secara ascending
+  int orderStateComparison = a.orderState!.compareTo(b.orderState!);
+  if (orderStateComparison != 0) {
+    return orderStateComparison;
+  }
 
-        // Jika order state sama, maka urutkan berdasarkan sol secara descending
-        int solComparison = b.sol!.compareTo(a.sol!);
-        if (solComparison != 0) {
-          return solComparison;
-        }
+  // Jika orderState sama, maka urutkan berdasarkan orderSol secara descending
+  int orderSolComparison = b.sol!.compareTo(a.sol!);
+  if (orderSolComparison != 0) {
+    return orderSolComparison;
+  }
 
-        // Jika sol sama, maka urutkan berdasarkan queue secara ascending
-        return a.queue!.compareTo(b.queue!);
-      });
+  // Jika orderSol sama, maka urutkan berdasarkan orderUrutan secara ascending
+  return a.queue!.compareTo(b.queue!);  
+    });
+    }
+
+    for(var item in listOrdered){
+      listOrderedFix.add(
+        OrderedModel(
+          sol: item.sol,
+          invCode: item.invCode,
+          qty: item.qty,
+          queue: item.queue,
+          idGlobal: item.idGlobal,
+          location: item.location,
+          orderState: item.orderState,
+          cancelQty: item.cancelQty,
+          name: item.name,
+          notes: item.notes,
+          price: item.price,
+        )
+      );
     }
 
     setState(() {
+      isLoading = false;
       listOrdered;
       apiResult;
+      listOrderedFix;
     });
   }
 
@@ -61,13 +91,13 @@ class _SendOrderPageState extends State<SendOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final DetailCheckinModel detailCheckin = widget.detailCheckin;
     Set<String> listSol= <String>{};
 
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body:
-      apiResult == null?
+      isLoading == true?
       AddOnWidget.loading():
       apiResult?.state != true?
       AddOnWidget.error(apiResult?.message):
@@ -161,14 +191,44 @@ class _SendOrderPageState extends State<SendOrderPage> {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.notes_outlined, color: Colors.black,),
+                              InkWell(
+                                onTap: ()async{
+                                  final noteState = await FnBDialog.note(context, order.name??'FnB Name', order.notes??'');
+                                  if(noteState != null){
+                                    setState(() {
+                                      order.notes = noteState;
+                                    });
+                                  }
+                                },
+                                child: const Icon(Icons.notes_outlined, color: Colors.black,)
+                              ),
+                              const SizedBox(width: 6,),
                               AutoSizeText(order.notes??'', style: CustomTextStyle.blackStandard(), maxLines: 1,),
                             ],
                           ),
-                          Container(
-                            decoration: CustomContainerStyle.confirmButton(),
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            child: Text('SUBMIT', style: CustomTextStyle.whiteStandard(),),
+                          InkWell(
+                            onTap: ()async{
+                              final newData = OrderedModel(invCode: order.invCode,notes: order.notes,qty: order.qty);
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              final revisionState = await ApiRequest().revisiOrder(newData, order.sol??'', detailCheckin.reception, listOrderedFix[index].qty.toString());
+                              if(revisionState.state == true){
+                                getData();
+                              }else{
+                                showToastError(revisionState.message??'Gagal revisi order');
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.confirmButton(),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              child: Text('SUBMIT', style: CustomTextStyle.whiteStandard(),),
+                            ),
                           )
                         ],
                       )

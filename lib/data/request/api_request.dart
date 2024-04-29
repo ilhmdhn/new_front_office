@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:device_information/device_information.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
@@ -517,19 +518,46 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<BaseResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     try{
       Uri url = Uri.parse('$serverUrl/order/single/room/sol/sod');
-      print('DEBUGGING 1');
       final bodyParams = await GenerateOrderParams.orderParams(roomCode, rcp, roomType, checkinDuration, orderData);
-      print('DEBUGGING 2');
-      print('DEBUGGING PARAMS $bodyParams');
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
-      print('DEBUGGING 3');
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
         loginPage();
       }
 
       final convertedResult = json.decode(apiResponse.body);
-      print('DEBUGGING 4');
       return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> revisiOrder(OrderedModel data, String sol, String rcp, String oldQty)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/order/revisi-order');
+      
+      final bodyParams = {
+        "order_slip_order": sol,
+        "order_inventory": data.invCode,
+        "order_note": data.notes,
+        "order_qty": oldQty,
+        "order_qty_temp": data.qty,
+        "order_room_rcp": rcp,
+        "order_room_user": PreferencesData.getUser().userId,
+        "order_model_android": await DeviceInformation.deviceModel
+      };
+      
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+
     }catch(e){
       return BaseResponse(
         isLoading: false,

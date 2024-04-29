@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
+import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/order/cancel_page.dart';
 import 'package:front_office_2/page/order/confirm_page.dart';
@@ -23,13 +26,25 @@ class FnbMainPage extends StatefulWidget {
 
 class _FnbMainPageState extends State<FnbMainPage> {
 
-  String roomCode = '';
   final PageController slideController = PageController();
   final List<String> namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
+  DetailCheckinResponse? dataCheckin;
+  
   int activePageIndex = 0;
+
+  void getData(roomCode)async{
+    dataCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
+    setState(() {
+      dataCheckin;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    roomCode = ModalRoute.of(context)!.settings.arguments as String;
+  final roomCode = ModalRoute.of(context)!.settings.arguments as String;
+  if(dataCheckin == null){
+    getData(roomCode);
+  }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -39,13 +54,21 @@ class _FnbMainPageState extends State<FnbMainPage> {
             color: Colors.white
           ),
         ),
-        body: Column(
+        backgroundColor: CustomColorStyle.background(),
+        body: 
+        
+      dataCheckin == null?
+        AddOnWidget.loading():
+      dataCheckin?.state != true?
+        AddOnWidget.error(dataCheckin?.message??'Error get detail checkin'):
+        Column(
           children: [
             Container(
               color: Colors.white,
-              width: double.infinity,
+              width: ScreenSize.getSizePercent(context, 100),
               height: ScreenSize.getHeightPercent(context, 10),
-              child: Align(
+              child:
+              Align(
                 alignment: Alignment.center,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -79,8 +102,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
                   });
                 },
                 children: [
-                  ListFnbPage(roomCode: roomCode),
-                  SendOrderPage(roomCode: roomCode),
+                  ListFnbPage(detailCheckin: dataCheckin!.data!,),
+                  SendOrderPage(detailCheckin: dataCheckin!.data!),
                   ConfirmOrderPage(roomCode: roomCode),
                   DoneOrderPage(roomCode: roomCode),
                   CancelOrderPage(roomCode: roomCode)
