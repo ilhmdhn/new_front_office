@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:device_information/device_information.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';

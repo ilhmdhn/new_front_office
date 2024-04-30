@@ -9,7 +9,6 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class FnBDialog{
@@ -70,8 +69,6 @@ class FnBDialog{
   }
 
   static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode)async{
-    final user = PreferencesData.getUser();
-
     Completer<bool?> completer = Completer<bool?>();
     showDialog(
       context: ctx,
@@ -216,7 +213,11 @@ class FnBDialog{
 
                                 if(checkinDetail.state != true){
                                   showToastError(checkinDetail.message);
-                                  Navigator.pop(ctx, false);
+                                  if(ctx.mounted){
+                                    Navigator.pop(ctx, false);
+                                  }else{
+                                    showToastWarning('Gagal karena berpindah halaman');
+                                  }
                                 }
                                 final rcp = checkinDetail.data?.reception??'';
                                 final roomType = checkinDetail.data?.roomType??'';

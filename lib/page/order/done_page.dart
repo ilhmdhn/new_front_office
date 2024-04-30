@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
@@ -11,8 +12,8 @@ import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 
 class DoneOrderPage extends StatefulWidget {
-  final String roomCode;
-  const DoneOrderPage({super.key, required this.roomCode});
+  final DetailCheckinModel detailCheckin;
+  const DoneOrderPage({super.key, required this.detailCheckin});
 
   @override
   State<DoneOrderPage> createState() => _DoneOrderPageState();
@@ -28,7 +29,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
     setState(() {
       isLoading = true;
     });
-    apiResult = await ApiRequest().getOrder(widget.roomCode);
+    apiResult = await ApiRequest().getOrder(widget.detailCheckin.roomCode);
 
     if(isNotNullOrEmpty(apiResult?.data)){
 
@@ -105,12 +106,12 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             InkWell(
                               onTap: ()async{
                                 
-                                final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty);
+                                final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
                                 if(cancelQty > 0){
                                   setState(() {
                                     isLoading = true;
                                 });
-                                final cancelState = await ApiRequest().cancelDo(widget.roomCode, order, cancelQty);
+                                final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelQty);
                                 if(cancelState.state !=true){
                                   setState(() {
                                     isLoading = false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -27,7 +28,11 @@ class _ProfilePageState extends State<ProfilePage> {
         body: Column(
           children: [
             ElevatedButton(
-              onPressed: (){
+              onPressed: ()async{
+                final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
+                if(logoutState != true){
+                  return;
+                }
                 PreferencesData.clearUser();
                 Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
               }, 
@@ -35,7 +40,6 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text('Logout', style: CustomTextStyle.whiteStandard(),)),
               ElevatedButton(
               onPressed: (){
-                PreferencesData.clearUser();
                 Navigator.pushNamed(context, PrinterPage.nameRoute);
               }, 
               style: CustomButtonStyle.confirm(),

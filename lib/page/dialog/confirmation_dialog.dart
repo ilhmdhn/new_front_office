@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/page/bloc/int_bloc.dart';
+import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmationDialog{
   static Future<bool> confirmation(BuildContext ctx, String title)async{
@@ -57,7 +60,7 @@ class ConfirmationDialog{
       return completer.future;
   }
 
-    static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel)async{
+    static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel, DetailCheckinModel dataCheckin)async{
       Completer<int> completer = Completer<int>();
       NumberCubit cancelValueBloc = NumberCubit();
       int cancelQty = 1;
@@ -129,7 +132,15 @@ class ConfirmationDialog{
                   Expanded(
                     child: InkWell(
                       onTap: ()async{
-                        Navigator.pop(ctx, cancelQty);
+                        final confirmationState = await VerificationDialog.requestVerification(ctx, dataCheckin.reception, dataCheckin.roomCode, 'Cancel order $itemName');
+                        
+                        if(confirmationState != true){
+                          showToastWarning('Cancel order dibatalkan');
+                          return;
+                        }
+                        if(ctx.mounted){
+                          Navigator.pop(ctx, cancelQty);
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

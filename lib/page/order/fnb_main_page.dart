@@ -105,7 +105,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
                   ListFnbPage(detailCheckin: dataCheckin!.data!,),
                   SendOrderPage(detailCheckin: dataCheckin!.data!),
                   ConfirmOrderPage(roomCode: roomCode),
-                  DoneOrderPage(roomCode: roomCode),
+                  DoneOrderPage(detailCheckin: dataCheckin!.data!),
                   CancelOrderPage(roomCode: roomCode)
                 ],
               ),
