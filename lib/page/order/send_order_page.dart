@@ -225,6 +225,12 @@ class _SendOrderPageState extends State<SendOrderPage> {
                           ),
                           InkWell(
                             onTap: ()async{
+
+                              final confirmEdit = await ConfirmationDialog.confirmation(context, 'Simpan edit order?');
+                              if(confirmEdit != true){
+                                return;
+                              }
+
                               final newData = OrderedModel(invCode: order.invCode,notes: order.notes,qty: order.qty);
                               setState(() {
                                 isLoading = true;
