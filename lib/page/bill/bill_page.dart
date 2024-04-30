@@ -10,6 +10,8 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
+import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class BillPage extends StatefulWidget {
   static const nameRoute = '/bill';
@@ -202,7 +204,13 @@ class _BillPageState extends State<BillPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: (){},
+                        onTap: (){
+                          final userLevel = PreferencesData.getUser();
+                          if(userLevel.level != 'KASIR'){
+                            showToastWarning('User tidak memiliki akses');
+                            return;
+                          }
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: CustomContainerStyle.blueButton(),
@@ -212,6 +220,11 @@ class _BillPageState extends State<BillPage> {
                       Expanded(
                         child: InkWell(
                           onTap: (){
+                            final userLevel = PreferencesData.getUser();
+                            if(userLevel.level != 'KASIR'){
+                              showToastWarning('User tidak memiliki akses');
+                              return;
+                            }
                             Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
                           },
                           child: Container(
