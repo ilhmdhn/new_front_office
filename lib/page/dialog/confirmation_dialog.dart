@@ -54,4 +54,96 @@ class ConfirmationDialog{
       });
       return completer.future;
   }
+
+    static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel)async{
+    Completer<int> completer = Completer<int>();
+    print('DEBUGGING MAX CANCEL $maxCancel');
+    showDialog(
+      context: ctx, 
+      builder: (BuildContext ctxDialog){
+        return StatefulBuilder(
+          builder: (ctxStfl, setState){
+            int cancelQty = 1;
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Center(child: AutoSizeText('Batalkan pesanan\n$itemName?', style: CustomTextStyle.blackMediumSize(16), maxLines: 3, minFontSize: 12, textAlign: TextAlign.center,)),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 36,
+                    width: 36,
+                    child: InkWell(
+                      child: Image.asset(
+                        'assets/icon/minus.png'),
+                      onTap: (){
+                      setState((){
+                        if(cancelQty>1){
+                          --cancelQty;
+                        }
+                      });
+                    },
+                    ),
+                    ),
+                    const SizedBox(width: 12,),
+                    Text(cancelQty.toString(), style: CustomTextStyle.blackMediumSize(21),),
+                    const SizedBox(width: 12,),
+                    SizedBox(
+                      height: 36,
+                      width: 36,
+                      child: InkWell(
+                        child: Image.asset('assets/icon/plus.png'),
+                      onTap: (){
+                        if(cancelQty < maxCancel){
+                          setState((){
+                            ++cancelQty;
+                          });
+                        }
+                    },
+                    ),
+                    ),
+                ],
+              ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(ctx, 0);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.cancelButton(),
+                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6,),
+                Expanded(
+                  child: InkWell(
+                    onTap: ()async{
+                      Navigator.pop(ctx, cancelQty);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.confirmButton(),
+                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+          }
+        );
+      }).then((value){
+        value ??= 0;
+        completer.complete(value);
+      });
+      return completer.future;
+  }
+
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -20,14 +21,18 @@ class DoneOrderPage extends StatefulWidget {
 class _DoneOrderPageState extends State<DoneOrderPage> {
 
   OrderResponse? apiResult;
+  bool isLoading = true;
   List<OrderedModel> listOrder = List.empty(growable: true);
 
   void getData()async{
+    setState(() {
+      isLoading = true;
+    });
     apiResult = await ApiRequest().getOrder(widget.roomCode);
 
     if(isNotNullOrEmpty(apiResult?.data)){
 
-      listOrder = apiResult!.data!.where((element) => element.orderState == '5').toList();
+      listOrder = apiResult!.data!.where((element) => element.orderState == '5' &&  (element.qty??0) - (element.cancelQty??0) >0).toList();
 
       apiResult?.data?.sort((a, b) {
         int solComparison = a.sol!.compareTo(b.sol!);
@@ -39,6 +44,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
     }
 
     setState(() {
+      isLoading = false;
       apiResult;
     });
   }
@@ -67,6 +73,8 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
             shrinkWrap: true,
             itemBuilder: (ctxList, index){
               final order = listOrder[index];
+              num price = (order.price??0) * ((order.qty??0) - (order.cancelQty??0));
+              int qty = (order.qty??0) - (order.cancelQty??0);
               return Column(
                 children: [
                   Container(
@@ -83,7 +91,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             ),
                             Flexible(
                               flex: 1,
-                              child: AutoSizeText(Formatter.formatRupiah((order.price??0) * ((order.qty??0) - (order.cancelQty??0))), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+                              child: AutoSizeText(Formatter.formatRupiah(price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
                             ),
                           ],
                         ),
@@ -92,12 +100,31 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
-                              child: AutoSizeText('${order.qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+                              child: AutoSizeText('${qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
                             ),
-                            Container(
-                              decoration: CustomContainerStyle.cancelButton(),
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-                              child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
+                            InkWell(
+                              onTap: ()async{
+                                
+                                final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty);
+                                if(cancelQty > 0){
+                                  setState(() {
+                                    isLoading = true;
+                                });
+                                final cancelState = await ApiRequest().cancelDo(widget.roomCode, order, cancelQty);
+                                if(cancelState.state !=true){
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }else{
+                                  getData();
+                                }
+                                }
+                              },
+                              child: Container(
+                                decoration: CustomContainerStyle.cancelButton(),
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                                child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
+                              ),
                             )
                           ],
                         ),

@@ -630,9 +630,9 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-  Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb)async{
+  Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb, int qty)async{
     try{
-      Uri url = Uri.parse('$serverUrl/neworder/add');
+      Uri url = Uri.parse('$serverUrl/cancelorder/add');
       
       final bodyParams = {
         "room": roomCode,
@@ -640,7 +640,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         "order_inventory": [{
           'inventory': fnb.invCode,
           'nama': fnb.name,
-          'qty': fnb.qty,
+          'qty': qty,
           'order_penjualan': fnb.okl,
           'slip_order': fnb.sol,
           }
