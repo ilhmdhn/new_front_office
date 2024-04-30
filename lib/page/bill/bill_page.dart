@@ -1,5 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
@@ -66,101 +69,108 @@ class _BillPageState extends State<BillPage> {
         result.state != true?
           Center(
             child: Text(result.message),):
-          Padding(
+          Container(
+            width: double.infinity,
+            height: double.infinity,
             padding: const EdgeInsets.all(8.0),
-            child: Stack(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    promoRoom>0?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ):const SizedBox(),
-                    const SizedBox(height: 6,),
-                    orderList.isNotEmpty?
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Flexible(
+                  flex: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AutoSizeText('Rincian Penjualan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
-                          const SizedBox(height: 6,),
-                          ListView.builder(
-                            itemCount: orderList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (ctx, index){
-                              final order = orderList[index];
-                              final cancelOrder = cancelOrderList.where((element) => element.orderCode == order.orderCode && element.inventoryCode == order.inventoryCode).toList();
-                              final promoOrder = promoOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
-                              final promoCancelOrder = promoCancelOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
-
-                              num pricePromo = 0;
-                              if(promoOrder.isNotEmpty){
-                                pricePromo = promoOrder[0].promoPrice;
-                              }
-
-                              if(promoCancelOrder.isNotEmpty){
-                                pricePromo = promoOrder[0].promoPrice - promoCancelOrder[0].promoPrice;
-                              }
-                    
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                    AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AutoSizeText('${order.jumlah} x ${order.harga}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                                      AutoSizeText(Formatter.formatRupiah(order.total), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                                    ],
-                                  ),
-                                  cancelOrder.isNotEmpty?
-                                  Column(
+                          AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                        ],
+                      ),
+                      promoRoom>0?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                        ],
+                      ):const SizedBox(),
+                      const SizedBox(height: 6,),
+                      orderList.isNotEmpty?
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AutoSizeText('Rincian Penjualan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
+                            const SizedBox(height: 6,),
+                            Flexible(
+                              child: ListView.builder(
+                                itemCount: orderList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (ctx, index){
+                                  final order = orderList[index];
+                                  final cancelOrder = cancelOrderList.where((element) => element.orderCode == order.orderCode && element.inventoryCode == order.inventoryCode).toList();
+                                  final promoOrder = promoOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
+                                  final promoCancelOrder = promoCancelOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
+                              
+                                  num pricePromo = 0;
+                                  if(promoOrder.isNotEmpty){
+                                    pricePromo = promoOrder[0].promoPrice;
+                                  }
+                              
+                                  if(promoCancelOrder.isNotEmpty){
+                                    pricePromo = promoOrder[0].promoPrice - promoCancelOrder[0].promoPrice;
+                                  }
+                                                  
+                                  return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      AutoSizeText('RETUR ${cancelOrder[0].namaItem}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                        AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          AutoSizeText('${cancelOrder[0].jumlah} x ${cancelOrder[0].harga}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
-                                          AutoSizeText('(${Formatter.formatRupiah(cancelOrder[0].total)})', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                          AutoSizeText('${order.jumlah} x ${order.harga}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                          AutoSizeText(Formatter.formatRupiah(order.total), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                                         ],
                                       ),
+                                      cancelOrder.isNotEmpty?
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText('RETUR ${cancelOrder[0].namaItem}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              AutoSizeText('${cancelOrder[0].jumlah} x ${cancelOrder[0].harga}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                              AutoSizeText('(${Formatter.formatRupiah(cancelOrder[0].total)})', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                            ],
+                                          ),
+                                        ],
+                                      ):const SizedBox(),
+                                      promoOrder.isNotEmpty?
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AutoSizeText(promoOrder[0].promoName, style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                                          AutoSizeText('(${Formatter.formatRupiah(pricePromo)})', style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                                        ],
+                                      ):const SizedBox(),
+                                      const SizedBox(height: 6,)
                                     ],
-                                  ):const SizedBox(),
-                                  promoOrder.isNotEmpty?
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AutoSizeText(promoOrder[0].promoName, style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
-                                      AutoSizeText('(${Formatter.formatRupiah(pricePromo)})', style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
-                                    ],
-                                  ):const SizedBox(),
-                                  const SizedBox(height: 6,)
-                                ],
-                              );
-                            })
-                        ],
-                      ),
-                    ): const SizedBox()
-                  ],
+                                  );
+                                }),
+                            )
+                          ],
+                        ),
+                      ): const SizedBox()
+                    ],
+                  ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                Flexible(
+                  flex: 1,
                   child: Column(
                     children: [
                     Row(
@@ -217,7 +227,8 @@ class _BillPageState extends State<BillPage> {
                       ],
                     ),
                     ],
-                  ))
+                  ),
+                )
               ],
             ),
           )
