@@ -106,9 +106,6 @@ class _BillPageState extends State<BillPage> {
                               final promoOrder = promoOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
                               final promoCancelOrder = promoCancelOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
 
-                              print('DEBUGGING cancelOrder ${cancelOrder.length}');
-                              print('DEBUGGING promoOrder ${promoOrder.length}');
-                              print('DEBUGGING promoCancelOrder ${promoCancelOrder.length}');
                               num pricePromo = 0;
                               if(promoOrder.isNotEmpty){
                                 pricePromo = promoOrder[0].promoPrice;

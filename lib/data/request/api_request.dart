@@ -567,6 +567,103 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<BaseResponse> cancelSo(String invCode, String sol, String rcp, String oldQty)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/order/cancelOrder');
+      
+      final bodyParams = {
+        "order_slip_order": sol,
+        "order_inventory": invCode,
+        "order_qty": oldQty,
+        "order_room_rcp": rcp,
+        "order_room_user": PreferencesData.getUser().userId,
+        "order_model_android": await DeviceInformation.deviceModel
+      };
+      
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> confirmDo(String roomCode, OrderedModel fnb)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/neworder/add');
+      
+      final bodyParams = {
+        "room": roomCode,
+        "chusr": PreferencesData.getUser().userId,
+        "order_inventory": [{
+          'inventory': fnb.invCode,
+          'nama': fnb.name,
+          'qty': fnb.qty,
+          'slip_order': fnb.sol,
+          }
+        ]
+      };
+      
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/neworder/add');
+      
+      final bodyParams = {
+        "room": roomCode,
+        "chusr": PreferencesData.getUser().userId,
+        "order_inventory": [{
+          'inventory': fnb.invCode,
+          'nama': fnb.name,
+          'qty': fnb.qty,
+          'order_penjualan': fnb.okl,
+          'slip_order': fnb.sol,
+          }
+        ]
+      };
+      
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

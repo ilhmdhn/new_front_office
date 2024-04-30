@@ -25,6 +25,7 @@ class OrderResponse{
 
 class OrderedModel{
   String? sol;
+  String? okl;
   String? invCode;
   int? qty;
   String? idGlobal;
@@ -38,6 +39,7 @@ class OrderedModel{
 
   OrderedModel({
     this.sol,
+    this.okl,
     this.invCode,
     this.qty,
     this.queue,
@@ -53,6 +55,7 @@ class OrderedModel{
   factory OrderedModel.fromJson(Map<String, dynamic>json){
     return OrderedModel(
       sol: json['order_sol'],
+      okl: json['order_code'],
       invCode: json['order_inventory'],
       queue: json['order_urutan'],
       qty: json['order_quantity'],

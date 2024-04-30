@@ -112,7 +112,11 @@ class _SendOrderPageState extends State<SendOrderPage> {
             OrderedModel order = listOrdered[index];
             final isInitiated = listSol.where((element) => element == order.sol).toList();
             listSol.add(order.sol??'');
-            return Column(
+            return 
+            
+            order.orderState != '2'?
+            
+            Column(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
@@ -150,7 +154,20 @@ class _SendOrderPageState extends State<SendOrderPage> {
                                   }else{
                                     final state = await ConfirmationDialog.confirmation(ctxList, 'Hapus ${order.name}?');
                                     if(state == true){
-                                      // listOrder.removeAt(index);
+                                      
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      
+                                      final removeState = await ApiRequest().cancelSo(order.invCode.toString(), order.sol??'', detailCheckin.reception, listOrderedFix[index].qty.toString());
+                                      if(removeState.state != true){
+                                        showToastError(removeState.message.toString());
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      }else{
+                                        getData();
+                                      }
                                     }
                                   }
                                   
@@ -229,6 +246,43 @@ class _SendOrderPageState extends State<SendOrderPage> {
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               child: Text('SUBMIT', style: CustomTextStyle.whiteStandard(),),
                             ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 6,)
+              ],
+            ):
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 5,
+                            child: AutoSizeText(order.name??'name', style: CustomTextStyle.blackStandard(), maxLines: 1,)
+                          ),
+                          Flexible(
+                            flex: 3,
+                            child: AutoSizeText(order.sol??'', style: GoogleFonts.poppins(), maxLines: 1,),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 6,),
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: CustomContainerStyle.cancelButton(),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            child: Text('Dibatalkan', style: CustomTextStyle.whiteSize(16),),
                           )
                         ],
                       )
