@@ -77,7 +77,6 @@ class _BillPageState extends State<BillPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                  flex: 5,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -169,65 +168,62 @@ class _BillPageState extends State<BillPage> {
                     ],
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Column(
+                Column(
+                  children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Ruangan + FnB', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(roomTotal + fnbTotal), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Service', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(serviceFnb + serviceRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Pajak', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(taxFnb + taxRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Total', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(totalAll), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: (){},
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: CustomContainerStyle.blueButton(),
-                            child: const Icon(Icons.print, color: Colors.white, size: 32,)),
-                        ),
-                        const SizedBox(width: 5,),
-                        Expanded(
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 11),
-                              decoration: CustomContainerStyle.confirmButton(),
-                              child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      AutoSizeText('Ruangan + FnB', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(roomTotal + fnbTotal), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Service', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(serviceFnb + serviceRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Pajak', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(taxFnb + taxRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Total', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(totalAll), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: (){},
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: CustomContainerStyle.blueButton(),
+                          child: const Icon(Icons.print, color: Colors.white, size: 32,)),
+                      ),
+                      const SizedBox(width: 5,),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 11),
+                            decoration: CustomContainerStyle.confirmButton(),
+                            child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  ],
                 )
               ],
             ),
