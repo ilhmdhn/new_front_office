@@ -174,10 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: (){
                       ConfigurationDialog().setUrl(context);
                     },
-                    child: Container(
-                      decoration: CustomContainerStyle.blueButton(),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      child: Text('Konfigurasi', style: CustomTextStyle.whiteSize(16),)),
+                    child: Text('Konfigurasi', style: CustomTextStyle.blackMedium(),),
                   ),
                 ),
               ]),
