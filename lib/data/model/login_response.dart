@@ -28,11 +28,13 @@ class UserDataModel{
   String? userId;
   String? level;
   String? token;
+  String? pass;
 
   UserDataModel({
     this.userId,
     this.level,
-    this.token
+    this.token,
+    this.pass
   });
 
   factory UserDataModel.fromJson(Map<String, dynamic> json)=>UserDataModel(

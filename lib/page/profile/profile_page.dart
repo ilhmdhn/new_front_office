@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
-import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -18,8 +19,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  UserDataModel user = PreferencesData.getUser();
+
   @override
   Widget build(BuildContext context) {
+    bool isBiometric = PreferencesData.getBiometricLoginState();
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
@@ -29,6 +33,65 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         body: Column(
           children: [
+            SizedBox(
+                  width: 97,
+                  height: 97,
+                  child: CircleAvatar(
+                    backgroundImage: Image.asset('assets/icon/user.png').image,
+                  ),
+            ),
+            const SizedBox(height: 6,),
+            AutoSizeText(user.userId??'user', style: CustomTextStyle.blackMediumSize(21),),
+            // const SizedBox(height: 6,),
+            AutoSizeText(user.level??'level', style: CustomTextStyle.blackMediumSize(18),),
+
+            const SizedBox(height: 12,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal:  8.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 36,
+                        child: Image.asset('assets/icon/fingerprint.png')
+                      ),
+                    Expanded(
+                      // width: widthTextButton,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                        child: AutoSizeText('Autentikasi Biometric', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                      )),
+                    SizedBox(
+                      width: 26,
+                      child: Checkbox(
+                        value: isBiometric, 
+                        onChanged: (value){
+                          PreferencesData.setBiometricLogin(value??false);
+                          setState(() {
+                            isBiometric = PreferencesData.getLoginState();
+                          });
+                        }
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 6,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal:  8.0),
               child: InkWell(
@@ -121,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if(logoutState != true){
                     return;
                   }
-                  PreferencesData.clearUser();
+                  PreferencesData.setLoginState(false);
                   Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
                 },
                 child: Container(

@@ -9,10 +9,12 @@ import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -40,10 +42,36 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void doLogin(String user, String pass)async{
+    setState(() {
+      isLoading = true;
+    });
+    final loginResult = await ApiRequest().loginFO(user, pass);
+    if(loginResult.state == true){
+      if(user != PreferencesData.getUser().userId){
+          PreferencesData.setBiometricLogin(false);
+      }
+
+      PreferencesData.setUser(loginResult.data!, pass);
+      PreferencesData.setLoginState(true);
+
+      await insertLogin();
+      if(context.mounted){
+        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+      }
+    }else{
+      showToastWarning(loginResult.message??'Gagal Login');
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   void loginState()async{
     final apiResponse = await ApiRequest().cekSign();
     final user = PreferencesData.getUser();
-    if(apiResponse.state == true && isNotNullOrEmpty(user.userId) && isNotNullOrEmpty(user.level) && isNotNullOrEmpty(user.token) ){
+    final loginState = PreferencesData.getLoginState();
+    if(apiResponse.state == true && isNotNullOrEmpty(user.userId) && isNotNullOrEmpty(user.level) && isNotNullOrEmpty(user.token) && loginState == true){
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{
       setState((){
@@ -135,33 +163,34 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
-                              onTap: () async{
-                                try {
-                                  final loginResult = await ApiRequest().loginFO(tfUser.text, tfPassword.text);
-                                  if(loginResult.state == true){
-                                    await PreferencesData.setUser(
-                                      loginResult.data!
-                                    );
-                                    await insertLogin();
-                                    if(context.mounted){
-                                      Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                                    }
-                                  }else{
-                                    showToastWarning(loginResult.message??'Gagal Login');
-                                  }
-                                } catch (e) {
-                                  showToastError('ERRORRRR $e');  
-                                }
+                              onTap: (){
+                                doLogin(tfUser.text, tfPassword.text);
                               },
                               child: Container(
                                 decoration: CustomContainerStyle.confirmButton(),
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 child: Text('Login', style: CustomTextStyle.whiteSize(19),))),
                           const SizedBox(width: 12,),
-                          SizedBox(
-                            height: 46,
-                            width: 46,
-                            child: Image.asset('assets/icon/fingerprint.png'),
+                          InkWell(
+                            onTap: ()async{
+                              final biometricState = PreferencesData.getBiometricLoginState();
+                              if(biometricState != true){
+                                showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                                return;
+                              }
+
+                              final biometricRequest = await FingerpintAuth().requestFingerprintAuth();
+                              if(biometricRequest != true){
+                                return;
+                              }
+                              final user = PreferencesData.getUser();
+                              doLogin(user.userId??'', user.pass??'');
+                            },
+                            child: SizedBox(
+                              height: 46,
+                              width: 46,
+                              child: Image.asset('assets/icon/fingerprint.png'),
+                            ),
                           )
                         ],
                       ),

@@ -3,6 +3,7 @@ import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:lottie/lottie.dart';
 
 class ReportPage extends StatefulWidget {
     static const nameRoute = '/report';
@@ -21,7 +22,9 @@ class _ReportPageState extends State<ReportPage> {
         title: Text('Laporan', style: CustomTextStyle.titleAppBar(),),
       ),
       backgroundColor: CustomColorStyle.background(),
-      body: SingleChildScrollView(
+      body: Center(
+        child: Lottie.asset('assets/animation/cooming_soon.json'),),
+      /*body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 21),
         child: Column(
           children: [
@@ -61,6 +64,6 @@ class _ReportPageState extends State<ReportPage> {
           ],
         ),
       ),
-    );
+    */);
   }
 }

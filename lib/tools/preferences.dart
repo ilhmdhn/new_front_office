@@ -35,17 +35,36 @@ class PreferencesData {
     return _prefs?.getString('OUTLET') ?? 'HP000';
   }
 
-  static Future<void> setUser(UserDataModel data) async {
+  static Future<void> setUser(UserDataModel data, pass) async {
     _prefs?.setString('USER_ID', data.userId!);
     _prefs?.setString('USER_LEVEL', data.level!);
     _prefs?.setString('USER_TOKEN', data.token!);
+    _prefs?.setString('USER_PASS', pass);
+  }
+
+  static void setBiometricLogin(bool value){
+    _prefs?.setBool('BIOMETRIC_LOGIN', value);
+  }
+
+  static bool getBiometricLoginState(){
+    final state = _prefs?.getBool('BIOMETRIC_LOGIN')??false;
+    return state;
   }
 
   static UserDataModel getUser() {
     final userId = _prefs?.getString('USER_ID') ?? '';
     final level = _prefs?.getString('USER_LEVEL') ?? '';
     final token = _prefs?.getString('USER_TOKEN') ?? '';
-    return UserDataModel(userId: userId, level: level, token: token);
+    final pass = _prefs?.getString('USER_PASS')??'';
+    return UserDataModel(userId: userId, level: level, token: token, pass: pass);
+  }
+
+  static void setLoginState(bool value){
+    _prefs?.setBool('LOGIN_STATE', value);
+  }
+
+  static bool getLoginState(){
+    return _prefs?.getBool('LOGIN_STATE')??false;
   }
 
   static String getUserToken() {
@@ -59,12 +78,6 @@ class PreferencesData {
 
   static String getFcmToken(){
     return _prefs?.getString('FCM_TOKEN')??'';
-  }
-
-  static void clearUser(){
-    _prefs?.setString('USER_ID', '');
-    _prefs?.setString('USER_LEVEL', '');
-    _prefs?.setString('USER_TOKEN', '');
   }
 
   static Future<String> getImei()async{
