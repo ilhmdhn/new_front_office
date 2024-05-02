@@ -85,7 +85,10 @@ class _OperationalPageState extends State<OperationalPage> {
                 return widget.kasirLayout(state.toString());
               } else if(userData.level == 'SUPERVISOR'){
                 return widget.spvLayout(state.toString());
-              }else{
+              } else if(userData.level == 'SERVER'){
+                return widget.serverLayout();
+              }
+              else{
                 return const SizedBox();
               }
             }),

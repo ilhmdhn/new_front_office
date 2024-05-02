@@ -111,6 +111,53 @@ class ButtonMenuWidget{
     );
   }
 
+  Widget serverLayout(){
+    final widthButton = ScreenSize.getSizePercent(context, 46);  
+    final spaceCenter = ScreenSize.getSizePercent(context, 2);
+    final widthRow = ScreenSize.getSizePercent(context, 94);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: order()),
+              SizedBox(
+                width: spaceCenter
+              ),
+              SizedBox(
+                width: widthButton,
+                child: bill()
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: clean()),
+              SizedBox(
+                width: spaceCenter
+              ),
+              SizedBox(
+                width: widthButton,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+  }
+
   Widget spvLayout(String approvalCount){
     final widthButton = ScreenSize.getSizePercent(context, 46);  
     final spaceCenter = ScreenSize.getSizePercent(context, 2);

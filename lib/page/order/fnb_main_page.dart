@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
+import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/main_page.dart';
@@ -13,6 +14,7 @@ import 'package:front_office_2/page/order/send_order_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 
 class FnbMainPage extends StatefulWidget {
@@ -27,9 +29,12 @@ class FnbMainPage extends StatefulWidget {
 class _FnbMainPageState extends State<FnbMainPage> {
 
   final PageController slideController = PageController();
-  final List<String> namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
   DetailCheckinResponse? dataCheckin;
-  
+
+  String userLevel = PreferencesData.getUser().level??'';
+
+  List<String> namePage = [];
+
   int activePageIndex = 0;
 
   void getData(roomCode)async{
@@ -42,6 +47,14 @@ class _FnbMainPageState extends State<FnbMainPage> {
   @override
   Widget build(BuildContext context) {
   final roomCode = ModalRoute.of(context)!.settings.arguments as String;
+
+  if(userLevel == 'aa'){
+    namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
+  }else{
+    namePage = ['ORDER', 'SEND ORDER'];
+  }
+
+
   if(dataCheckin == null){
     getData(roomCode);
   }
@@ -94,7 +107,11 @@ class _FnbMainPageState extends State<FnbMainPage> {
               ),
             ),
             Flexible(
-              child: PageView(
+              child: 
+              
+              userLevel == 'KASIR' || userLevel == 'SUPERVISOR' || userLevel == 'IT'?
+              
+              PageView(
                 controller: slideController,
                 onPageChanged: (index){
                   setState(() {
@@ -108,7 +125,18 @@ class _FnbMainPageState extends State<FnbMainPage> {
                   DoneOrderPage(detailCheckin: dataCheckin!.data!),
                   CancelOrderPage(roomCode: roomCode)
                 ],
-              ),
+              ):PageView(
+                controller: slideController,
+                onPageChanged: (index){
+                  setState(() {
+                    activePageIndex = index;
+                  });
+                },
+                children: [
+                  ListFnbPage(detailCheckin: dataCheckin!.data!,),
+                  SendOrderPage(detailCheckin: dataCheckin!.data!)
+                ],
+              )
             ),
           ],
         ),

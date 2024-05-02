@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
-import 'package:front_office_2/page/status/status_page.dart';
+import 'package:front_office_2/page/status/history_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:front_office_2/tools/permissions.dart';
@@ -78,7 +78,7 @@ class _MainPageState extends State<MainPage> {
           ]),
           body: <Widget>[
             const OperationalPage(),
-            const StatusPage(),
+            const HistoryPage(),
             const ReportPage(),
             const ProfilePage()
           ][currentPageIndex],
