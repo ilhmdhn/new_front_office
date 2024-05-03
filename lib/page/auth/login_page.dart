@@ -14,7 +14,6 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -56,8 +55,11 @@ class _LoginPageState extends State<LoginPage> {
       PreferencesData.setLoginState(true);
 
       await insertLogin();
-      if(context.mounted){
-        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+      BuildContext ctx = context;
+      if(ctx.mounted){
+        Navigator.pushNamedAndRemoveUntil(ctx, MainPage.nameRoute, (route) => false);
+      }else{
+        showToastError('Gagal, jangan berpindah halaman');
       }
     }else{
       showToastWarning(loginResult.message??'Gagal Login');

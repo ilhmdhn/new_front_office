@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
-import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
-import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/order/cancel_page.dart';
 import 'package:front_office_2/page/order/confirm_page.dart';
 import 'package:front_office_2/page/order/done_page.dart';

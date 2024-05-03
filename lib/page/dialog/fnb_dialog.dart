@@ -248,10 +248,18 @@ class FnBDialog{
 
                                   if(orderState.state != true){
                                     showToastError(orderState.message.toString());
-                                    Navigator.pop(ctx, false);
+                                    if(ctx.mounted){
+                                     Navigator.pop(ctx, false);
+                                    }else{
+                                      showToastWarning('Gagal berpindah halaman');
+                                    }
                                   }
                     
-                                  Navigator.pop(ctx, true);
+                                  if(ctx.mounted){
+                                    Navigator.pop(ctx, true);
+                                  }else{
+                                    showToastWarning('Gagal berpindah halaman');
+                                  }
                                 },
                                 child: Container(
                                   decoration: CustomContainerStyle.confirmButton(),

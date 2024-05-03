@@ -6,7 +6,6 @@ import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -185,7 +184,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     return;
                   }
                   PreferencesData.setLoginState(false);
-                  Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
+                  if(context.mounted){
+                    Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
+                  }else{
+                    showToastWarning('Gagal berpindah halaman');
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),

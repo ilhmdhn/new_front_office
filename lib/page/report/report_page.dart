@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/page/report/sales/sales_report_page.dart';
-import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:lottie/lottie.dart';
