@@ -62,6 +62,9 @@ class _LoginPageState extends State<LoginPage> {
         showToastError('Gagal, jangan berpindah halaman');
       }
     }else{
+      setState((){
+        isLoading = false;
+      });
       showToastWarning(loginResult.message??'Gagal Login');
     }
     setState(() {
@@ -166,6 +169,10 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           InkWell(
                               onTap: (){
+                                if(isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)){
+                                  showToastWarning('Lengkapi User dan Password');
+                                  return;
+                                }
                                 doLogin(tfUser.text, tfPassword.text);
                               },
                               child: Container(
