@@ -26,7 +26,7 @@ class VerificationDialog{
       return biometricResult;
     }
 
-    Completer<bool?> completer = Completer<bool?>();
+    Completer<bool?> completer = Completer<bool?>(); 
     String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
     ApprovalCubit approvalCubit = ApprovalCubit();
     approvalCubit.sendApproval(uniqueTime, reception, room, note);
