@@ -85,32 +85,58 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                         isLoading = true;
                       });
 
-                      final checkinResult = await ApiRequest().doCheckin(CheckinBody(
-                        chusr: PreferencesData.getUser().userId??'UNKNOWN',
-                        hour: result.duration,
-                        minute: 0,
-                        pax: result.pax,
-                        checkinRoom: CheckinRoom(
-                          room: listRoomItem[index].roomCode??''),
-                        checkinRoomType: CheckinRoomType(
-                          roomCapacity: listRoomItem[index].roomCapacity??0,
-                          roomType: checkinParams.roomType??'',
-                          isRoomCheckin: isRoomCheckin
-                        ),
-                        visitor: Visitor(
-                          memberCode: checkinParams.memberCode,
-                          memberName: checkinParams.memberName
-                        )
-                      ));
+                      if(isRoomCheckin == true){
 
-                      if(checkinResult.state==true && contextz.mounted){
-                        Navigator.pushNamedAndRemoveUntil(contextz, EditCheckinPage.nameRoute, arguments:  listRoomItem[index].roomCode,(route) => false,);
+                        final checkinResult = await ApiRequest().doCheckin(CheckinBody(
+                          chusr: PreferencesData.getUser().userId??'UNKNOWN',
+                          hour: result.duration,
+                          minute: 0,
+                          pax: result.pax,
+                          checkinRoom: CheckinRoom(
+                            room: listRoomItem[index].roomCode??''),
+                          checkinRoomType: CheckinRoomType(
+                            roomCapacity: listRoomItem[index].roomCapacity??0,
+                            roomType: checkinParams.roomType??'',
+                            isRoomCheckin: isRoomCheckin
+                          ),
+                          visitor: Visitor(
+                            memberCode: checkinParams.memberCode,
+                            memberName: checkinParams.memberName
+                          )
+                        ));
+
+                        if(checkinResult.state==true && contextz.mounted){
+                          Navigator.pushNamedAndRemoveUntil(contextz, EditCheckinPage.nameRoute, arguments:  listRoomItem[index].roomCode,(route) => false,);
+                        }else{
+                          setState(() {
+                            isLoading = false;
+                          });
+                          showToastError(checkinResult.message??'Gagal Checkin');
+                        }
+
                       }else{
-                        setState(() {
-                          isLoading = false;
-                        });
-                        showToastError(checkinResult.message??'Gagal Checkin');
-                      }
+                        final params = {
+                          'checkin_room_type': {
+                            'kamar_untuk_checkin': isRoomCheckin
+                          },
+                          'checkin_room':{
+                            'jenis_kamar': checkinParams.roomType??'',
+                            'kamar': listRoomItem[index].roomCode??'',
+                          },
+                          'visitor':{
+                            'member': checkinParams.memberCode,
+                            'nama_lengkap': checkinParams.memberName
+                          },
+                          'chusr': PreferencesData.getUser().userId,
+                          'durasi_jam': 0,
+                          'durasi_menit': 0,
+                          'pax': result.pax,
+                        };
+                      final checkinResult = await ApiRequest().doCheckinLobby(params);
+
+                  
+
+                    }
                   },
                   child: Container(
                                   decoration: BoxDecoration(

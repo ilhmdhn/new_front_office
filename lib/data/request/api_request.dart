@@ -122,6 +122,25 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+    Future<BaseResponse> doCheckinLobby(Map<String, dynamic> params)async{
+    try{
+      final url = Uri.parse('$serverUrl/checkin-direct/direct-lobby-member');
+      final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(params));
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+          loginPage();
+      }
+      final convertedResult = json.decode(apiResponse.body);
+
+      return BaseResponse.fromJson(convertedResult);
+    }catch(err){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: err.toString()
+      );
+    }
+  }
+
   Future<EdcResponse> getEdc()async{
     try{ 
       final url = Uri.parse('$serverUrl/edc/list-edc');
