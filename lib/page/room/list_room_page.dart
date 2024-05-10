@@ -9,6 +9,7 @@ import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/checkin_time_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -69,14 +70,16 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
               itemBuilder: (BuildContext context, int index){
                 return InkWell(
                   onTap:()async{
-                    TimePaxModel? result = await CheckinDurationDialog().setCheckinTime(context, listRoomItem[index].roomName.toString());
-                    if(result != null){
-                      
-                      bool isRoomCheckin = false;
-                  
-                      if(listRoomItem[index].isRoomCheckin == 1){
-                        isRoomCheckin = true;
-                      }
+                    bool isRoomCheckin = listRoomItem[index].isRoomCheckin?? false;
+                    String roomName = listRoomItem[index].roomName??'';
+                    if(isNullOrEmpty(roomName)){
+                      roomName = listRoomItem[index].roomCode??'';
+                    }
+                    TimePaxModel? result = await CheckinDurationDialog().setCheckinTime(context, roomName, isRoomCheckin);
+
+                    if(result == null){
+                      return;
+                    }
                       
                       setState(() {
                         isLoading = true;
@@ -108,7 +111,6 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                         });
                         showToastError(checkinResult.message??'Gagal Checkin');
                       }
-                    }
                   },
                   child: Container(
                                   decoration: BoxDecoration(

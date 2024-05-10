@@ -31,7 +31,7 @@ class RoomModel{
   String? roomCode;
   String? roomName;
   int? roomCapacity;
-  int? isRoomCheckin;
+  bool? isRoomCheckin;
 
   RoomModel({
     this.roomCode,
@@ -44,6 +44,6 @@ class RoomModel{
     roomCode: json['kamar'],
     roomName: json['kamar_alias'],
     roomCapacity: json['kapasitas'],
-    isRoomCheckin: json['status_kamar_ready_untuk_checkin']
+    isRoomCheckin: json['kamar_untuk_checkin']
   );
 }
