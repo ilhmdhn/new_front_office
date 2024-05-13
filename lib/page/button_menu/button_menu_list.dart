@@ -770,7 +770,7 @@ class ButtonMenuWidget{
     return InkWell(
       onTap: (){
         // showToastWarning('Checkin Info Cooming Soon');
-        RatingDialog.viewQr(context, '');
+        RatingDialog.submitRate(context, '');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(

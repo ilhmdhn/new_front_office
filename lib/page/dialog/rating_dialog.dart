@@ -1,5 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -76,6 +80,107 @@ class RatingDialog{
   }
 
   static void submitRate(BuildContext ctx, String invoice)async{
-    
+    showDialog(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (BuildContext ctxDialog){
+        double rate = 3;
+        String hint = '';
+        bool isOk = false;
+        return StatefulBuilder(
+          builder: (BuildContext ctxStateful, setState){
+            if(rate < 1.5){
+              hint = 'Sampaikan keluhan kamu';
+            }else{
+              hint = 'Tulis pendapat kamu mengenai pelayanan kami';
+            }
+            
+            if(isOk == true){
+              Future.delayed(const Duration(seconds: 3), () {
+                Navigator.pop(ctx);
+              });
+              return SizedBox(
+                child: LottieBuilder.asset('assets/animation/done.json'),
+              );
+            }
+            
+            return PopScope(
+              canPop: false,
+              child: AlertDialog(
+                title: Center(child: AutoSizeText('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1, minFontSize: 10,)),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RatingBar.builder(
+                    initialRating: 3,
+                    minRating: 0.5,
+                    itemSize: 35,
+                    wrapAlignment: WrapAlignment.center,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      setState((){
+                        rate = rating;
+                      });
+                    },
+                    ),
+                    const SizedBox(height: 12,),
+                    TextField(
+                      maxLines: 3,
+                      minLines: 2,
+                      keyboardType: TextInputType.multiline,
+                      decoration: CustomTextfieldStyle.normalHint(hint),
+                    ),
+                        const SizedBox(height: 12,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 6,
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pop(ctx, false);
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.cancelButton(),
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                              child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
+                            ),
+                          ),
+                        ),
+                        const Flexible(
+                          flex: 2,
+                          child: SizedBox()
+                        ),
+                        Flexible(
+                          flex: 6,
+                          child: InkWell(
+                            onTap: (){
+                              setState((){
+                                isOk = true;
+                              });
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.confirmButton(),
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                              child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ); 
+          });
+        }
+    );
   }
 }

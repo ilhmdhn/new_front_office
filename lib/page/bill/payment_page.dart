@@ -647,7 +647,6 @@ class _PaymentPageState extends State<PaymentPage> {
 
                           if(context.mounted){
                             Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                            RatingDialog.viewQr(context, '');
                           }
                         },
                         child: Container(

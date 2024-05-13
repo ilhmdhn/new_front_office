@@ -23,7 +23,7 @@ class CustomTextfieldStyle{
       counterText: "",
       hintStyle: GoogleFonts.poppins(
         fontSize: 16,
-        color: Colors.black,
+        color: Colors.grey,
         fontWeight: FontWeight.w400),
         focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
