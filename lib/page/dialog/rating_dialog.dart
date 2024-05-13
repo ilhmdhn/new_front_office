@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class RatingDialog{
+  
   static Future<void> viewQr(BuildContext ctx ,String invoice)async{
     showDialog(
       context: ctx, 
@@ -76,5 +73,9 @@ class RatingDialog{
           ),
         );
       });
+  }
+
+  static void submitRate(BuildContext ctx, String invoice)async{
+    
   }
 }

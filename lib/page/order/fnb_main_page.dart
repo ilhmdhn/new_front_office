@@ -44,7 +44,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
   Widget build(BuildContext context) {
   final roomCode = ModalRoute.of(context)!.settings.arguments as String;
 
-  if(userLevel == 'aa'){
+  if(userLevel == 'KASIR'){
     namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
   }else{
     namePage = ['ORDER', 'SEND ORDER'];
