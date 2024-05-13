@@ -7,6 +7,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/payment_list_dialog.dart';
 import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
+import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -413,7 +414,6 @@ class _PaymentPageState extends State<PaymentPage> {
                           return showToastError('Isi nominal');
                         }
                         final value = int.parse(_nominalController.text.replaceAll(RegExp(r'[^\d]'), ''));
-                        showToastWarning(value.toString());
                         final isAdded = paymentList.where((element) => element.paymentType == paymentMethod).toList();
                         if(isAdded.isNotEmpty){
                           return showToastWarning('Metode pembayaran sudah ditambahkan');
@@ -644,8 +644,10 @@ class _PaymentPageState extends State<PaymentPage> {
                             return;
                           }
 
+
                           if(context.mounted){
                             Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                            RatingDialog.viewQr(context, '');
                           }
                         },
                         child: Container(

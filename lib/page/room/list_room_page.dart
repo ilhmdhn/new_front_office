@@ -134,8 +134,14 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                         };
                       final checkinResult = await ApiRequest().doCheckinLobby(params);
 
-                  
-
+                      if(checkinResult.state==true && contextz.mounted){
+                          Navigator.pushNamedAndRemoveUntil(contextz, EditCheckinPage.nameRoute, arguments:  listRoomItem[index].roomCode,(route) => false,);
+                      }else{
+                        setState(() {
+                          isLoading = false;
+                        });
+                        showToastError(checkinResult.message??'Gagal Checkin');
+                      }
                     }
                   },
                   child: Container(
