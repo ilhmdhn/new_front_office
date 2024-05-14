@@ -200,4 +200,27 @@ class CloudRequest{
       );
     }
   }
+
+    static Future<BaseResponse> insertRate(String? invoice, String? member, double? rate, String? reason)async{
+      try{
+        String outlet = PreferencesData.getOutlet();
+        final url = Uri.parse('$baseUrl/transaction/insert-rating');
+
+        final bodyParams = {
+          'invoice': invoice,
+          'outlet': outlet,
+          'member': member,
+          'rate': rate,
+          'reason': reason
+        };
+        final apiResponse = await http.post(url,body: json.encode(bodyParams) ,headers:{'Content-Type': 'application/json','authorization': token});
+        final convertedResult = json.decode(apiResponse.body);
+        return BaseResponse.fromJson(convertedResult);
+      }catch(e){
+        return BaseResponse(
+          state: false,
+          message: e.toString()
+        );
+      }
+  }
 }

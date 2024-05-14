@@ -1,9 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
+import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/di.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -79,7 +82,7 @@ class RatingDialog{
       });
   }
 
-  static void submitRate(BuildContext ctx, String invoice)async{
+  static void submitRate(BuildContext ctx, String invoice, String memberCode, String memberName)async{
     showDialog(
       context: ctx,
       barrierDismissible: false,
@@ -87,6 +90,7 @@ class RatingDialog{
         double rate = 3;
         String hint = '';
         bool isOk = false;
+        TextEditingController reasonController = TextEditingController();
         return StatefulBuilder(
           builder: (BuildContext ctxStateful, setState){
             if(rate < 1.5){
@@ -97,8 +101,15 @@ class RatingDialog{
             
             if(isOk == true){
               Future.delayed(const Duration(seconds: 3), () {
-                Navigator.pop(ctx);
+              // if(ctx.mounted){
+                
+              // }else{
+                // navigatorKey.
+                getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+                // Navigator.pop(ctx);
+              // }
               });
+
               return SizedBox(
                 child: LottieBuilder.asset('assets/animation/done.json'),
               );
@@ -132,16 +143,17 @@ class RatingDialog{
                     ),
                     const SizedBox(height: 12,),
                     TextField(
-                      maxLines: 3,
+                      maxLines: 5,
                       minLines: 2,
+                      controller: reasonController,
                       keyboardType: TextInputType.multiline,
                       decoration: CustomTextfieldStyle.normalHint(hint),
                     ),
                         const SizedBox(height: 12,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(
+                        Expanded(
                           flex: 6,
                           child: InkWell(
                             onTap: (){
@@ -150,18 +162,19 @@ class RatingDialog{
                             child: Container(
                               decoration: CustomContainerStyle.cancelButton(),
                               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                              child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
+                              child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),
                             ),
                           ),
                         ),
-                        const Flexible(
+                        const Expanded(
                           flex: 2,
                           child: SizedBox()
                         ),
-                        Flexible(
+                        Expanded(
                           flex: 6,
                           child: InkWell(
-                            onTap: (){
+                            onTap: ()async{
+                              await CloudRequest.insertRate(invoice, memberCode, rate, reasonController.text);
                               setState((){
                                 isOk = true;
                               });
@@ -169,7 +182,7 @@ class RatingDialog{
                             child: Container(
                               decoration: CustomContainerStyle.confirmButton(),
                               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                              child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),),
+                              child: Center(child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),)),
                             ),
                           ),
                         ),

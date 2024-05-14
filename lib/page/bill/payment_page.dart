@@ -646,7 +646,12 @@ class _PaymentPageState extends State<PaymentPage> {
 
 
                           if(context.mounted){
+                            final invoiceCode = billData?.data?.dataInvoice.invoice??'';
+                            final memberCode = billData?.data?.dataInvoice.memberCode??'';
+                            final memberName = billData?.data?.dataInvoice.memberName??'';
+                            
                             Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                            RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
                           }
                         },
                         child: Container(

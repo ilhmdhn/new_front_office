@@ -79,6 +79,9 @@ class OutletModel{
 }
 
 class InvoiceModel{
+  String memberName;
+  String memberCode;
+  String invoice;
   num sewaRuangan;
   num promo;
   num jumlahRuangan;
@@ -103,6 +106,9 @@ class InvoiceModel{
   num jumlahBersih;
 
   InvoiceModel({
+    required this.memberName,
+    required this.memberCode,
+    required this.invoice,
     required this.sewaRuangan,
     required this.promo,
     required this.jumlahRuangan,
@@ -129,6 +135,9 @@ class InvoiceModel{
 
   factory InvoiceModel.fromJson(Map<String, dynamic>json){
     return InvoiceModel(
+      memberName: json['member_name'],
+      memberCode: json['member_code'],
+      invoice: json['invoice'],
       sewaRuangan: json['sewa_ruangan'],
       promo: json['promo'],
       jumlahRuangan: json['jumlah_ruangan'],

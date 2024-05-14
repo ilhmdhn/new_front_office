@@ -5,7 +5,6 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
-import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -770,7 +769,7 @@ class ButtonMenuWidget{
     return InkWell(
       onTap: (){
         // showToastWarning('Checkin Info Cooming Soon');
-        RatingDialog.submitRate(context, '');
+        // RatingDialog.submitRate(context, '');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
