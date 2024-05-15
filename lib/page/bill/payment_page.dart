@@ -605,10 +605,18 @@ class _PaymentPageState extends State<PaymentPage> {
                       );
                     }
                   ),
+
+                  minusPay < 0?
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AutoSizeText('KURANG BAYAR', style: CustomTextStyle.blackSemi(),),
+                          AutoSizeText('KEMBALI', style: CustomTextStyle.blackSemi(),),
+                          AutoSizeText(Formatter.formatRupiah(minusPay).replaceAll('-', ''), style: CustomTextStyle.blackSemi())
+                        ],
+                  ):Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('KURANG', style: CustomTextStyle.blackSemi(),),
                           AutoSizeText(Formatter.formatRupiah(minusPay), style: CustomTextStyle.blackSemi())
                         ],
                   ),

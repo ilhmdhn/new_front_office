@@ -1,4 +1,5 @@
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:front_office_2/data/model/network.dart';
@@ -87,5 +88,20 @@ class PreferencesData {
       showToastError(e.toString());
       return 'error $e';
     }
+  }
+
+  static void setPrinter(PrinterModel printer){
+    _prefs?.setString('PRINTER_NAME', printer.name);
+    _prefs?.setString('PRINTER_CONNECTION', printer.connection);
+    _prefs?.setString('PRINTER_TYPE', printer.type);
+    _prefs?.setString('PRINTER_ADDRESS', printer.address);
+  }
+
+  static PrinterModel getPrinter(){
+    return PrinterModel(
+      name: _prefs?.getString('PRINTER_NAME')??'', 
+      connection: _prefs?.getString('PRINTER_CONNECTION')??'', 
+      type: _prefs?.getString('PRINTER_TYPE')??'', 
+      address: _prefs?.getString('PRINTER_ADDRESS')??'');
   }
 }

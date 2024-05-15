@@ -36,7 +36,7 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
                     padding: 0,
                     elevation: 0, // Menghilangkan bayangan
                     buttonLables: transferReason, 
-                    buttonValues: transferReasongCode,
+                    buttonValues: transferReason,
                     buttonTextStyle: ButtonTextStyle(
                       selectedColor: Colors.white,
                       unSelectedColor: Colors.black,

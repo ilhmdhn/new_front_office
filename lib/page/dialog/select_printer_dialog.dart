@@ -7,7 +7,7 @@ import 'package:front_office_2/tools/list.dart';
 
 
 class SelectPrinterDialog {
-  Future<int?> setPrinter(BuildContext ctx, int? chooseIndex) async {
+  Future<String?> setPrinter(BuildContext ctx, String? chooseIndex) async {
     return showDialog(
       context: ctx,
       builder: (BuildContext context) {
@@ -26,14 +26,14 @@ class SelectPrinterDialog {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CustomRadioButton(
-                      defaultSelected: chooseIndex,
+                      // defaultSelected: chooseIndex,
                       selectedBorderColor: Colors.transparent,
                       unSelectedBorderColor: CustomColorStyle.appBarBackground(),
                       enableShape: true,
                       horizontal: true,
                       elevation: 0, // Menghilangkan bayangan
                       buttonLables: printerSizeList, 
-                      buttonValues: printerCode,
+                      buttonValues: printerSizeList,
                         buttonTextStyle: ButtonTextStyle(
                         selectedColor: Colors.white,
                         unSelectedColor: Colors.black,

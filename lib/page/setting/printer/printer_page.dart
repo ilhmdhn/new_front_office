@@ -1,15 +1,13 @@
-import 'package:front_office_2/page/dialog/select_printer_dialog.dart';
-import 'package:front_office_2/page/setting/printer/test_print.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/services.dart';
-import 'package:front_office_2/page/style/custom_button.dart';
+import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/input_formatter.dart';
+
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class PrinterPage extends StatefulWidget {
@@ -21,114 +19,124 @@ class PrinterPage extends StatefulWidget {
 }
 
 class _PrinterPageState extends State<PrinterPage> {
-  BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
-  List<BluetoothDevice> _devices = [];
-  BluetoothDevice? _device;
-  bool _connected = false;
-  TestPrint testPrint = TestPrint();
+  PrinterBluetoothManager printerManager = PrinterBluetoothManager();
+  List<PrinterList> listPrinter = List.empty(growable: true);
+  PrinterList
+  chosedPrinter = PrinterList(name: '', address: '');
+  bool isScanProcess = false;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  Future<void> initPlatformState() async {
-    bool? isConnected = await bluetooth.isConnected;
-    List<BluetoothDevice> devices = [];
-    try {
-      devices = await bluetooth.getBondedDevices();
-    } on PlatformException {
-      showToastError('Error list bluetooth printer');
-    }
-
-    bluetooth.onStateChanged().listen((state) {
-      switch (state) {
-        case BlueThermalPrinter.CONNECTED:
-          setState(() {
-            _connected = true;
-            showToastWarning("bluetooth device state: connected");
-          });
-          break;
-        case BlueThermalPrinter.DISCONNECTED:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: disconnected");
-          });
-          break;
-        case BlueThermalPrinter.DISCONNECT_REQUESTED:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: disconnect requested");
-          });
-          break;
-        case BlueThermalPrinter.STATE_TURNING_OFF:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: bluetooth turning off");
-          });
-          break;
-        case BlueThermalPrinter.STATE_OFF:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: bluetooth off");
-          });
-          break;
-        case BlueThermalPrinter.STATE_ON:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: bluetooth on");
-          });
-          break;
-        case BlueThermalPrinter.STATE_TURNING_ON:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: bluetooth turning on");
-          });
-          break;
-        case BlueThermalPrinter.ERROR:
-          setState(() {
-            _connected = false;
-            showToastWarning("bluetooth device state: error");
-          });
-          break;
-        default:
-          showToastWarning(state.toString());
-          break;
-      }
-    });
-
-    if (!mounted) return;
-    setState(() {
-      _devices = devices;
-    });
-
-    if (isConnected == true) {
-      setState(() {
-        _connected = true;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    // String printerName = printer.name;
+    // String printerConnection = printer.connection;
+    // String printerAddress = printer.address;
+    // String printerType = printer.type;
+
+
+    
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
             iconTheme: const IconThemeData(
               color:  Colors.white, //change your color here
             ),
-            title: Text('Printer Setting', style: CustomTextStyle.titleAppBar(),),
+            title: Text('Printer Setting :', style: CustomTextStyle.titleAppBar(),),
             backgroundColor: CustomColorStyle.appBarBackground(),
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
               children: <Widget>[
-                SizedBox(
+
+                InkWell(
+                  onTap: (){
+                  listPrinter.clear();
+                  if(isScanProcess == true){
+                    showToastWarning('Proses scan sedang berjalan');
+                    return;
+                  }
+
+                  setState(() {
+                    isScanProcess = true;
+                  });
+
+                  printerManager.startScan(const Duration(seconds: 4));
+
+                  Future.delayed(const Duration(seconds: 5), () {
+                    printerManager.scanResults.listen((printers) async {
+                      for (var element in printers) {
+                        if(isNotNullOrEmpty(element.name) && isNotNullOrEmpty(element.address)){
+                          final availableName = listPrinter.where((elementSearch) => elementSearch.name == element.name);
+                          final availableAddress = listPrinter.where((elementSearch) => elementSearch.address == element.address);
+                          if(isNullOrEmpty(availableName) && isNullOrEmpty(availableAddress)){
+                            listPrinter.add(PrinterList(name: element.name??'', address: element.address??''));
+                          }
+                        }
+                      }
+                    });
+
+                    setState(() {
+                      listPrinter;
+                      isScanProcess = false;
+                    });
+                  });
+                }, 
+                
+                child: isScanProcess == true?
+                  Container(
+                    decoration: CustomContainerStyle.blueButton(),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    child: Text('Scanning...', style: CustomTextStyle.whiteStandard(),),
+                  ):
+                  Container(
+                    decoration: CustomContainerStyle.confirmButton(),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    child: Text('Scan', style: CustomTextStyle.whiteStandard(),),
+                  )
+                ),
+
+          isNullOrEmpty(listPrinter)?
+          const SizedBox():
+          Text(listPrinter[0].name),
+        //   DropdownButton<PrinterList>(
+        //   value: chosedPrinter,
+        //   items: listPrinter.map((PrinterList item) {
+        //     return DropdownMenuItem<PrinterList>(
+        //       value: item,
+        //       child: Text(item.name),
+        //     );
+        //   }).toList(),
+        //   onChanged: (PrinterList? newValue) {
+        //     setState(() {
+        //       chosedPrinter = newValue!;
+        //     });
+        //   },
+        // ),
+
+                // DropdownButton(
+                //         isExpanded: true,
+                //         items: items,
+                //         hint: isNullOrEmpty(listPrinter) ? const Text('No available devices') : null,
+                //         onChanged: (PrinterList? value) {
+                //           setState(() {
+                //             chosedPrinter = PrinterList(
+                //               name: value?.name??'',
+                //               address: value?.address??''
+                //             );
+                //           });
+                //         },
+                //         value: chosedPrinter,
+                // ),
+/*                SizedBox(
                   width: double.infinity,
-                  child: Text('Current Printer:', style: CustomTextStyle.blackMedium()),
+                  child: Text('Current Printer ', style: CustomTextStyle.blackMediumSize(18)),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -143,7 +151,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: Text('RPP02N Printer Bluetooth', style: CustomTextStyle.blackMedium()),
+                      child: Text(printer.name , style: CustomTextStyle.blackMedium()),
                     ),
                   ],
                 ),
@@ -160,7 +168,24 @@ class _PrinterPageState extends State<PrinterPage> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: Text('Bluetooth/ network', style: CustomTextStyle.blackMedium()),
+                      child: Text(printer.connection, style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Address', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(printer.address, style: CustomTextStyle.blackMedium()),
                     ),
                   ],
                 ),
@@ -177,7 +202,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: Text('data', style: CustomTextStyle.blackMedium())
+                      child: Text(printer.type, style: CustomTextStyle.blackMedium())
                     ),
                   ],
                 ),
@@ -207,11 +232,13 @@ class _PrinterPageState extends State<PrinterPage> {
                         items: _getDeviceItems(),
                         hint: isNullOrEmpty(_getDeviceItems()) ? const Text('No available devices') : null,
                         onChanged: (BluetoothDevice? value) {
-                            setState(() => _device =BluetoothDevice(
-                              'fix printer', 
-                              '02:2A:9F:2C:37:48'
-                              ));
-                              },
+                          setState(() {
+                            _device = BluetoothDevice(
+                              value?.name,
+                              value?.address
+                            );
+                          });
+                        },
                         value: _device,
                       ),
                     ),
@@ -244,7 +271,7 @@ class _PrinterPageState extends State<PrinterPage> {
                       style: CustomButtonStyle.bluePrimary(),
                       onPressed: () async{
                         // testPrint.sample();
-                        int? anu = await SelectPrinterDialog().setPrinter(context, 1);
+                        String? anu = await SelectPrinterDialog().setPrinter(context, 'Portable 58mm');
                         showToastWarning(anu.toString());
                       },
                       child: const Text('Pilih Type',
@@ -257,6 +284,7 @@ class _PrinterPageState extends State<PrinterPage> {
                       child: ElevatedButton(
                       style: CustomButtonStyle.bluePrimary(),
                       onPressed: () {
+                        showToastWarning('NGETEST');
                         testPrint.sample();
                       },
                       child: const Text('Print Test',
@@ -279,6 +307,14 @@ class _PrinterPageState extends State<PrinterPage> {
                 ),
                
                 const SizedBox(height: 26,),
+                ElevatedButton(
+                  onPressed: (){
+                    bluetooth.isConnected.then((isConnected) {
+                      showToastWarning('STATUS KONEKSI $isConnected');
+                    });
+                  }, 
+                  child: Text('konek'))
+                /*
                 SizedBox(
                   width: double.infinity,
                   child: Text('Setting Network Printer', style: CustomTextStyle.blackMedium(), textAlign: TextAlign.center,),
@@ -310,7 +346,10 @@ class _PrinterPageState extends State<PrinterPage> {
                       style: CustomButtonStyle.confirm(),
                       child: const Text('Connect'))
                   ],
-                ),
+                ),*/
+
+
+
                 const SizedBox(height: 12,),
                 Row(children: [
                   //nganu
@@ -331,34 +370,20 @@ class _PrinterPageState extends State<PrinterPage> {
                   SizedBox(
                     height: 36,
                     child: ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),)))
-                ],),
+                ],),*/
               ],
             ),
           ),
         ),
     );
   }
-
-  List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
-    List<DropdownMenuItem<BluetoothDevice>> items = [];
-    if (_devices.isEmpty) {
-      items.clear();
-    } else {
-      for (var device in _devices) {
-        items.add(DropdownMenuItem(
-          value: device,
-          child: Text(device.name.toString()),
-        ));
-      }
-    }
-    return items;
-  }
-
+/*
   void _connect() {
     if (_device != null) {
       bluetooth.isConnected.then((isConnected) {
         if (isConnected == false) {
           bluetooth.connect(_device!).catchError((error) {
+            showToastError(error.toString());
             setState(() => _connected = false);
           });
           setState(() => _connected = true);
@@ -373,5 +398,5 @@ class _PrinterPageState extends State<PrinterPage> {
     bluetooth.disconnect();
     setState(() => _connected = false);
   }
-
+*/
 }
