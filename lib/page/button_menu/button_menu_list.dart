@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
@@ -10,6 +13,8 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:front_office_2/tools/udp_sender.dart';
+import 'package:udp/udp.dart';
 
 class ButtonMenuWidget{
   final BuildContext context;
@@ -767,10 +772,18 @@ class ButtonMenuWidget{
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
 
     return InkWell(
-      onTap: (){
+      onTap: ()async{
         // showToastWarning('Checkin Info Cooming Soon');
         // RatingDialog.submitRate(context, '');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
+        final UdpSender udpSender = UdpSender(address: '192.168.1.136', port: 3911);
+        Map<String, dynamic> nganu = {
+          'nganu': 1
+        };
+
+        final sendData = jsonEncode(nganu);
+
+        await udpSender.sendUdpMessage(sendData);
       },
       child: Container(
         // height: 83,

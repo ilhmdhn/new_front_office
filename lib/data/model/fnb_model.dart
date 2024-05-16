@@ -15,7 +15,8 @@ class FnBResultModel {
         state: true,
         message: json['message'],
         data:
-            List<FnBModel>.from((json['data'] as List).map((x) => FnBModel.fromJson(x))));
+            List<FnBModel>.from(
+              (json['data'] as List).map((x) => FnBModel.fromJson(x))));
   }
 }
 

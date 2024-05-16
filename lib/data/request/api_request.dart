@@ -15,6 +15,7 @@ import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/data/model/sol_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -679,6 +680,22 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         state: false,
         message: e.toString()
       );
+    }
+  }
+
+  Future<SolResponse> getSol(String sol)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/mobile-print/list-so?sol=$sol');
+      final apiResponse = await http.get(url);
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return SolResponse.fromJson(convertedResult);
+    }catch(e){
+      return SolResponse(state: false, message: e.toString(), data: List.empty());
     }
   }
 
