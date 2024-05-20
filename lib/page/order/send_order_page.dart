@@ -9,6 +9,7 @@ import 'package:front_office_2/page/dialog/fnb_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -141,8 +142,11 @@ class _SendOrderPageState extends State<SendOrderPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           isNullOrEmpty(isInitiated)? 
-                          InkWell(onTap: (){
-                          
+                          InkWell(onTap: ()async{
+                            final approve = await ConfirmationDialog.confirmation(context, 'reprint SO?');
+                            if(approve == true){
+                              DoPrint.printSo(order.sol??'', detailCheckin.roomCode, detailCheckin.memberName, detailCheckin.pax);
+                            }
                           }, child: const Icon(Icons.print)): const SizedBox(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

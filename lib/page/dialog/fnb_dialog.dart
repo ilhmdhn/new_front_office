@@ -9,6 +9,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -242,10 +243,11 @@ class FnBDialog{
                                   final checkinMinute = checkinDetail.data?.checkinMinute??0;
                     
                                   final orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
+                                  DoPrint.lastSo(rcp, roomCode, checkinDetail.data?.memberName??'Guest', checkinDetail.data?.pax??1);
                                   setState((){
                                     isLoading = false;
                                   });
-
+                                  
                                   if(orderState.state != true){
                                     showToastError(orderState.message.toString());
                                     if(ctx.mounted){

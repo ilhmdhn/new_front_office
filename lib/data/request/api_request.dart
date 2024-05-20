@@ -16,6 +16,7 @@ import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
+import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -384,6 +385,24 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<PreviewBillResponse> getBill(String roomCode)async{
+    try{
+      final url = Uri.parse('$serverUrl/mobile-print/view-bill?room=$roomCode');
+      final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return PreviewBillResponse.fromJson(convertedResult);
+    }catch(e){
+      return PreviewBillResponse(
+        state: false, 
+        message: e.toString());
+    }
+  }
+
   Future<BaseResponse> pay(Map<String, dynamic> params)async{
     try{
       final url = Uri.parse('$serverUrl/payment/add');
@@ -544,6 +563,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      print('DEBUGGING' + convertedResult.toString());
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
@@ -696,6 +716,22 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return SolResponse.fromJson(convertedResult);
     }catch(e){
       return SolResponse(state: false, message: e.toString(), data: List.empty());
+    }
+  }
+
+  Future<StringResponse> latestSo(String rcp)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/mobile-print/latest-so?rcp=$rcp');
+      final apiResponse = await http.get(url);
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return StringResponse.fromJson(convertedResult);
+    }catch(e){
+      return StringResponse(state: false, message: e.toString(), data: '');
     }
   }
 

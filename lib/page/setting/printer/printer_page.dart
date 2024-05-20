@@ -1,14 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/helper.dart';
-
 import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
+import 'package:front_office_2/tools/input_formatter.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:intl/number_symbols_data.dart';
 
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
@@ -25,6 +27,7 @@ class _PrinterPageState extends State<PrinterPage> {
   PrinterList
   chosedPrinter = PrinterList(name: '', address: '');
   bool isScanProcess = false;
+  TextEditingController tfIpPc = TextEditingController();
 
   @override
   void initState() {
@@ -39,7 +42,7 @@ class _PrinterPageState extends State<PrinterPage> {
     // String printerAddress = printer.address;
     // String printerType = printer.type;
 
-
+    PrinterModel printer = PreferencesData.getPrinter();
     
     return SafeArea(
       child: Scaffold(
@@ -52,8 +55,84 @@ class _PrinterPageState extends State<PrinterPage> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ListView(
-              children: <Widget>[
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                                SizedBox(
+                  width: double.infinity,
+                  child: Text('Current Printer ', style: CustomTextStyle.blackMediumSize(18)),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Printer', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(printer.name , style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Connection', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(printer.connection, style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Address', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(printer.address, style: CustomTextStyle.blackMedium()),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('Printer Type', style: CustomTextStyle.blackMedium()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(':'),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(printer.type, style: CustomTextStyle.blackMedium())
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 26,),
 
                 InkWell(
                   onTap: (){
@@ -98,13 +177,50 @@ class _PrinterPageState extends State<PrinterPage> {
                   Container(
                     decoration: CustomContainerStyle.confirmButton(),
                     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    child: Text('Scan', style: CustomTextStyle.whiteStandard(),),
+                    child: Text('Scan Bluetooth printer', style: CustomTextStyle.whiteStandard(),),
                   )
                 ),
 
           isNullOrEmpty(listPrinter)?
           const SizedBox():
           Text(listPrinter[0].name),
+          SizedBox(height: 20,),
+
+          Text('PC Printer', style: CustomTextStyle.blackMediumSize(16)),
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              children: [
+                Flexible(child: TextField(
+                  inputFormatters: [IPAddressInputFormatter()],
+                  keyboardType: TextInputType.number,
+                  controller: tfIpPc,
+                  decoration: CustomTextfieldStyle.normalHint('Ip Address'),)),
+                const SizedBox(width: 12,),
+                InkWell(
+                  onTap: (){
+                    PreferencesData.setPrinter(
+                      PrinterModel(
+                        name: 'PC PRINTER', 
+                        connection: '3', 
+                        type: 'DOT MATRIX', 
+                        address: tfIpPc.text)
+                    );
+
+                    setState(() {
+                      printer = PreferencesData.getPrinter();
+                    });
+                  },
+                  child: Container(
+                    decoration: CustomContainerStyle.confirmButton(),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    child: Text('Simpan', style: CustomTextStyle.whiteStandard(),),  
+                  ),
+                )
+              ],
+            ),
+          ),
+
         //   DropdownButton<PrinterList>(
         //   value: chosedPrinter,
         //   items: listPrinter.map((PrinterList item) {
@@ -371,7 +487,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     height: 36,
                     child: ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),)))
                 ],),*/
-              ],
+              ],)
             ),
           ),
         ),
