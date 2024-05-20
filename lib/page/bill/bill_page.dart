@@ -183,6 +183,7 @@ class _BillPageState extends State<BillPage> {
                       AutoSizeText(Formatter.formatRupiah(serviceFnb + serviceRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                     ],
                   ),
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

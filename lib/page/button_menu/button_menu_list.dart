@@ -771,11 +771,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: ()async{
-
-        DoPrint.printSo('SOL-24051600002', 'asd', 'qwe', 1);
-
-        // showToastWarning('Checkin Info Cooming Soon');
-        // RatingDialog.submitRate(context, '');
+        showToastWarning('Checkin Info Cooming Soon');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
