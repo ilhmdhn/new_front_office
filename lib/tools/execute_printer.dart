@@ -8,8 +8,6 @@ import 'package:front_office_2/tools/udp_sender.dart';
 
 class DoPrint{
 
-  static final printerData = PreferencesData.getPrinter();
-
   static lastSo(String rcp, String roomCode, String guestName, int pax)async{
     final apiResponse = await ApiRequest().latestSo(rcp);
     if(apiResponse.state != true){
@@ -24,7 +22,8 @@ class DoPrint{
   }
 
   static printSo(String sol, String roomCode, String guestName, int pax)async{
-
+    final printerData = PreferencesData.getPrinter();
+    
     if(printerData.connection == '3'){
       showToastWarning('send signal into ${printerData.address}');
       try{

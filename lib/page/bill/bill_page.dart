@@ -7,6 +7,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -191,6 +192,33 @@ class _BillPageState extends State<BillPage> {
                       AutoSizeText(Formatter.formatRupiah(taxFnb + taxRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                     ],
                   ),
+                  isNotNullOrEmpty(result.data?.transferList)?
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Transfer List', style: CustomTextStyle.blackMedium())),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: result.data?.transferList.length,
+                          itemBuilder: (ctxList, index){
+                            String roomName = result.data?.transferList[index].room??'room name';
+                            num value  = result.data?.transferList[index].transferTotal??0;
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AutoSizeText(roomName, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                AutoSizeText(Formatter.formatRupiah(value), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                              ],
+                            ); 
+                          }
+                        ),
+                      ],
+                    ),
+                  ):
+                  const SizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

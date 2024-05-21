@@ -563,7 +563,6 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       }
 
       final convertedResult = json.decode(apiResponse.body);
-      print('DEBUGGING' + convertedResult.toString());
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(

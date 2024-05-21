@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
@@ -10,7 +9,6 @@ import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
-import 'package:intl/number_symbols_data.dart';
 
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
@@ -184,7 +182,7 @@ class _PrinterPageState extends State<PrinterPage> {
           isNullOrEmpty(listPrinter)?
           const SizedBox():
           Text(listPrinter[0].name),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           Text('PC Printer', style: CustomTextStyle.blackMediumSize(16)),
           SizedBox(
