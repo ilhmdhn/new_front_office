@@ -385,6 +385,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+
   Future<PreviewBillResponse> getBill(String roomCode)async{
     try{
       final url = Uri.parse('$serverUrl/mobile-print/view-bill?room=$roomCode');

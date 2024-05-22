@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:front_office_2/tools/udp_sender.dart';
@@ -70,11 +71,44 @@ class DoPrint{
     }
   }
 
-  static printBill(){
+  static printBill(String roomCode)async{
     try{
-      
-    }catch(e){
+      final printerData = PreferencesData.getPrinter();
+      if(printerData.connection == '3'){
+      showToastWarning('send signal into ${printerData.address}');
+      try{
+        final billData = await ApiRequest().getBill(roomCode);
+        
+        if(billData.state != true){
+          showToastError(billData.message);
+          return;
+        }else if(billData.data == null){
+          showToastError('Tidak ada data');
+          return;
+        }
 
+        final bill = billData.data!;
+
+        Map<String, dynamic> data = {
+          'type': 1,
+          'user': PreferencesData.getUser().userId,
+          'bill_data': JsonConverter.generateBillJson(bill),
+          'footer_style': 1
+        };
+
+        final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
+        
+        final sendData = jsonEncode(data);
+
+        await udpSender.sendUdpMessage(sendData);
+      }catch(e){
+        showToastError('Gagal print bill $e');
+      }
+    }else{
+      showToastWarning('Printer belum di setting');
+    }
+    }catch(e){
+      showToastError('Error print bill $e');
     }
   }
 }

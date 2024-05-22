@@ -6,6 +6,7 @@ import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -235,6 +236,8 @@ class _BillPageState extends State<BillPage> {
                           if(userLevel.level != 'KASIR'){
                             showToastWarning('User tidak memiliki akses');
                             return;
+                          }else{
+                            DoPrint.printBill(roomCode);
                           }
                         },
                         child: Container(

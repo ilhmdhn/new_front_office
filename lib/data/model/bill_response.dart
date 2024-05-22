@@ -31,6 +31,7 @@ class PreviewBillModel{
   List<PromoOrderModel> dataPromoOrder;
   List<PromoCancelOrderModel> dataPromoCancelOrder;
   List<TransferListModel> transferList;
+  List<TransferModel> transferData;
 
   PreviewBillModel({
     required this.dataOutlet,
@@ -41,7 +42,8 @@ class PreviewBillModel{
     required this.dataPromoOrder,
     required this.dataPromoCancelOrder,
     required this.dataServiceTaxPercent,
-    required this.transferList
+    required this.transferList,
+    required this.transferData
   });
 
   factory PreviewBillModel.fromJson(Map<String, dynamic>json){
@@ -54,7 +56,8 @@ class PreviewBillModel{
       dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoOrderModel.fromJson(x))), 
       dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
-      transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x)))
+      transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
+      transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
     );
   }
 }
@@ -376,7 +379,7 @@ class TransferModel{
       dataOrder: List<OrderModel>.from((json['orderData'] as List).map((x) => OrderModel.fromJson(x))), 
       dataCancelOrder: List<CancelOrderModel>.from((json['cancelOrderData'] as List).map((x) => CancelOrderModel.fromJson(x))), 
       dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoOrderModel.fromJson(x))), 
-      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
+      dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent'])
     );
   }
