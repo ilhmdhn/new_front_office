@@ -93,7 +93,7 @@ class DoPrint{
           'type': 1,
           'user': PreferencesData.getUser().userId,
           'bill_data': JsonConverter.generateBillJson(bill),
-          'footer_style': 1
+          'footer_style': 3
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);

@@ -128,7 +128,7 @@ class _BillPageState extends State<BillPage> {
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                        AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                        AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 2),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [

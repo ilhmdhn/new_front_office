@@ -7,6 +7,7 @@ import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
+import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_response.dart';
@@ -401,6 +402,26 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return PreviewBillResponse(
         state: false, 
         message: e.toString());
+    }
+  }
+
+  Future<InvoiceResponse> getInvoice(String rcp)async{
+    try{
+      final url = Uri.parse('$serverUrl/mobile-print/invoice?rcp=$rcp');
+      final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return InvoiceResponse.fromJson(convertedResult);
+    }catch(e){
+      return InvoiceResponse(
+        state: false,
+        message: e.toString(),
+        data: null
+      );
     }
   }
 

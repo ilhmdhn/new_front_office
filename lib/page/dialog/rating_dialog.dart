@@ -157,7 +157,7 @@ class RatingDialog{
                           flex: 6,
                           child: InkWell(
                             onTap: (){
-                              Navigator.pop(ctx, false);
+                              getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
                             },
                             child: Container(
                               decoration: CustomContainerStyle.cancelButton(),
