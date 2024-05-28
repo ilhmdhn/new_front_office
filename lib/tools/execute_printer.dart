@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
@@ -109,6 +111,41 @@ class DoPrint{
     }
     }catch(e){
       showToastError('Error print bill $e');
+    }
+  }
+
+  static void printInvoice(String rcp)async{
+    try{
+      final printerData = PreferencesData.getPrinter();
+      if(printerData.connection == '3'){
+        final invoiceData = await ApiRequest().getInvoice(rcp);
+
+        if(invoiceData.state != true){
+          showToastError(invoiceData.message);
+          return;
+        }else if(invoiceData.data == null){
+          showToastError('data invoice null\n${invoiceData.message}');
+          return;
+        }
+
+        PrintInvoiceModel ivc = invoiceData.data!;
+
+        Map<String, dynamic> data = {
+          'type': 2,
+          'user': PreferencesData.getUser().userId,
+          'bill_data': JsonConverter.generateInvoiceJson(ivc),
+          'footer_style': 3
+        };
+
+        final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
+        final sendData = jsonEncode(data);
+
+        await udpSender.sendUdpMessage(sendData);
+        return;
+      }
+    }catch(e){
+      showToastError(e.toString());
+      return;
     }
   }
 }

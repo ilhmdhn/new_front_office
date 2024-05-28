@@ -14,6 +14,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/list.dart';
@@ -652,6 +653,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             return;
                           }
 
+                          DoPrint.printInvoice(billData?.data?.dataInvoice.invoice??'');
 
                           if(context.mounted){
                             final invoiceCode = billData?.data?.dataInvoice.invoice??'';

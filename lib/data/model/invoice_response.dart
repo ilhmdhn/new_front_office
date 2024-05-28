@@ -3,7 +3,7 @@ import 'package:front_office_2/data/model/bill_response.dart';
 class InvoiceResponse{
   bool state;
   String message;
-  InvoiceModel? data;
+  PrintInvoiceModel? data;
 
   InvoiceResponse({
     required this.state,
@@ -20,7 +20,7 @@ class InvoiceResponse{
   }
 }
 
-class InvoiceModel{
+class PrintInvoiceModel{
   OutletModel dataOutlet;
   InvoiceModel dataInvoice;
   RoomModel dataRoom;
@@ -35,7 +35,7 @@ class InvoiceModel{
   List<TransferModel> transferData;
   List<PaymentData> paymentList;
 
-  InvoiceModel({
+  PrintInvoiceModel({
     required this.dataOutlet,
     required this.dataInvoice,
     required this.dataRoom,
@@ -50,8 +50,8 @@ class InvoiceModel{
     required this.paymentList,
   });
 
-  factory InvoiceModel.fromJson(Map<String, dynamic>json){
-    return InvoiceModel(
+  factory PrintInvoiceModel.fromJson(Map<String, dynamic>json){
+    return PrintInvoiceModel(
       dataOutlet: OutletModel.fromJson(json['dataOutlet']), 
       dataInvoice: InvoiceModel.fromJson( json['dataInvoice']), 
       dataRoom: RoomModel.fromJson(json['dataRoom']), 

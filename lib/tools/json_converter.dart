@@ -1,4 +1,5 @@
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/invoice_response.dart';
 
 class JsonConverter{
   static Map<String, dynamic> outlet(OutletModel data){
@@ -58,6 +59,26 @@ class JsonConverter{
       'serviceFnbPercent' : data.serviceFnbPercent,
       'taxFnbPercent' : data.taxFnbPercent,
     };
+  }
+
+  static Map<String, dynamic> paymentDetail(PaymentDetail data){
+    return{
+      'pay_value' : data.payValue,
+      'pay_change' : data.payChange,
+    };
+  }
+
+  static List<Map<String, dynamic>> paymentData(List<PaymentData> data){
+    final List<Map<String, dynamic>> paymentList = List.empty(growable: true);
+
+    for(var element in data){
+      paymentList.add({
+        'payment_name':element.paymentName,
+        'value': element.value
+      });
+    }
+
+    return paymentList;
   }
 
   static List<Map<String, dynamic>> order(List<OrderModel> data){
@@ -158,5 +179,19 @@ class JsonConverter{
     };
   }
 
-  
+  static Map<String, dynamic> generateInvoiceJson(PrintInvoiceModel data){
+    return {
+      'dataOutlet': outlet(data.dataOutlet),
+      'dataInvoice':invoice(data.dataInvoice),
+      'dataRoom': room(data.dataRoom),
+      'orderData': order(data.dataOrder),
+      'cancelOrderData': cancelOrder(data.dataCancelOrder),
+      'promoOrderData': promoOrder(data.dataPromoOrder),
+      'promoOrderCancel': promoCancelOrder(data.dataPromoCancelOrder),
+      'transferBillData': transferList(data.transferData),
+      'service_percent': serviceTax(data.dataServiceTaxPercent),
+      'payment_detail': paymentDetail(data.payment),
+      'payment_list': paymentData(data.paymentList)
+    };
+  }
 }
