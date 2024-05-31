@@ -122,6 +122,8 @@ class RatingDialog{
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    AutoSizeText('Ilham Dohaan', style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 9,),
+                    const SizedBox(height: 12,),
                     RatingBar.builder(
                     initialRating: 3,
                     minRating: 0.5,

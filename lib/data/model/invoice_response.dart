@@ -15,7 +15,7 @@ class InvoiceResponse{
     return InvoiceResponse(
       state: json['state'], 
       message: json['message'], 
-      data: json['data']
+      data: PrintInvoiceModel.fromJson(json['data'])
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/page/bloc/notif_bloc.dart';
 import 'package:front_office_2/page/button_menu/button_menu_list.dart';
@@ -49,6 +50,7 @@ class _OperationalPageState extends State<OperationalPage> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: paddingEdgeSize),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             const SizedBox(height: 16,),
             Row(

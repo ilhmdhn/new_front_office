@@ -87,6 +87,7 @@ class OutletModel{
 class InvoiceModel{
   String memberName;
   String memberCode;
+  String reception;
   String invoice;
   num sewaRuangan;
   num promo;
@@ -114,6 +115,7 @@ class InvoiceModel{
   InvoiceModel({
     required this.memberName,
     required this.memberCode,
+    required this.reception,
     required this.invoice,
     required this.sewaRuangan,
     required this.promo,
@@ -144,6 +146,7 @@ class InvoiceModel{
       memberName: json['member_name'],
       memberCode: json['member_code'],
       invoice: json['invoice'],
+      reception: json['reception'],
       sewaRuangan: json['sewa_ruangan'],
       promo: json['promo'],
       jumlahRuangan: json['jumlah_ruangan'],

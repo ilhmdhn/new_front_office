@@ -133,7 +133,7 @@ class DoPrint{
         Map<String, dynamic> data = {
           'type': 2,
           'user': PreferencesData.getUser().userId,
-          'bill_data': JsonConverter.generateInvoiceJson(ivc),
+          'invoice': JsonConverter.generateInvoiceJson(ivc),
           'footer_style': 3
         };
 

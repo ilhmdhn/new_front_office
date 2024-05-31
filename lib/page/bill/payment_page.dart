@@ -653,7 +653,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             return;
                           }
 
-                          DoPrint.printInvoice(billData?.data?.dataInvoice.invoice??'');
+                          DoPrint.printInvoice(billData?.data?.dataInvoice.reception??'');
 
                           if(context.mounted){
                             final invoiceCode = billData?.data?.dataInvoice.invoice??'';

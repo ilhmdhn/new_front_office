@@ -21,93 +21,96 @@ class ButtonMenuWidget{
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final widthRow = ScreenSize.getSizePercent(context, 94);
 
-    return Column(
-      children: [
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                height: 83,
-                child: checkin()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                height: 83,
-                child: checkinReservation())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          height: 83,
-          width: widthRow,
-          child: editCheckin(),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: extend()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: transfer())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: order()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: bill())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: checkout()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: clean())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                height: 83,
-                child: checkinInfo()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                height: 83,
-                child: reservationList())
-            ],
-        ),
-        )
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          SizedBox(
+            width: widthRow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: widthButton,
+                  height: 83,
+                  child: checkin()),
+                SizedBox(width: spaceCenter,),
+                SizedBox(
+                  width: widthButton,
+                  height: 83,
+                  child: checkinReservation())
+              ],
+          ),
+          ),
+          const SizedBox(height: 8,),
+          SizedBox(
+            height: 83,
+            width: widthRow,
+            child: editCheckin(),
+          ),
+          const SizedBox(height: 8,),
+          SizedBox(
+            width: widthRow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: widthButton,
+                  child: extend()),
+                SizedBox(width: spaceCenter,),
+                SizedBox(
+                  width: widthButton,
+                  child: transfer())
+              ],
+          ),
+          ),
+          const SizedBox(height: 8,),
+          SizedBox(
+            width: widthRow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: widthButton,
+                  child: order()),
+                SizedBox(width: spaceCenter,),
+                SizedBox(
+                  width: widthButton,
+                  child: bill())
+              ],
+          ),
+          ),
+          const SizedBox(height: 8,),
+          SizedBox(
+            width: widthRow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: widthButton,
+                  child: checkout()),
+                SizedBox(width: spaceCenter,),
+                SizedBox(
+                  width: widthButton,
+                  child: clean())
+              ],
+          ),
+          ),
+          const SizedBox(height: 8,),
+          SizedBox(
+            width: widthRow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: widthButton,
+                  height: 83,
+                  child: checkinInfo()),
+                SizedBox(width: spaceCenter,),
+                SizedBox(
+                  width: widthButton,
+                  height: 83,
+                  child: reservationList())
+              ],
+          ),
+          )
+        ],
+      ),
     );
   }
 
