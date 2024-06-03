@@ -117,7 +117,6 @@ class JsonConverter{
 
   static List<Map<String, dynamic>> promoOrder(List<PromoOrderModel> data){
     final List<Map<String, dynamic>> cancelOrderData = List.empty(growable: true);
-
     for(var element in data){
       cancelOrderData.add({
         'orderCode': element.orderCode,

@@ -51,6 +51,7 @@ class PrintInvoiceModel{
   });
 
   factory PrintInvoiceModel.fromJson(Map<String, dynamic>json){
+
     return PrintInvoiceModel(
       dataOutlet: OutletModel.fromJson(json['dataOutlet']), 
       dataInvoice: InvoiceModel.fromJson( json['dataInvoice']), 

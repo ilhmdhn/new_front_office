@@ -10,6 +10,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 
 class ButtonMenuWidget{
   final BuildContext context;
@@ -340,6 +341,7 @@ class ButtonMenuWidget{
     
     return InkWell(
       onTap: (){
+        // DoPrint.printInvoice('RCP-2405200003');
         showToastWarning('Checkin Reservation is coming soon');
       },
       child: Container(
