@@ -341,8 +341,8 @@ class ButtonMenuWidget{
     
     return InkWell(
       onTap: (){
-        // DoPrint.printInvoice('RCP-2405200003');
-        showToastWarning('Checkin Reservation is coming soon');
+        DoPrint.printInvoice('RCP-2405200003');
+        // showToastWarning('Checkin Reservation is coming soon');
       },
       child: Container(
         // height: 83,
