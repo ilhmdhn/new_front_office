@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/helper.dart';

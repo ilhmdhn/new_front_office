@@ -4,6 +4,7 @@ import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
+import 'package:front_office_2/tools/event_bus.dart';
 
 class ApprovalListPage extends StatefulWidget {
   static const nameRoute = '/approval';
@@ -32,6 +33,11 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    eventBus.on<RefreshApprovalCount>().listen((event) {
+      getData();
+    });
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

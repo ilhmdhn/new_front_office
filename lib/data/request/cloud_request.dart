@@ -223,4 +223,19 @@ class CloudRequest{
         );
       }
   }
+
+  static Future<BaseResponse> approvalState(String idApproval)async{
+    try{
+        String outlet = PreferencesData.getOutlet();
+        final url = Uri.parse('$baseUrl/approval/state?outlet=$outlet&id_approval=$idApproval');
+        final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json','authorization': token});
+        final convertedResult = json.decode(apiResponse.body);
+        return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
 }

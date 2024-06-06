@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/data/model/base_response.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/bloc/send_approval_bloc.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -36,6 +37,7 @@ class VerificationDialog{
       builder: (BuildContext ctxDialog){
         bool isLoading = true;
         bool isConfirmed = false;
+        bool loadingCheck = false;
         return PopScope(
           canPop: false,
           child: StatefulBuilder(
@@ -156,9 +158,31 @@ class VerificationDialog{
                             ),
                             Flexible(
                               child: InkWell(
-                                onTap: (){
+                                onTap: ()async{
                                 if(isLoading == true){
-                                  showToastWarning('Belum di konfirmasi');
+                                    final checkState = await CloudRequest.approvalState(uniqueTime);
+                                    if(loadingCheck == true){
+                                      return;
+                                    }
+                                    loadingCheck = true;
+                                    if(checkState.state != true){
+                                      showToastError(checkState.message??'Error Check Approval State');
+                                    }else{
+                                      if(checkState.message == "1"){
+                                        showToastWarning("Verifikasi belum disetujui");
+                                      }else if(checkState.message == "2"){
+                                        setState(() {
+                                          isLoading = false;
+                                          isConfirmed = true;
+                                        });
+                                      }else if(checkState.message == "3"){
+                                        setState((){
+                                          isLoading = false;
+                                          isConfirmed = false;
+                                        });
+                                      }
+                                    }
+                                    loadingCheck = false;
                                 }else if(isConfirmed == true){
                                   CloudRequest.finishApproval(uniqueTime);
                                   Navigator.pop(ctx, true);
