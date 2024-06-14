@@ -3,11 +3,13 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/filter.dart';
 import 'package:front_office_2/tools/list.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class TransferReasonPage extends StatefulWidget {
   static const nameRoute = '/transfer-reasong';
@@ -23,21 +25,42 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
   ListRoomTypeReadyResponse listAvailableRoomTypeResponse = ListRoomTypeReadyResponse();
   DetailCheckinResponse? detailRoom;
   List<RoomTypeReadyData> listAvailableRoomType = List.empty();
+  String roomCode = '';
 
   void getData()async{
-    // if(detailRoom.data.roomType.)
 
+    detailRoom = await ApiRequest().getDetailRoomCheckin(roomCode);
     String roomType = detailRoom?.data?.roomType??'';
+    
+    listAvailableRoomTypeResponse = await ApiRequest().getListRoomTypeReady();
+
+    if(listAvailableRoomTypeResponse.state != true){
+      setState(() {
+        listAvailableRoomTypeResponse;
+        isLoading = false;
+      });
+
+      showToastError(listAvailableRoomTypeResponse.message??'Error get list room');
+      return;
+    }
 
     if(Filter.isLobby(roomType)){
       listAvailableRoomType = listAvailableRoomTypeResponse.data.where((element) => Filter.isLobby(element.roomType??'')).toList();
     }else{
       listAvailableRoomType = listAvailableRoomTypeResponse.data.where((element) => !Filter.isLobby(element.roomType??'')).toList();
     }
+    setState(() {
+      listAvailableRoomType;
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    roomCode = ModalRoute.of(context)?.settings.arguments as String;
+    if(detailRoom == null){
+      getData();
+    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
@@ -95,13 +118,63 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
                 AddOnWidget.error(listAvailableRoomTypeResponse.message)
               :listAvailableRoomType.isEmpty?
                 AddOnWidget.empty():
-              ListView.builder(
-                itemCount: listAvailableRoomType.length,
-                shrinkWrap: true,
-                itemBuilder: (ctxList, index){
-                  RoomTypeReadyData roomType = listAvailableRoomType[index];
-                  
-                })
+              LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                  int crossAxisCount = 3;
+                
+                  if (constraints.maxWidth < 580) {
+                    crossAxisCount = 2;
+                  }
+          
+                  return GridView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 8, // Spasi antar kolom
+                      mainAxisSpacing: 8, // Spasi antar baris
+                      childAspectRatio: 10/3
+                    ),
+                    itemCount: listAvailableRoomType.length, 
+                    itemBuilder: (context, index){
+                      return InkWell(
+                        onTap: (){
+                          // checkinArgs.roomType = listAvailableRoomType[index].roomType;
+                          // Navigator.pushNamed(context, ListRoomReadyPage.nameRoute, arguments:checkinArgs);
+                        },
+                        child: Container(
+                                  decoration: BoxDecoration(
+                                  color: Colors.white, // Warna background
+                                  borderRadius: BorderRadius.circular(10), // Bentuk border
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                      spreadRadius: 3, // Radius penyebaran shadow
+                                      blurRadius: 7, // Radius blur shadow
+                                      offset: const Offset(0, 3), // Offset shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AutoSizeText(listAvailableRoomType[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 2, minFontSize: 12,),
+                                          AutoSizeText('Room Ready ${listAvailableRoomType[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                  ]),
+                                ),
+                      );
+                    });
+                }),
+              
             ],
           ),
         ),
