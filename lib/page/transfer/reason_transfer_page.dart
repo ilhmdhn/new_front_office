@@ -3,8 +3,10 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/filter.dart';
 import 'package:front_office_2/tools/list.dart';
 
 class TransferReasonPage extends StatefulWidget {
@@ -18,11 +20,20 @@ class TransferReasonPage extends StatefulWidget {
 class _TransferReasonPageState extends State<TransferReasonPage> {
 
   bool isLoading = true;
-  ListRoomTypeReadyResponse listRoom = ListRoomTypeReadyResponse();
+  ListRoomTypeReadyResponse listAvailableRoomTypeResponse = ListRoomTypeReadyResponse();
   DetailCheckinResponse? detailRoom;
+  List<RoomTypeReadyData> listAvailableRoomType = List.empty();
 
   void getData()async{
     // if(detailRoom.data.roomType.)
+
+    String roomType = detailRoom?.data?.roomType??'';
+
+    if(Filter.isLobby(roomType)){
+      listAvailableRoomType = listAvailableRoomTypeResponse.data.where((element) => Filter.isLobby(element.roomType??'')).toList();
+    }else{
+      listAvailableRoomType = listAvailableRoomTypeResponse.data.where((element) => !Filter.isLobby(element.roomType??'')).toList();
+    }
   }
 
   @override
@@ -79,16 +90,18 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
               ),
 
               isLoading == true?
-                Flexible(
-                  child: Center(
-                    child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
-                  ),
-                ):
-
-                SizedBox()
-  
-              // ListView.builder(
-              //   itemBuilder: )
+                AddOnWidget.loading()
+              :listAvailableRoomTypeResponse.state != true?
+                AddOnWidget.error(listAvailableRoomTypeResponse.message)
+              :listAvailableRoomType.isEmpty?
+                AddOnWidget.empty():
+              ListView.builder(
+                itemCount: listAvailableRoomType.length,
+                shrinkWrap: true,
+                itemBuilder: (ctxList, index){
+                  RoomTypeReadyData roomType = listAvailableRoomType[index];
+                  
+                })
             ],
           ),
         ),
