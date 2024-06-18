@@ -8,6 +8,7 @@ import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:front_office_2/tools/execute_printer.dart';
@@ -21,97 +22,95 @@ class ButtonMenuWidget{
     final widthButton = ScreenSize.getSizePercent(context, 46);  
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final widthRow = ScreenSize.getSizePercent(context, 94);
+    final isPotrait = isVertical(context);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          SizedBox(
-            width: widthRow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: widthButton,
-                  height: 83,
-                  child: checkin()),
-                SizedBox(width: spaceCenter,),
-                SizedBox(
-                  width: widthButton,
-                  height: 83,
-                  child: checkinReservation())
-              ],
-          ),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            height: 83,
-            width: widthRow,
-            child: editCheckin(),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            width: widthRow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: widthButton,
-                  child: extend()),
-                SizedBox(width: spaceCenter,),
-                SizedBox(
-                  width: widthButton,
-                  child: transfer())
-              ],
-          ),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            width: widthRow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: widthButton,
-                  child: order()),
-                SizedBox(width: spaceCenter,),
-                SizedBox(
-                  width: widthButton,
-                  child: bill())
-              ],
-          ),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            width: widthRow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: widthButton,
-                  child: checkout()),
-                SizedBox(width: spaceCenter,),
-                SizedBox(
-                  width: widthButton,
-                  child: clean())
-              ],
-          ),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            width: widthRow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: widthButton,
-                  height: 83,
-                  child: checkinInfo()),
-                SizedBox(width: spaceCenter,),
-                SizedBox(
-                  width: widthButton,
-                  height: 83,
-                  child: reservationList())
-              ],
-          ),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                height: isPotrait == true? 83:null,
+                child: checkin()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                height: isPotrait == true? 83:null,
+                child: checkinReservation())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          height: isPotrait == true? 83:null,
+          width: widthRow,
+          child: editCheckin(),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: extend()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: transfer())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: order()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: bill())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                child: checkout()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                child: clean())
+            ],
+        ),
+        ),
+        const SizedBox(height: 8,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButton,
+                height: isPotrait == true? 83:null,
+                child: checkinInfo()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButton,
+                height: isPotrait == true? 83:null,
+                child: reservationList())
+            ],
+        ),
+        )
+      ],
     );
   }
 
@@ -179,14 +178,14 @@ class ButtonMenuWidget{
               SizedBox(width: spaceCenter,),
               // SizedBox(
               //   width: widthButton,
-              //   height: 83,
+              //   height: isPotrait == true? 83:null,
               //   child: checkinReservation())
             ],
         ),
         ),
        /* const SizedBox(height: 8,),
         SizedBox(
-          height: 83,
+          height: isPotrait == true? 83:null,
           width: widthRow,
           child: editCheckin(),
         ),
@@ -242,12 +241,12 @@ class ButtonMenuWidget{
             children: [
               SizedBox(
                 width: widthButton,
-                height: 83,
+                height: isPotrait == true? 83:null,
                 child: checkinInfo()),
               SizedBox(width: spaceCenter,),
               SizedBox(
                 width: widthButton,
-                height: 83,
+                height: isPotrait == true? 83:null,
                 child: reservationList())
             ],
         ),
@@ -272,7 +271,7 @@ class ButtonMenuWidget{
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     return InkWell(
             child: Container(
-            // height: 83,
+            // height: isPotrait == true? 83:null,
             // width: widthButton,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
@@ -345,7 +344,7 @@ class ButtonMenuWidget{
         // showToastWarning('Checkin Reservation is coming soon');
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -374,7 +373,7 @@ class ButtonMenuWidget{
               // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: true, softWrap: true,maxLines: 2,),
+                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: true, softWrap: true, maxLines: 2,),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -398,7 +397,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -452,7 +451,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -506,7 +505,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 3);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -560,7 +559,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -614,7 +613,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -668,7 +667,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -722,7 +721,7 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -777,7 +776,7 @@ class ButtonMenuWidget{
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -831,7 +830,7 @@ class ButtonMenuWidget{
         showToastWarning('List Reservation is Cooming Soon');
       },
       child: Container(
-        // height: 83,
+        // height: isPotrait == true? 83:null,
           // width: widthButton,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -889,7 +888,7 @@ class ButtonMenuWidget{
         label: Text(notifCount.toString()),
         isLabelVisible: notifCount>0?true:false,
         child: Container(
-          // height: 83,
+          // height: isPotrait == true? 83:null,
             // width: widthButton,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(

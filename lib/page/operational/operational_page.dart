@@ -80,20 +80,25 @@ class _OperationalPageState extends State<OperationalPage> {
               ],
             ),
             const SizedBox(height: 16),
-            BlocBuilder(
-            bloc: approvalCubit,
-            builder: (BuildContext ctxApproval, state){
-              if(userData.level == 'KASIR'){
-                return widget.kasirLayout(state.toString());
-              } else if(userData.level == 'SUPERVISOR'){
-                return widget.spvLayout(state.toString());
-              } else if(userData.level == 'SERVER'){
-                return widget.serverLayout();
-              }
-              else{
-                return const SizedBox();
-              }
-            }),
+            Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: BlocBuilder(
+                bloc: approvalCubit,
+                builder: (BuildContext ctxApproval, state){
+                  if(userData.level == 'KASIR'){
+                    return widget.kasirLayout(state.toString());
+                  } else if(userData.level == 'SUPERVISOR'){
+                    return widget.spvLayout(state.toString());
+                  } else if(userData.level == 'SERVER'){
+                    return widget.serverLayout();
+                  }
+                  else{
+                    return const SizedBox();
+                  }
+                }),
+              ),
+            ),
           ],
         ),
       )
