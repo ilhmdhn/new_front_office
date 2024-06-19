@@ -7,6 +7,8 @@ import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/orientation.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -83,9 +85,12 @@ class RatingDialog{
   }
 
   static void submitRate(BuildContext ctx, String invoice, String memberCode, String memberName)async{
+
+    final isPotrait = isVertical(ctx);
+
     showDialog(
       context: ctx,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext ctxDialog){
         double rate = 3;
         String hint = '';
@@ -116,81 +121,90 @@ class RatingDialog{
             }
             
             return PopScope(
-              canPop: false,
+              canPop: true,
               child: AlertDialog(
-                title: Center(child: AutoSizeText('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1, minFontSize: 10,)),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AutoSizeText('Ilham Dohaan', style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 9,),
-                    const SizedBox(height: 12,),
-                    RatingBar.builder(
-                    initialRating: 3,
-                    minRating: 0.5,
-                    itemSize: 35,
-                    wrapAlignment: WrapAlignment.center,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      setState((){
-                        rate = rating;
-                      });
-                    },
-                    ),
-                    const SizedBox(height: 12,),
-                    TextField(
-                      maxLines: 5,
-                      minLines: 2,
-                      controller: reasonController,
-                      keyboardType: TextInputType.multiline,
-                      decoration: CustomTextfieldStyle.normalHint(hint),
-                    ),
-                        const SizedBox(height: 12,),
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: InkWell(
-                            onTap: (){
-                              getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
-                            },
-                            child: Container(
-                              decoration: CustomContainerStyle.cancelButton(),
-                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                              child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),
+                title: Center(child: SizedBox(
+                  child: 
+                  isPotrait?
+                  AutoSizeText('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1, minFontSize: 10,):
+                  Text('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1,)
+                  )),
+                content: SizedBox(
+                  width: isPotrait?null: ScreenSize.getSizePercent(ctx, 40),
+                  height: isPotrait?null: ScreenSize.getHeightPercent(ctx, 30),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AutoSizeText('Ilham Dohaan', style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 9,),
+                      const SizedBox(height: 12,),
+                      RatingBar.builder(
+                      initialRating: 3,
+                      minRating: 0.5,
+                      itemSize: 35,
+                      wrapAlignment: WrapAlignment.center,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {
+                        setState((){
+                          rate = rating;
+                        });
+                      },
+                      ),
+                      const SizedBox(height: 12,),
+                      TextField(
+                        maxLines: 5,
+                        minLines: 2,
+                        controller: reasonController,
+                        keyboardType: TextInputType.multiline,
+                        decoration: CustomTextfieldStyle.normalHint(hint),
+                      ),
+                          const SizedBox(height: 12,),
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: InkWell(
+                              onTap: (){
+                                getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+                              },
+                              child: Container(
+                                decoration: CustomContainerStyle.cancelButton(),
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),
+                              ),
                             ),
                           ),
-                        ),
-                        const Expanded(
-                          flex: 2,
-                          child: SizedBox()
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: InkWell(
-                            onTap: ()async{
-                              await CloudRequest.insertRate(invoice, memberCode, rate, reasonController.text);
-                              setState((){
-                                isOk = true;
-                              });
-                            },
-                            child: Container(
-                              decoration: CustomContainerStyle.confirmButton(),
-                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                              child: Center(child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),)),
+                          const Expanded(
+                            flex: 2,
+                            child: SizedBox()
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: InkWell(
+                              onTap: ()async{
+                                await CloudRequest.insertRate(invoice, memberCode, rate, reasonController.text);
+                                setState((){
+                                  isOk = true;
+                                });
+                              },
+                              child: Container(
+                                decoration: CustomContainerStyle.confirmButton(),
+                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                child: Center(child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),)),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ); 

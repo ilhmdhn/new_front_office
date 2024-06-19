@@ -6,6 +6,7 @@ import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
+import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -150,6 +151,19 @@ class ButtonMenuWidget{
                 width: widthButtonLandscape,
                 height: isPotrait == true? 83:null,
                 child: bill()),
+              SizedBox(width: spaceCenter,)
+            ],
+          ),
+        ),
+         SizedBox(height: 12,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButtonLandscape,
+                height: isPotrait == true? 83:null,
+                child: checkinInfo()),
               SizedBox(width: spaceCenter,)
             ],
           ),
@@ -846,7 +860,8 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: ()async{
-        showToastWarning('Checkin Info Cooming Soon');
+        // showToastWarning('Checkin Info Cooming Soon');
+        RatingDialog.submitRate(context, '', '', '');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
