@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
+import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
@@ -19,12 +20,16 @@ class ButtonMenuWidget{
   final myGroup = AutoSizeGroup();
   
   Widget kasirLayout(String approvalCount){
-    final widthButton = ScreenSize.getSizePercent(context, 46);  
+    final isPotrait = isVertical(context);
+    final widthButton = ScreenSize.getSizePercent(context, 46);
+    final widthButtonLandscape = ScreenSize.getSizePercent(context, 30);
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final widthRow = ScreenSize.getSizePercent(context, 94);
-    final isPotrait = isVertical(context);
 
-    return Column(
+
+    return 
+    isPotrait?    
+    Column(
       children: [
         SizedBox(
           width: widthRow,
@@ -110,6 +115,45 @@ class ButtonMenuWidget{
             ],
         ),
         )
+      ],
+    ):Column(
+      children: [
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButtonLandscape,
+                height: isPotrait == true? 83:null,
+                child: checkin()),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                width: widthButtonLandscape,
+                height: isPotrait == true? 83:null,
+                child: checkinReservation()
+              ),
+              SizedBox(width: spaceCenter,),
+              SizedBox(
+                height: isPotrait == true? 83:null,
+                width: widthButtonLandscape,
+                child: editCheckin(),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 12,),
+        SizedBox(
+          width: widthRow,
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthButtonLandscape,
+                height: isPotrait == true? 83:null,
+                child: bill()),
+              SizedBox(width: spaceCenter,)
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -267,8 +311,11 @@ class ButtonMenuWidget{
   Widget checkin(){
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+    final isPotrait = isVertical(context);
+
     return InkWell(
             child: Container(
             // height: isPotrait == true? 83:null,
@@ -293,7 +340,7 @@ class ButtonMenuWidget{
                   width: spacerpaddingButton,
                 ),
                 SizedBox(
-                  width: widthIconButton,
+                  width:  isPotrait? widthIconButton: widthIconButtonLandscape,
                   child: Image.asset('assets/menu_icon/karaoke.png')
                 ),
                 Expanded(
@@ -335,9 +382,12 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
+    final isPotrait = isVertical(context);
+
     return InkWell(
       onTap: (){
         DoPrint.printInvoice('RCP-2405200003');
@@ -366,14 +416,14 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/reservation.png')
               ),
             Expanded(
               // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: true, softWrap: true, maxLines: 2,),
+                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 13, wrapWords: true, softWrap: true, maxLines: 2,),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -390,8 +440,11 @@ class ButtonMenuWidget{
 
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+    final isPotrait = isVertical(context);
+
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
@@ -419,14 +472,14 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/edit_checkin.png')
               ),
             Flexible(
               // width: widthTextButton,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1,)),
+                child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2,)),
               )),
             SizedBox(
               width: widthArrowButton,
@@ -444,8 +497,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+    final isPotrait = isVertical(context);
+
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
@@ -473,7 +529,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/extend.png')
               ),
             Expanded(
@@ -497,9 +553,12 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     
+    final isPotrait = isVertical(context);
+
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 3);
@@ -527,7 +586,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/change.png')
               ),
             Expanded(
@@ -551,8 +610,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: (){
@@ -581,7 +643,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/fnb.png')
               ),
             Expanded(
@@ -605,8 +667,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: (){
@@ -635,7 +700,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/bill.png')
               ),
             Expanded(
@@ -659,8 +724,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: (){
@@ -689,7 +757,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/checkout.png')
               ),
             Expanded(
@@ -713,8 +781,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: (){
@@ -743,7 +814,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/clean.png')
               ),
             Expanded(
@@ -767,8 +838,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: ()async{
@@ -798,7 +872,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/room_checkin.png')
               ),
             Expanded(
@@ -822,8 +896,11 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
+    final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: (){
@@ -852,7 +929,7 @@ class ButtonMenuWidget{
               width: spacerpaddingButton,
             ),
             SizedBox(
-              width: widthIconButton,
+              width: isPotrait? widthIconButton: widthIconButtonLandscape,
                 child: Image.asset('assets/menu_icon/list_reservation.png')
               ),
             Expanded(
@@ -876,10 +953,13 @@ class ButtonMenuWidget{
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
     final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     int? notifCount = int.tryParse(notif);
     notifCount ??= 0;
+    final isPotrait = isVertical(context);
+
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, ApprovalListPage.nameRoute);
@@ -910,7 +990,7 @@ class ButtonMenuWidget{
                 width: spacerpaddingButton,
               ),
               SizedBox(
-                width: widthIconButton,
+                width: isPotrait? widthIconButton: widthIconButtonLandscape,
                   child: Image.asset('assets/menu_icon/fingeprint.png')
                 ),
               Expanded(

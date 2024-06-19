@@ -12,6 +12,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
@@ -71,6 +72,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isPotrait = isVertical(context);
     destination = ModalRoute.of(context)!.settings.arguments as int;
     if(destination != 0 && isLoaded == false){
       getRoomCheckin('');
@@ -178,7 +180,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                               children: [
                                 Align(
                                   alignment: Alignment.topLeft,
-                                  child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(19),  maxLines: 1, minFontSize: 11,),
+                                  child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
                                 ),
                                 Align(
                                   alignment: Alignment.bottomRight,
