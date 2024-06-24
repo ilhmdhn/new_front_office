@@ -33,6 +33,8 @@ class PreviewBillModel{
   List<TransferListModel> transferList;
   List<TransferModel> transferData;
 
+  int? footerStyle;
+
   PreviewBillModel({
     required this.dataOutlet,
     required this.dataInvoice,
@@ -43,7 +45,8 @@ class PreviewBillModel{
     required this.dataPromoCancelOrder,
     required this.dataServiceTaxPercent,
     required this.transferList,
-    required this.transferData
+    required this.transferData,
+    this.footerStyle
   });
 
   factory PreviewBillModel.fromJson(Map<String, dynamic>json){
@@ -58,6 +61,7 @@ class PreviewBillModel{
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
+      footerStyle: json['footerStyle']??1
     );
   }
 }

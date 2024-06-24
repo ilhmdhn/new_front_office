@@ -243,7 +243,7 @@ class VerificationDialog{
                   ):
                   Container(
                     width: ScreenSize.getSizePercent(ctx, 55),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,

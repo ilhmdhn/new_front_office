@@ -26,6 +26,7 @@ class PrintInvoiceModel{
   RoomModel dataRoom;
   ServiceTaxPercentModel dataServiceTaxPercent;
   PaymentDetail payment;
+  int? footerStyle;
 
   List<OrderModel> dataOrder;
   List<CancelOrderModel> dataCancelOrder;
@@ -48,6 +49,7 @@ class PrintInvoiceModel{
     required this.transferList,
     required this.transferData,
     required this.paymentList,
+    this.footerStyle,
   });
 
   factory PrintInvoiceModel.fromJson(Map<String, dynamic>json){
@@ -64,7 +66,8 @@ class PrintInvoiceModel{
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
-      paymentList: List<PaymentData>.from((json['paymentData'] as List).map((x) => PaymentData.from(x)))
+      paymentList: List<PaymentData>.from((json['paymentData'] as List).map((x) => PaymentData.from(x))),
+      footerStyle: json['footerStyle']?? 1
     );
   }
 }

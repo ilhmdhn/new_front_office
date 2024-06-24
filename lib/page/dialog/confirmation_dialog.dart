@@ -1,9 +1,6 @@
 import 'dart:async';
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/page/bloc/int_bloc.dart';

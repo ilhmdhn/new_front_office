@@ -94,7 +94,7 @@ class DoPrint{
           'type': 1,
           'user': PreferencesData.getUser().userId,
           'bill_data': JsonConverter.generateBillJson(bill),
-          'footer_style': 3
+          'footer_style': bill.footerStyle??1
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
@@ -133,7 +133,7 @@ class DoPrint{
           'type': 2,
           'user': PreferencesData.getUser().userId,
           'invoice': JsonConverter.generateInvoiceJson(ivc),
-          'footer_style': 3
+          'footer_style': invoiceData.data?.footerStyle??1
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
