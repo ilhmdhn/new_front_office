@@ -18,9 +18,11 @@ import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
 import 'package:front_office_2/data/model/string_response.dart';
+import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -743,7 +745,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<StringResponse> latestSo(String rcp)async{
     try{
       Uri url = Uri.parse('$serverUrl/mobile-print/latest-so?rcp=$rcp');
-      final apiResponse = await http.get(url);
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
 
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
         loginPage();
@@ -753,6 +755,23 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return StringResponse.fromJson(convertedResult);
     }catch(e){
       return StringResponse(state: false, message: e.toString(), data: '');
+    }
+  }
+
+  Future<BaseResponse> transferRoomtoRoom(TransferParams data)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/checkin-direct/transfer-room-member');
+      final bodyParams = JsonConverter.generateTransferParams(data);
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token} );
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(state: false, message: e.toString());
     }
   }
 

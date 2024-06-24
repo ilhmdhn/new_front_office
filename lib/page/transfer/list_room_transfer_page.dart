@@ -4,6 +4,8 @@ import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/main_page.dart';
+import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/filter.dart';
@@ -71,12 +73,18 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                 itemBuilder: (BuildContext context, int index){
                   return InkWell(
                     onTap:()async{
-                      showToastWarning('roomDestination: ${transferParams.roomDestination} roomTypeDestination: ${transferParams.roomTypeDestination} isRoomCheckin: ${transferParams.isRoomCheckin} oldRoom: ${transferParams.oldRoom} transferReason: ${transferParams.transferReason}');
+                      transferParams.roomDestination = listRoomItem[index].roomCode;
+                      transferParams.capacity = listRoomItem[index].roomCapacity;
 
                       if(Filter.isLobby(transferParams.roomTypeDestination??'')){
 
                       }else{
-
+                        final transferState = await ApiRequest().transferRoomtoRoom(transferParams);
+                        if(transferState.state != true){
+                          showToastError(transferState.message??'Error Transfer room to room');
+                        }else{
+                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        }
                       }
                     },
                     child: Container(
