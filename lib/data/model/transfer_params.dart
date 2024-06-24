@@ -4,6 +4,7 @@ class TransferParams{
   bool? isRoomCheckin;
   int? capacity;
   String? oldRoom;
+  String? invoice;
   String? transferReason;
 
   TransferParams({
@@ -11,6 +12,7 @@ class TransferParams{
     this.roomTypeDestination,
     this.isRoomCheckin,
     this.oldRoom,
+    this.invoice,
     this.capacity,
     this.transferReason
   });

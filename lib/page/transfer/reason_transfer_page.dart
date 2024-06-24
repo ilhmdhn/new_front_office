@@ -147,6 +147,7 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
                       return InkWell(
                         onTap: (){
                           transferParams.roomTypeDestination = listAvailableRoomType[index].roomType??'';
+                          transferParams.invoice = detailRoom?.data?.invoice??'';
                           Navigator.pushNamed(context, ListRoomTransferPage.nameRoute, arguments: transferParams);
                         },
                         child: Container(

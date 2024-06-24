@@ -775,6 +775,29 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<BaseResponse> transferLobbytoLobby(TransferParams data)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/transfer/tolobby');
+      final chusr = PreferencesData.getUser().userId;
+      Map<String, dynamic> bodyParams = {
+        "room_code": data.oldRoom,
+        "room_destination": data.roomDestination,
+        "chusr": chusr
+      };
+
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token} );
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(state: false, message: e.toString());
+    }
+  }
+
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }
