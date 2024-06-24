@@ -51,7 +51,7 @@ class _QRScannerDialogState extends State<QRScannerDialog> {
                 children: [
                   Expanded(
                     child: TextField(
-                      decoration: CustomTextfieldStyle.normalHint('Masukkan kode manual'),
+                      decoration: CustomTextfieldStyle.normalHint('Masukkan kode'),
                       onChanged: (value) => manualCode = value,
                     ),
                   ),
