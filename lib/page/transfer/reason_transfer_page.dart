@@ -3,10 +3,13 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
 import 'package:front_office_2/tools/filter.dart';
 import 'package:front_office_2/tools/list.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -26,6 +29,7 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
   DetailCheckinResponse? detailRoom;
   List<RoomTypeReadyData> listAvailableRoomType = List.empty();
   String roomCode = '';
+  TransferParams transferParams = TransferParams();
 
   void getData()async{
 
@@ -57,7 +61,11 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
 
   @override
   Widget build(BuildContext context) {
-    roomCode = ModalRoute.of(context)?.settings.arguments as String;
+    
+    transferParams = ModalRoute.of(context)?.settings.arguments as TransferParams;
+    transferParams.transferReason = 'Overpax';
+    roomCode = transferParams.oldRoom??'';
+
     if(detailRoom == null){
       getData();
     }
@@ -101,9 +109,9 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
                 enableButtonWrap: false,  
                 padding: 0,                      
                 radioButtonValue: (value){
-                setState(() {
-              
-                });
+                  setState(() {
+                    transferParams.transferReason = value;
+                  });
                 }, 
                 unSelectedColor: Colors.white, 
                 selectedColor: CustomColorStyle.appBarBackground()
@@ -138,8 +146,8 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
                     itemBuilder: (context, index){
                       return InkWell(
                         onTap: (){
-                          // checkinArgs.roomType = listAvailableRoomType[index].roomType;
-                          // Navigator.pushNamed(context, ListRoomReadyPage.nameRoute, arguments:checkinArgs);
+                          transferParams.roomTypeDestination = listAvailableRoomType[index].roomType??'';
+                          Navigator.pushNamed(context, ListRoomTransferPage.nameRoute, arguments: transferParams);
                         },
                         child: Container(
                                   decoration: BoxDecoration(

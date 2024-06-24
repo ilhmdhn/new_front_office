@@ -1,5 +1,6 @@
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
+import 'package:front_office_2/tools/preferences.dart';
 
 class JsonConverter{
   static Map<String, dynamic> outlet(OutletModel data){
@@ -191,6 +192,25 @@ class JsonConverter{
       'service_percent': serviceTax(data.dataServiceTaxPercent),
       'payment_detail': paymentDetail(data.payment),
       'payment_list': paymentData(data.paymentList)
+    };
+  }
+
+  static Map<String, dynamic> generateTransferParams(String destinationRoom, bool isCheckinRoom, String roomType, int capacity, String oldRoom, String reason){
+    final chusr = PreferencesData.getUser().userId;
+    return {
+      "checkin_room":{
+        "kamar": destinationRoom
+      },
+      "checkin_room_type":{
+        "kamar_untuk_checkin": isCheckinRoom,
+        "jenis_kamar": roomType,
+        "kapasitas": capacity,
+      },
+      "chusr": chusr,
+      "old_room_before_transfer":{
+        "kamar": oldRoom
+      },
+      "transfer_reason": reason
     };
   }
 }

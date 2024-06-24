@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
+import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/bill_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
@@ -214,7 +215,10 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     }
 
     if(code == 3 && isNotNullOrEmpty(roomCode)){
-      Navigator.pushNamed(context, TransferReasonPage.nameRoute, arguments: roomCode);
+      TransferParams transferParams = TransferParams(
+        oldRoom: roomCode
+      );
+      Navigator.pushNamed(context, TransferReasonPage.nameRoute, arguments: transferParams);
     }
 
     if(code == 4 && isNotNullOrEmpty(roomCode)){

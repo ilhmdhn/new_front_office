@@ -18,6 +18,7 @@ import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/status/history_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
@@ -86,6 +87,7 @@ class FrontOffice extends StatelessWidget {
         ExtendRoomPage.nameRoute: (context) => const ExtendRoomPage(),
         ApprovalListPage.nameRoute: (context) => const ApprovalListPage(),
         TransferReasonPage.nameRoute: (context) => const TransferReasonPage(),
+        ListRoomTransferPage.nameRoute: (context)=> const ListRoomTransferPage(),
         BillPage.nameRoute: (context) => const BillPage(),
         PaymentPage.nameRoute: (context) => const PaymentPage(),
         FnbMainPage.nameRoute: (context) => const FnbMainPage()
