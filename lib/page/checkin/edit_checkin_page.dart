@@ -5,6 +5,7 @@ import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -193,7 +194,15 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           InkWell(
                             onTap: ()async{
                               final qrCode = await showQRScannerDialog(context);
+
                               if(qrCode != null){
+                                final voucherState = await CloudRequest.memberVoucher(detailRoom?.data?.memberCode??'', qrCode);
+
+                                if(voucherState.state != true){
+                                  showToastError(voucherState.message??'Error get voucher data');
+                                  return;
+                                }
+
                                 setState(() {
                                   voucherCode = qrCode;
                                 });
