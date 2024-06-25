@@ -1,13 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
-import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/filter.dart';
@@ -94,7 +92,7 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                       }else{
                         final transferState = await ApiRequest().transferRoomtoRoom(transferParams);
                         if(transferState.state != true){
-                          showToastError(transferState.message??'Error Transfer room to room');
+                          showToastError(transferState.message??'Error Transfer lobby to lobby');
                         }else{
                           Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                         }

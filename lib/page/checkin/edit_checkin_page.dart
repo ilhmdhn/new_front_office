@@ -4,6 +4,7 @@ import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
+import 'package:front_office_2/data/model/voucher_member_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
@@ -45,6 +46,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String cardTypeName = "";
   String dpNote = "";
   String edcCode = "";
+  VoucherMemberModel? voucherDetail;
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
@@ -185,38 +187,99 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Voucher Puppy Club', style: CustomTextStyle.blackMedium(),)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: ()async{
-                              final qrCode = await showQRScannerDialog(context);
-
-                              if(qrCode != null){
-                                final voucherState = await CloudRequest.memberVoucher(detailRoom?.data?.memberCode??'', qrCode);
-
-                                if(voucherState.state != true){
-                                  showToastError(voucherState.message??'Error get voucher data');
-                                  return;
-                                }
-
-                                setState(() {
-                                  voucherCode = qrCode;
-                                });
+                    child: Text('Voucher Puppy Club', style: CustomTextStyle.blackMediumSize(17),)),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        isNullOrEmpty(voucherCode)? InkWell(
+                          onTap: ()async{
+                            final qrCode = await showQRScannerDialog(context);
+                    
+                            if(qrCode != null){
+                              final voucherState = await CloudRequest.memberVoucher(detailRoom?.data?.memberCode??'', qrCode);
+                    
+                              if(voucherState.state != true){
+                                showToastError(voucherState.message??'Error get voucher data');
+                                return;
                               }
-                            },
+                    
+                              setState(() {
+                                voucherCode = qrCode;
+                                voucherDetail = voucherState.data;
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 150,
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                            decoration: CustomContainerStyle.blueButton(),
+                            alignment: Alignment.center,
+                            child: Text('Scan Voucher', style: CustomTextStyle.whiteStandard(),)),):
+                          //testtt  
+                            Padding(
+                            padding: const EdgeInsets.all(3.0),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: CustomContainerStyle.blueButton(),
-                              child: Text('Pilih', style: CustomTextStyle.whiteStandard(),)),),
-                            const SizedBox(width: 6,), 
-                            voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
-                        ],
-                      ),
-                    ],
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 0.7,
+                                ),
+                                borderRadius: BorderRadius.circular(10), // Bentuk border
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: AutoSizeText(voucherDetail?.voucherName??'', style: CustomTextStyle.blackMediumSize(17)),
+                                  ),
+                                  Row(
+                                    children: [
+                                      voucherDetail?.voucherPrice != null && (voucherDetail?.voucherPrice??0) > 0?
+                                      Text('Nominal Voucher :', style: CustomTextStyle.blackStandard()): const SizedBox(),
+                                      const SizedBox(width: 5,),
+                                      Expanded(child: AutoSizeText(Formatter.formatRupiah((voucherDetail?.voucherPrice??0)), style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                                    ],
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      onTap: ()async{
+                                        if(dataCheckin?.voucher == null){
+                                          setState(() {
+                                            voucherCode = null;
+                                            voucherDetail = null;
+                                          });
+                                        }else{
+                                          if(context.mounted){
+                                            final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher $voucherCode')??false;
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.redAccent.shade400,
+                                          borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                                          child: Text('Hapus Voucher', style: CustomTextStyle.whiteSize(14),),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //testtt
+                          const SizedBox(width: 6,), 
+                          // voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 6,), 
                   promoRoom == null?
@@ -225,7 +288,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Promo Room', style: CustomTextStyle.blackMedium(),),
+                        const SizedBox(height: 6,),
+                        Text('Promo Room', style: CustomTextStyle.blackMediumSize(17),),
+                        const SizedBox(height: 2,),
                         InkWell(
                           onTap: ()async{
                             final nganu = await PromoDialog().setPromoRoom(context, 'PR A');
@@ -236,9 +301,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             }
                           },
                           child: Container(
+                            width: 150,
                             decoration: CustomContainerStyle.blueButton(),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                            child: Text('Pilih Promo Room', style: CustomTextStyle.whiteStandard(),),
                           ),
                         )
                       ],
@@ -328,7 +394,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Promo FnB', style: CustomTextStyle.blackMedium(),),
+                        const SizedBox(height: 6,),
+                        Text('Promo FnB', style: CustomTextStyle.blackMediumSize(19),),
                         InkWell(
                           onTap: ()async{
                             final choosePromo = await PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
@@ -339,9 +406,11 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             }
                           },
                           child: Container(
+                            width: 150,
                             decoration: CustomContainerStyle.blueButton(),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            child: Text('Pilih', style: CustomTextStyle.whiteStandard(),),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                            child: Text('Pilih Promo FnB', style: CustomTextStyle.whiteStandard(),),
                           ),),
                       ],
                     )):Padding(

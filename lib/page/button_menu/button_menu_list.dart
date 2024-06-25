@@ -12,7 +12,6 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
-import 'package:front_office_2/tools/execute_printer.dart';
 
 class ButtonMenuWidget{
   final BuildContext context;

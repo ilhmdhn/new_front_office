@@ -10,7 +10,7 @@ import 'package:front_office_2/data/model/base_response.dart';
 
 class CloudRequest{
 
-  static final baseUrl = dotenv.env['server_fo_cloud
+  static final baseUrl = dotenv.env['server_fo_cloud'];
   static final token = dotenv.env['fo_cloud_auth']!;
 
   static final membershipServer = dotenv.env['server_membership']!;
@@ -245,13 +245,11 @@ class CloudRequest{
 
     static Future<VoucherMemberResponse> memberVoucher(String memberCode, String voucherCode)async{
     try{
-        print('DEBUGGING URL $membershipServer/voucher-info?member_code=$memberCode&voucher_code=$voucherCode');
         final url = Uri.parse('$membershipServer/voucher-info?member_code=$memberCode&voucher_code=$voucherCode');
         final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json','authorization': membershipToken});
         final convertedResult = json.decode(apiResponse.body);
         return VoucherMemberResponse.fromJson(convertedResult);
     }catch(e){
-      print('DEBUGGING NGERROR ${e.toString()}');
       return VoucherMemberResponse(
         state: false,
         message: e.toString()
