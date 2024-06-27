@@ -27,7 +27,6 @@ class DoPrint{
     final printerData = PreferencesData.getPrinter();
     
     if(printerData.connection == '3'){
-      showToastWarning('send signal into ${printerData.address}');
       try{
         final dataSol = await ApiRequest().getSol(sol);
         
@@ -76,10 +75,9 @@ class DoPrint{
     try{
       final printerData = PreferencesData.getPrinter();
       if(printerData.connection == '3'){
-      showToastWarning('send signal into ${printerData.address}');
       try{
         final billData = await ApiRequest().getBill(roomCode);
-        
+                showToastWarning('cek footer ${billData.data?.footerStyle}');
         if(billData.state != true){
           showToastError(billData.message);
           return;
@@ -94,7 +92,7 @@ class DoPrint{
           'type': 1,
           'user': PreferencesData.getUser().userId,
           'bill_data': JsonConverter.generateBillJson(bill),
-          'footer_style': bill.footerStyle??1
+          'footer_style': bill.footerStyle??5
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
@@ -128,12 +126,11 @@ class DoPrint{
         }
 
         PrintInvoiceModel ivc = invoiceData.data!;
-
         Map<String, dynamic> data = {
           'type': 2,
           'user': PreferencesData.getUser().userId,
           'invoice': JsonConverter.generateInvoiceJson(ivc),
-          'footer_style': invoiceData.data?.footerStyle??1
+          'footer_style': invoiceData.data?.footerStyle??5
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);

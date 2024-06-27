@@ -467,7 +467,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             paymentList.add(
                               PaymentDetail(
                                 approvalCodeDebet: _approvalDebetCardController.text,
-                                cardCodeDebet: _numberCreditCardController.text,
+                                cardCodeDebet: _numberDebetCardController.text,
                                 cardDebet: cardChoosed,
                                 edcDebet: edcChoosed,
                                 namaUserDebet: _nameDebetCardController.text,

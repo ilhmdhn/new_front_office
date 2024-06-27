@@ -61,7 +61,7 @@ class PreviewBillModel{
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
-      footerStyle: json['footerStyle']??1
+      footerStyle: json['footerStyle']??5
     );
   }
 }

@@ -131,7 +131,7 @@ class _PrinterPageState extends State<PrinterPage> {
                   ],
                 ),
                 const SizedBox(height: 26,),
-
+/*
                 InkWell(
                   onTap: (){
                   listPrinter.clear();
@@ -182,7 +182,7 @@ class _PrinterPageState extends State<PrinterPage> {
           isNullOrEmpty(listPrinter)?
           const SizedBox():
           Text(listPrinter[0].name),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 20,),*/
 
           Text('PC Printer', style: CustomTextStyle.blackMediumSize(16)),
           SizedBox(
