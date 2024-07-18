@@ -77,7 +77,6 @@ class DoPrint{
       if(printerData.connection == '3'){
       try{
         final billData = await ApiRequest().getBill(roomCode);
-                showToastWarning('cek footer ${billData.data?.footerStyle}');
         if(billData.state != true){
           showToastError(billData.message);
           return;

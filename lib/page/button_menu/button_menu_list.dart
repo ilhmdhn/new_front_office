@@ -858,7 +858,6 @@ class ButtonMenuWidget{
     return InkWell(
       onTap: ()async{
         // showToastWarning('Checkin Info Cooming Soon');
-        RatingDialog.submitRate(context, '', '', '');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
@@ -961,7 +960,7 @@ class ButtonMenuWidget{
     );
   }
 
-   Widget approval(String notif){
+  Widget approval(String notif){
     // final widthButton = ScreenSize.getSizePercent(context, 45);
     final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
     final widthIconButton = ScreenSize.getSizePercent(context, 10);

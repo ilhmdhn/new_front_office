@@ -78,7 +78,7 @@ class _PaymentPageState extends State<PaymentPage> {
   void getData()async{
     billData = await ApiRequest().previewBill(roomCode);
     if(billData?.state == true){
-      totalBill = billData?.data?.dataInvoice.jumlahTotal??0;
+      totalBill = billData?.data?.dataInvoice.jumlahBersih??0;
       _setNominal();
     }
     setState(() {

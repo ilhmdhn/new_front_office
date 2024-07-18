@@ -6,6 +6,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/bill_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/order/fnb_main_page.dart';
@@ -163,7 +164,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                           movePage(destination, roomData.room);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
                           decoration: BoxDecoration(
                             color: Colors.white, // Warna background
                             borderRadius: BorderRadius.circular(10), // Bentuk border
@@ -179,6 +180,16 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                destination == 6?
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
+                                    InkWell(onTap: (){
+                                      RatingDialog.submitRate(context, roomData.summaryCode, roomData.memberName, roomData.memberName);
+                                    }, child: Icon(Icons.star_rate, size: 21, color: Colors.amber,))
+                                  ],
+                                ):
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),

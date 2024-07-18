@@ -85,9 +85,9 @@ class _OperationalPageState extends State<OperationalPage> {
                 child: BlocBuilder(
                 bloc: approvalCubit,
                 builder: (BuildContext ctxApproval, state){
-                  if(userData.level == 'KASIR'){
+                  if(userData.level == 'KASIR' || userData.level == 'IT'){
                     return widget.kasirLayout(state.toString());
-                  } else if(userData.level == 'SUPERVISOR'){
+                  } else if(userData.level == 'SUPERVISOR' || userData.level == 'KAPTEN'){
                     return widget.spvLayout(state.toString());
                   } else if(userData.level == 'SERVER'){
                     return widget.serverLayout();

@@ -195,6 +195,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       children: [
                         isNullOrEmpty(voucherCode)? InkWell(
                           onTap: ()async{
+                            showToastWarning('Masih belum aktif, gunakan FO Desktop');
+                            /*
                             final qrCode = await showQRScannerDialog(context);
                     
                             if(qrCode != null){
@@ -210,7 +212,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 voucherDetail = voucherState.data;
                               });
                             }
-                          },
+                          */},
                           child: Container(
                             width: 150,
                             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
