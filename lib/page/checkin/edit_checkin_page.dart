@@ -196,7 +196,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         isNullOrEmpty(voucherCode)? InkWell(
                           onTap: ()async{
                             showToastWarning('Masih belum aktif, gunakan FO Desktop');
-                            /*
+                            
                             final qrCode = await showQRScannerDialog(context);
                     
                             if(qrCode != null){
@@ -212,7 +212,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 voucherDetail = voucherState.data;
                               });
                             }
-                          */},
+                          },
                           child: Container(
                             width: 150,
                             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
@@ -540,6 +540,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           memberCode: dataCheckin!.memberCode,
                           promo: listPromo,
                         );
+                        if(voucherDetail != null){
+                          final voucherNominal = voucherDetail?.voucherPrice??0;
+                          
+                        }
 
                         final editResponse = await ApiRequest().editCheckin(params);
                         if(editResponse.state == true){
