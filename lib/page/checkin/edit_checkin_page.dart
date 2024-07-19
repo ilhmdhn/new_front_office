@@ -18,6 +18,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 class EditCheckinPage extends StatefulWidget {
   static const nameRoute = '/edit-checkin';
@@ -522,6 +523,23 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         if(isNotNullOrEmpty(promoFnb?.promoName)){
                           listPromo.add(promoFnb!.promoName!);
                         }
+
+                        final chusr = PreferencesData.getUser().userId??'Relogin';
+
+                        VoucherDetail? voucherFix = null;
+                        if(voucherDetail != null){
+                          voucherFix = VoucherDetail(
+                            code: voucherDetail?.voucherCode??'',
+                            hour: voucherDetail?.voucherHour??0,
+                            hourPrice: (voucherDetail?.voucherRoomPrice??0).toInt(),
+                            hourPercent: (voucherDetail?.voucherRoomDiscount??0).toInt(),
+                            item: voucherDetail?.itemCode??'',
+                            itemPrice: (voucherDetail?.voucherFnbPrice??0).toInt(),
+                            itemPercent: (voucherDetail?.voucherFnbDiscount??0).toInt(),
+                            price: (voucherDetail?.voucherPrice??0).toInt(),
+                          );
+                        }
+
                         final params = EditCheckinBody(
                           room: dataCheckin!.roomCode,
                           pax: pax,
@@ -529,10 +547,11 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           dp: "",
                           description: descriptionController.text,
                           event: eventController.text,
-                          chusr: 'ILHAM',
+                          chusr: chusr,
                           voucher: '',
                           dpNote: "",
                           cardType: "",
+                          voucherDetail: voucherFix,
                           cardName: "",
                           cardNo: "",
                           cardApproval: "",
@@ -540,10 +559,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           memberCode: dataCheckin!.memberCode,
                           promo: listPromo,
                         );
-                        if(voucherDetail != null){
-                          final voucherNominal = voucherDetail?.voucherPrice??0;
-                          
-                        }
 
                         final editResponse = await ApiRequest().editCheckin(params);
                         if(editResponse.state == true){

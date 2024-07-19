@@ -49,6 +49,30 @@ class Visitor{
   });
 }
 
+class VoucherDetail{
+  String code;
+  String expired;
+  int hour;
+  int hourPrice;
+  int hourPercent;
+  String item;
+  int itemPrice;
+  int itemPercent;
+  num price;
+  
+  VoucherDetail({
+    required this.code,
+    this.expired = '',
+    this.hour = 0,
+    this.hourPrice = 0,
+    this.hourPercent = 0,
+    this.item = '',
+    this.itemPrice = 0,
+    this.itemPercent = 0,
+    this.price = 0,
+  });
+}
+
 class EditCheckinBody{
   String room;
   int pax;
@@ -62,6 +86,7 @@ class EditCheckinBody{
   String cardType;
   String cardName;
   String cardNo;
+  VoucherDetail? voucherDetail;
   String cardApproval;
   String edcMachine;
   String memberCode;
@@ -76,6 +101,7 @@ class EditCheckinBody{
     this.event = '',//
     this.chusr = '',
     this.voucher = '',//
+    this.voucherDetail,
     this.dpNote = '',//
     this.cardType = '',
     this.cardName = '',
@@ -85,6 +111,22 @@ class EditCheckinBody{
     this.memberCode = '',
     this.promo = const []
   });
+}
+
+class GenerateVoucherParams{
+  Map<String, dynamic> execute(VoucherDetail data){
+    return <String, dynamic>{
+      'code': data.code,
+      'expired': data.expired,
+      'hour': data.hour,
+      'hour_price': data.hourPrice,
+      'hour_percent': data.hourPercent,
+      'item': data.item,
+      'item_price': data.itemPrice,
+      'item_percent': data.itemPercent,
+      'price': data.price
+    };
+  }
 }
 
 class GenerateCheckinParams{
@@ -128,6 +170,7 @@ class GenerateCheckinParams{
       'event_owner':  '',
       'chusr':  checkinData.chusr,
       'voucher':  checkinData.voucher,
+      'voucher_detail': checkinData.voucherDetail == null? null: GenerateVoucherParams().execute(checkinData.voucherDetail!),
       'keterangan_payment_uang_muka': checkinData.dpNote,
       'input1_jenis_kartu': checkinData.cardType,
       'input2_nama':  checkinData.cardName,
