@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/report/cash_detail/cash_detail_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:lottie/lottie.dart';
@@ -29,7 +30,7 @@ class _ReportPageState extends State<ReportPage> {
         padding: const EdgeInsets.only(top: 12),
         child: Column(
           children: [
-            AddOnWidget.listButtonNavigation(context, ReportPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan')
+            AddOnWidget.listButtonNavigation(context, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan')
             /*SizedBox(
               width: double.infinity,
               child: ElevatedButton(

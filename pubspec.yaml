@@ -30,6 +30,7 @@ environment:
 dependencies:
   animated_rating_stars: ^1.0.1
   auto_size_text: ^3.0.0
+  calendar_date_picker2: ^1.1.5
   cupertino_icons: ^1.0.2
   custom_radio_grouped_button: ^2.2.1
   device_information: ^0.0.4
