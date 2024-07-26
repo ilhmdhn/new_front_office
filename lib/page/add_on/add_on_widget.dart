@@ -34,4 +34,48 @@ class AddOnWidget{
       ),
     );
   }
+
+  static Widget listButtonNavigation(BuildContext ctx, String destination, String assets, String name){
+    return Padding(
+                padding: const EdgeInsets.symmetric(horizontal:  8.0),
+                child: InkWell(
+                  onTap: ()async{
+                    Navigator.pushNamed(ctx, destination);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 36,
+                            child: Image.asset(assets)
+                          ),
+                        Expanded(
+                          // width: widthTextButton,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                            child: AutoSizeText(name, style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                          )),
+                        const SizedBox(
+                          width: 26,
+                          child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+                      ],
+                    ),
+                  ), 
+                  ),
+              );
+  }
 }
