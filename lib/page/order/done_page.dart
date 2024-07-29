@@ -10,6 +10,8 @@ import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class DoneOrderPage extends StatefulWidget {
   final DetailCheckinModel detailCheckin;
@@ -105,7 +107,11 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             ),
                             InkWell(
                               onTap: ()async{
-                                
+                                String userLevel = PreferencesData.getUser().level??'';
+                                if(userLevel != 'KASIR'){
+                                  showToastWarning('Hanya user kasir');
+                                  return;
+                                }
                                 final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
                                 if(cancelQty > 0){
                                   setState(() {

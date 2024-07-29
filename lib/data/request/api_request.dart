@@ -798,6 +798,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

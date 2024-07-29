@@ -47,7 +47,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
   if(userLevel == 'KASIR'){
     namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
   }else{
-    namePage = ['ORDER', 'SEND ORDER'];
+    namePage = ['ORDER', 'SEND ORDER', 'DONE', 'CANCEL'];
   }
 
 
@@ -130,7 +130,9 @@ class _FnbMainPageState extends State<FnbMainPage> {
                 },
                 children: [
                   ListFnbPage(detailCheckin: dataCheckin!.data!,),
-                  SendOrderPage(detailCheckin: dataCheckin!.data!)
+                  SendOrderPage(detailCheckin: dataCheckin!.data!),
+                  DoneOrderPage(detailCheckin: dataCheckin!.data!),
+                  CancelOrderPage(roomCode: roomCode)
                 ],
               )
             ),
