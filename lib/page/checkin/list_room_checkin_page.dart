@@ -130,86 +130,89 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                 ),
               ),
               const SizedBox(height: 11,),
-              LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints){
-                  int crossAxisCount = 3;   
-                  if (constraints.maxWidth < 580) {
-                    crossAxisCount = 2;
-                  }
-          
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 8, // Spasi antar kolom
-                      mainAxisSpacing: 8, // Spasi antar baris
-                      childAspectRatio: 6/3
-                    ),
-                    itemCount: listRoomCheckin.length,
-                    itemBuilder: (context, index){
-                      final roomData = listRoomCheckin[index];
-                      if(roomData.remainHour>0 || roomData.remainMinute>0){
-                        remaining = 'Sisa';
-                        if(roomData.remainHour>0){
-                          remaining += ' ${roomData.remainHour} Jam';
+              Flexible(
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints){
+                    int crossAxisCount = 3;   
+                    if (constraints.maxWidth < 580) {
+                      crossAxisCount = 2;
+                    }
+                          
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 8, // Spasi antar kolom
+                        mainAxisSpacing: 8, // Spasi antar baris
+                        childAspectRatio: 6/3
+                      ),
+                      itemCount: listRoomCheckin.length,
+                      itemBuilder: (context, index){
+                        final roomData = listRoomCheckin[index];
+                        if(roomData.remainHour>0 || roomData.remainMinute>0){
+                          remaining = 'Sisa';
+                          if(roomData.remainHour>0){
+                            remaining += ' ${roomData.remainHour} Jam';
+                          }
+                          if(roomData.remainMinute>0){
+                            remaining += ' ${roomData.remainMinute} Menit';
+                          }
+                        }else{
+                          remaining = 'WAKTU HABIS';
                         }
-                        if(roomData.remainMinute>0){
-                          remaining += ' ${roomData.remainMinute} Menit';
-                        }
-                      }else{
-                        remaining = 'WAKTU HABIS';
-                      }
-                      return InkWell(
-                        onTap: (){
-                          movePage(destination, roomData.room);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Warna background
-                            borderRadius: BorderRadius.circular(10), // Bentuk border
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                spreadRadius: 3, // Radius penyebaran shadow
-                                blurRadius: 7, // Radius blur shadow
-                                offset: const Offset(0, 3), // Offset shadow
-                              ),
-                            ],
-                          ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                destination == 6?
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
-                                    InkWell(onTap: (){
-                                      RatingDialog.submitRate(context, roomData.summaryCode, roomData.memberName, roomData.memberName);
-                                    }, child: Icon(Icons.star_rate, size: 21, color: Colors.amber,))
-                                  ],
-                                ):
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
+                        return InkWell(
+                          onTap: (){
+                            movePage(destination, roomData.room);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Warna background
+                              borderRadius: BorderRadius.circular(10), // Bentuk border
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                  spreadRadius: 3, // Radius penyebaran shadow
+                                  blurRadius: 7, // Radius blur shadow
+                                  offset: const Offset(0, 3), // Offset shadow
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                              ],
+                            ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  destination == 6?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      AutoSizeText(roomData.memberName, style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
-                                      AutoSizeText(remaining, style: CustomTextStyle.blackMediumSize(14),  maxLines: 2, minFontSize: 9,),
+                                      AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
+                                      InkWell(onTap: (){
+                                        RatingDialog.submitRate(context, roomData.summaryCode, roomData.memberName, roomData.memberName);
+                                      }, child: Icon(Icons.star_rate, size: 21, color: Colors.amber,))
                                     ],
+                                  ):
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
                                   ),
-                                )
-                                ]),
-                        ),
-                      );
-                    });
-                })
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        AutoSizeText(roomData.memberName, style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
+                                        AutoSizeText(remaining, style: CustomTextStyle.blackMediumSize(14),  maxLines: 2, minFontSize: 9,),
+                                      ],
+                                    ),
+                                  )
+                                  ]),
+                          ),
+                        );
+                      });
+                  }),
+              ),
+              const SizedBox(height: 11,)
             ],
           ),
         ),
