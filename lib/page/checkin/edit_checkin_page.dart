@@ -258,49 +258,13 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                     alignment: Alignment.topCenter,
                                     child: AutoSizeText(voucherFix?.code??'', style: CustomTextStyle.blackMediumSize(17)),
                                   ),
-                                  (voucherFix?.hour??0) > 0? AddOnWidget.vcrItem(context, 'hour', '${voucherFix?.hour??0}') : const SizedBox(),
-                                  (voucherFix?.hourPercent??0) > 0?
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 16),
-                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
-                                      ),
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 75),
-                                        child: AutoSizeText('${(voucherFix?.hourPercent??0)} %', style: CustomTextStyle.blackStandard(),),
-                                      )
-                                    ],
-                                  ):
-                                  const SizedBox(),
-                                  (voucherFix?.item??'') >= 0?
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 16),
-                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
-                                      ),
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 75),
-                                        child: AutoSizeText('${(voucherFix?.hourPercent??0)} %', style: CustomTextStyle.blackStandard(),),
-                                      )
-                                    ],
-                                  ):
-                                  const SizedBox(),
-                                  (voucherFix?.hourPrice??0) >= 0?
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 16),
-                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
-                                      ),
-                                      SizedBox(
-                                        width: ScreenSize.getSizePercent(context, 75),
-                                        child: AutoSizeText((voucherFix?.hourPrice??0).toString(), style: CustomTextStyle.blackStandard(),),
-                                      )
-                                    ],
-                                  ):
-                                  const SizedBox(),
+                                  (voucherFix?.hour??0) > 0? AddOnWidget.vcrItem(context, 'Jam', '${voucherFix?.hour??0}') : const SizedBox(),
+                                  (voucherFix?.hourPrice??0) > 0? AddOnWidget.vcrItem(context, 'Room', Formatter.formatRupiah(voucherFix?.hourPrice??0)) : const SizedBox(),
+                                  (voucherFix?.hourPercent??0) > 0? AddOnWidget.vcrItem(context, 'Room', '${voucherFix?.hourPercent??0}') : const SizedBox(),
+                                  (voucherFix?.item??'') != ''? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.item}') : const SizedBox(),
+                                  (voucherFix?.itemPrice??0) > 0 ? AddOnWidget.vcrItem(context, 'FnB', Formatter.formatRupiah(voucherFix?.itemPrice??0)) : const SizedBox(),
+                                  (voucherFix?.itemPercent??0) > 0? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.itemPercent}%') : const SizedBox(),
+                                  (voucherFix?.price??0) >0 ? AddOnWidget.vcrItem(context, 'FnB', Formatter.formatRupiah(voucherFix?.price??0)) : const SizedBox(),
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
@@ -312,6 +276,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                         }else{
                                           if(context.mounted){
                                             final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher ${voucherFix?.code??''}')??false;
+                                            if(removeVoucherState != true){
+                                              showToastWarning('Batal');
+                                              return;
+                                            }
                                             setState(() {
                                               voucherFix == null;
                                             });
