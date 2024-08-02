@@ -53,7 +53,7 @@ class VoucherDetail{
   String code;
   String expired;
   int hour;
-  int hourPrice;
+  num hourPrice;
   int hourPercent;
   String item;
   int itemPrice;
@@ -71,6 +71,19 @@ class VoucherDetail{
     this.itemPercent = 0,
     this.price = 0,
   });
+
+  factory VoucherDetail.fromJson(Map<String, dynamic> json){
+    return VoucherDetail(
+      code: json['code'],
+      hour: json['hour'],
+      hourPrice: json['room_price'],
+      hourPercent: json['room_percent'],
+      item: json['item'],
+      itemPrice: json['item_price'],
+      itemPercent: json['item_percent'],
+      price: json['price']
+    );
+  }
 }
 
 class EditCheckinBody{

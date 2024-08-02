@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class PromoRoomResponse{
   bool isLoading;
   bool? state;
@@ -51,3 +53,29 @@ class PromoRoomModel{
     );
   }
 }
+
+// class VoucherDetail{
+//   String code;
+//   String reception;
+//   int hour;
+//   num roomPrice;
+//   int roomPercent;
+//   String item;
+//   num itemPrice;
+//   int itemPercent;
+//   num price;
+
+//   VoucherDetail({
+//     required this.code,
+//     required this.reception,
+//     required this.hour,
+//     required this.roomPrice,
+//     required this.roomPercent,
+//     required this.item,
+//     required this.itemPrice,
+//     required this.itemPercent,
+//     required this.price,
+//   });
+
+//   factore VoucherDetail.fromJson
+// }

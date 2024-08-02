@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:lottie/lottie.dart';
 
 class AddOnWidget{
@@ -77,5 +78,20 @@ class AddOnWidget{
                   ), 
                   ),
               );
+  }
+
+  static Widget vcrItem(BuildContext ctx, String title, String value){
+    return Row(
+      children: [
+        SizedBox(
+          width: ScreenSize.getSizePercent(ctx, 16),
+          child: AutoSizeText('$title:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
+        ),
+        SizedBox(
+          width: ScreenSize.getSizePercent(ctx, 75),
+          child: AutoSizeText(value, style: CustomTextStyle.blackStandard(), maxLines: 1,),
+        )
+      ],
+    );
   }
 }

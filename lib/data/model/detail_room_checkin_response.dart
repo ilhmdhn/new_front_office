@@ -1,3 +1,4 @@
+import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -34,6 +35,7 @@ class DetailCheckinModel{
   int pax;
   PromoRoomModel? promoRoom;
   PromoFnbModel? promoFnb;
+  VoucherDetail? vcrDetail;
   String hp;
   String invoice;
   String reception;
@@ -60,6 +62,7 @@ class DetailCheckinModel{
     this.pax = 0,
     this.promoRoom,
     this.promoFnb,
+    this.vcrDetail,
     this.hp = '',
     this.downPayment = 0,
     this.description = '',
@@ -89,6 +92,7 @@ class DetailCheckinModel{
       pax: json['checkin_room']['qm3'],
       promoRoom: isNullOrEmpty(json['order_promo_room']) ? null: PromoRoomModel.fromJson(json['order_promo_room'][0]),
       promoFnb: isNullOrEmpty(json['order_promo_food'])? null: PromoFnbModel.fromJson(json['order_promo_food'][0]),
+      vcrDetail:  VoucherDetail.fromJson(json['vcr_detail']),
       hp: json['checkin_room']['hp'],
       downPayment: json['checkin_room']['uang_muka'],
       description: json['checkin_room']['keterangan'],

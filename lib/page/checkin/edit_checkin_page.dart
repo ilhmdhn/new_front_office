@@ -7,6 +7,7 @@ import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
+import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
@@ -19,6 +20,7 @@ import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 class EditCheckinPage extends StatefulWidget {
   static const nameRoute = '/edit-checkin';
@@ -31,7 +33,6 @@ class EditCheckinPage extends StatefulWidget {
 class _EditCheckinPageState extends State<EditCheckinPage> {
   int pax = 1;
   int dpCode = 1;
-  String? voucherCode;
   bool isLoading = true;
   String chooseEdc = '';
   String chooseCardType = '';
@@ -51,6 +52,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
+  VoucherDetail? voucherFix;
 
   void getData()async{
     detailRoom = await ApiRequest().getDetailRoomCheckin(roomCode);
@@ -58,10 +60,14 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
       showToastError(detailRoom?.message??'Error get room info');
     }
 
+    if(detailRoom?.data?.vcrDetail != null){
+      voucherFix = detailRoom!.data!.vcrDetail!;
+    }
 
     isLoading = false;
     setState(() {
       isLoading;
+      voucherFix;
       detailRoom;
       dataCheckin = detailRoom?.data;
     });
@@ -118,7 +124,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
           child: Text(detailRoom?.message??'Error get Room Info'),
         ):
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.getSizePercent(context, 2)),
           child: SizedBox(
             height: double.infinity,
             child: SingleChildScrollView(
@@ -194,10 +200,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        isNullOrEmpty(voucherCode)? InkWell(
+                        voucherFix == null? InkWell(
                           onTap: ()async{
-                            // showToastWarning('Masih belum aktif, gunakan FO Desktop');
-                            
+                            /*
+                            showToastWarning('Masih belum aktif, gunakan FO Desktop');
+                            return
+                            */
                             final qrCode = await showQRScannerDialog(context);
                     
                             if(qrCode != null){
@@ -207,23 +215,35 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 showToastError(voucherState.message??'Error get voucher data');
                                 return;
                               }
-                    
-                              setState(() {
-                                voucherCode = qrCode;
                                 voucherDetail = voucherState.data;
+                              
+                              if(voucherDetail != null){
+                                  voucherFix = VoucherDetail(
+                                    code: voucherDetail?.voucherCode??'',
+                                    hour: voucherDetail?.voucherHour??0,
+                                    hourPrice: (voucherDetail?.voucherRoomPrice??0).toInt(),
+                                    hourPercent: (voucherDetail?.voucherRoomDiscount??0).toInt(),
+                                    item: voucherDetail?.itemCode??'',
+                                    itemPrice: (voucherDetail?.voucherFnbPrice??0).toInt(),
+                                    itemPercent: (voucherDetail?.voucherFnbDiscount??0).toInt(),
+                                    price: (voucherDetail?.voucherPrice??0).toInt(),
+                                  );
+                              }
+                              
+                              setState(() {
+                                voucherFix;
                               });
                             }
                           },
                           child: Container(
-                            width: 150,
                             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                             decoration: CustomContainerStyle.blueButton(),
                             alignment: Alignment.center,
-                            child: Text('Scan Voucher', style: CustomTextStyle.whiteStandard(),)),):
-                            Padding(
-                            padding: const EdgeInsets.all(3.0),
+                            child: Text('Scan Voucher', style: CustomTextStyle.whiteStandard(),)),
+                            ): Padding(
+                            padding: EdgeInsets.all(ScreenSize.getSizePercent(context, 1)),
                             child: Container(
-                              padding: const EdgeInsets.all(5),
+                              padding: EdgeInsets.all(ScreenSize.getSizePercent(context, 1)),
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.black,
@@ -236,28 +256,65 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 children: [
                                   Align(
                                     alignment: Alignment.topCenter,
-                                    child: AutoSizeText(voucherDetail?.voucherName??'', style: CustomTextStyle.blackMediumSize(17)),
+                                    child: AutoSizeText(voucherFix?.code??'', style: CustomTextStyle.blackMediumSize(17)),
                                   ),
+                                  (voucherFix?.hour??0) > 0? AddOnWidget.vcrItem(context, 'hour', '${voucherFix?.hour??0}') : const SizedBox(),
+                                  (voucherFix?.hourPercent??0) > 0?
                                   Row(
                                     children: [
-                                      voucherDetail?.voucherPrice != null && (voucherDetail?.voucherPrice??0) > 0?
-                                      Text('Nominal Voucher :', style: CustomTextStyle.blackStandard()): const SizedBox(),
-                                      const SizedBox(width: 5,),
-                                      Expanded(child: AutoSizeText(Formatter.formatRupiah((voucherDetail?.voucherPrice??0)), style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 16),
+                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
+                                      ),
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 75),
+                                        child: AutoSizeText('${(voucherFix?.hourPercent??0)} %', style: CustomTextStyle.blackStandard(),),
+                                      )
                                     ],
-                                  ),
+                                  ):
+                                  const SizedBox(),
+                                  (voucherFix?.item??'') >= 0?
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 16),
+                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
+                                      ),
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 75),
+                                        child: AutoSizeText('${(voucherFix?.hourPercent??0)} %', style: CustomTextStyle.blackStandard(),),
+                                      )
+                                    ],
+                                  ):
+                                  const SizedBox(),
+                                  (voucherFix?.hourPrice??0) >= 0?
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 16),
+                                        child: AutoSizeText('room:', style: CustomTextStyle.blackStandard(), maxLines: 1,),
+                                      ),
+                                      SizedBox(
+                                        width: ScreenSize.getSizePercent(context, 75),
+                                        child: AutoSizeText((voucherFix?.hourPrice??0).toString(), style: CustomTextStyle.blackStandard(),),
+                                      )
+                                    ],
+                                  ):
+                                  const SizedBox(),
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
                                       onTap: ()async{
                                         if(dataCheckin?.voucher == null){
                                           setState(() {
-                                            voucherCode = null;
                                             voucherDetail = null;
                                           });
                                         }else{
                                           if(context.mounted){
-                                            final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher $voucherCode')??false;
+                                            final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher ${voucherFix?.code??''}')??false;
+                                            setState(() {
+                                              voucherFix == null;
+                                            });
                                           }
                                         }
                                       },
@@ -277,9 +334,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                               ),
                             ),
                           ),
-                          //testtt
                           const SizedBox(width: 6,), 
-                          // voucherCode!=null?AutoSizeText(voucherCode.toString(), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 12,): const SizedBox(),
                       ],
                     ),
                   ),
@@ -525,19 +580,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
 
                         final chusr = PreferencesData.getUser().userId??'Relogin';
 
-                        VoucherDetail? voucherFix = null;
-                        if(voucherDetail != null){
-                          voucherFix = VoucherDetail(
-                            code: voucherDetail?.voucherCode??'',
-                            hour: voucherDetail?.voucherHour??0,
-                            hourPrice: (voucherDetail?.voucherRoomPrice??0).toInt(),
-                            hourPercent: (voucherDetail?.voucherRoomDiscount??0).toInt(),
-                            item: voucherDetail?.itemCode??'',
-                            itemPrice: (voucherDetail?.voucherFnbPrice??0).toInt(),
-                            itemPercent: (voucherDetail?.voucherFnbDiscount??0).toInt(),
-                            price: (voucherDetail?.voucherPrice??0).toInt(),
-                          );
-                        }
+                        
 
                         final params = EditCheckinBody(
                           room: dataCheckin!.roomCode,
