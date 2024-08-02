@@ -144,7 +144,6 @@ class CloudRequest{
     try{
       String outlet = PreferencesData.getOutlet();
       final url = Uri.parse('$baseUrl/approval/cancel/$outlet/$idApproval');
-      
       final apiResponse = await http.put(url, headers:{'Content-Type': 'application/json','authorization': token});
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);

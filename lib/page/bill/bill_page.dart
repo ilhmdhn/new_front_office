@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -231,13 +233,24 @@ class _BillPageState extends State<BillPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: (){
+                        onTap: ()async{
                           final userLevel = PreferencesData.getUser();
                           if(userLevel.level != 'KASIR'){
                             showToastWarning('User tidak memiliki akses');
                             return;
                           }else{
-                            DoPrint.printBill(roomCode);
+
+                            if(result.data?.dataInvoice.statusPrint != '0'){
+
+                              final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
+                              if(reprintBillState!= true){
+                                showToastWarning('Permintaan dibatalkan');
+                                return;
+                              }
+                              DoPrint.printBill(roomCode);
+                            }else{
+                              DoPrint.printBill(roomCode);
+                            }
                           }
                         },
                         child: Container(

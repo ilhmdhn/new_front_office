@@ -798,6 +798,22 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<BaseResponse> updatePrintState(String rcp, String state)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/mobile-print/update-status?rcp=$rcp&status_print=$state');
+      final apiResponse = await http.get(url);
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+      
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(state: false, message: e.toString());
+    }
+  }
+
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);

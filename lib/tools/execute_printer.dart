@@ -77,6 +77,9 @@ class DoPrint{
       if(printerData.connection == '3'){
       try{
         final billData = await ApiRequest().getBill(roomCode);
+
+        ApiRequest().updatePrintState(billData.data?.dataInvoice.reception??'', '1');
+
         if(billData.state != true){
           showToastError(billData.message);
           return;
@@ -115,7 +118,7 @@ class DoPrint{
       final printerData = PreferencesData.getPrinter();
       if(printerData.connection == '3'){
         final invoiceData = await ApiRequest().getInvoice(rcp);
-
+        ApiRequest().updatePrintState(rcp, '2');
         if(invoiceData.state != true){
           showToastError(invoiceData.message);
           return;

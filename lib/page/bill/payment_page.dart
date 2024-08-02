@@ -510,7 +510,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               return showToastError('Lengkapi data');
                             }
 
-                            final approvalState = await VerificationDialog.requestVerification(context, 'RCP', 'ROOMNYA', 'Meminta persetujuan pembayaran COMPLIMENTARY sebesar $value');
+                            final approvalState = await VerificationDialog.requestVerification(context, billData?.data?.dataInvoice.reception??'', billData?.data?.dataRoom.roomCode??'', 'Meminta persetujuan pembayaran COMPLIMENTARY sebesar $value');
                               
                             if(approvalState != true){
                               return showToastWarning('Permintaan complimentary ditolak');
