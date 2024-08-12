@@ -92,7 +92,10 @@ class DetailCheckinModel{
       pax: json['checkin_room']['qm3'],
       promoRoom: isNullOrEmpty(json['order_promo_room']) ? null: PromoRoomModel.fromJson(json['order_promo_room'][0]),
       promoFnb: isNullOrEmpty(json['order_promo_food'])? null: PromoFnbModel.fromJson(json['order_promo_food'][0]),
-      vcrDetail:  VoucherDetail.fromJson(json['vcr_detail']),
+      // vcrDetail:  VoucherDetail.fromJson(json['vcr_detail']),
+      vcrDetail:  json.containsKey('vcr_detail') && json['vcr_detail'] != null
+        ? VoucherDetail.fromJson(json['vcr_detail'])
+        : null,
       hp: json['checkin_room']['hp'],
       downPayment: json['checkin_room']['uang_muka'],
       description: json['checkin_room']['keterangan'],

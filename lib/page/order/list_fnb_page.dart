@@ -11,6 +11,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/screen_size.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListFnbPage extends StatefulWidget {
@@ -56,6 +57,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
         });
       }
     }catch(e){
+      showToastWarning(e.toString());
       _fnbPagingController.error(e);
     }
   }

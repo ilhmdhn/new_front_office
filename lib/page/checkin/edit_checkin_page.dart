@@ -202,10 +202,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       children: [
                         voucherFix == null? InkWell(
                           onTap: ()async{
-                            /*
+                            
                             showToastWarning('Masih belum aktif, gunakan FO Desktop');
-                            return
-                            */
+                            return;
                             final qrCode = await showQRScannerDialog(context);
                     
                             if(qrCode != null){
