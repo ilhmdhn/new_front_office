@@ -13,17 +13,15 @@ import 'package:front_office_2/tools/toast.dart';
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
   const PrinterPage({super.key});
-  
+
   @override
   State<PrinterPage> createState() => _PrinterPageState();
 }
 
 class _PrinterPageState extends State<PrinterPage> {
-
   PrinterBluetoothManager printerManager = PrinterBluetoothManager();
   List<PrinterList> listPrinter = List.empty(growable: true);
-  PrinterList
-  chosedPrinter = PrinterList(name: '', address: '');
+  PrinterList chosedPrinter = PrinterList(name: '', address: '');
   bool isScanProcess = false;
   TextEditingController tfIpPc = TextEditingController();
 
@@ -34,103 +32,170 @@ class _PrinterPageState extends State<PrinterPage> {
 
   @override
   Widget build(BuildContext context) {
-
     // String printerName = printer.name;
     // String printerConnection = printer.connection;
     // String printerAddress = printer.address;
     // String printerType = printer.type;
 
     PrinterModel printer = PreferencesData.getPrinter();
-    
+
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            iconTheme: const IconThemeData(
-              color:  Colors.white, //change your color here
-            ),
-            title: Text('Printer Setting :', style: CustomTextStyle.titleAppBar(),),
-            backgroundColor: CustomColorStyle.appBarBackground(),
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.white, //change your color here
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
+          title: Text(
+            'Printer Setting :',
+            style: CustomTextStyle.titleAppBar(),
+          ),
+          backgroundColor: CustomColorStyle.appBarBackground(),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Text('Current Printer ',
+                    style: CustomTextStyle.blackMediumSize(18)),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
+                  Expanded(
+                    flex: 2,
+                    child:
+                        Text('Printer', style: CustomTextStyle.blackMedium()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(':'),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(printer.name,
+                        style: CustomTextStyle.blackMedium()),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text('Connection',
+                        style: CustomTextStyle.blackMedium()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(':'),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(printer.connection,
+                        style: CustomTextStyle.blackMedium()),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child:
+                        Text('Address', style: CustomTextStyle.blackMedium()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(':'),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(printer.address,
+                        style: CustomTextStyle.blackMedium()),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text('Printer Type',
+                        style: CustomTextStyle.blackMedium()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(':'),
+                  ),
+                  Expanded(
+                      flex: 5,
+                      child: Text(printer.type,
+                          style: CustomTextStyle.blackMedium())),
+                ],
+              ),
+              const SizedBox(
+                height: 26,
+              ),
 
-                                SizedBox(
-                  width: double.infinity,
-                  child: Text('Current Printer ', style: CustomTextStyle.blackMediumSize(18)),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
+              Align(
+                alignment: Alignment.center,
+                child: Text('Pilih Printer', style: CustomTextStyle.blackMediumSize(19)),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Printer', style: CustomTextStyle.blackMedium()),
+                                  Text('PC Printer',
+                        style: CustomTextStyle.blackMediumSize(16)),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          Flexible(
+                              child: TextField(
+                            inputFormatters: [IPAddressInputFormatter()],
+                            keyboardType: TextInputType.number,
+                            controller: tfIpPc,
+                            decoration:
+                                CustomTextfieldStyle.normalHint('Ip Address'),
+                          )),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              PreferencesData.setPrinter(PrinterModel(
+                                  name: 'PC PRINTER',
+                                  connection: '3',
+                                  type: 'DOT MATRIX',
+                                  address: tfIpPc.text));
+
+                              setState(() {
+                                printer = PreferencesData.getPrinter();
+                              });
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.confirmButton(),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
+                              child: Text(
+                                'Simpan',
+                                style: CustomTextStyle.whiteStandard(),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(':'),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(printer.name , style: CustomTextStyle.blackMedium()),
-                    ),
+
                   ],
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Connection', style: CustomTextStyle.blackMedium()),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(':'),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(printer.connection, style: CustomTextStyle.blackMedium()),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Address', style: CustomTextStyle.blackMedium()),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(':'),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(printer.address, style: CustomTextStyle.blackMedium()),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Printer Type', style: CustomTextStyle.blackMedium()),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(':'),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(printer.type, style: CustomTextStyle.blackMedium())
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 26,),
+              ),
+
 /*
                 InkWell(
                   onTap: (){
@@ -184,70 +249,35 @@ class _PrinterPageState extends State<PrinterPage> {
           Text(listPrinter[0].name),
           const SizedBox(height: 20,),*/
 
-          Text('PC Printer', style: CustomTextStyle.blackMediumSize(16)),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                Flexible(child: TextField(
-                  inputFormatters: [IPAddressInputFormatter()],
-                  keyboardType: TextInputType.number,
-                  controller: tfIpPc,
-                  decoration: CustomTextfieldStyle.normalHint('Ip Address'),)),
-                const SizedBox(width: 12,),
-                InkWell(
-                  onTap: (){
-                    PreferencesData.setPrinter(
-                      PrinterModel(
-                        name: 'PC PRINTER', 
-                        connection: '3', 
-                        type: 'DOT MATRIX', 
-                        address: tfIpPc.text)
-                    );
+              //   DropdownButton<PrinterList>(
+              //   value: chosedPrinter,
+              //   items: listPrinter.map((PrinterList item) {
+              //     return DropdownMenuItem<PrinterList>(
+              //       value: item,
+              //       child: Text(item.name),
+              //     );
+              //   }).toList(),
+              //   onChanged: (PrinterList? newValue) {
+              //     setState(() {
+              //       chosedPrinter = newValue!;
+              //     });
+              //   },
+              // ),
 
-                    setState(() {
-                      printer = PreferencesData.getPrinter();
-                    });
-                  },
-                  child: Container(
-                    decoration: CustomContainerStyle.confirmButton(),
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    child: Text('Simpan', style: CustomTextStyle.whiteStandard(),),  
-                  ),
-                )
-              ],
-            ),
-          ),
-
-        //   DropdownButton<PrinterList>(
-        //   value: chosedPrinter,
-        //   items: listPrinter.map((PrinterList item) {
-        //     return DropdownMenuItem<PrinterList>(
-        //       value: item,
-        //       child: Text(item.name),
-        //     );
-        //   }).toList(),
-        //   onChanged: (PrinterList? newValue) {
-        //     setState(() {
-        //       chosedPrinter = newValue!;
-        //     });
-        //   },
-        // ),
-
-                // DropdownButton(
-                //         isExpanded: true,
-                //         items: items,
-                //         hint: isNullOrEmpty(listPrinter) ? const Text('No available devices') : null,
-                //         onChanged: (PrinterList? value) {
-                //           setState(() {
-                //             chosedPrinter = PrinterList(
-                //               name: value?.name??'',
-                //               address: value?.address??''
-                //             );
-                //           });
-                //         },
-                //         value: chosedPrinter,
-                // ),
+              // DropdownButton(
+              //         isExpanded: true,
+              //         items: items,
+              //         hint: isNullOrEmpty(listPrinter) ? const Text('No available devices') : null,
+              //         onChanged: (PrinterList? value) {
+              //           setState(() {
+              //             chosedPrinter = PrinterList(
+              //               name: value?.name??'',
+              //               address: value?.address??''
+              //             );
+              //           });
+              //         },
+              //         value: chosedPrinter,
+              // ),
 /*                SizedBox(
                   width: double.infinity,
                   child: Text('Current Printer ', style: CustomTextStyle.blackMediumSize(18)),
@@ -485,10 +515,10 @@ class _PrinterPageState extends State<PrinterPage> {
                     height: 36,
                     child: ElevatedButton(onPressed: (){}, style: CustomButtonStyle.bluePrimary(), child: Text('Print Test', style: CustomTextStyle.whiteStandard(),)))
                 ],),*/
-              ],)
-            ),
-          ),
+            ],
+          )),
         ),
+      ),
     );
   }
 /*
@@ -513,4 +543,20 @@ class _PrinterPageState extends State<PrinterPage> {
     setState(() => _connected = false);
   }
 */
+
+_getDeviceItems() {
+    List<DropdownMenuItem<BluetoothDevice>> items = [];
+    if (_devices.isEmpty) {
+      items.clear();
+    } else {
+      for (var device in _devices) {
+        items.add(DropdownMenuItem(
+          value: device,
+          child: Text(device.name.toString()),
+        ));
+      }
+    }
+    return items;
+  }
+
 }

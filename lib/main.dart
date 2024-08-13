@@ -17,6 +17,7 @@ import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
+import 'package:front_office_2/page/setting/printer/printer_tools.dart';
 import 'package:front_office_2/page/status/history_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
@@ -58,7 +59,7 @@ void main() async{
   });
   await PreferencesData.initialize();
   setupLocator();
-  
+  PrinterTools().
   runApp(const FrontOffice());
 }
 
