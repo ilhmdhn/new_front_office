@@ -203,8 +203,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         voucherFix == null? InkWell(
                           onTap: ()async{
                             
-                            showToastWarning('Masih belum aktif, gunakan FO Desktop');
-                            return;
+                            // showToastWarning('Masih belum aktif, gunakan FO Desktop');
+                            // return;
                             final qrCode = await showQRScannerDialog(context);
                     
                             if(qrCode != null){
@@ -259,11 +259,12 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                   ),
                                   (voucherFix?.hour??0) > 0? AddOnWidget.vcrItem(context, 'Jam', '${voucherFix?.hour??0}') : const SizedBox(),
                                   (voucherFix?.hourPrice??0) > 0? AddOnWidget.vcrItem(context, 'Room', Formatter.formatRupiah(voucherFix?.hourPrice??0)) : const SizedBox(),
-                                  (voucherFix?.hourPercent??0) > 0? AddOnWidget.vcrItem(context, 'Room', '${voucherFix?.hourPercent??0}') : const SizedBox(),
+                                  (voucherFix?.hourPercent??0) > 0? AddOnWidget.vcrItem(context, 'Room', '${voucherFix?.hourPercent??0}%') : const SizedBox(),
+                                  
                                   (voucherFix?.item??'') != ''? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.item}') : const SizedBox(),
                                   (voucherFix?.itemPrice??0) > 0 ? AddOnWidget.vcrItem(context, 'FnB', Formatter.formatRupiah(voucherFix?.itemPrice??0)) : const SizedBox(),
                                   (voucherFix?.itemPercent??0) > 0? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.itemPercent}%') : const SizedBox(),
-                                  (voucherFix?.price??0) >0 ? AddOnWidget.vcrItem(context, 'FnB', Formatter.formatRupiah(voucherFix?.price??0)) : const SizedBox(),
+                                  (voucherFix?.price??0) >0 ? AddOnWidget.vcrItem(context, 'Price', Formatter.formatRupiah(voucherFix?.price??0)) : const SizedBox(),
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
