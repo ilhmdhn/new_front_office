@@ -105,6 +105,8 @@ class DoPrint{
       }catch(e){
         showToastError('Gagal print bill $e');
       }
+    } else if(printerData.connection == '2'){
+      
     }else{
       showToastWarning('Printer belum di setting');
     }

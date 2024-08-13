@@ -25,7 +25,7 @@ class PreviewBillModel{
   InvoiceModel dataInvoice;
   RoomModel dataRoom;
   ServiceTaxPercentModel dataServiceTaxPercent;
-
+  VoucherValue? voucherValue;
   List<OrderModel> dataOrder;
   List<CancelOrderModel> dataCancelOrder;
   List<PromoOrderModel> dataPromoOrder;
@@ -46,7 +46,8 @@ class PreviewBillModel{
     required this.dataServiceTaxPercent,
     required this.transferList,
     required this.transferData,
-    this.footerStyle
+    this.footerStyle,
+    this.voucherValue
   });
 
   factory PreviewBillModel.fromJson(Map<String, dynamic>json){
@@ -61,7 +62,8 @@ class PreviewBillModel{
       dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
-      footerStyle: json['footerStyle']??5
+      footerStyle: json['footerStyle']??5,
+      voucherValue: json['voucher']
     );
   }
 }
@@ -337,6 +339,29 @@ class ServiceTaxPercentModel{
       taxRoomPercent: json['tax_room_percent'],
       serviceFnbPercent: json['service_fnb_percent'],
       taxFnbPercent: json['tax_fnb_percent'],
+    );
+  }
+}
+
+class VoucherValue{
+  num roomPrice;
+  num fnbPrice;
+  num price;
+  num totalPrice;
+
+  VoucherValue({
+    this.roomPrice = 0,
+    this.fnbPrice = 0,
+    this.price = 0,
+    this.totalPrice = 0,
+  });
+
+  factory VoucherValue.fromJson(Map<String, dynamic> json){
+    return VoucherValue(
+      roomPrice: json['room_price'],
+      fnbPrice: json['item_price'],
+      price: json['price'],
+      totalPrice: json['total_price'],
     );
   }
 }
