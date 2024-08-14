@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/tools/btprint_executor.dart';
+import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -106,7 +108,10 @@ class DoPrint{
         showToastError('Gagal print bill $e');
       }
     } else if(printerData.connection == '2'){
-      
+        final billData = await ApiRequest().getBill(roomCode);
+        ApiRequest().updatePrintState(billData.data?.dataInvoice.reception ?? '', '1');
+        BtprintExecutor().printBill(billData.data!);
+        
     }else{
       showToastWarning('Printer belum di setting');
     }

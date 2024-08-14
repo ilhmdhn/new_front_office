@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/other_model.dart';
+import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
 import 'package:front_office_2/tools/printer_tools.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -13,8 +14,6 @@ import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:front_office_2/tools/toast.dart';
-
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
   const PrinterPage({super.key});
@@ -26,10 +25,10 @@ class PrinterPage extends StatefulWidget {
 class _PrinterPageState extends State<PrinterPage> {
   List<PrinterList> listPrinter = List.empty(growable: true);
   PrinterList chosedPrinter = PrinterList(name: '', address: '');
-  bool isScanProcess = false;
   TextEditingController tfIpPc = TextEditingController();
   List<BluetoothDevice> printerList = List.empty(growable: true);
   PrinterModel printer = PreferencesData.getPrinter();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -185,7 +184,9 @@ class _PrinterPageState extends State<PrinterPage> {
   }
 
   Widget _buildBluetoothPrinterList() {
-    if (printerList.isEmpty) {
+    if(isLoading){
+      return AddOnWidget.loading();
+    }else if (printerList.isEmpty) {
       return Center(
         child: Text('Tidak ada perangkat bluetooth, pastikan bluetooth aktif dan scan ulang', style: CustomTextStyle.blackStandard(),),
       );
@@ -199,7 +200,10 @@ class _PrinterPageState extends State<PrinterPage> {
         return ListTile(
           title: Text(device.name ?? 'Unknown'),
           subtitle: Text(device.address ?? 'No Address'),
-          onTap: () {
+          onTap: () async{
+            setState(() {
+              isLoading = true;
+            });
             setState(() {
               PreferencesData.setPrinter(PrinterModel(
                 name: device.name ?? 'Unknown',
@@ -208,9 +212,11 @@ class _PrinterPageState extends State<PrinterPage> {
                 address: device.address ?? '',
               ));
               printer = PreferencesData.getPrinter();
-              BtPrint().connectToDevice(device);
             });
-            showToastWarning('Printer selected: ${device.name}');
+            await BtPrint().connectToDevice(device);
+            setState(() {
+              isLoading = false;
+            });
           },
         );
       },

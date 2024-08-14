@@ -208,6 +208,37 @@ class RoomModel{
   }
 }
 
+class OrderFinalModel{
+  String orderCode;
+  String inventoryCode;
+  String namaItem;
+  int jumlah;
+  num hargaSatuan;
+  num hargaPromo;
+  String promoName;
+  int jumlahCancel;
+  num hargaCancel;
+  num hargaPromoCancel;
+
+  num totalSemua;
+
+  OrderFinalModel({
+    required this.orderCode,
+    required this.inventoryCode,
+    required this.namaItem,
+    required this.jumlah,
+    required this.hargaSatuan,
+    required this.hargaPromo,
+    required this.promoName,
+    
+    required this.jumlahCancel,
+    required this.hargaCancel,
+    required this.hargaPromoCancel,
+    
+    required this.totalSemua,
+  });
+}
+
 class OrderModel{
   String orderCode;
   String inventoryCode;

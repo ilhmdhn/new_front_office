@@ -234,6 +234,8 @@ class _BillPageState extends State<BillPage> {
                     children: [
                       InkWell(
                         onTap: ()async{
+                          DoPrint.printBill(roomCode);
+                          return;
                           final userLevel = PreferencesData.getUser();
                           if(userLevel.level != 'KASIR'){
                             showToastWarning('User tidak memiliki akses');
@@ -241,7 +243,6 @@ class _BillPageState extends State<BillPage> {
                           }else{
 
                             if(result.data?.dataInvoice.statusPrint != '0'){
-
                               final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
                               if(reprintBillState!= true){
                                 showToastWarning('Permintaan dibatalkan');

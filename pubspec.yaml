@@ -32,6 +32,7 @@ dependencies:
   auto_size_text: ^3.0.0
   blue_thermal_printer: ^1.2.3
   calendar_date_picker2: ^1.1.5
+  collection: ^1.19.0
   cupertino_icons: ^1.0.2
   custom_radio_grouped_button: ^2.2.1
   device_information: ^0.0.4

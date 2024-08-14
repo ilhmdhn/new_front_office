@@ -74,7 +74,6 @@ class BtPrint {
     bool connectionState = await bluetooth.isConnected ?? false;
     PrinterModel printerDevice = PreferencesData.getPrinter();
     try {
-      print('DEBUGGING SINII');
       if (connectionState) {
         return bluetooth;
       } else {
@@ -82,8 +81,8 @@ class BtPrint {
         return bluetooth;
       }
     } catch (error) {
-      showToastError("Failed to get instance: $error");
-      rethrow; // throw error further up if needed for additional handling
+      showToastError("Setting printer");
+      return bluetooth;
     }
   }
 
@@ -95,7 +94,7 @@ class BtPrint {
       }
       await bluetooth.connect(device);
     } catch (error) {
-      showToastError("Connection failed: $error");
+      showToastError("Perangkat tidak aktif");
     }
   }
 
