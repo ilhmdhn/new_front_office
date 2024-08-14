@@ -63,7 +63,7 @@ class PreviewBillModel{
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
       footerStyle: json['footerStyle']??5,
-      voucherValue: json['voucher']
+      voucherValue: json['voucher'] != null ?VoucherValue.fromJson(json['voucher']):null
     );
   }
 }
