@@ -159,13 +159,20 @@ class BtprintExecutor{
         if(data.dataInvoice.promo >0){
           await bluetooth.write(formatTable('Promo', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', 48));
         }
+
+        if((data.voucherValue?.roomPrice ?? 0) > 0){
+          await bluetooth.write(formatTable('Voucher Room', '(${Formatter.formatRupiah((data.voucherValue?.roomPrice ?? 0))})', 48));
+        }
         
         //FnB
-
         if(isNotNullOrEmpty(orderFix)){
-          printFnB(orderFix, bluetooth);
+          await printFnB(orderFix, bluetooth);
         }
 
+        await bluetooth.write('------------------------------------------------\n');
+        await bluetooth.write(formatTable('Jumlah Ruangan', Formatter.formatRupiah(data.dataInvoice.jumlahRuangan), 48));
+        await bluetooth.write(formatTable('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan), 48));
+        await bluetooth.write('------------------------------------------------\n');
 
         bluetooth.printNewLine();
       }else{
@@ -237,5 +244,9 @@ class BtprintExecutor{
     }
 
     return mergedList;
+  }
+
+  Future<void> printFooter(ServiceTaxPercentModel tns, BlueThermalPrinter bt){
+
   }
 }
