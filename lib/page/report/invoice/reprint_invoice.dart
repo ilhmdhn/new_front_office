@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -48,7 +49,12 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                 Flexible(
                   flex: 1,
                   child: InkWell(
-                    onTap: (){
+                    onTap: ()async{
+                      final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
+                      if (reprintBillState != true) {
+                        showToastWarning('Permintaan dibatalkan');
+                        return;
+                      }
                       showToastWarning(tfRcp.text);
                       DoPrint.printInvoice(tfRcp.text);
                     },
