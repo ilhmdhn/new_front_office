@@ -24,7 +24,7 @@ class BtprintExecutor{
     final bluetooth = await BtPrint().getInstance();
     bluetooth.isConnected.then((isConnected) async{
       if (isConnected == true) {
-        bluetooth.printNewLine();
+        await bluetooth.printNewLine();
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x4C, 0x01])).then((value) async=> await bluetooth.write('\nAYAM CABE GARAM 1'));
         await bluetooth.write('\n Printer Normally');
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x21, 0x00])).then((value) async=> await bluetooth.write('\nAYAM CABE GARAM 3'));
@@ -44,8 +44,8 @@ class BtprintExecutor{
 
         // Reset to normal size
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x21, 0x00]));
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
+        await bluetooth.printNewLine();
+        await bluetooth.printNewLine();
       }else{
         showToastWarning('Sambungkan printer di pengaturan');
       }
@@ -136,10 +136,10 @@ class BtprintExecutor{
         await bluetooth.write('${data.dataOutlet.alamatOutlet}\n');
         await bluetooth.write('${data.dataOutlet.kota}\n');
         await bluetooth.write('${data.dataOutlet.telepon}\n');
-        bluetooth.printNewLine();
+        await bluetooth.printNewLine();
         await bluetooth.writeBytes(bold);
         await bluetooth.write('TAGIHAN\n');
-        bluetooth.printNewLine();
+        await bluetooth.printNewLine();
         await bluetooth.writeBytes(offBold);
         
         //Checkin Info
@@ -150,7 +150,7 @@ class BtprintExecutor{
         await bluetooth.write('${data.dataRoom.nama}\n');
         await bluetooth.write('Tanggal : ');
         await bluetooth.write('${data.dataRoom.tanggal}\n');
-        bluetooth.printNewLine();
+        await bluetooth.printNewLine();
         await bluetooth.writeBytes(left);
         
         //Room Info
@@ -196,6 +196,7 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(right);
         await bluetooth.write('$formattedDate $user');
+        await bluetooth.writeBytes(normal);
         await bluetooth.printNewLine();
         if(isNotNullOrEmpty(data.transferData)){
           for(var teepData in data.transferData){
@@ -321,32 +322,61 @@ class BtprintExecutor{
       await bluetooth.writeBytes(left);
 
               //Room Info
-      await bluetooth.write(formatTable('Sewa Ruangan',
-          Formatter.formatRupiah(data.dataInvoice.sewaRuangan), 48));
+      await bluetooth.write(formatTable('Sewa Ruangan', Formatter.formatRupiah(data.dataInvoice.sewaRuangan), 48));
       if (data.dataInvoice.promo > 0) {
-        await bluetooth.write(formatTable('Promo',
-            '(${Formatter.formatRupiah(data.dataInvoice.promo)})', 48));
+        await bluetooth.write(formatTable('Promo', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', 48));
       }
 
-      if ((data.voucherValue?.roomPrice ?? 0) > 0) {
-        await bluetooth.write(formatTable(
-            'Voucher Room',
-            '(${Formatter.formatRupiah((data.voucherValue?.roomPrice ?? 0))})',
-            48));
+      if((data.voucherValue?.roomPrice ?? 0) > 0) {
+        await bluetooth.write(formatTable('Voucher Room', '(${Formatter.formatRupiah((data.voucherValue?.roomPrice ?? 0))})', 48));
       }
 
       //FnB
       if (isNotNullOrEmpty(orderFix)) {
         await printFnB(orderFix, bluetooth);
-        if (data.voucherValue != null &&
-            (data.voucherValue?.fnbPrice ?? 0) > 0) {
-          await bluetooth.write(formatTable(
-              'Voucher FnB',
-              '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})',
-              48));
+        if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
+          await bluetooth.write(formatTable('Voucher FnB', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})',48));
         }
       }
+
+      await bluetooth.write('------------------------------------------------\n');
+      await bluetooth.write(formatTable('Jumlah Ruangan', Formatter.formatRupiah(data.dataInvoice.jumlahRuangan), 48));
+      await bluetooth.write(formatTable('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan), 48));
+      await bluetooth.write('------------------------------------------------\n\n');
+      //Tax And Service
+      await printFooter( bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
+
+      if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
+        await bluetooth.write(formatTable('Voucher', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})',48));
+      }
+
+      if (isNotNullOrEmpty(data.transferList)) {
+        for (var teep in data.transferList) {
+          await bluetooth.write(formatTableRow( teep.room, Formatter.formatRupiah(teep.transferTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+        }
+      }
+
+      await bluetooth.write(formatTableRow('Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+
+      if(isNotNullOrEmpty(data.paymentList)){
+        for(var payment in data.paymentList){
+          await bluetooth.write(formatTableRow(payment.paymentName, Formatter.formatRupiah(payment.value), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+        }
+      }else{
+        await bluetooth.write('Data Pembayaran Tidak Ditemukan');
+      }
+      await bluetooth.writeBytes(right);
+      await bluetooth.write('----------------');
+      await bluetooth.write(Formatter.formatRupiah(data.payment.payValue));
+      await bluetooth.printCustom('Kembali ${Formatter.formatRupiah(data.payment.payChange)}', Size.boldMedium.val, Align.right.val);
+      await bluetooth.printNewLine();
+      await bluetooth.writeBytes(right);
+      await bluetooth.write('$formattedDate $user');
+      await bluetooth.writeBytes(normal);
+      await bluetooth.printNewLine();
     });
+
+
   }
 
   Future<void> printTransfer(BlueThermalPrinter bluetooth, TransferModel data)async{
@@ -446,7 +476,7 @@ class BtprintExecutor{
     await bluetooth.write('${data.dataRoom.nama}\n');
     await bluetooth.write('Tanggal : ');
     await bluetooth.write('${data.dataRoom.tanggal}\n');
-    bluetooth.printNewLine();
+    await bluetooth.printNewLine();
     await bluetooth.writeBytes(left);
 
     //Room Info
