@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
+import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -183,9 +184,14 @@ class BtprintExecutor{
         }
 
         if(isNotNullOrEmpty(data.transferList)){
+          await bluetooth.writeBytes(right);
+          await bluetooth.write('Transfer Room\n');
+          await bluetooth.writeBytes(normal);
+
           for(var teep in data.transferList){
             await bluetooth.write(formatTableRow(teep.room, Formatter.formatRupiah(teep.transferTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
           }
+            await bluetooth.printNewLine();
         }
 
         await bluetooth.write(formatTableRow('Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
@@ -200,6 +206,8 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         if(isNotNullOrEmpty(data.transferData)){
           for(var teepData in data.transferData){
+            await bluetooth.printNewLine();
+            await bluetooth.printNewLine();
             await printTransfer(bluetooth, teepData); 
           }
         }
@@ -305,7 +313,7 @@ class BtprintExecutor{
       await bluetooth.write('${data.dataOutlet.telepon}\n');
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(bold);
-      await bluetooth.write('TAGIHAN');
+      await bluetooth.write('INVOICE');
       await bluetooth.printNewLine();
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(offBold);
@@ -351,9 +359,13 @@ class BtprintExecutor{
       }
 
       if (isNotNullOrEmpty(data.transferList)) {
+        await bluetooth.writeBytes(right);
+        await bluetooth.write('Transfer Room\n');
+        await bluetooth.writeBytes(normal);
         for (var teep in data.transferList) {
           await bluetooth.write(formatTableRow( teep.room, Formatter.formatRupiah(teep.transferTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
         }
+        await bluetooth.printNewLine();
       }
 
       await bluetooth.write(formatTableRow('Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
@@ -366,17 +378,25 @@ class BtprintExecutor{
         await bluetooth.write('Data Pembayaran Tidak Ditemukan');
       }
       await bluetooth.writeBytes(right);
-      await bluetooth.write('----------------');
+      await bluetooth.write('----------------\n');
       await bluetooth.write(Formatter.formatRupiah(data.payment.payValue));
+      await bluetooth.printNewLine();
       await bluetooth.printCustom('Kembali ${Formatter.formatRupiah(data.payment.payChange)}', Size.boldMedium.val, Align.right.val);
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(right);
-      await bluetooth.write('$formattedDate $user');
       await bluetooth.writeBytes(normal);
+      await bluetooth.write('$formattedDate $user');
       await bluetooth.printNewLine();
+    if (isNotNullOrEmpty(data.transferData)) {
+        for (var teepData in data.transferData) {
+          await bluetooth.printNewLine();
+          await bluetooth.printNewLine();
+          await printTransfer(bluetooth, teepData);
+        }
+    }
     });
 
-
+    ApiRequest().updatePrintState(data.dataInvoice.reception, '2');
   }
 
   Future<void> printTransfer(BlueThermalPrinter bluetooth, TransferModel data)async{

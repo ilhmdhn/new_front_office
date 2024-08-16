@@ -6,6 +6,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ListRoomTypePage extends StatefulWidget {
@@ -120,7 +121,9 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 2, minFontSize: 12,),
+                                          SizedBox(
+                                            width: ScreenSize.getSizePercent(context, 38),
+                                            child: AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 1, minFontSize: 9,)),
                                           AutoSizeText('Room Ready ${listRoomItem[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
                                         ],
                                       ),

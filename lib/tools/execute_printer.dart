@@ -68,7 +68,10 @@ class DoPrint{
       }catch(e){
         showToastError('Gagal print SO $e');
       }
-    }else{
+    }else if(printerData.connection == '2'){
+
+    }
+    else{
       showToastWarning('Printer belum di setting');
     }
   }
@@ -147,6 +150,16 @@ class DoPrint{
 
         await udpSender.sendUdpMessage(sendData);
         return;
+      }else if(printerData.connection == '2'){
+        final invoiceData = await ApiRequest().getInvoice(rcp);
+        if (invoiceData.state != true) {
+          showToastError(invoiceData.message);
+          return;
+        } else if (invoiceData.data == null) {
+          showToastError('data invoice null\n${invoiceData.message}');
+          return;
+        }
+        BtprintExecutor().printInvoice(invoiceData.data!);
       }
     }catch(e){
       showToastError(e.toString());

@@ -81,6 +81,8 @@ class _PaymentPageState extends State<PaymentPage> {
       totalBill = billData?.data?.dataInvoice.jumlahBersih??0;
       _setNominal();
     }
+    _nameReceivablesCardController.text = (billData?.data?.dataInvoice.memberName??'');
+    _memberReceivablesCardController.text = (billData?.data?.dataInvoice.memberCode??'');
     setState(() {
       billData;  
     });

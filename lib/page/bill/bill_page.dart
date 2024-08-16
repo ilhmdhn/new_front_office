@@ -234,8 +234,6 @@ class _BillPageState extends State<BillPage> {
                     children: [
                       InkWell(
                         onTap: ()async{
-                          DoPrint.printBill(roomCode);
-                          return;
                           final userLevel = PreferencesData.getUser();
                           if(userLevel.level != 'KASIR'){
                             showToastWarning('User tidak memiliki akses');
@@ -250,7 +248,10 @@ class _BillPageState extends State<BillPage> {
                               }
                               DoPrint.printBill(roomCode);
                             }else{
-                              DoPrint.printBill(roomCode);
+                              final confirmationState = await ConfirmationDialog.confirmation(context, 'Cetak Tagihan');
+                              if(confirmationState == true){
+                                DoPrint.printBill(roomCode);
+                              }
                             }
                           }
                         },
