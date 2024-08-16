@@ -63,7 +63,7 @@ class PreviewBillModel{
       transferList: List<TransferListModel>.from((json['transferListData'] as List).map((x) => TransferListModel.fromJson(x))),
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
       footerStyle: json['footerStyle']??5,
-      voucherValue: json['voucher'] != null ?VoucherValue.fromJson(json['voucher']):null
+      voucherValue: json.containsKey('voucher') && json['voucher'] != null ?VoucherValue.fromJson(json['voucher']):null
     );
   }
 }
@@ -422,6 +422,7 @@ class TransferModel{
   List<PromoOrderModel> dataPromoOrder;
   List<PromoCancelOrderModel> dataPromoCancelOrder;
   ServiceTaxPercentModel dataServiceTaxPercent;
+  VoucherValue? voucherValue;
 
   TransferModel({
     required this.dataOutlet,
@@ -432,6 +433,7 @@ class TransferModel{
     required this.dataPromoOrder,
     required this.dataPromoCancelOrder,
     required this.dataServiceTaxPercent,
+    this.voucherValue
   });
 
   factory TransferModel.fromJson(Map<String, dynamic>json){
@@ -443,7 +445,8 @@ class TransferModel{
       dataCancelOrder: List<CancelOrderModel>.from((json['cancelOrderData'] as List).map((x) => CancelOrderModel.fromJson(x))), 
       dataPromoOrder: List<PromoOrderModel>.from((json['promoOrderData'] as List).map((x) => PromoOrderModel.fromJson(x))), 
       dataPromoCancelOrder: List<PromoCancelOrderModel>.from((json['promoOrderCancel'] as List).map((x) => PromoCancelOrderModel.fromJson(x))), 
-      dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent'])
+      dataServiceTaxPercent: ServiceTaxPercentModel.fromJson(json['service_percent']),
+      voucherValue: json.containsKey('voucher') && json['voucher'] != null ?VoucherValue.fromJson(json['voucher']) : null
     );
   }
 }

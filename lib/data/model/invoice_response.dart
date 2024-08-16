@@ -70,7 +70,7 @@ class PrintInvoiceModel{
       transferData: List<TransferModel>.from((json['transferBillData'] as List).map((x) => TransferModel.fromJson(x))),
       paymentList: List<PaymentData>.from((json['paymentData'] as List).map((x) => PaymentData.from(x))),
       footerStyle: json['footerStyle']??5,
-      voucher: json['voucher'] != null ? VoucherValue.fromJson(json['voucher']) : null
+      voucher: json.containsKey('voucher') && json['voucher'] != null ? VoucherValue.fromJson(json['voucher']) : null
     );
   }
 }
