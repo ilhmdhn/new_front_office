@@ -14,6 +14,7 @@ import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 class PrinterPage extends StatefulWidget {
   static const nameRoute = '/printer';
   const PrinterPage({super.key});
@@ -78,9 +79,16 @@ class _PrinterPageState extends State<PrinterPage> {
                 children: [
                   InkWell(
                     onTap: () async {
-                      final printerListResult =
-                          await PrinterTools().getBluetoothDevices();
+                      if(isLoading){
+                        showToastWarning('Tunggu proses selesai');
+                        return;
+                      }
                       setState(() {
+                        isLoading = true;
+                      });
+                      final printerListResult = await PrinterTools().getBluetoothDevices();
+                      setState(() {
+                        isLoading = false;
                         printerList = printerListResult;
                       });
                     },

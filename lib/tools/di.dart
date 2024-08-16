@@ -81,7 +81,7 @@ class BtPrint {
         return bluetooth;
       }
     } catch (error) {
-      showToastError("Setting printer");
+      showToastError('Belum Siap\nPastikan Bluetooth Aktif, Printer Aktif dan Setting printer sesuai');
       return bluetooth;
     }
   }
