@@ -165,10 +165,24 @@ class BtprintExecutor{
         }
         
         //FnB
-        if(isNotNullOrEmpty(orderFix)){
+        if (isNotNullOrEmpty(orderFix)) {
           await printFnB(orderFix, bluetooth);
-          if(data.voucherValue != null && (data.voucherValue?.fnbPrice??0) > 0){
-            await bluetooth.write(formatTable('Voucher FnB', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', 48));
+          if (data.voucherValue != null &&
+              (data.voucherValue?.fnbPrice ?? 0) > 0) {
+            await bluetooth.write(formatTable(
+                'Voucher FnB',
+                '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})',
+                48));
+          }
+
+          num totalPromo = 0;
+          for (var element in orderFix) {
+            totalPromo += element.hargaPromo;
+          }
+
+          if ((PreferencesData.getShowTotalItemPromo() || PreferencesData.getShowPromoBelowItem() == false) == true && totalPromo > 0) {
+            await bluetooth.printNewLine();
+            await bluetooth.write(formatTable('Total Promo Item','(${Formatter.formatRupiah(totalPromo)})', 48));
           }
         }
 
@@ -199,6 +213,7 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         await bluetooth.printCustom('Rp ${Formatter.formatRupiah(data.dataInvoice.jumlahBersih)}', Size.boldMedium.val, Align.center.val);
         await bluetooth.writeBytes(normal);
+        await bluetooth.printNewLine();
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(right);
         await bluetooth.write('$formattedDate $user');
@@ -318,7 +333,7 @@ class BtprintExecutor{
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(offBold);
 
-              //Checkin Info
+      //Checkin Info
       await bluetooth.writeBytes(left);
       await bluetooth.write('Ruangan : ');
       await bluetooth.write('${data.dataRoom.roomCode}\n');
@@ -329,7 +344,7 @@ class BtprintExecutor{
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(left);
 
-              //Room Info
+      //Room Info
       await bluetooth.write(formatTable('Sewa Ruangan', Formatter.formatRupiah(data.dataInvoice.sewaRuangan), 48));
       if (data.dataInvoice.promo > 0) {
         await bluetooth.write(formatTable('Promo', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', 48));
@@ -344,6 +359,16 @@ class BtprintExecutor{
         await printFnB(orderFix, bluetooth);
         if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
           await bluetooth.write(formatTable('Voucher FnB', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})',48));
+        }
+
+        num totalPromo = 0;
+        for (var element in orderFix) {
+          totalPromo += element.hargaPromo;
+        }
+
+        if((PreferencesData.getShowTotalItemPromo() || PreferencesData.getShowPromoBelowItem() == false ) == true && totalPromo >0){
+          await bluetooth.printNewLine();
+          await bluetooth.write(formatTable('Total Promo Item', '(${Formatter.formatRupiah(totalPromo)})', 48));
         }
       }
 
@@ -382,6 +407,7 @@ class BtprintExecutor{
       await bluetooth.write(Formatter.formatRupiah(data.payment.payValue));
       await bluetooth.printNewLine();
       await bluetooth.printCustom('Kembali ${Formatter.formatRupiah(data.payment.payChange)}', Size.boldMedium.val, Align.right.val);
+      await bluetooth.printNewLine();
       await bluetooth.printNewLine();
       await bluetooth.writeBytes(right);
       await bluetooth.writeBytes(normal);
@@ -534,8 +560,7 @@ class BtprintExecutor{
     await bluetooth
         .write('------------------------------------------------\n\n');
     //Tax And Service
-    await printFooter(
-        bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
+    await printFooter(bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
 
     if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
       await bluetooth.write(formatTable('Voucher',
@@ -555,37 +580,60 @@ class BtprintExecutor{
   Future<void> printFooter(BlueThermalPrinter bt, InvoiceModel ivc,
       ServiceTaxPercentModel tns, int style) async {
     if (style == 1) {
-      await bt.write(formatTableRow(
-          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Service FnB ${tns.serviceFnbPercent}%',
-          Formatter.formatRupiah(ivc.fnbService), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Service Room ${tns.serviceRoomPercent}%',
-          Formatter.formatRupiah(ivc.roomService), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Pajak FnB ${tns.taxFnbPercent}%',
-          Formatter.formatRupiah(ivc.fnbTax), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Pajak Room ${tns.taxRoomPercent}%',
-          Formatter.formatRupiah(ivc.roomTax), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Service FnB ${tns.serviceFnbPercent}%', Formatter.formatRupiah(ivc.fnbService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Service Room ${tns.serviceRoomPercent}%', Formatter.formatRupiah(ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Pajak FnB ${tns.taxFnbPercent}%', Formatter.formatRupiah(ivc.fnbTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Pajak Room ${tns.taxRoomPercent}%', Formatter.formatRupiah(ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
       await bt.writeBytes(right);
       await bt.write('----------------\n');
       await bt.writeBytes(normal);
-      await bt.write(formatTableRow(
-          'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow( 'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
       await bt.write('----------------\n');
     } else if (style == 2) {
-      await bt.write(formatTableRow(
-          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-    } else {
-      await bt.write(formatTableRow(
-          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah Service ${(tns.serviceFnbPercent + tns.serviceRoomPercent)/2}%', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah pajak ${(tns.taxFnbPercent + tns.taxRoomPercent) / 2}%', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    } else if(style == 3){
+      await bt.write(formatTableRow('Harga Tertera sudah termasuk service dan pajak', '', 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+    } else if(style == 4){
+
+    } else if(style == 5){
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah Service', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah pajak', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    }else if(style == 6){
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Service FnB ', Formatter.formatRupiah(ivc.fnbService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Service Room', Formatter.formatRupiah(ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    }else if(style == 7){
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Pajak FnB ', Formatter.formatRupiah(ivc.fnbTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Pajak Room', Formatter.formatRupiah(ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    }else{
+
     }
+    return;
   }
 
 
@@ -610,11 +658,23 @@ class BtprintExecutor{
     await bt.printNewLine();
     
     for(var fnb in fnbList ){
-      if(fnb.jumlah > 0){
+
+      if(PreferencesData.getShowReturState() == true){
         await bt.write('${fnb.namaItem}\n');
-        await bt.write(formatTable('  ${fnb.jumlah} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',Formatter.formatRupiah(fnb.totalSemua),48));
-        if (fnb.hargaPromo > 0) {
-          await bt.write(formatTable(fnb.promoName,'(${Formatter.formatRupiah(fnb.hargaPromo)})', 48));
+        await bt.write(formatTable('  ${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}', Formatter.formatRupiah(fnb.totalSemua + fnb.hargaCancel), 48));
+        if(fnb.jumlahCancel > 0){
+          await bt.write(formatTable('  RETUR ${fnb.namaItem} x ${Formatter.formatRupiah(fnb.jumlahCancel)}', '(${Formatter.formatRupiah(fnb.hargaCancel)})', 48));
+        }
+        if (fnb.hargaPromo > 0 && PreferencesData.getShowPromoBelowItem() == true) {
+          await bt.write(formatTable(fnb.promoName, '(${Formatter.formatRupiah(fnb.hargaPromo)})', 48));
+        }
+      }else{
+        if (fnb.jumlah > 0) {
+          await bt.write('${fnb.namaItem}\n');
+          await bt.write(formatTable('  ${fnb.jumlah} x ${Formatter.formatRupiah(fnb.hargaSatuan)}', Formatter.formatRupiah(fnb.totalSemua), 48));
+          if (fnb.hargaPromo > 0 && PreferencesData.getShowPromoBelowItem() == true) {
+            await bt.write(formatTable(fnb.promoName, '(${Formatter.formatRupiah(fnb.hargaPromo)})', 48));
+          }
         }
       }
     }

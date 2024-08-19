@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
-import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
