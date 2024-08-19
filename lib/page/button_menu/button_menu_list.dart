@@ -8,6 +8,7 @@ import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -857,7 +858,7 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: ()async{
-        // showToastWarning('Checkin Info Cooming Soon');
+        showToastWarning('Checkin Info Cooming Soon');
         // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(

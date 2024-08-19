@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/di.dart';
@@ -49,6 +50,70 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
       }else{
         showToastWarning('Sambungkan printer di pengaturan');
+      }
+    });
+  }
+
+  void slipCheckin(CheckinSlipModel data)async{
+    final bluetooth = await BtPrint().getInstance();
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    
+    bluetooth.isConnected.then((value) async{
+      if(value != true){
+        showToastError('Cetak Slip Gagal');
+      }else{
+                await bluetooth.writeBytes(normal);
+
+        //HEADER
+        await bluetooth.writeBytes(center);
+        await bluetooth.write('${data.outlet.namaOutlet}\n');
+        await bluetooth.write('${data.outlet.alamatOutlet}\n');
+        await bluetooth.write('${data.outlet.kota}\n');
+        await bluetooth.write('${data.outlet.telepon}\n');
+        await bluetooth.printNewLine();
+        await bluetooth.writeBytes(bold);
+        await bluetooth.write('TAGIHAN\n');
+        await bluetooth.printNewLine();
+        await bluetooth.writeBytes(offBold);
+
+        //Checkin Info
+        await bluetooth.writeBytes(left);
+        await bluetooth.write('Ruangan           : ');
+        await bluetooth.write('${data.detail.roomName}\n');
+        await bluetooth.write('Nama              : ');
+        await bluetooth.write('${data.detail.name}\n');
+        await bluetooth.write('Jumlah Tamu       : ');
+        await bluetooth.write('${data.detail.pax}\n');
+        await bluetooth.write('Jenis Kamar       : ');
+        await bluetooth.write('${data.detail.roomType}\n');
+        await bluetooth.write('Jam Checkin       : ');
+        await bluetooth.write('${data.detail.checkinTime}\n');
+        await bluetooth.write('Lama Sewa         : ');
+        await bluetooth.write('${data.detail.checkinDuration}\n');
+        await bluetooth.write('Jumlah Biaya Sewa : ');
+        await bluetooth.write('${Formatter.formatRupiah(data.detail.checkinFee)}\n');
+        await bluetooth.write('Jam Checkout      : ');
+        await bluetooth.write('${data.detail.checkoutTime}\n');
+        await bluetooth.write('------------------------------------------------');
+        await bluetooth.printNewLine();
+        await bluetooth.printCustom('PERNYATAAN', Size.boldMedium.val, Align.center.val);
+        await bluetooth.writeBytes(center);
+        await bluetooth.writeBytes(normal);
+        await bluetooth.write('Saya & rekan tidak  akan membawa masuk dan atau\n');
+        await bluetooth.write('mengkonsumsi makanan/minuman yang bukan berasal\n');
+        await bluetooth.write('dari outlet ${data.outlet.namaOutlet} ini. Apabila  terbukti\n');
+        await bluetooth.write('kemudian, saya  bersedia dikenakan denda sesuai\n');
+        await bluetooth.write('daftar yang berlaku\n');
+        await bluetooth.printNewLine();
+        await bluetooth.printNewLine();
+        await bluetooth.writeBytes(right);
+        await bluetooth.write('${data.detail.name}\n');
+        await bluetooth.write('${data.detail.phone}\n');
+        await bluetooth.writeBytes(left);
+        await bluetooth.write('$formattedDate\n');
+        await bluetooth.printNewLine();
+        await bluetooth.printNewLine();
       }
     });
   }

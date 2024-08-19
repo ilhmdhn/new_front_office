@@ -11,6 +11,20 @@ import 'package:front_office_2/tools/udp_sender.dart';
 
 class DoPrint{
 
+  static checkin(String rcp)async{
+    try{
+      final apiResponse = await ApiRequest().checkinSlip(rcp);
+      print('Result ${apiResponse.state.toString()}');
+      final printerData = PreferencesData.getPrinter();
+
+      if (printerData.connection == '2') {
+        BtprintExecutor().slipCheckin(apiResponse.data!);
+      }
+    }catch(e){
+      showToastError('Error Print Slip Checkin ${e.toString()}');
+    }
+  }
+
   static lastSo(String rcp, String roomCode, String guestName, int pax)async{
     final apiResponse = await ApiRequest().latestSo(rcp);
     if(apiResponse.state != true){

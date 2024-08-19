@@ -104,7 +104,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                             memberName: checkinParams.memberName
                           )
                         ));
-
+                        
                         if(checkinResult.state==true && contextz.mounted){
                           Navigator.pushNamedAndRemoveUntil(contextz, EditCheckinPage.nameRoute, arguments:  listRoomItem[index].roomCode,(route) => false,);
                         }else{

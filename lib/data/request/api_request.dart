@@ -21,9 +21,12 @@ import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/data/model/checkin_slip_response.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{
@@ -116,7 +119,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
           loginPage();
       }
       final convertedResult = json.decode(apiResponse.body);
-
+      DoPrint.checkin(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(err){
       return BaseResponse(
@@ -135,7 +138,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
           loginPage();
       }
       final convertedResult = json.decode(apiResponse.body);
-
+      // DoPrint.checkin(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(err){
       return BaseResponse(
@@ -769,6 +772,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      DoPrint.checkin(convertedResult['data']['kode_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(state: false, message: e.toString());
@@ -811,6 +815,23 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(state: false, message: e.toString());
+    }
+  }
+
+  Future<CheckinSlipResponse> checkinSlip(String rcp)async{
+    try{
+      Uri url = Uri.parse('$serverUrl/mobile-print/checkin-slip?rcp=$rcp');
+      final apiResponse = await http.get(url);
+
+      if (apiResponse.statusCode == 401 || apiResponse.statusCode == 403) {
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return CheckinSlipResponse.fromJson(convertedResult);
+
+    }catch(e){
+      return CheckinSlipResponse(state: false, message: e.toString());
     }
   }
 
