@@ -104,4 +104,28 @@ class PreferencesData {
       type: _prefs?.getString('PRINTER_TYPE')??'', 
       address: _prefs?.getString('PRINTER_ADDRESS')??'');
   }
+
+  static void setShowRetur(bool state){
+    _prefs?.setBool('SHOW_RETUR', state);
+  }
+
+  static bool getShowReturState(){
+    return _prefs?.getBool('SHOW_RETUR')??false;
+  }
+
+  static void setShowTotalItemPromo(bool state) {
+    _prefs?.setBool('SHOW_TOTAL_PROMO_ITEM', state);
+  }
+
+  static bool getShowTotalItemPromo() {
+    return _prefs?.getBool('SHOW_TOTAL_PROMO_ITEM') ?? false;
+  }
+
+  static void setShowPromoBelowItem(bool state) {
+    _prefs?.setBool('SHOW_PROMO_BELOW_ITEM', state);
+  }
+
+  static bool getShowPromoBelowItem() {
+    return _prefs?.getBool('SHOW_PROMO_BELOW_ITEM') ?? false;
+  }
 }

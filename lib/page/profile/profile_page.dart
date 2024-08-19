@@ -4,6 +4,7 @@ import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
+import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -135,6 +136,58 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
               ),
               const SizedBox(height: 6,),
+                            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: () async {
+                  Navigator.pushNamed(context, PrinterStylePage.nameRoute);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                          width: 36,
+                          child: Image.asset('assets/icon/edit_invoice.png')),
+                      Expanded(
+                          // width: widthTextButton,
+                          child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 12),
+                        child: AutoSizeText('Printer Style',
+                            style: CustomTextStyle.blackMediumSize(19),
+                            minFontSize: 14,
+                            wrapWords: false,
+                            maxLines: 2),
+                      )),
+                      const SizedBox(
+                          width: 26,
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.green,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: InkWell(

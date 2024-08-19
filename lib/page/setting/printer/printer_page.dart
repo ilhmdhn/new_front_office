@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
