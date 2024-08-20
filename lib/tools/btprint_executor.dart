@@ -256,7 +256,7 @@ class BtprintExecutor{
         await bluetooth.write(formatTable('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan), 48));
         await bluetooth.write('------------------------------------------------\n\n');
         //Tax And Service
-        await printFooter(bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
+        await printFooter(bluetooth, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
 
         if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
           await bluetooth.write(formatTable('Voucher','(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})',48));
@@ -288,7 +288,7 @@ class BtprintExecutor{
           for(var teepData in data.transferData){
             await bluetooth.printNewLine();
             await bluetooth.printNewLine();
-            await printTransfer(bluetooth, teepData); 
+            await printTransfer(bluetooth, teepData, (data.footerStyle??1)); 
           }
         }
       }else{
@@ -442,7 +442,7 @@ class BtprintExecutor{
       await bluetooth.write(formatTable('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan), 48));
       await bluetooth.write('------------------------------------------------\n\n');
       //Tax And Service
-      await printFooter( bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
+      await printFooter( bluetooth, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle ?? 1));
 
       if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
         await bluetooth.write(formatTable('Voucher', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})',48));
@@ -482,7 +482,7 @@ class BtprintExecutor{
         for (var teepData in data.transferData) {
           await bluetooth.printNewLine();
           await bluetooth.printNewLine();
-          await printTransfer(bluetooth, teepData);
+          await printTransfer(bluetooth, teepData, (data.footerStyle??1));
         }
     }
     });
@@ -490,7 +490,7 @@ class BtprintExecutor{
     ApiRequest().updatePrintState(data.dataInvoice.reception, '2');
   }
 
-  Future<void> printTransfer(BlueThermalPrinter bluetooth, TransferModel data)async{
+  Future<void> printTransfer(BlueThermalPrinter bluetooth, TransferModel data, int footerStyle)async{
 
     List<OrderFinalModel> orderFix = List.empty(growable: true);
 
@@ -625,11 +625,10 @@ class BtprintExecutor{
     await bluetooth
         .write('------------------------------------------------\n\n');
     //Tax And Service
-    await printFooter(bluetooth, data.dataInvoice, data.dataServiceTaxPercent, 1);
+    await printFooter(bluetooth, data.dataInvoice, data.dataServiceTaxPercent, footerStyle);
 
     if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
-      await bluetooth.write(formatTable('Voucher',
-          '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', 48));
+      await bluetooth.write(formatTable('Voucher', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', 48));
     }
 
     await bluetooth.write(formatTableRow('Jumlah Bersih',

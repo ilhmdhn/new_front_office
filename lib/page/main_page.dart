@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
-import 'package:front_office_2/page/status/history_page.dart';
+import 'package:front_office_2/page/status/state_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:front_office_2/tools/permissions.dart';
@@ -61,9 +61,9 @@ class _MainPageState extends State<MainPage> {
               label: 'Reception'
             ),
             NavigationDestination(
-              icon: Icon(Icons.history, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.history, color: Colors.blue),
-              label: 'History'
+              icon: Icon(Icons.info_outline, color: Colors.grey.shade800), 
+              selectedIcon: const Icon(Icons.info_outline, color: Colors.blue),
+              label: 'Status'
             ),
             NavigationDestination(
               icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
@@ -78,7 +78,7 @@ class _MainPageState extends State<MainPage> {
           ]),
           body: <Widget>[
             const OperationalPage(),
-            const HistoryPage(),
+            const StatePage(),
             const ReportPage(),
             const ProfilePage()
           ][currentPageIndex],
