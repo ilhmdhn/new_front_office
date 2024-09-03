@@ -242,6 +242,27 @@ class CloudRequest{
     }
   }
 
+  static Future<BaseResponse> approvalReason(String idApproval, String reason)async{
+    try{
+      String outlet = PreferencesData.getOutlet();
+      final url = Uri.parse('$baseUrl/approval/note/$outlet/$idApproval');
+      final apiResponse = await http.put(
+        url, 
+        headers: {'Content-Type': 'application/json','authorization': token},
+        body: json.encode({
+          'reason': reason
+        })
+      );
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
     static Future<VoucherMemberResponse> memberVoucher(String memberCode, String voucherCode)async{
     try{
         final url = Uri.parse('$membershipServer/voucher-info?member_code=$memberCode&voucher_code=$voucherCode');

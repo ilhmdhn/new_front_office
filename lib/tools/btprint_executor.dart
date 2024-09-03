@@ -32,19 +32,15 @@ class BtprintExecutor{
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x21, 0x00])).then((value) async=> await bluetooth.write('\nAYAM CABE GARAM 3'));
           await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x21, 0x00]));
 
-        // Print with Font A
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x4D, 0x00]));
         await bluetooth.write('\nThis is Font A\n');
 
-        // Print with Font B
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x4D, 0x01]));
         await bluetooth.write('\nThis is Font B\n');
 
-        // Double height and width, no bold
         await bluetooth.writeBytes(Uint8List.fromList([0x1D, 0x21, 0x22]));
         await bluetooth.write('\nDouble Height and Width, Non-Bold\n');
 
-        // Reset to normal size
         await bluetooth.writeBytes(Uint8List.fromList([0x1B, 0x21, 0x00]));
         await bluetooth.printNewLine();
         await bluetooth.printNewLine();
@@ -63,9 +59,7 @@ class BtprintExecutor{
       if(value != true){
         showToastError('Cetak Slip Gagal');
       }else{
-                await bluetooth.writeBytes(normal);
-
-        //HEADER
+        await bluetooth.writeBytes(normal);
         await bluetooth.writeBytes(center);
         await bluetooth.write('${data.outlet.namaOutlet}\n');
         await bluetooth.write('${data.outlet.alamatOutlet}\n');
@@ -77,7 +71,6 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(offBold);
 
-        //Checkin Info
         await bluetooth.writeBytes(left);
         await bluetooth.write('Ruangan           : ');
         await bluetooth.write('${data.detail.roomName}\n');
@@ -196,7 +189,6 @@ class BtprintExecutor{
       if (isConnected == true) {
         await bluetooth.writeBytes(normal);
 
-        //HEADER
         await bluetooth.writeBytes(center);
         await bluetooth.write('${data.dataOutlet.namaOutlet}\n');
         await bluetooth.write('${data.dataOutlet.alamatOutlet}\n');
@@ -208,7 +200,6 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(offBold);
         
-        //Checkin Info
         await bluetooth.writeBytes(left);
         await bluetooth.write('Ruangan : ');
         await bluetooth.write('${data.dataRoom.roomCode}\n');
@@ -219,7 +210,6 @@ class BtprintExecutor{
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(left);
         
-        //Room Info
         await bluetooth.write(formatTable('Sewa Ruangan', Formatter.formatRupiah(data.dataInvoice.sewaRuangan), 48));
         if(data.dataInvoice.promo >0){
           await bluetooth.write(formatTable('Promo', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', 48));

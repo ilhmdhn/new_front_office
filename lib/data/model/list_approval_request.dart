@@ -23,6 +23,7 @@ class RequestApprovalResponse{
 class ApprovalRequestModel{
   String idApproval;
   String user;
+  String reason;
   String reception;
   String room;
   String note;
@@ -31,6 +32,7 @@ class ApprovalRequestModel{
     this.idApproval = '',
     this.user = '',
     this.reception = '',
+    this.reason = '',
     this.room = '',
     this.note = ''
   });
@@ -41,6 +43,7 @@ class ApprovalRequestModel{
       user: json['user'],
       reception: json['reception'],
       room: json['room'],
+      reason: json['reason'],
       note: json['note']
     );
   }

@@ -8,10 +8,12 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/bloc/send_approval_bloc.dart';
+import 'package:front_office_2/page/dialog/textfield_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -88,11 +90,11 @@ class VerificationDialog{
       context: ctx, 
       barrierDismissible: false,
       builder: (BuildContext ctxDialog){
+        String reason = '';
         return PopScope(
           canPop: true,
           child: StatefulBuilder(
             builder: (BuildContext ctxWidget, StateSetter setState){
-
               Widget buttonCancel(){
                 return InkWell(
                   onTap: (){
@@ -146,7 +148,7 @@ class VerificationDialog{
                     CloudRequest.finishApproval(uniqueTime);
                     Navigator.pop(ctx, false);
                   }
-                            }, 
+                  }, 
                             child: Container(
                   decoration: BoxDecoration(
                     color: Colors.green.shade700,
@@ -224,6 +226,26 @@ class VerificationDialog{
                       const SizedBox(height: 20,),
                       countdown(),
                       const SizedBox(height: 20,),
+                      InkWell(
+                        child: Row( mainAxisAlignment: MainAxisAlignment.center, children: [AutoSizeText(isNullOrEmpty(reason)?'isi catatan': reason, style: CustomTextStyle.blackStandard(), minFontSize: 12), const SizedBox(width: 12,),Image.asset('assets/icon/pencil.png', width: 16, height: 16,)],),
+                        onTap: ()async{
+                          final note = await TextFieldDialog().inputText(ctx);
+                          setState(() {
+                            reason = 'loading';
+                          });
+                          if(note!=null){
+                            final state = await CloudRequest.approvalReason(uniqueTime, note);
+                            if(state.state == true){
+                              setState((){
+                                reason = note;
+                              });
+                            }else{
+                              showToastError('Gagal menambahkan alasan otorisasi ${state.message}');
+                            }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -250,17 +272,17 @@ class VerificationDialog{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         animation(),
-                        SizedBox(width: 10,),
+                        const SizedBox(width: 10,),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             countdown(),
-                            SizedBox(height: 12,),
+                            const SizedBox(height: 12,),
                             Row(
                               children: [
                                 buttonCancel(),
-                                SizedBox(width: 12,),
+                                const SizedBox(width: 12,),
                                 buttonPositive(),
                               ],
                             )
