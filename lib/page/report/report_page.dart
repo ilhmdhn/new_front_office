@@ -4,6 +4,7 @@ import 'package:front_office_2/page/report/cash_detail/cash_detail_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/preferences.dart';
 import 'package:lottie/lottie.dart';
 
 class ReportPage extends StatefulWidget {
@@ -31,9 +32,10 @@ class _ReportPageState extends State<ReportPage> {
         padding: const EdgeInsets.only(top: 12),
         child: Column(
           children: [
-            AddOnWidget.listButtonNavigation(context, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
-            const SizedBox(height: 9,),
-            AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'),
+            // AddOnWidget.listButtonNavigation(context, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
+            // const SizedBox(height: 9,),
+            PreferencesData.getUser().level == 'KASIR' || PreferencesData.getUser().level == 'IT' ?
+            AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox()
             /*SizedBox(
               width: double.infinity,
               child: ElevatedButton(

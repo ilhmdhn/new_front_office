@@ -17,6 +17,7 @@ import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
+import 'package:front_office_2/data/model/status_room_checkin.dart';
 import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
@@ -835,6 +836,21 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<RoomCheckinState> checkinState()async{
+    try{
+      Uri url = Uri.parse('$serverUrl/room/all-room-checkin-by-type');
+      final apiResponse = await http.get(url);
+
+      if (apiResponse.statusCode == 401 || apiResponse.statusCode == 403) {
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return RoomCheckinState.fromJson(convertedResult);
+    }catch(e){
+      return RoomCheckinState(state: false, message: e.toString());
+    }
+  }
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);

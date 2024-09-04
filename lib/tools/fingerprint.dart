@@ -1,6 +1,5 @@
 import 'package:front_office_2/tools/toast.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
 
 class FingerpintAuth{
 
