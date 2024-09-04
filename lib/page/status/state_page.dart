@@ -120,111 +120,84 @@ class _StatePageState extends State<StatePage> {
                                     ],
                                   ),
                                   Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 96,
-                                                              child: Row(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .wifi_protected_setup,
-                                                                      color: Colors
-                                                                          .amber,
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 6,
-                                                                  ),
-                                                                  AutoSizeText(
-                                                                    'Process',
-                                                                    style: CustomTextStyle
-                                                                        .blackMedium(),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            AutoSizeText(
-                                                                ': ${room.process}',
-                                                                style: CustomTextStyle
-                                                                    .blackMedium()),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 96,
-                                                              child: Row(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .done_all_outlined,
-                                                                      color: Colors
-                                                                          .blue,
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 6,
-                                                                  ),
-                                                                  AutoSizeText(
-                                                                    'Delivery',
-                                                                    style: CustomTextStyle
-                                                                        .blackMedium(),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            AutoSizeText(
-                                                                ': ${room.delivery}',
-                                                                style: CustomTextStyle
-                                                                    .blackMedium()),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 96,
-                                                              child: Row(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .turn_left,
-                                                                      color: Colors
-                                                                          .redAccent,
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 6,
-                                                                  ),
-                                                                  AutoSizeText(
-                                                                    'Cancel',
-                                                                    style: CustomTextStyle
-                                                                        .blackMedium(),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            AutoSizeText(
-                                                                ': ${room.cancel}',
-                                                                style: CustomTextStyle
-                                                                    .blackMedium()),
-                                                          ],
-                                                        ),
-                            
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      SizedBox(
+                                        width: 96,
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: Icon(
+                                                Icons.wifi_protected_setup,
+                                                color: Colors.amber,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            AutoSizeText(
+                                              'Process',
+                                              style: CustomTextStyle.blackMedium(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AutoSizeText(': ${room.process}',
+                                        style: CustomTextStyle.blackMedium()),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      SizedBox(
+                                        width: 96,
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: Icon(
+                                                Icons.done_all_outlined,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            AutoSizeText(
+                                              'Delivery',
+                                              style: CustomTextStyle.blackMedium(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AutoSizeText(': ${room.delivery}', style: CustomTextStyle.blackMedium()),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      SizedBox(
+                                        width: 96,
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: Icon( Icons.turn_left, color: Colors.redAccent,),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            AutoSizeText('Cancel', style: CustomTextStyle.blackMedium(),),
+                                          ],
+                                        ),
+                                      ),
+                                      AutoSizeText(': ${room.cancel}', style: CustomTextStyle.blackMedium()),
+                                    ],
+                                  ),
                                 ],
                               ),
                               ],
