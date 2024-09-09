@@ -34,7 +34,7 @@ class _ReportPageState extends State<ReportPage> {
           children: [
             // AddOnWidget.listButtonNavigation(context, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
             // const SizedBox(height: 9,),
-            PreferencesData.getUser().level == 'KASIR' || PreferencesData.getUser().level == 'IT' ?
+            PreferencesData.getUser().level == 'KASIR' || PreferencesData.getUser().level == 'IT' || PreferencesData.getUser().level == 'ACCOUNTING'?
             AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox()
             /*SizedBox(
               width: double.infinity,

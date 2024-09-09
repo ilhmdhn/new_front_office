@@ -91,8 +91,9 @@ class _OperationalPageState extends State<OperationalPage> {
                     return widget.spvLayout(state.toString());
                   } else if(userData.level == 'SERVER'){
                     return widget.serverLayout();
-                  }
-                  else{
+                  }else if(userData.level == 'ACCOUNTING'){
+                    return widget.accountingLayout(state.toString());
+                  }else{
                     return const SizedBox();
                   }
                 }),

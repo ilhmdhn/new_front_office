@@ -171,6 +171,194 @@ class ButtonMenuWidget{
     );
   }
 
+  Widget accountingLayout(String approvalCount) {
+    final isPotrait = isVertical(context);
+    final widthButton = ScreenSize.getSizePercent(context, 46);
+    final widthButtonLandscape = ScreenSize.getSizePercent(context, 30);
+    final spaceCenter = ScreenSize.getSizePercent(context, 2);
+    final widthRow = ScreenSize.getSizePercent(context, 94);
+
+    return isPotrait
+        ? Column(
+            children: [
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButton,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkin()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(
+                        width: widthButton,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkinReservation())
+       
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                height: isPotrait == true ? 83 : null,
+                width: widthRow,
+                child: editCheckin(),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(width: widthButton, child: extend()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(width: widthButton, child: transfer())
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(width: widthButton, child: order()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(width: widthButton, child: bill())
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(width: widthButton, child: checkout()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(width: widthButton, child: clean())
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButton,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkinInfo()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(
+                        width: widthButton,
+                        height: isPotrait == true ? 83 : null,
+                        child: reservationList())
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButton, child: approval(approvalCount)),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    // SizedBox(
+                    //   width: widthButton,
+                    //   height: isPotrait == true? 83:null,
+                    //   child: checkinReservation())
+                  ],
+                ),
+              ),
+            ],
+          )
+        : Column(
+            children: [
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButtonLandscape,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkin()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(
+                        width: widthButtonLandscape,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkinReservation()),
+                    SizedBox(
+                      width: spaceCenter,
+                    ),
+                    SizedBox(
+                      height: isPotrait == true ? 83 : null,
+                      width: widthButtonLandscape,
+                      child: editCheckin(),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButtonLandscape,
+                        height: isPotrait == true ? 83 : null,
+                        child: bill()),
+                    SizedBox(
+                      width: spaceCenter,
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              SizedBox(
+                width: widthRow,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: widthButtonLandscape,
+                        height: isPotrait == true ? 83 : null,
+                        child: checkinInfo()),
+                    SizedBox(
+                      width: spaceCenter,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+  }
+
+
   Widget serverLayout(){
     final widthButton = ScreenSize.getSizePercent(context, 46);  
     final spaceCenter = ScreenSize.getSizePercent(context, 2);

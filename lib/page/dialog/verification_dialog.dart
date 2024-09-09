@@ -33,7 +33,11 @@ class VerificationDialog{
     Completer<bool?> completer = Completer<bool?>(); 
     String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
     ApprovalCubit approvalCubit = ApprovalCubit();
-    approvalCubit.sendApproval(uniqueTime, reception, room, note);
+
+    if(!['ACCOUNTING', 'KAPTEN', 'SUPERVISOR'].contains(user.level)){
+      approvalCubit.sendApproval(uniqueTime, reception, room, note);
+    }
+
 
     Widget animation(){
       return SizedBox(
