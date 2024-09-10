@@ -63,6 +63,15 @@ class JsonConverter{
     };
   }
 
+  static Map<String, dynamic> voucherValue(VoucherValue data){
+    return{
+      'room_price': data.roomPrice,
+      'item_price': data.fnbPrice,
+      'price': data.price,
+      'total_price': data.totalPrice,
+    };
+  }
+
   static Map<String, dynamic> paymentDetail(PaymentDetail data){
     return{
       'pay_value' : data.payValue,
@@ -176,7 +185,8 @@ class JsonConverter{
       'promoOrderData': promoOrder(data.dataPromoOrder),
       'promoOrderCancel': promoCancelOrder(data.dataPromoCancelOrder),
       'transferBillData': transferList(data.transferData),
-      'service_percent': serviceTax(data.dataServiceTaxPercent)
+      'service_percent': serviceTax(data.dataServiceTaxPercent),
+      'voucherValue': data.voucherValue !=null? voucherValue(data.voucherValue!): voucherValue(VoucherValue(roomPrice: 0, fnbPrice:0, price:0,totalPrice:0))
     };
   }
 
@@ -192,7 +202,8 @@ class JsonConverter{
       'transferBillData': transferList(data.transferData),
       'service_percent': serviceTax(data.dataServiceTaxPercent),
       'payment_detail': paymentDetail(data.payment),
-      'payment_list': paymentData(data.paymentList)
+      'payment_list': paymentData(data.paymentList),
+      'voucherValue': data.voucherValue != null ? voucherValue(data.voucherValue!) : voucherValue(VoucherValue(roomPrice: 0, fnbPrice: 0, price: 0, totalPrice: 0))
     };
   }
 

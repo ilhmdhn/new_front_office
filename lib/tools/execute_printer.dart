@@ -14,7 +14,6 @@ class DoPrint{
   static checkin(String rcp)async{
     try{
       final apiResponse = await ApiRequest().checkinSlip(rcp);
-      print('Result ${apiResponse.state.toString()}');
       final printerData = PreferencesData.getPrinter();
 
       if (printerData.connection == '2') {
