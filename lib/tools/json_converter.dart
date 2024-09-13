@@ -225,4 +225,16 @@ class JsonConverter{
       "transfer_reason": data.transferReason
     };
   }
+
+  static Map<String, dynamic> style(){
+    final showRetur = PreferencesData.getShowReturState();
+    final showTotalItemPromo = PreferencesData.getShowTotalItemPromo();
+    final showPromoBelowItem = PreferencesData.getShowPromoBelowItem();
+    
+    return{
+      'retur':  showRetur,
+      'total_item_promo':  showTotalItemPromo,
+      'promo_below_item':  showPromoBelowItem
+    };
+  }
 }

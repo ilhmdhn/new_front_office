@@ -8,6 +8,7 @@ import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:front_office_2/tools/udp_sender.dart';
+import 'package:front_office_2/tools/json_converter.dart';
 
 class DoPrint{
 
@@ -111,7 +112,8 @@ class DoPrint{
           'type': 1,
           'user': PreferencesData.getUser().userId,
           'bill_data': JsonConverter.generateBillJson(bill),
-          'footer_style': bill.footerStyle??5
+          'footer_style': bill.footerStyle??5,
+          'style': JsonConverter.style()
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
@@ -154,7 +156,8 @@ class DoPrint{
           'type': 2,
           'user': PreferencesData.getUser().userId,
           'invoice': JsonConverter.generateInvoiceJson(ivc),
-          'footer_style': invoiceData.data?.footerStyle??5
+          'footer_style': invoiceData.data?.footerStyle??5,
+          'style': JsonConverter.style()
         };
 
         final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
