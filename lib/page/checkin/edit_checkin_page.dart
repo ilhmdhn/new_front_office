@@ -281,7 +281,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                               return;
                                             }
                                             setState(() {
-                                              voucherFix == null;
+                                              voucherFix = null;
                                             });
                                           }
                                         }
