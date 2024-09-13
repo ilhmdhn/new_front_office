@@ -10,7 +10,7 @@ class CheckinHistory extends StatefulWidget {
 class _CheckinHistoryState extends State<CheckinHistory> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
 
       ));

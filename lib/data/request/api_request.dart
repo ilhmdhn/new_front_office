@@ -27,7 +27,6 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
-import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{

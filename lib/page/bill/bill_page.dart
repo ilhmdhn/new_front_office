@@ -99,6 +99,15 @@ class _BillPageState extends State<BillPage> {
                           AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                         ],
                       ):const SizedBox(),
+                      /*(result.data?.voucherValue?.roomPrice??0)>0?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('Voucher Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText('(${Formatter.formatRupiah((result.data?.voucherValue?.roomPrice ?? 0))})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                        ],
+                      )
+                      : const SizedBox(),*/
                       const SizedBox(height: 6,),
                       orderList.isNotEmpty?
                       Flexible(
@@ -167,7 +176,7 @@ class _BillPageState extends State<BillPage> {
                             )
                           ],
                         ),
-                      ): const SizedBox()
+                      ): const SizedBox(),
                     ],
                   ),
                 ),
@@ -222,6 +231,14 @@ class _BillPageState extends State<BillPage> {
                     ),
                   ):
                   const SizedBox(),
+                  (result.data?.voucherValue?.totalPrice ?? 0) > 0? 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Voucher', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah((result.data?.voucherValue?.totalPrice ?? 0)), style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ): const SizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

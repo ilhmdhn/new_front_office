@@ -188,7 +188,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                       AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
                                       InkWell(onTap: (){
                                         RatingDialog.submitRate(context, roomData.summaryCode, roomData.memberName, roomData.memberName);
-                                      }, child: Icon(Icons.star_rate, size: 21, color: Colors.amber,))
+                                      }, child: const Icon(Icons.star_rate, size: 21, color: Colors.amber,))
                                     ],
                                   ):
                                   Align(

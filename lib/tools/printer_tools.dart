@@ -12,7 +12,7 @@ class PrinterTools{
       final bluetooth = await BtPrint().getInstance();
       devices = await bluetooth.getBondedDevices();
     } on PlatformException catch (e) {
-      showToastError("Error getting list devices:");
+      showToastError("Error getting list devices: ${e.toString()}");
     }
     return devices;
   }

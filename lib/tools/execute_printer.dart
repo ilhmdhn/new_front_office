@@ -8,7 +8,6 @@ import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:front_office_2/tools/udp_sender.dart';
-import 'package:front_office_2/tools/json_converter.dart';
 
 class DoPrint{
 

@@ -261,7 +261,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                   (voucherFix?.hourPrice??0) > 0? AddOnWidget.vcrItem(context, 'Room', Formatter.formatRupiah(voucherFix?.hourPrice??0)) : const SizedBox(),
                                   (voucherFix?.hourPercent??0) > 0? AddOnWidget.vcrItem(context, 'Room', '${voucherFix?.hourPercent??0}%') : const SizedBox(),
                                   
-                                  (voucherFix?.item??'') != ''? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.item}') : const SizedBox(),
+                                  (voucherFix?.item??'').trim() != ''? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.item}') : const SizedBox(),
                                   (voucherFix?.itemPrice??0) > 0 ? AddOnWidget.vcrItem(context, 'FnB', Formatter.formatRupiah(voucherFix?.itemPrice??0)) : const SizedBox(),
                                   (voucherFix?.itemPercent??0) > 0? AddOnWidget.vcrItem(context, 'FnB', '${voucherFix?.itemPercent}%') : const SizedBox(),
                                   (voucherFix?.price??0) >0 ? AddOnWidget.vcrItem(context, 'Price', Formatter.formatRupiah(voucherFix?.price??0)) : const SizedBox(),

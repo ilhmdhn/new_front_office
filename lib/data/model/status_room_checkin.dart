@@ -1,6 +1,3 @@
-import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/toast.dart';
-
 class RoomCheckinState{
   bool state;
   String? message;

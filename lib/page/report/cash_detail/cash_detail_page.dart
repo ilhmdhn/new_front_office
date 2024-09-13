@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -93,12 +91,12 @@ class _CashDetailPageState extends State<CashDetailPage> {
               ),
               const SizedBox(height: 10,),
               AutoSizeText('Pecahan Tunai', style: CustomTextStyle.titleAlertDialog(),),
-              Row(
+              const Row(
                 children: [
                   Text('Selisih')
                 ],
               ),
-              SingleChildScrollView(
+              const SingleChildScrollView(
                 child: Column(
                   children: [
                     Row(
