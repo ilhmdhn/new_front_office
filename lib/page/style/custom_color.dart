@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class CustomColorStyle{
   static Color background(){
-    return CustomColorStyle().hexToColor('#edf2fb');
+    return CustomColorStyle().hexToColor('#F6F8FA');
   }
 
   static Color appBarBackground() {

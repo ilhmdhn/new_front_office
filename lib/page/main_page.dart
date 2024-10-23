@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/dashboard/dashboard_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
@@ -55,15 +56,14 @@ class _MainPageState extends State<MainPage> {
           indicatorColor: null,
           selectedIndex: currentPageIndex,
           destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard_outlined, color: CustomColorStyle.bluePrimary(),),
+            label: 'Dashboard'),
             NavigationDestination(
               icon: Image.asset('assets/icon/reception_grey.png', width: 36,), 
               selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 36,),
               label: 'Reception'
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.info_outline, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.info_outline, color: Colors.blue),
-              label: 'Status'
             ),
             NavigationDestination(
               icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
@@ -77,8 +77,8 @@ class _MainPageState extends State<MainPage> {
             ),
           ]),
           body: <Widget>[
+            const DashboardPage(),
             const OperationalPage(),
-            const StatePage(),
             const ReportPage(),
             const ProfilePage()
           ][currentPageIndex],

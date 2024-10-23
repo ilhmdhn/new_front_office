@@ -38,9 +38,8 @@ class SendNotification {
             importance: Importance.max,
             priority: Priority.max,
             ticker: 'ticker');
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(0, message.data['Title'], 'Hello, this is a notification!', platformChannelSpecifics, payload: RoomCheckinListPage.nameRoute);
+    await flutterLocalNotificationsPlugin.show(0, message.data['Title'], message.data['Message'], platformChannelSpecifics, payload: RoomCheckinListPage.nameRoute);
   }
 }

@@ -6,6 +6,7 @@ import 'package:front_office_2/page/bill/bill_page.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
+import 'package:front_office_2/page/dashboard/dashboard_page.dart';
 import 'package:front_office_2/page/extend/extend_room_page.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
@@ -25,6 +26,7 @@ import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
+import 'package:front_office_2/tools/display_notif.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -32,9 +34,13 @@ import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async{
   await dotenv.load(fileName: ".env");
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -42,18 +48,22 @@ void main() async{
 
   FirebaseTools.initToken();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String? signalType = message.data['type'];
-    String? signalCode = message.data['code'];
-    bool state = false;
-    if(message.data['state'] == 'true'){
-      state = true;
-    }
-
+    DisplayNotif.approvalRequest(navigatorKey.currentContext!, 'aaa');
     if(signalType == '1'){
+      
+      String? signalCode = message.data['code'];
+      bool state = false;
+      if (message.data['state'] == 'true') {
+        state = true;
+      }
+      
       eventBus.fire(ConfirmationSignalModel(code: signalCode??'', state: state));
     }else if(signalType == '2'){
-      SendNotification.notif(message);
+      DisplayNotif.doInstruction(navigatorKey.currentContext!, message.data['Message']);
+      eventBus.fire(RefreshApprovalCount());
     }else if(signalType == '3'){
       eventBus.fire(RefreshApprovalCount());
     }
@@ -76,6 +86,7 @@ class FrontOffice extends StatelessWidget {
       routes: {
         LoginPage.nameRoute: (context) => const LoginPage(),
         MainPage.nameRoute: (context) => const MainPage(),
+        DashboardPage.nameRoute: (context) => const DashboardPage(),
         OperationalPage.nameRoute: (context) => const OperationalPage(),
         StatePage.nameRoute: (context) => const StatePage(),
         ReportPage.nameRoute: (context) => const ReportPage(),

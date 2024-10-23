@@ -7,6 +7,7 @@ import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/display_notif.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -1102,7 +1103,8 @@ class ButtonMenuWidget{
 
     return InkWell(
       onTap: (){
-        showToastWarning('List Reservation is Cooming Soon');
+        DisplayNotif.doInstruction( context,'Ayam Bakarr');
+        // showToastWarning('List Reservation is Cooming Soon');
       },
       child: Container(
         // height: isPotrait == true? 83:null,
