@@ -32,36 +32,42 @@ import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-void main() async{
-  await dotenv.load(fileName: ".env");
-  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load(fileName: ".env");
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseTools.initToken();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await FirebaseTools.initToken();
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('aaa');
     String? signalType = message.data['type'];
     String? signalCode = message.data['code'];
     bool state = false;
-    if(message.data['state'] == 'true'){
+  
+    if (message.data['state'] == 'true') {
       state = true;
     }
 
-    if(signalType == '1'){
-      eventBus.fire(ConfirmationSignalModel(code: signalCode??'', state: state));
-    }else if(signalType == '2'){
+    if (signalType == '1') {
+      eventBus.fire(ConfirmationSignalModel(code: signalCode ?? '', state: state));
+    } else if (signalType == '2') {
       SendNotification.notif(message);
-    }else if(signalType == '3'){
+      eventBus.fire(RefreshApprovalCount());
+    } else if (signalType == '3') {
       eventBus.fire(RefreshApprovalCount());
     }
   });
+
   await PreferencesData.initialize();
   setupLocator();
   runApp(const FrontOffice());
 }
+
 
 class FrontOffice extends StatelessWidget {
   const FrontOffice({super.key});

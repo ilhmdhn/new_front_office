@@ -3,7 +3,7 @@ import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class FirebaseTools{
-  static void initToken() async {
+  static Future<void> initToken() async {
     String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     PreferencesData.setFcmToken(fcmToken??'');

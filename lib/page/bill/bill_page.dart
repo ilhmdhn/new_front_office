@@ -253,7 +253,7 @@ class _BillPageState extends State<BillPage> {
                         onTap: ()async{
                           // DoPrint.printBill(roomCode); return;
                           final userLevel = PreferencesData.getUser();
-                          if(userLevel.level != 'KASIR'){
+                          if(userLevel.level != 'KASIR' && userLevel.level != 'SERVER'){
                             showToastWarning('User tidak memiliki akses');
                             return;
                           }else{
