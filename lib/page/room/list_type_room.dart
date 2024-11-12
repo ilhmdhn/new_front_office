@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
-import 'package:front_office_2/page/room/list_room_page.dart';
+import 'package:front_office_2/page/room/list_room_ready_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/screen_size.dart';

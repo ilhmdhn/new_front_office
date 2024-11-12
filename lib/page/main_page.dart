@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dashboard/dashboard_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
-import 'package:front_office_2/page/status/state_page.dart';
+import 'package:front_office_2/page/room/room_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:front_office_2/tools/permissions.dart';
@@ -46,7 +47,7 @@ class _MainPageState extends State<MainPage> {
       child: Scaffold(
         backgroundColor: CustomColorStyle.background(),
         bottomNavigationBar: NavigationBar(
-          height: 55,
+          height: 51,
           backgroundColor: Colors.grey.shade300,
           onDestinationSelected: (int index){
             setState(() {
@@ -57,28 +58,28 @@ class _MainPageState extends State<MainPage> {
           selectedIndex: currentPageIndex,
           destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard_outlined, color: CustomColorStyle.bluePrimary(),),
+            icon: const Icon(Icons.dashboard_outlined, size: 26,),
+            selectedIcon: Icon(Icons.dashboard_outlined, size: 26, color: CustomColorStyle.bluePrimary(),),
             label: 'Dashboard'),
             NavigationDestination(
-              icon: Image.asset('assets/icon/reception_grey.png', width: 36,), 
-              selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 36,),
-              label: 'Reception'
+              icon: Image.asset('assets/icon/reception_grey.png', width: 31,), 
+              selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 31,),
+              label: 'Room'
             ),
             NavigationDestination(
-              icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.sticky_note_2_outlined, color: Colors.blue),
+              icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800, size: 26), 
+              selectedIcon: const Icon(Icons.sticky_note_2_outlined, color: Colors.blue, size: 26),
               label: 'Report'
             ),
             NavigationDestination(
-              icon: Icon(Icons.person, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.person, color: Colors.blue),
+              icon: Icon(Icons.person, color: Colors.grey.shade800, size: 26), 
+              selectedIcon: const Icon(Icons.person, color: Colors.blue, size: 26),
               label: 'Profile'
             ),
           ]),
           body: <Widget>[
             const DashboardPage(),
-            const OperationalPage(),
+            const RoomPage(),
             const ReportPage(),
             const ProfilePage()
           ][currentPageIndex],
