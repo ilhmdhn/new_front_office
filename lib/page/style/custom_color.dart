@@ -4,6 +4,10 @@ class CustomColorStyle{
     return CustomColorStyle().hexToColor('#F6F8FA');
   }
 
+  static Color secondaryBackground(){
+    return Colors.white;
+  }
+
   static Color appBarBackground() {
     return CustomColorStyle().hexToColor('#2296F3');
   }

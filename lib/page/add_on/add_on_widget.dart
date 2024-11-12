@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/page/dialog/view_notif_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -94,4 +95,33 @@ class AddOnWidget{
       ],
     );
   }
+
+  static PreferredSizeWidget appBar(BuildContext ctx ,String title, {int notifCount = 0}){
+    final notificationDialog = NotificationDialog();
+    return AppBar(
+      backgroundColor: CustomColorStyle.appBarBackground(),
+      foregroundColor: Colors.white,
+      title: Text(
+        title,
+        style: CustomTextStyle.titleAppBar(),
+        selectionColor: Colors.white,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: InkWell(
+            onTap: (){
+              notificationDialog.showNotificationOverlay(ctx);
+            },
+            child: Badge.count(
+              count: notifCount,
+              isLabelVisible: notifCount>0? true: false,
+              child: const Icon(Icons.notifications, color: Colors.white, size: 29,),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+  
 }
