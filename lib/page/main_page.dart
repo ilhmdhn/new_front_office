@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dashboard/dashboard_page.dart';
-import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/room/room_page.dart';

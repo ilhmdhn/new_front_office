@@ -18,6 +18,7 @@ import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/room/list_room_ready_page.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
+import 'package:front_office_2/page/room/reservation/reservation_list_page.dart';
 import 'package:front_office_2/page/room/room_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
@@ -90,6 +91,7 @@ class FrontOffice extends StatelessWidget {
         RoomPage.nameRoute: (context) => const RoomPage(),
         DashboardPage.nameRoute: (context) => const DashboardPage(),
         OperationalPage.nameRoute: (context) => const OperationalPage(),
+        ReservationList.nameRoute: (context) => const ReservationList(),
         StatePage.nameRoute: (context) => const StatePage(),
         ReportPage.nameRoute: (context) => const ReportPage(),
         ProfilePage.nameRoute: (context) => const ProfilePage(),

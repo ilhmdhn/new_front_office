@@ -2,6 +2,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/room/reservation/reservation_list_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -105,8 +106,10 @@ class _RoomPageState extends State<RoomPage> {
                 )
               ],
             ),
-            const Expanded(
-              child: SizedBox()),
+            Expanded(
+              child: 
+                existPage == 1? ReservationList(): Column()
+              ),
           ],
         )
       ,
