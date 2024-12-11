@@ -36,7 +36,6 @@ import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
   await dotenv.load(fileName: ".env");

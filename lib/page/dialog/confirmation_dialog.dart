@@ -13,7 +13,7 @@ import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmationDialog{
   static Future<bool> confirmation(BuildContext ctx, String title)async{
-    Completer<bool> completer = Completer<bool>();
+    Completer<bool> completer = Completer<bool>();Completer<bool> completer = Completer<bool>();
 
     final isPotrait = isVertical(ctx);
 
