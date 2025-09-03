@@ -44,7 +44,6 @@ void main() async {
   await FirebaseTools.initToken();
   // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('aaa');
     String? signalType = message.data['type'];
     String? signalCode = message.data['code'];
     bool state = false;
