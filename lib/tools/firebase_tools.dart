@@ -4,9 +4,9 @@ import 'package:front_office_2/tools/toast.dart';
 
 class FirebaseTools{
   static Future<void> initToken() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    // String? fcmToken = await FirebaseMessaging.instance.getToken();
 
-    PreferencesData.setFcmToken(fcmToken??'');
+    // PreferencesData.setFcmToken(fcmToken??'');
 
     FirebaseMessaging.instance.onTokenRefresh
         .listen((fcmToken) async {

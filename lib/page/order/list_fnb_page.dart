@@ -24,14 +24,13 @@ class ListFnbPage extends StatefulWidget {
 
 class _ListFnbPageState extends State<ListFnbPage> {
 
-  final PagingController _fnbPagingController = PagingController(firstPageKey: 1);
+  final PagingController<int, FnBModel> _fnbPagingController = PagingController(firstPageKey: 1);
   String category = '';
   String _searchFnb = '';
   bool isLoading = true;
 
   @override
   void initState() {
-    _fetchPage(1);
     _fnbPagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
@@ -58,7 +57,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
       }
     }catch(e){
       showToastWarning(e.toString());
-      _fnbPagingController.error(e);
+      _fnbPagingController.error = e;
     }
   }
 
@@ -88,8 +87,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
                 height: ScreenSize.getHeightPercent(context, 10),
                 child: SearchBar(
                   hintText: 'Cari Room',
-                  surfaceTintColor: MaterialStateColor.resolveWith((states) => Colors.white),
-                  shadowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
+                  surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                  shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                   onChanged: ((value){
                     if(_searchFnb != value){
                       _searchFnb = value;
@@ -104,12 +103,12 @@ class _ListFnbPageState extends State<ListFnbPage> {
               ),
               const SizedBox(height: 6),
             Flexible(
-              child: PagedListView(
+              child: PagedListView<int, FnBModel>(
                 shrinkWrap: true,
                 pagingController: _fnbPagingController,
                 builderDelegate: PagedChildBuilderDelegate(
                   itemBuilder: (ctxPaging, item, index) {
-                    final fnb = item as FnBModel;
+                    final fnb = item;
                     final indexAdded = listOrder.indexWhere(((element) => element.invCode == item.invCode));
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
