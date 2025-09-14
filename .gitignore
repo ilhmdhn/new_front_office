@@ -30,6 +30,9 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/windows
+/linux
+/macos
 
 # Symbolication related
 app.*.symbols
@@ -43,10 +46,8 @@ app.*.map.json
 /android/app/release
 
 .env
-macos/firebase_app_id_file.json
 android/app/google-services.json
 ios/firebase_app_id_file.json
 ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
-macos/Runner/GoogleService-Info.plist
 data.dart

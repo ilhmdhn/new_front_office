@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/Users/ilhamdohaan/.pub-cache/hosted/pub.dev/device_information-0.0.4/android/src/main/java/co/creativemind/device_information/**)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter pub:*)",
+      "Read(/Users/ilhamdohaan/.pub-cache/hosted/pub.dev/path_provider_android-2.2.4/android/src/main/java/io/flutter/plugins/pathprovider/**)",
+      "Bash(flutter build:*)",
+      "Read(/Users/ilhamdohaan/.pub-cache/hosted/pub.dev/qr_code_scanner-1.0.1/android/**)",
+      "Read(/Users/ilhamdohaan/.pub-cache/hosted/pub.dev/qr_code_scanner-1.0.1/android/**)",
+      "Read(/Users/ilhamdohaan/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.2/android/src/main/java/io/flutter/plugins/sharedpreferences/**)",
+      "Bash(pod install:*)",
+      "Bash(pod update:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
