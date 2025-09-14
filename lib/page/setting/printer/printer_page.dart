@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
@@ -25,7 +25,7 @@ class _PrinterPageState extends State<PrinterPage> {
   List<PrinterList> listPrinter = List.empty(growable: true);
   PrinterList chosedPrinter = PrinterList(name: '', address: '');
   TextEditingController tfIpPc = TextEditingController();
-  List<BluetoothDevice> printerList = List.empty(growable: true);
+  List<dynamic> printerList = List.empty(growable: true);
   PrinterModel printer = PreferencesData.getPrinter();
   bool isLoading = false;
 
@@ -219,7 +219,7 @@ class _PrinterPageState extends State<PrinterPage> {
               ));
               printer = PreferencesData.getPrinter();
             });
-            await BtPrint().connectToDevice(device);
+            // await BtPrint().connectToDevice(device);
             setState(() {
               isLoading = false;
             });

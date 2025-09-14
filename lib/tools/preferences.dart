@@ -3,7 +3,7 @@ import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:front_office_2/data/model/network.dart';
-import 'package:device_information/device_information.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class PreferencesData {
   static SharedPreferences? _prefs;
@@ -83,7 +83,9 @@ class PreferencesData {
 
   static Future<String> getImei()async{
     try{
-      return await DeviceInformation.deviceIMEINumber;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.id; // Using Android ID instead of IMEI
     }catch(e){
       showToastError(e.toString());
       return 'error $e';

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:device_information/device_information.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
@@ -33,6 +33,16 @@ class ApiRequest{
 
   final serverUrl = PreferencesData.getUrl();
   final token = PreferencesData.getUserToken();
+  
+  Future<String> _getDeviceModel() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.model;
+    } catch (e) {
+      return 'Unknown';
+    }
+  }
   
   Future<LoginResponse> loginFO(String userId, String password)async{
     try {
@@ -612,7 +622,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         "order_qty_temp": data.qty,
         "order_room_rcp": rcp,
         "order_room_user": PreferencesData.getUser().userId,
-        "order_model_android": await DeviceInformation.deviceModel
+        "order_model_android": await _getDeviceModel()
       };
       
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -642,7 +652,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         "order_qty": oldQty,
         "order_room_rcp": rcp,
         "order_room_user": PreferencesData.getUser().userId,
-        "order_model_android": await DeviceInformation.deviceModel
+        "order_model_android": await _getDeviceModel()
       };
       
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});

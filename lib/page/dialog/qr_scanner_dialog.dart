@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRScannerDialog extends StatefulWidget {
   const QRScannerDialog({super.key});
@@ -13,19 +13,9 @@ class QRScannerDialog extends StatefulWidget {
 
 class _QRScannerDialogState extends State<QRScannerDialog> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
+  MobileScannerController controller = MobileScannerController();
   bool scanSuccess = false;
   String? manualCode;
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +30,18 @@ class _QRScannerDialogState extends State<QRScannerDialog> {
             children: [
               AspectRatio(
                 aspectRatio: 1/1,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
+                child: MobileScanner(
+                  controller: controller,
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      if (!scanSuccess && barcode.rawValue != null) {
+                        scanSuccess = true;
+                        Navigator.of(context).pop(barcode.rawValue);
+                        break;
+                      }
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 10,),
@@ -70,19 +69,10 @@ class _QRScannerDialogState extends State<QRScannerDialog> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (!scanSuccess) {
-        scanSuccess = true;
-        Navigator.of(context).pop(scanData.code);
-      }
-    });
-  }
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }

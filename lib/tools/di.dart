@@ -1,4 +1,4 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -26,12 +26,13 @@ class NavigationService {
 
 void setupLocator() {
   getIt.registerLazySingleton(() => NavigationService(navigatorKey: navigatorKey));
-  if(PreferencesData.getPrinter().connection == '2'){
-    getIt.registerLazySingleton(() => BtPrint());
-    BtPrint().stateInfo();
-  }
+  // if(PreferencesData.getPrinter().connection == '2'){
+  //   getIt.registerLazySingleton(() => BtPrint());
+  //   BtPrint().stateInfo();
+  // }
 }
 
+/* 
 class BtPrint {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
   
@@ -105,3 +106,4 @@ class BtPrint {
     }
   }
 }
+*/

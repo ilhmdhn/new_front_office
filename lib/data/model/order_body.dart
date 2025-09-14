@@ -1,12 +1,22 @@
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:device_information/device_information.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class GenerateOrderParams{
 
+  static Future<String> _getDeviceModel() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.model;
+    } catch (e) {
+      return 'Unknown';
+    }
+  }
+
   static Future<Map<String, dynamic>> orderParams(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     final chusr = PreferencesData.getUser().userId;
-    final deviceId = await DeviceInformation.deviceModel;
+    final deviceId = await _getDeviceModel();
     List<String> invCodeList = List.empty(growable: true);
     List<String> qtyList = List.empty(growable: true);
     List<String> noteList = List.empty(growable: true);
