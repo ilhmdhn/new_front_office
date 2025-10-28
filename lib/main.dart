@@ -41,8 +41,6 @@ void main() async{
   await dotenv.load(fileName: ".env");
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
