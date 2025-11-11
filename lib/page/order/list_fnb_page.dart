@@ -31,14 +31,24 @@ class _ListFnbPageState extends State<ListFnbPage> {
 
   @override
   void initState() {
+    super.initState();
+    print('DEBUGGING INIT STATE LIST FNB');
     _fnbPagingController.addPageRequestListener((pageKey) {
+      print('DEBUGGING REQUEST PAGE KEY $pageKey');
       _fetchPage(pageKey);
     });
-    super.initState();
+    print('DEBUGGING BEFORE FRAME CALLBACK');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('DEBUGGING AFTER FRAME CALLBACK');
+      print('DEBUGGING CALLING FETCH PAGE MANUALLY');
+      _fetchPage(1);
+    });
+    print('DEBUGGING END INIT STATE');
   }
 
   Future<void> _fetchPage(int pageKey)async{
     try{
+      print('DEBUGGING SINI PAGE KEY $pageKey CATEGORY $category SEARCH $_searchFnb');
       final getFnb = await ApiRequest().fnbPage(pageKey, category, _searchFnb);
       if(getFnb.state != true){
         throw getFnb.message.toString();
@@ -77,7 +87,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
       body:
       isLoading == true?
       Center(
-        child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
+        child: CircularProgressIndicator(color: Colors.red),
       ):
       Padding(
         padding: const EdgeInsets.all(8.0),

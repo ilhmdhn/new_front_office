@@ -543,6 +543,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
 
   Future<FnBResultModel> fnbPage(int page, String category, String search)async{
     try{
+      print('DEBUGGING SINI FNB API REQUEST');
       Uri url = Uri.parse('$serverUrl/inventory/list-paging?page=$page&size=10&category=$category&search=$search');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       
