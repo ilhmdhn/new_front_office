@@ -27,23 +27,13 @@ class _ListFnbPageState extends State<ListFnbPage> {
   final PagingController<int, FnBModel> _fnbPagingController = PagingController(firstPageKey: 1);
   String category = '';
   String _searchFnb = '';
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    print('DEBUGGING INIT STATE LIST FNB');
     _fnbPagingController.addPageRequestListener((pageKey) {
-      print('DEBUGGING REQUEST PAGE KEY $pageKey');
       _fetchPage(pageKey);
     });
-    print('DEBUGGING BEFORE FRAME CALLBACK');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('DEBUGGING AFTER FRAME CALLBACK');
-      print('DEBUGGING CALLING FETCH PAGE MANUALLY');
-      _fetchPage(1);
-    });
-    print('DEBUGGING END INIT STATE');
   }
 
   Future<void> _fetchPage(int pageKey)async{
@@ -59,11 +49,6 @@ class _ListFnbPageState extends State<ListFnbPage> {
         _fnbPagingController.appendLastPage(listFnb);
       }else{
         _fnbPagingController.appendPage(listFnb, pageKey+1);
-      }
-      if(isLoading == true){
-        setState(() {
-          isLoading = false;
-        });
       }
     }catch(e){
       showToastWarning(e.toString());
@@ -85,10 +70,6 @@ class _ListFnbPageState extends State<ListFnbPage> {
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body:
-      isLoading == true?
-      Center(
-        child: CircularProgressIndicator(color: Colors.red),
-      ):
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
