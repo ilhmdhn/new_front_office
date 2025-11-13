@@ -65,220 +65,219 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColorStyle.background(),
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color:  Colors.white, //change your color here
-          ),
-          title: Text('Change Checkin Duration', style: CustomTextStyle.titleAppBar(),),
-          backgroundColor: CustomColorStyle.appBarBackground(),
+    return Scaffold(
+      backgroundColor: CustomColorStyle.background(),
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color:  Colors.white, //change your color here
         ),
-        body: 
-        
-        isLoading == true?
-
-        Center(
-          child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
-        ):
-
-        detailCheckin?.state != true?
-        Center(
-          child: AutoSizeText(detailCheckin?.message??'ERROR GET DATA CHECKIN'),
-        ):
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Center(
-                child: AutoSizeText('INFORMASI CHECKIN', style: CustomTextStyle.blackMediumSize(21), minFontSize: 12, maxLines: 1,),
-              ),
-              const SizedBox(height: 12,),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AutoSizeText(memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                        AutoSizeText(memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                      ],
-                    ),
+        title: Text('Change Checkin Duration', style: CustomTextStyle.titleAppBar(),),
+        backgroundColor: CustomColorStyle.appBarBackground(),
+      ),
+      body: 
+      
+      isLoading == true?
+    
+      Center(
+        child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
+      ):
+    
+      detailCheckin?.state != true?
+      Center(
+        child: AutoSizeText(detailCheckin?.message??'ERROR GET DATA CHECKIN'),
+      ):
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Center(
+              child: AutoSizeText('INFORMASI CHECKIN', style: CustomTextStyle.blackMediumSize(21), minFontSize: 12, maxLines: 1,),
+            ),
+            const SizedBox(height: 12,),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      AutoSizeText(memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                      AutoSizeText(memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                    ],
                   ),
-                  Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AutoSizeText(room, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                        AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                      ],
-                    )
+                ),
+                Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
+                Expanded(
+                  child: Column(
+                    children: [
+                      AutoSizeText(room, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                      AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                    ],
                   )
-                ],
-              ),
-              const SizedBox(height: 16,),
-              Align(alignment: Alignment.centerLeft, child: AutoSizeText('Extend Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
-              Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            setState((){
-                              if(extendTime>0){
-                                --extendTime;
-                              }
-                            });
-                          },
-                          child: SizedBox(
-                            height: 43,
-                            width: 43,
-                            child: Image.asset(
-                              'assets/icon/minus.png'),
-                          )
-                        ),
-                        const SizedBox(width: 9,),
-                        AutoSizeText(extendTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
-                        const SizedBox(width: 9,),
-                        InkWell(
-                          onTap: (){
-                            setState((){
-                              if(extendTime < 24){
-                                ++extendTime;
-                              }
-                            });
-                          },
-                          child: SizedBox(
-                            height: 43,
-                            width: 43,
-                            child: Image.asset(
-                              'assets/icon/plus.png'),
-                          )
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6,),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: ()async{
-                            final confirm = await ConfirmationDialog.confirmation(context, 'Extend Room?');
-                            if(confirm == true){
-                              final extendState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
-                              if(extendState.state == true){
-                                if(context.mounted){
-                                  Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                                }else{
-                                  showToastWarning('Berhasil silahkan kembali');
-                                }
-                              }else{
-                                showToastError(extendState.message??'Gagal reduce duration');
-                              } 
+                )
+              ],
+            ),
+            const SizedBox(height: 16,),
+            Align(alignment: Alignment.centerLeft, child: AutoSizeText('Extend Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          setState((){
+                            if(extendTime>0){
+                              --extendTime;
                             }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: CustomContainerStyle.confirmButton(),
-                            child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 26,),
-              Align(alignment: Alignment.centerLeft, child: AutoSizeText('Reduce Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            setState((){
-                              if(reduceTime>0){
-                                --reduceTime;
-                              }
-                            });
-                          },
-                          child: SizedBox(
-                            height: 43,
-                            width: 43,
-                            child: Image.asset(
-                              'assets/icon/minus.png'),
-                          )
-                        ),
-                        const SizedBox(width: 9,),
-                        AutoSizeText('- ${reduceTime.toString()}', style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
-                        const SizedBox(width: 9,),
-                        InkWell(
-                          onTap: (){
-                            setState((){
-                              if(reduceTime < 24){
-                                ++reduceTime;
-                              }
-                            });
-                          },
-                          child: SizedBox(
-                            height: 43,
-                            width: 43,
-                            child: Image.asset(
-                              'assets/icon/plus.png'),
-                          )
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6,),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: ()async{
-
-                            detailCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
-                            int remainingTime = ((detailCheckin?.data?.hourRemaining??0) * 60) + (detailCheckin?.data?.minuteRemaining??0);
-
-                            if( (remainingTime - (reduceTime*60)) <= 10 ){
-                              showToastWarning('Durasi checkin setelah dikurangi harus diatas 10 menit');
-                              return;
+                          });
+                        },
+                        child: SizedBox(
+                          height: 43,
+                          width: 43,
+                          child: Image.asset(
+                            'assets/icon/minus.png'),
+                        )
+                      ),
+                      const SizedBox(width: 9,),
+                      AutoSizeText(extendTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                      const SizedBox(width: 9,),
+                      InkWell(
+                        onTap: (){
+                          setState((){
+                            if(extendTime < 24){
+                              ++extendTime;
                             }
-
-                            if(!context.mounted){
-                              return;
-                            }
-                            
-                            final biometricResult = await VerificationDialog.requestVerification(context, rcp, roomCode, 'Reduce Checkin Duration');
-                            if(biometricResult == true){
-                                final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
-                            if(reduceState.state == true){
+                          });
+                        },
+                        child: SizedBox(
+                          height: 43,
+                          width: 43,
+                          child: Image.asset(
+                            'assets/icon/plus.png'),
+                        )
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 6,),
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: ()async{
+                          final confirm = await ConfirmationDialog.confirmation(context, 'Extend Room?');
+                          if(confirm == true){
+                            final extendState = await ApiRequest().extendRoom(roomCode, extendTime.toString());
+                            if(extendState.state == true){
                               if(context.mounted){
                                 Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                               }else{
                                 showToastWarning('Berhasil silahkan kembali');
                               }
                             }else{
-                              showToastError(reduceState.message??'Gagal reduce duration');
-                            }
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: CustomContainerStyle.cancelButton(),
-                            child: Text('Reduce Room', style: CustomTextStyle.whiteSize(16),))
-                        ),
-                      ],
-                    ),
+                              showToastError(extendState.message??'Gagal reduce duration');
+                            } 
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: CustomContainerStyle.confirmButton(),
+                          child: Text('Extend Room', style: CustomTextStyle.whiteSize(16),))),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 26,),
+            Align(alignment: Alignment.centerLeft, child: AutoSizeText('Reduce Checkin Duration', style: CustomTextStyle.blackMediumSize(17),)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          setState((){
+                            if(reduceTime>0){
+                              --reduceTime;
+                            }
+                          });
+                        },
+                        child: SizedBox(
+                          height: 43,
+                          width: 43,
+                          child: Image.asset(
+                            'assets/icon/minus.png'),
+                        )
+                      ),
+                      const SizedBox(width: 9,),
+                      AutoSizeText('- ${reduceTime.toString()}', style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                      const SizedBox(width: 9,),
+                      InkWell(
+                        onTap: (){
+                          setState((){
+                            if(reduceTime < 24){
+                              ++reduceTime;
+                            }
+                          });
+                        },
+                        child: SizedBox(
+                          height: 43,
+                          width: 43,
+                          child: Image.asset(
+                            'assets/icon/plus.png'),
+                        )
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 6,),
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: ()async{
+    
+                          detailCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
+                          int remainingTime = ((detailCheckin?.data?.hourRemaining??0) * 60) + (detailCheckin?.data?.minuteRemaining??0);
+    
+                          if( (remainingTime - (reduceTime*60)) <= 10 ){
+                            showToastWarning('Durasi checkin setelah dikurangi harus diatas 10 menit');
+                            return;
+                          }
+    
+                          if(!context.mounted){
+                            return;
+                          }
+                          
+                          final biometricResult = await VerificationDialog.requestVerification(context, rcp, roomCode, 'Reduce Checkin Duration');
+                          if(biometricResult == true){
+                              final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
+                          if(reduceState.state == true){
+                            if(context.mounted){
+                              Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                            }else{
+                              showToastWarning('Berhasil silahkan kembali');
+                            }
+                          }else{
+                            showToastError(reduceState.message??'Gagal reduce duration');
+                          }
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: CustomContainerStyle.cancelButton(),
+                          child: Text('Reduce Room', style: CustomTextStyle.whiteSize(16),))
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ));
+      ),
+    );
   }
 
   @override

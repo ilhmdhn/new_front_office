@@ -36,97 +36,95 @@ class _PrinterPageState extends State<PrinterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          title: Text(
-            'Printer Setting :',
-            style: CustomTextStyle.titleAppBar(),
-          ),
-          backgroundColor: CustomColorStyle.appBarBackground(),
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white, //change your color here
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Text('Current Printer ',
-                    style: CustomTextStyle.blackMediumSize(18)),
+        title: Text(
+          'Printer Setting :',
+          style: CustomTextStyle.titleAppBar(),
+        ),
+        backgroundColor: CustomColorStyle.appBarBackground(),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Text('Current Printer ',
+                  style: CustomTextStyle.blackMediumSize(18)),
+            ),
+            _buildInfoRow('Printer', printer.name),
+            _buildInfoRow('Connection', printer.connection),
+            _buildInfoRow('Address', printer.address),
+            _buildInfoRow('Printer Type', printer.type),
+            const SizedBox(height: 26),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Pilih Printer',
+                style: CustomTextStyle.blackMediumSize(19),
               ),
-              _buildInfoRow('Printer', printer.name),
-              _buildInfoRow('Connection', printer.connection),
-              _buildInfoRow('Address', printer.address),
-              _buildInfoRow('Printer Type', printer.type),
-              const SizedBox(height: 26),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Pilih Printer',
-                  style: CustomTextStyle.blackMediumSize(19),
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildIpInputRow(),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      if(isLoading){
-                        showToastWarning('Tunggu proses selesai');
-                        return;
-                      }
-                      setState(() {
-                        isLoading = true;
-                      });
-                      final printerListResult = await PrinterTools().getBluetoothDevices();
-                      setState(() {
-                        isLoading = false;
-                        printerList = printerListResult;
-                      });
-                    },
-                    child: Container(
-                      decoration: CustomContainerStyle.blueButton(),
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      child: AutoSizeText(
-                        'Scan Bluetooth Printers',
-                        style: CustomTextStyle.whiteStandard(),
-                      ),
+            ),
+            const SizedBox(height: 8),
+            _buildIpInputRow(),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    if(isLoading){
+                      showToastWarning('Tunggu proses selesai');
+                      return;
+                    }
+                    setState(() {
+                      isLoading = true;
+                    });
+                    final printerListResult = await PrinterTools().getBluetoothDevices();
+                    setState(() {
+                      isLoading = false;
+                      printerList = printerListResult;
+                    });
+                  },
+                  child: Container(
+                    decoration: CustomContainerStyle.blueButton(),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    child: AutoSizeText(
+                      'Scan Bluetooth Printers',
+                      style: CustomTextStyle.whiteStandard(),
                     ),
                   ),
-                  const SizedBox(width: 12,),
-                  InkWell(
-                    onTap: () {
-                      BtprintExecutor().testPrint();
-                    },
-                    child: Container(
-                      decoration: CustomContainerStyle.blueButton(),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6, horizontal: 12),
-                      child: AutoSizeText(
-                        'Test bt print',
-                        style: CustomTextStyle.whiteStandard(),
-                      ),
+                ),
+                const SizedBox(width: 12,),
+                InkWell(
+                  onTap: () {
+                    BtprintExecutor().testPrint();
+                  },
+                  child: Container(
+                    decoration: CustomContainerStyle.blueButton(),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 6, horizontal: 12),
+                    child: AutoSizeText(
+                      'Test bt print',
+                      style: CustomTextStyle.whiteStandard(),
                     ),
                   ),
-                
-                ],
-              ),
-              const SizedBox(height: 12),
-              Flexible(
-                fit: FlexFit.loose,
-                child: SingleChildScrollView(
-                  child: _buildBluetoothPrinterList(),
                 ),
+              
+              ],
+            ),
+            const SizedBox(height: 12),
+            Flexible(
+              fit: FlexFit.loose,
+              child: SingleChildScrollView(
+                child: _buildBluetoothPrinterList(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -87,136 +87,134 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: CustomColorStyle.background(),
-        body: 
-        
-        isLoading == true?
-        Center(
-          child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
-        ):
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AutoSizeText('Login FO', style: GoogleFonts.poppins(fontSize: 36, color: CustomColorStyle.appBarBackground(), fontWeight: FontWeight.w500),)
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 2,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: CustomColorStyle.background(),
+      body: 
+      
+      isLoading == true?
+      Center(
+        child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
+      ):
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 1,
+                child: SizedBox(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Username:', style: CustomTextStyle.blackStandard(),),
-                      SizedBox(
-                        height: 36,
-                        child: TextField(
-                          style: GoogleFonts.poppins(),
-                          controller: tfUser,
-                          autofillHints: const [AutofillHints.username],
-                          decoration: CustomTextfieldStyle.characterNormal(),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Text('Password:', style: CustomTextStyle.blackStandard(),),
-                      SizedBox(
-                        height: 36,
-                        child: TextField(
-                          controller: tfPassword,
-                          style: GoogleFonts.poppins(),
-                          autofillHints: const [AutofillHints.password],
-                          obscureText: showPassword? false: true,
-                          decoration: InputDecoration(
-                            // contentPadding: EdgeInsets.symmetric(vertical: 40.0),
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(vertical: -10.0, horizontal: 12),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: const BorderSide(color: Colors.grey, width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: (){
-                                setState(() {
-                                 showPassword = !showPassword;  
-                                });
-                              },
-                              icon: Icon(showPassword? Icons.visibility:Icons.visibility_off),)
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                              onTap: (){
-                                if(isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)){
-                                  showToastWarning('Lengkapi User dan Password');
-                                  return;
-                                }
-                                doLogin(tfUser.text, tfPassword.text);
-                              },
-                              child: Container(
-                                decoration: CustomContainerStyle.confirmButton(),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                child: Text('Login', style: CustomTextStyle.whiteSize(19),))),
-                          const SizedBox(width: 12,),
-                          InkWell(
-                            onTap: ()async{
-                              final biometricState = PreferencesData.getBiometricLoginState();
-                              if(biometricState != true){
-                                showToastWarning('Autentikasi Biometric Belum Diaktifkan');
-                                return;
-                              }
-
-                              final biometricRequest = await FingerpintAuth().requestFingerprintAuth();
-                              if(biometricRequest != true){
-                                return;
-                              }
-                              final user = PreferencesData.getUser();
-                              doLogin(user.userId??'', user.pass??'');
-                            },
-                            child: SizedBox(
-                              height: 46,
-                              width: 46,
-                              child: Image.asset('assets/icon/fingerprint.png'),
-                            ),
-                          )
-                        ],
-                      ),
+                      AutoSizeText('Login FO', style: GoogleFonts.poppins(fontSize: 36, color: CustomColorStyle.appBarBackground(), fontWeight: FontWeight.w500),)
                     ],
                   ),
                 ),
-                Flexible(
-                  flex: 2,
-                  child: InkWell(
-                    onTap: (){
-                      ConfigurationDialog().setUrl(context);
-                    },
-                    child: Text('Konfigurasi', style: CustomTextStyle.blackMedium(),),
-                  ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Username:', style: CustomTextStyle.blackStandard(),),
+                    SizedBox(
+                      height: 36,
+                      child: TextField(
+                        style: GoogleFonts.poppins(),
+                        controller: tfUser,
+                        autofillHints: const [AutofillHints.username],
+                        decoration: CustomTextfieldStyle.characterNormal(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Text('Password:', style: CustomTextStyle.blackStandard(),),
+                    SizedBox(
+                      height: 36,
+                      child: TextField(
+                        controller: tfPassword,
+                        style: GoogleFonts.poppins(),
+                        autofillHints: const [AutofillHints.password],
+                        obscureText: showPassword? false: true,
+                        decoration: InputDecoration(
+                          // contentPadding: EdgeInsets.symmetric(vertical: 40.0),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(vertical: -10.0, horizontal: 12),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: (){
+                              setState(() {
+                               showPassword = !showPassword;  
+                              });
+                            },
+                            icon: Icon(showPassword? Icons.visibility:Icons.visibility_off),)
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                            onTap: (){
+                              if(isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)){
+                                showToastWarning('Lengkapi User dan Password');
+                                return;
+                              }
+                              doLogin(tfUser.text, tfPassword.text);
+                            },
+                            child: Container(
+                              decoration: CustomContainerStyle.confirmButton(),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              child: Text('Login', style: CustomTextStyle.whiteSize(19),))),
+                        const SizedBox(width: 12,),
+                        InkWell(
+                          onTap: ()async{
+                            final biometricState = PreferencesData.getBiometricLoginState();
+                            if(biometricState != true){
+                              showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                              return;
+                            }
+    
+                            final biometricRequest = await FingerpintAuth().requestFingerprintAuth();
+                            if(biometricRequest != true){
+                              return;
+                            }
+                            final user = PreferencesData.getUser();
+                            doLogin(user.userId??'', user.pass??'');
+                          },
+                          child: SizedBox(
+                            height: 46,
+                            width: 46,
+                            child: Image.asset('assets/icon/fingerprint.png'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-              ]),
-        ),
+              ),
+              Flexible(
+                flex: 2,
+                child: InkWell(
+                  onTap: (){
+                    ConfigurationDialog().setUrl(context);
+                  },
+                  child: Text('Konfigurasi', style: CustomTextStyle.blackMedium(),),
+                ),
+              ),
+            ]),
       ),
     );
   }

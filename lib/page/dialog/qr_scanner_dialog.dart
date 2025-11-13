@@ -75,7 +75,10 @@ class _QRScannerDialogState extends State<QRScannerDialog> {
     controller.scannedDataStream.listen((scanData) {
       if (!scanSuccess) {
         scanSuccess = true;
-        Navigator.of(context).pop(scanData.code);
+        if(context.mounted == true){
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop(scanData.code);
+        }
       }
     });
   }

@@ -41,48 +41,46 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     notifPermissionState();
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColorStyle.background(),
-        bottomNavigationBar: NavigationBar(
-          height: 55,
-          backgroundColor: Colors.grey.shade300,
-          onDestinationSelected: (int index){
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          indicatorColor: null,
-          selectedIndex: currentPageIndex,
-          destinations: [
-            NavigationDestination(
-              icon: Image.asset('assets/icon/reception_grey.png', width: 36,), 
-              selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 36,),
-              label: 'Reception'
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.info_outline, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.info_outline, color: Colors.blue),
-              label: 'Status'
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.sticky_note_2_outlined, color: Colors.blue),
-              label: 'Report'
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person, color: Colors.grey.shade800), 
-              selectedIcon: const Icon(Icons.person, color: Colors.blue),
-              label: 'Profile'
-            ),
-          ]),
-          body: <Widget>[
-            const OperationalPage(),
-            const StatePage(),
-            const ReportPage(),
-            const ProfilePage()
-          ][currentPageIndex],
-      ),
+    return Scaffold(
+      backgroundColor: CustomColorStyle.background(),
+      bottomNavigationBar: NavigationBar(
+        height: 55,
+        backgroundColor: Colors.grey.shade300,
+        onDestinationSelected: (int index){
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: null,
+        selectedIndex: currentPageIndex,
+        destinations: [
+          NavigationDestination(
+            icon: Image.asset('assets/icon/reception_grey.png', width: 36,), 
+            selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 36,),
+            label: 'Reception'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.info_outline, color: Colors.grey.shade800), 
+            selectedIcon: const Icon(Icons.info_outline, color: Colors.blue),
+            label: 'Status'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.sticky_note_2_outlined, color: Colors.grey.shade800), 
+            selectedIcon: const Icon(Icons.sticky_note_2_outlined, color: Colors.blue),
+            label: 'Report'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person, color: Colors.grey.shade800), 
+            selectedIcon: const Icon(Icons.person, color: Colors.blue),
+            label: 'Profile'
+          ),
+        ]),
+        body: <Widget>[
+          const OperationalPage(),
+          const StatePage(),
+          const ReportPage(),
+          const ProfilePage()
+        ][currentPageIndex],
     );
   }
 }

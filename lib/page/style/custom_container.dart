@@ -3,13 +3,13 @@ import 'package:front_office_2/page/style/custom_color.dart';
 
 class CustomContainerStyle{
   
-  static confirmButton(){
+  static Decoration confirmButton(){
     return BoxDecoration(
       color: Colors.green.shade700,
       borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.6),
+          color: Colors.grey.withValues(alpha:  0.6),
           spreadRadius: 2,
           blurRadius: 7,
           offset: const Offset(0, 3),
@@ -18,13 +18,13 @@ class CustomContainerStyle{
     );
   }
 
-  static cancelButton(){
+  static Decoration cancelButton(){
     return BoxDecoration(
       color: Colors.redAccent.shade400,
       borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.6),
+          color: Colors.grey.withValues(alpha:  0.6),
           spreadRadius:2,
           blurRadius: 7,
           offset: const Offset(0, 3),
@@ -33,13 +33,13 @@ class CustomContainerStyle{
     );
   }
 
-  static blueButton(){
+  static Decoration blueButton(){
     return BoxDecoration(
       color: CustomColorStyle.appBarBackground(),
       borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.6),
+          color: Colors.grey.withValues(alpha:  0.6),
           spreadRadius:2,
           blurRadius: 7,
           offset: const Offset(0, 3),
@@ -48,27 +48,27 @@ class CustomContainerStyle{
     );
   }
 
-  static whiteList(){
+  static Decoration whiteList(){
     return BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
     );
   }
 
-  static cancelList(){
+  static Decoration cancelList(){
     return BoxDecoration(
       color: Colors.pink,
       borderRadius: BorderRadius.circular(10),
     );
   }
 
-  static barInactive(){
+  static Decoration barInactive(){
     return BoxDecoration(
       color: Colors.grey.shade300,
       // borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.6),
+          color: Colors.grey.withValues(alpha:  0.6),
           spreadRadius:1,
           // blurRadius: 7,
           offset: const Offset(0, 3),
@@ -76,13 +76,13 @@ class CustomContainerStyle{
       ],
     );
   }
-  static barActive(){
+  static Decoration barActive(){
     return BoxDecoration(
       color: CustomColorStyle.appBarBackground(),
       // borderRadius: BorderRadius.circular(10),
       // boxShadow: [
         // BoxShadow(
-          // color: Colors.grey.withOpacity(0.6),
+          // color: Colors.grey.withValues(alpha:  0.6),
           // spreadRadius:2,
           // blurRadius: 7,
           // offset: const Offset(0, 3),

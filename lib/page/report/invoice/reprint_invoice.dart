@@ -19,56 +19,55 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
   TextEditingController tfRcp = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-      appBar: AppBar(
-      iconTheme: const IconThemeData(
-      color: Colors.white, 
-      ),
-        backgroundColor: CustomColorStyle.appBarBackground(),
-        title: Text('Cetak Invoice', style: CustomTextStyle.titleAppBar(),),
-      ),
-      backgroundColor: CustomColorStyle.background(),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          children: [
-            const SizedBox(height: 24,),
-            Row(
-              children: [
-                Flexible(
-                  flex: 2,
-                  child: TextField(
-                    controller: tfRcp,
-                    decoration: CustomTextfieldStyle.normalHint('Masukkan Kode RCP'),
+    return Scaffold(
+    appBar: AppBar(
+    iconTheme: const IconThemeData(
+    color: Colors.white, 
+    ),
+      backgroundColor: CustomColorStyle.appBarBackground(),
+      title: Text('Cetak Invoice', style: CustomTextStyle.titleAppBar(),),
+    ),
+    backgroundColor: CustomColorStyle.background(),
+    body: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          const SizedBox(height: 24,),
+          Row(
+            children: [
+              Flexible(
+                flex: 2,
+                child: TextField(
+                  controller: tfRcp,
+                  decoration: CustomTextfieldStyle.normalHint('Masukkan Kode RCP'),
+                ),
+              ),
+              const SizedBox(width: 12,),
+              Flexible(
+                flex: 1,
+                child: InkWell(
+                  onTap: ()async{
+                    final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
+                    if (reprintBillState != true) {
+                      showToastWarning('Permintaan dibatalkan');
+                      return;
+                    }
+                    showToastWarning(tfRcp.text);
+                    DoPrint.printInvoice(tfRcp.text);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: CustomContainerStyle.blueButton(),
+                    child: Center(child: Text('Print', style: CustomTextStyle.whiteSize(19),)),
                   ),
                 ),
-                const SizedBox(width: 12,),
-                Flexible(
-                  flex: 1,
-                  child: InkWell(
-                    onTap: ()async{
-                      final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
-                      if (reprintBillState != true) {
-                        showToastWarning('Permintaan dibatalkan');
-                        return;
-                      }
-                      showToastWarning(tfRcp.text);
-                      DoPrint.printInvoice(tfRcp.text);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: CustomContainerStyle.blueButton(),
-                      child: Center(child: Text('Print', style: CustomTextStyle.whiteSize(19),)),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      )
-    ));
+              )
+            ],
+          )
+        ],
+      ),
+    )
+        );
   }
 }

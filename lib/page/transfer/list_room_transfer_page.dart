@@ -35,104 +35,102 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
       getData();
     }
     
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColorStyle.background(),
-        appBar: AppBar(
-          title: Align(alignment: Alignment.centerLeft ,child: Text('Room Tujuan', style: CustomTextStyle.titleAppBar(),)),
-          iconTheme: const IconThemeData(
-            color:  Colors.white,
-          ),
-          backgroundColor: CustomColorStyle.appBarBackground(),
+    return Scaffold(
+      backgroundColor: CustomColorStyle.background(),
+      appBar: AppBar(
+        title: Align(alignment: Alignment.centerLeft ,child: Text('Room Tujuan', style: CustomTextStyle.titleAppBar(),)),
+        iconTheme: const IconThemeData(
+          color:  Colors.white,
         ),
-        body: 
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child:   
-            isLoading? AddOnWidget.loading():
-          listRoomResponse.state != true?
-          AddOnWidget.error(listRoomResponse.message):
-          isNullOrEmpty(listRoomResponse.data)?
-          AddOnWidget.empty():
-          LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints){
-              int crossAxisCount = 3;   
-              if (constraints.maxWidth < 580) {
-                crossAxisCount = 2;
-              }
-              final listRoomItem = listRoomResponse.data;
-          
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 8, // Spasi antar kolom
-                  mainAxisSpacing: 8, // Spasi antar baris
-                  childAspectRatio: 10/3
-                ),
-                itemCount: listRoomItem.length,
-                itemBuilder: (BuildContext context, int index){
-                  return InkWell(
-                    onTap:()async{
-                      transferParams.roomDestination = listRoomItem[index].roomCode;
-                      transferParams.capacity = listRoomItem[index].roomCapacity;
-                      
-                      final transferApprovalState = await VerificationDialog.requestVerification(context, transferParams.invoice??'invoice unavailable' , transferParams.oldRoom.toString(), 'transfer room dari ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}');
-
-                      if(transferApprovalState != true){
-                        showToastWarning('Permintaan ditolak');
-                        return;
-                      }else{
-                       if(Filter.isLobby(transferParams.roomTypeDestination??'')){
-                        final transferState = await ApiRequest().transferLobbytoLobby(transferParams);
-                        if(transferState.state != true){
-                          showToastError(transferState.message??'Error Transfer room to room');
-                        }else{
-                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                        }
-                      }else{
-                        final transferState = await ApiRequest().transferRoomtoRoom(transferParams);
-                        if(transferState.state != true){
-                          showToastError(transferState.message??'Error Transfer lobby to lobby');
-                        }else{
-                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                        }
-                      } 
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Warna background
-                        borderRadius: BorderRadius.circular(10), // Bentuk border
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2), // Warna shadow
-                            spreadRadius: 3, // Radius penyebaran shadow
-                            blurRadius: 7, // Radius blur shadow
-                            offset: const Offset(0, 3), // Offset shadow
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AutoSizeText(listRoomItem[index].roomCode.toString(), style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
-                              ],
-                            ),
-                          ),
-                          const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                        ]
-                      ),
-                    ),
-                  );
-                });
+        backgroundColor: CustomColorStyle.appBarBackground(),
+      ),
+      body: 
+      Padding(
+        padding: const EdgeInsets.all(12),
+        child:   
+          isLoading? AddOnWidget.loading():
+        listRoomResponse.state != true?
+        AddOnWidget.error(listRoomResponse.message):
+        isNullOrEmpty(listRoomResponse.data)?
+        AddOnWidget.empty():
+        LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints){
+            int crossAxisCount = 3;   
+            if (constraints.maxWidth < 580) {
+              crossAxisCount = 2;
             }
-          ),
+            final listRoomItem = listRoomResponse.data;
+        
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 8, // Spasi antar kolom
+                mainAxisSpacing: 8, // Spasi antar baris
+                childAspectRatio: 10/3
+              ),
+              itemCount: listRoomItem.length,
+              itemBuilder: (BuildContext context, int index){
+                return InkWell(
+                  onTap:()async{
+                    transferParams.roomDestination = listRoomItem[index].roomCode;
+                    transferParams.capacity = listRoomItem[index].roomCapacity;
+                    
+                    final transferApprovalState = await VerificationDialog.requestVerification(context, transferParams.invoice??'invoice unavailable' , transferParams.oldRoom.toString(), 'transfer room dari ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}');
+    
+                    if(transferApprovalState != true){
+                      showToastWarning('Permintaan ditolak');
+                      return;
+                    }else{
+                     if(Filter.isLobby(transferParams.roomTypeDestination??'')){
+                      final transferState = await ApiRequest().transferLobbytoLobby(transferParams);
+                      if(transferState.state != true){
+                        showToastError(transferState.message??'Error Transfer room to room');
+                      }else{
+                        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                      }
+                    }else{
+                      final transferState = await ApiRequest().transferRoomtoRoom(transferParams);
+                      if(transferState.state != true){
+                        showToastError(transferState.message??'Error Transfer lobby to lobby');
+                      }else{
+                        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                      }
+                    } 
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Warna background
+                      borderRadius: BorderRadius.circular(10), // Bentuk border
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha:  0.2), // Warna shadow
+                          spreadRadius: 3, // Radius penyebaran shadow
+                          blurRadius: 7, // Radius blur shadow
+                          offset: const Offset(0, 3), // Offset shadow
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AutoSizeText(listRoomItem[index].roomCode.toString(), style: CustomTextStyle.blackMediumSize(21),  maxLines: 2, minFontSize: 12,),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                      ]
+                    ),
+                  ),
+                );
+              });
+          }
         ),
       ),
     );

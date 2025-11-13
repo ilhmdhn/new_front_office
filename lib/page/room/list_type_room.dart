@@ -40,103 +40,101 @@ class _ListRoomTypePageState extends State<ListRoomTypePage> {
   @override
   Widget build(BuildContext context) {
     final checkinArgs = ModalRoute.of(context)?.settings.arguments as CheckinParams;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color:  Colors.white, //change your color here
-        ),
-        title: Text('List Room Type', style: CustomTextStyle.titleAppBar(),),
-          backgroundColor: CustomColorStyle.appBarBackground(),
-        ),
-        backgroundColor: CustomColorStyle.background(),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 55,
-                    child: CircleAvatar(
-                      backgroundImage: Image.asset('assets/icon/user.png').image,
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+      iconTheme: const IconThemeData(
+        color:  Colors.white, //change your color here
+      ),
+      title: Text('List Room Type', style: CustomTextStyle.titleAppBar(),),
+        backgroundColor: CustomColorStyle.appBarBackground(),
+      ),
+      backgroundColor: CustomColorStyle.background(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 55,
+                  child: CircleAvatar(
+                    backgroundImage: Image.asset('assets/icon/user.png').image,
                   ),
-                  const SizedBox(width: 6,),
-                  Column(
-                    children: [
-                      const SizedBox(height: 3,),
-                      Text(checkinArgs.memberName??'', style: CustomTextStyle.blackMedium()),
-                    ],
+                ),
+                const SizedBox(width: 6,),
+                Column(
+                  children: [
+                    const SizedBox(height: 3,),
+                    Text(checkinArgs.memberName??'', style: CustomTextStyle.blackMedium()),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 26,),
+            Expanded(
+              child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                int crossAxisCount = 3;
+              
+                if (constraints.maxWidth < 580) {
+                  crossAxisCount = 2;
+                }
+        
+                final listRoomItem = listRoom.data;
+                return GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 8, // Spasi antar kolom
+                    mainAxisSpacing: 8, // Spasi antar baris
+                    childAspectRatio: 10/3
                   ),
-                ],
-              ),
-              const SizedBox(height: 26,),
-              Expanded(
-                child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-                  int crossAxisCount = 3;
-                
-                  if (constraints.maxWidth < 580) {
-                    crossAxisCount = 2;
-                  }
-          
-                  final listRoomItem = listRoom.data;
-                  return GridView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 8, // Spasi antar kolom
-                      mainAxisSpacing: 8, // Spasi antar baris
-                      childAspectRatio: 10/3
-                    ),
-                    itemCount: listRoomItem.length, 
-                    itemBuilder: (context, index){
-                      return InkWell(
-                        onTap: (){
-                          checkinArgs.roomType = listRoomItem[index].roomType;
-                          Navigator.pushNamed(context, ListRoomReadyPage.nameRoute, arguments:checkinArgs);
-                        },
-                        child: Container(
-                                  decoration: BoxDecoration(
-                                  color: Colors.white, // Warna background
-                                  borderRadius: BorderRadius.circular(10), // Bentuk border
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2), // Warna shadow
-                                      spreadRadius: 3, // Radius penyebaran shadow
-                                      blurRadius: 7, // Radius blur shadow
-                                      offset: const Offset(0, 3), // Offset shadow
+                  itemCount: listRoomItem.length, 
+                  itemBuilder: (context, index){
+                    return InkWell(
+                      onTap: (){
+                        checkinArgs.roomType = listRoomItem[index].roomType;
+                        Navigator.pushNamed(context, ListRoomReadyPage.nameRoute, arguments:checkinArgs);
+                      },
+                      child: Container(
+                                decoration: BoxDecoration(
+                                color: Colors.white, // Warna background
+                                borderRadius: BorderRadius.circular(10), // Bentuk border
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2), // Warna shadow
+                                    spreadRadius: 3, // Radius penyebaran shadow
+                                    blurRadius: 7, // Radius blur shadow
+                                    offset: const Offset(0, 3), // Offset shadow
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                          width: ScreenSize.getSizePercent(context, 38),
+                                          child: AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 1, minFontSize: 9,)),
+                                        AutoSizeText('Room Ready ${listRoomItem[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            width: ScreenSize.getSizePercent(context, 38),
-                                            child: AutoSizeText(listRoomItem[index].roomType.toString(), style: CustomTextStyle.blackMedium(),  maxLines: 1, minFontSize: 9,)),
-                                          AutoSizeText('Room Ready ${listRoomItem[index].roomAvailable.toString()}', style: CustomTextStyle.blackMediumSize(13),  maxLines: 1, minFontSize: 12,),
-                                        ],
-                                      ),
-                                    ),
-                                    const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
-                                  ]),
-                                ),
-                      );
-                    });
-                }),
-              )
-            ],
-          ),
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios, size: 19, color: Colors.green,)
+                                ]),
+                              ),
+                    );
+                  });
+              }),
+            )
+          ],
         ),
       ),
     );

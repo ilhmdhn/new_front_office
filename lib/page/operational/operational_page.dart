@@ -31,10 +31,13 @@ class _OperationalPageState extends State<OperationalPage> {
   Widget build(BuildContext context) {
     final paddingEdgeSize = ScreenSize.getSizePercent(context, 3);
     final userData = PreferencesData.getUser();
+
     final widget = ButtonMenuWidget(context: context);
+
     eventBus.on<RefreshApprovalCount>().listen((event) {
       approvalCubit.getData();
     });
+    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

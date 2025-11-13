@@ -24,32 +24,81 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     bool isBiometric = PreferencesData.getBiometricLoginState();
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColorStyle.background(),
-        appBar: AppBar(
-          backgroundColor: CustomColorStyle.appBarBackground(),
-          title: Text('Profile', style: CustomTextStyle.titleAppBar(),),
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              SizedBox(
-                    width: 97,
-                    height: 97,
-                    child: CircleAvatar(
-                      backgroundImage: Image.asset('assets/icon/user.png').image,
+    return Scaffold(
+      backgroundColor: CustomColorStyle.background(),
+      appBar: AppBar(
+        backgroundColor: CustomColorStyle.appBarBackground(),
+        title: Text('Profile', style: CustomTextStyle.titleAppBar(),),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            SizedBox(
+                  width: 97,
+                  height: 97,
+                  child: CircleAvatar(
+                    backgroundImage: Image.asset('assets/icon/user.png').image,
+                  ),
+            ),
+            const SizedBox(height: 6,),
+            AutoSizeText(user.userId??'user', style: CustomTextStyle.blackMediumSize(21),),
+            // const SizedBox(height: 6,),
+            AutoSizeText(user.level??'level', style: CustomTextStyle.blackMediumSize(18),),
+        
+            const SizedBox(height: 12,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal:  8.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 36,
+                        child: Image.asset('assets/icon/fingerprint.png')
+                      ),
+                    Expanded(
+                      // width: widthTextButton,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                        child: AutoSizeText('Autentikasi Biometric', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                      )),
+                    SizedBox(
+                      width: 26,
+                      child: Checkbox(
+                        value: isBiometric, 
+                        onChanged: (value){
+                          PreferencesData.setBiometricLogin(value??false);
+                          setState(() {
+                            isBiometric = PreferencesData.getLoginState();
+                          });
+                        }
+                      )
                     ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 6,),
-              AutoSizeText(user.userId??'user', style: CustomTextStyle.blackMediumSize(21),),
-              // const SizedBox(height: 6,),
-              AutoSizeText(user.level??'level', style: CustomTextStyle.blackMediumSize(18),),
-          
-              const SizedBox(height: 12,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:  8.0),
+            ),
+            const SizedBox(height: 6,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal:  8.0),
+              child: InkWell(
+                onTap: ()async{
+                  Navigator.pushNamed(context, PrinterPage.nameRoute);
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
                   decoration: BoxDecoration(
@@ -57,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       spreadRadius: 3,
                       blurRadius: 7,
                       offset: const Offset(0, 3),
@@ -69,221 +118,170 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       SizedBox(
                         width: 36,
-                          child: Image.asset('assets/icon/fingerprint.png')
+                          child: Image.asset('assets/icon/printer.png')
                         ),
                       Expanded(
                         // width: widthTextButton,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                          child: AutoSizeText('Autentikasi Biometric', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                          child: AutoSizeText('Setting Printer', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
                         )),
-                      SizedBox(
+                      const SizedBox(
                         width: 26,
-                        child: Checkbox(
-                          value: isBiometric, 
-                          onChanged: (value){
-                            PreferencesData.setBiometricLogin(value??false);
-                            setState(() {
-                              isBiometric = PreferencesData.getLoginState();
-                            });
-                          }
-                        )
-                      ),
+                        child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
                     ],
                   ),
+                ), 
+                ),
+            ),
+            const SizedBox(height: 6,),
+                          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: InkWell(
+              onTap: () async {
+                Navigator.pushNamed(context, PrinterStylePage.nameRoute);
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.2),
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: 36,
+                        child: Image.asset('assets/icon/edit_invoice.png')),
+                    Expanded(
+                        // width: widthTextButton,
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 12),
+                      child: AutoSizeText('Printer Style',
+                          style: CustomTextStyle.blackMediumSize(19),
+                          minFontSize: 14,
+                          wrapWords: false,
+                          maxLines: 2),
+                    )),
+                    const SizedBox(
+                        width: 26,
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.green,
+                        )),
+                  ],
                 ),
               ),
-              const SizedBox(height: 6,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:  8.0),
-                child: InkWell(
-                  onTap: ()async{
-                    Navigator.pushNamed(context, PrinterPage.nameRoute);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
-                    decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 36,
-                            child: Image.asset('assets/icon/printer.png')
-                          ),
-                        Expanded(
-                          // width: widthTextButton,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                            child: AutoSizeText('Setting Printer', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
-                          )),
-                        const SizedBox(
-                          width: 26,
-                          child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                      ],
-                    ),
-                  ), 
-                  ),
-              ),
-              const SizedBox(height: 6,),
-                            Padding(
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
-                onTap: () async {
-                  Navigator.pushNamed(context, PrinterStylePage.nameRoute);
+                onTap: ()async{
+                  showToastWarning('Belum tersedia');
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.2),
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                          width: 36,
-                          child: Image.asset('assets/icon/edit_invoice.png')),
+                        width: 36,
+                          child: Image.asset('assets/icon/reset_password.png')
+                        ),
                       Expanded(
-                          // width: widthTextButton,
-                          child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 12),
-                        child: AutoSizeText('Printer Style',
-                            style: CustomTextStyle.blackMediumSize(19),
-                            minFontSize: 14,
-                            wrapWords: false,
-                            maxLines: 2),
-                      )),
+                        // width: widthTextButton,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                          child: AutoSizeText('Reset Password', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                        )),
                       const SizedBox(
-                          width: 26,
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.green,
-                          )),
+                        width: 26,
+                        child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
                     ],
                   ),
+                ), 
                 ),
-              ),
             ),
-            const SizedBox(
-              height: 6,
+            const SizedBox(height: 6,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: ()async{
+                  final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
+                  if(logoutState != true){
+                    return;
+                  }
+                  PreferencesData.setLoginState(false);
+                  if(context.mounted){
+                    Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
+                  }else{
+                    showToastWarning('Gagal berpindah halaman');
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                  decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.2),
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 36,
+                          child: Image.asset('assets/icon/logout.png')
+                        ),
+                      Expanded(
+                        // width: widthTextButton,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                          child: AutoSizeText('Logout', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                        )),
+                      const SizedBox(
+                        width: 26,
+                        child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+                    ],
+                  ),
+                ), 
+                ),
             ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: InkWell(
-                  onTap: ()async{
-                    showToastWarning('Belum tersedia');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
-                    decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 36,
-                            child: Image.asset('assets/icon/reset_password.png')
-                          ),
-                        Expanded(
-                          // width: widthTextButton,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                            child: AutoSizeText('Reset Password', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
-                          )),
-                        const SizedBox(
-                          width: 26,
-                          child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                      ],
-                    ),
-                  ), 
-                  ),
-              ),
-              const SizedBox(height: 6,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: InkWell(
-                  onTap: ()async{
-                    final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
-                    if(logoutState != true){
-                      return;
-                    }
-                    PreferencesData.setLoginState(false);
-                    if(context.mounted){
-                      Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
-                    }else{
-                      showToastWarning('Gagal berpindah halaman');
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
-                    decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 36,
-                            child: Image.asset('assets/icon/logout.png')
-                          ),
-                        Expanded(
-                          // width: widthTextButton,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                            child: AutoSizeText('Logout', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
-                          )),
-                        const SizedBox(
-                          width: 26,
-                          child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                      ],
-                    ),
-                  ), 
-                  ),
-              ),
-            ],
-          ),
+          ],
         ),
-      )
+      ),
     );
   }
 }

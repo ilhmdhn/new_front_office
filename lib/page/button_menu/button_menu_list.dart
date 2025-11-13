@@ -356,7 +356,6 @@ class ButtonMenuWidget{
           );
   }
 
-
   Widget serverLayout(){
     final widthButton = ScreenSize.getSizePercent(context, 46);  
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
@@ -525,7 +524,7 @@ class ButtonMenuWidget{
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withValues(alpha: 0.2),
                   spreadRadius: 3,
                   blurRadius: 7,
                   offset: const Offset(0, 3),
@@ -600,7 +599,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10), // Bentuk border
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // Warna shadow
+              color: Colors.grey.withValues(alpha: 0.2), // Warna shadow
               spreadRadius: 3, // Radius penyebaran shadow
               blurRadius: 7, // Radius blur shadow
               offset: const Offset(0, 3), // Offset shadow
@@ -656,7 +655,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10), // Bentuk border
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // Warna shadow
+              color: Colors.grey.withValues(alpha: 0.2), // Warna shadow
               spreadRadius: 3, // Radius penyebaran shadow
               blurRadius: 7, // Radius blur shadow
               offset: const Offset(0, 3), // Offset shadow
@@ -713,7 +712,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -770,7 +769,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -827,7 +826,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -884,7 +883,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -941,7 +940,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -998,7 +997,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -1056,7 +1055,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -1113,7 +1112,7 @@ class ButtonMenuWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 3,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -1174,7 +1173,7 @@ class ButtonMenuWidget{
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 spreadRadius: 3,
                 blurRadius: 7,
                 offset: const Offset(0, 3),
