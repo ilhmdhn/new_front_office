@@ -12,55 +12,52 @@ import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmationDialog{
+/*
   static Future<bool> confirmation(BuildContext ctx, String title)async{
     Completer<bool> completer = Completer<bool>();
 
     final isPotrait = isVertical(ctx);
 
     showDialog(
-      context: ctx, 
+      context: ctx,
       builder: (BuildContext ctxDialog){
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Center(child: isPotrait? 
+          title: Center(child: isPotrait?
             AutoSizeText(title, style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 12,):
             Text(title, style: CustomTextStyle.blackMediumSize(19), maxLines: 1,)
           ),
+          content: const SizedBox(height: 0),
           actions: [
-            SizedBox(
-              width: isPotrait? ScreenSize.getSizePercent(ctx, 70): ScreenSize.getSizePercent(ctx, 30),
-              height: isPotrait? ScreenSize.getSizePercent(ctx, 10): ScreenSize.getSizePercent(ctx, 5),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, false);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: CustomContainerStyle.cancelButton(),
-                        child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(ctx, false);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.cancelButton(),
+                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
                     ),
                   ),
-                  const SizedBox(width: 6,),
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, true);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: CustomContainerStyle.confirmButton(),
-                        child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
-                      ),
+                ),
+                const SizedBox(width: 6,),
+                Expanded(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(ctx, true);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: CustomContainerStyle.confirmButton(),
+                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         );
@@ -70,6 +67,68 @@ class ConfirmationDialog{
       });
       return completer.future;
   }
+*/
+  static Future<bool> confirmation(BuildContext ctx, String title) async {
+    if (!ctx.mounted) return false;
+  
+    try {
+      final result = await showDialog<bool>(
+        context: ctx,
+        barrierDismissible: false,
+        builder: (BuildContext ctxDialog) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            title: AutoSizeText(title, style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 12,),
+            actions: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        if (ctxDialog.mounted) {
+                          Navigator.pop(ctx, false);
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        if (ctxDialog.mounted) {
+                          Navigator.pop(ctx, true);
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    return result ?? false;
+  } catch (e) {
+    debugPrint('Dialog error: $e');
+    return false;
+  }
+}
+
+
 
     static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel, DetailCheckinModel dataCheckin)async{
       Completer<int> completer = Completer<int>();

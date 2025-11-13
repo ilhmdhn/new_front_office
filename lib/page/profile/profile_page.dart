@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
@@ -233,11 +235,12 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: ()async{
-                  final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
+                  /*final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
                   if(logoutState != true){
                     return;
-                  }
+                  }*/
                   PreferencesData.setLoginState(false);
+                  FirebaseMessaging.instance.deleteToken();
                   if(context.mounted){
                     Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
                   }else{

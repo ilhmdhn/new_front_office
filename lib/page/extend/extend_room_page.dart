@@ -282,8 +282,7 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
 
   @override
   void dispose() {
-    // _extendController.dispose();
-    // _reduceController.dispose();
+    // No controllers to dispose - extendTime dan reduceTime adalah int variables
     super.dispose();
   }
 }

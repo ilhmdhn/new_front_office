@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> insertLogin()async{
     final response = await CloudRequest.insertLogin();
     if(response.state != true){
-      showToastError(' Error upload fcm tokent ${response.message}');
+      showToastError(' Error upload fcm token ${response.message}');
     }
   }
 

@@ -30,9 +30,11 @@ class VerificationDialog{
     bool isConfirmed = false;
     bool loadingCheck = false;
 
-    Completer<bool?> completer = Completer<bool?>(); 
+    Completer<bool?> completer = Completer<bool?>();
     String uniqueTime = DateTime.now().microsecondsSinceEpoch.toString();
     ApprovalCubit approvalCubit = ApprovalCubit();
+    StreamSubscription? eventSubscription;
+    StateSetter? dialogSetState;
 
     if(!['ACCOUNTING', 'KAPTEN', 'SUPERVISOR'].contains(user.level)){
       approvalCubit.sendApproval(uniqueTime, reception, room, note);
@@ -94,10 +96,30 @@ class VerificationDialog{
       barrierDismissible: false,
       builder: (BuildContext ctxDialog){
         String reason = '';
+
         return PopScope(
           canPop: true,
           child: StatefulBuilder(
             builder: (BuildContext ctxWidget, StateSetter setState){
+              // Simpan setState reference hanya sekali
+              dialogSetState ??= setState;
+
+              // Setup event listener hanya sekali
+              eventSubscription ??= eventBus.on<ConfirmationSignalModel>().listen((event) {
+                if(uniqueTime == event.code){
+                  if(ctxWidget.mounted && ctx.mounted && ctxDialog.mounted){
+                    dialogSetState?.call(() {
+                      if(event.state == true){
+                        isLoading = false;
+                        isConfirmed = true;
+                      }else{
+                        isLoading = false;
+                        isConfirmed = false;
+                      }
+                    });
+                  }
+                }
+              });
               Widget buttonCancel(){
                 return InkWell(
                   onTap: (){
@@ -161,23 +183,6 @@ class VerificationDialog{
                   child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)));
               }
 
-              eventBus.on<ConfirmationSignalModel>().listen((event) {
-                if(uniqueTime == event.code){
-                  if(ctxWidget.mounted && ctx.mounted && ctxDialog.mounted){
-                    if(event.state == true){
-                      setState(() {
-                        isLoading = false;
-                        isConfirmed = true;
-                      });
-                    }else{
-                      setState((){
-                        isLoading = false;
-                        isConfirmed = false;
-                      });
-                    }
-                  }
-                }
-              });
               return AlertDialog(
                 actionsPadding: const EdgeInsets.all(0),
                 contentPadding: const EdgeInsets.all(0),
@@ -299,7 +304,12 @@ class VerificationDialog{
             },
           ),
         );
-      }).then((value) => completer.complete(value));
+      }).then((value) {
+        // Cleanup: cancel subscription saat dialog ditutup
+        eventSubscription?.cancel();
+        approvalCubit.close();
+        completer.complete(value);
+      });
       return completer.future;
   }
 }

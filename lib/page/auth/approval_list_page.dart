@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
@@ -18,27 +19,38 @@ class ApprovalListPage extends StatefulWidget {
 
 class _ApprovalListPageState extends State<ApprovalListPage> {
   RequestApprovalResponse? apiResponse;
+  StreamSubscription? _eventSubscription;
 
 
   void getData()async{
-    apiResponse = await CloudRequest.approvalList();
-    setState(() {
-      apiResponse;
-    });
+    final result = await CloudRequest.approvalList();
+    if(mounted){
+      setState(() {
+        apiResponse = result;
+      });
+    }
   }
 
   @override
   void initState(){
-    getData();
     super.initState();
+    getData();
+
+    _eventSubscription = eventBus.on<RefreshApprovalCount>().listen((event) {
+      if(mounted){
+        getData();
+      }
+    });
+  }
+
+  @override
+  void dispose(){
+    _eventSubscription?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    eventBus.on<RefreshApprovalCount>().listen((event) {
-      getData();
-    });
 
     return Scaffold(
       appBar: AppBar(
