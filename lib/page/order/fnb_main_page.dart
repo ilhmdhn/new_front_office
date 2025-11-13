@@ -33,7 +33,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
 
   int activePageIndex = 0;
 
-  void getData(roomCode)async{
+  void getData(String roomCode)async{
     dataCheckin = await ApiRequest().getDetailRoomCheckin(roomCode);
     setState(() {
       dataCheckin;

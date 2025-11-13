@@ -17,7 +17,7 @@ class CustomTextfieldStyle{
     );
   }
 
-  static InputDecoration normalHint(hint){
+  static InputDecoration normalHint(String hint){
     return InputDecoration(
       hintText: hint,
       counterText: "",

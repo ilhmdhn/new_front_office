@@ -167,7 +167,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-  Future<PromoRoomResponse> getPromoRoom(roomType)async{
+  Future<PromoRoomResponse> getPromoRoom(String roomType)async{
     try{
       final url = Uri.parse('$serverUrl/promo/promo-room/$roomType');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -185,7 +185,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-  Future<PromoFnbResponse> getPromoFnB(roomType, roomCode)async{
+  Future<PromoFnbResponse> getPromoFnB(String roomType, String roomCode)async{
     try{
       final url = Uri.parse('$serverUrl/promo/promo-food/$roomType/$roomCode');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -543,7 +543,6 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
 
   Future<FnBResultModel> fnbPage(int page, String category, String search)async{
     try{
-      print('DEBUGGING SINI FNB API REQUEST');
       Uri url = Uri.parse('$serverUrl/inventory/list-paging?page=$page&size=10&category=$category&search=$search');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       

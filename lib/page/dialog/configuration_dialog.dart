@@ -9,7 +9,7 @@ import 'package:front_office_2/tools/toast.dart';
 
 class ConfigurationDialog{
 
-  void setUrl(ctx)async{
+  void setUrl(BuildContext ctx)async{
     TextEditingController tfIp = TextEditingController();
     TextEditingController tfPort = TextEditingController();
     TextEditingController tfOutlet = TextEditingController();

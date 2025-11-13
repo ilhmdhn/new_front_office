@@ -11,7 +11,7 @@ import 'package:front_office_2/tools/udp_sender.dart';
 
 class DoPrint{
 
-  static checkin(String rcp)async{
+  static void checkin(String rcp)async{
     try{
       final apiResponse = await ApiRequest().checkinSlip(rcp);
       final printerData = PreferencesData.getPrinter();
@@ -24,7 +24,7 @@ class DoPrint{
     }
   }
 
-  static lastSo(String rcp, String roomCode, String guestName, int pax)async{
+  static void lastSo(String rcp, String roomCode, String guestName, int pax)async{
     final apiResponse = await ApiRequest().latestSo(rcp);
     if(apiResponse.state != true){
       showToastError(apiResponse.message??'');
@@ -37,7 +37,7 @@ class DoPrint{
     printSo(apiResponse.data!, roomCode, guestName, pax);
   }
 
-  static printSo(String sol, String roomCode, String guestName, int pax)async{
+  static void printSo(String sol, String roomCode, String guestName, int pax)async{
     final printerData = PreferencesData.getPrinter();
     
     if(printerData.connection == '3'){
@@ -88,7 +88,7 @@ class DoPrint{
     }
   }
 
-  static printBill(String roomCode)async{
+  static void printBill(String roomCode)async{
     try{
       final printerData = PreferencesData.getPrinter();
       if(printerData.connection == '3'){

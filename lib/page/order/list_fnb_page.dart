@@ -38,7 +38,6 @@ class _ListFnbPageState extends State<ListFnbPage> {
 
   Future<void> _fetchPage(int pageKey)async{
     try{
-      print('DEBUGGING SINI PAGE KEY $pageKey CATEGORY $category SEARCH $_searchFnb');
       final getFnb = await ApiRequest().fnbPage(pageKey, category, _searchFnb);
       if(getFnb.state != true){
         throw getFnb.message.toString();
