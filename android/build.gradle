@@ -28,6 +28,17 @@ subprojects {
             android {
                 compileSdkVersion 36
                 buildToolsVersion "34.0.0"
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_11
+                    targetCompatibility JavaVersion.VERSION_11
+                }
+            }
+        }
+        if (project.plugins.hasPlugin('org.jetbrains.kotlin.android')) {
+            android {
+                kotlinOptions {
+                    jvmTarget = '11'
+                }
             }
         }
     }
