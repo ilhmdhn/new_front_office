@@ -5,8 +5,10 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   animated_rating_stars
   firebase_core
+  flutter_thermal_printer
   local_auth_windows
   permission_handler_windows
+  universal_ble
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

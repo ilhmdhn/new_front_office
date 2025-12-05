@@ -7,8 +7,6 @@ import 'package:front_office_2/page/bloc/int_bloc.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/orientation.dart';
-import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmationDialog{

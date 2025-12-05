@@ -282,7 +282,7 @@ class _BillPageState extends State<BillPage> {
                       child: InkWell(
                         onTap: (){
                           final userLevel = PreferencesData.getUser();
-                          if(userLevel.level != 'KASIR' || userLevel.level != 'SERVER'){
+                          if(userLevel.level != 'KASIR' && userLevel.level != 'ACCOUNTING '){
                             showToastWarning('User tidak memiliki akses');
                             return;
                           }

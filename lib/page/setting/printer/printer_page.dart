@@ -42,7 +42,7 @@ class _PrinterPageState extends State<PrinterPage> {
           color: Colors.white, //change your color here
         ),
         title: Text(
-          'Printer Setting :',
+          'Printer Setting',
           style: CustomTextStyle.titleAppBar(),
         ),
         backgroundColor: CustomColorStyle.appBarBackground(),

@@ -86,16 +86,20 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                       if(transferState.state != true){
                         showToastError(transferState.message??'Error Transfer room to room');
                       }else{
-                        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        if(context.mounted){
+                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        }
                       }
                     }else{
                       final transferState = await ApiRequest().transferRoomtoRoom(transferParams);
                       if(transferState.state != true){
                         showToastError(transferState.message??'Error Transfer lobby to lobby');
                       }else{
-                        Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        if(context.mounted){
+                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                        }
                       }
-                    } 
+                    }
                     }
                   },
                   child: Container(

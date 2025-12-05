@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
-import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
