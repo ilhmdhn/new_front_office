@@ -40,6 +40,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_thermal_printer (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
   - GoogleDataTransport (10.1.0):
@@ -90,6 +92,9 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - universal_ble (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - animated_rating_stars (from `.symlinks/plugins/animated_rating_stars/ios`)
@@ -99,12 +104,14 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_thermal_printer (from `.symlinks/plugins/flutter_thermal_printer/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - universal_ble (from `.symlinks/plugins/universal_ble/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -134,6 +141,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_thermal_printer:
+    :path: ".symlinks/plugins/flutter_thermal_printer/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   local_auth_darwin:
@@ -146,6 +155,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  universal_ble:
+    :path: ".symlinks/plugins/universal_ble/darwin"
 
 SPEC CHECKSUMS:
   animated_rating_stars: 127efa3d924c3d9ba9a73507bf6e6450639bb596
@@ -160,6 +171,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 43ec73bbfedd0c385a849bb91593ab4ad4b9e48e
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
+  flutter_thermal_printer: 56e0926d5ac26e5f407cdf760013313dee05a318
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
@@ -171,6 +183,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   qr_code_scanner: d77f94ecc9abf96d9b9b8fc04ef13f611e5a147a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  universal_ble: ff19787898040d721109c6324472e5dd4bc86adc
 
 PODFILE CHECKSUM: 765e01554d9d3c26f8eeba1f0e94f4440784a0bc
 

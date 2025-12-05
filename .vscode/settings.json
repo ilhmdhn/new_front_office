@@ -1,3 +1,62 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic"
+  // Java Settings
+  "java.configuration.updateBuildConfiguration": "automatic",
+
+  // Flutter Settings
+  "dart.flutterSdkPath": null,
+  "dart.debugExternalPackageLibraries": false,
+  "dart.debugSdkLibraries": false,
+
+  // Hot Reload Settings - IMPORTANT for development
+  // "always" = auto hot reload saat save (recommended untuk VS Code button start)
+  "dart.flutterHotReloadOnSave": "always",
+  "dart.flutterHotRestartOnSave": "never",
+
+  // Flutter Run Settings
+  "dart.flutterRunLogFile": null,
+  "dart.previewFlutterUiGuides": true,
+  "dart.previewFlutterUiGuidesCustomTracking": true,
+
+  // Analysis Settings
+  "dart.analysisServerFolding": true,
+  "dart.closingLabels": true,
+  "dart.enableCompletionCommitCharacters": true,
+
+  // Editor Settings
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // File Associations
+  "files.associations": {
+    "*.dart": "dart"
+  },
+
+  // Exclude from file watcher (performance improvement)
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.hg/store/**": true,
+    "**/build/**": true,
+    "**/.gradle/**": true,
+    "**/android/.gradle/**": true,
+    "**/ios/Pods/**": true,
+    "**/.dart_tool/**": true
+  },
+
+  // Search exclude (performance improvement)
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/build/**": true,
+    "**/.gradle/**": true,
+    "**/android/.gradle/**": true,
+    "**/ios/Pods/**": true,
+    "**/.dart_tool/**": true
+  }
 }

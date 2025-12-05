@@ -1,0 +1,14 @@
+[
+  // Flutter Hot Restart
+  {
+    "key": "cmd+shift+r",
+    "command": "flutter.hotRestart",
+    "when": "debugType == 'dart'"
+  },
+  // Flutter Hot Reload
+  {
+    "key": "cmd+r",
+    "command": "flutter.hotReload",
+    "when": "debugType == 'dart'"
+  }
+]
