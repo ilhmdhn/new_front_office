@@ -41,6 +41,36 @@ class ReceiptPrinterHelper {
     ]);
   }
 
+  List<int> textCenter(
+    String value, {
+    bool? bold,
+    PosTextSize? width,
+    PosTextSize? height,
+  }) {
+    return generator.row([
+      PosColumn(
+        text: '',
+        width: 3,
+        styles: PosStyles(),
+      ),
+      PosColumn(
+        text: value,
+        width: 6,
+        styles: PosStyles(
+          align: PosAlign.center,
+          bold: bold ?? false,
+          width: width ?? PosTextSize.size1,
+          height: height ?? PosTextSize.size1,
+        ),
+      ),
+      PosColumn(
+        text: '',
+        width: 3,
+        styles: PosStyles(),
+      ),
+    ]);
+  }
+
   List<int> table(
     String leftText,
     String centerText,

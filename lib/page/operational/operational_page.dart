@@ -92,7 +92,7 @@ class _OperationalPageState extends State<OperationalPage> {
                     return widget.kasirLayout(state.toString());
                   } else if(userData.level == 'SUPERVISOR' || userData.level == 'KAPTEN'){
                     return widget.spvLayout(state.toString());
-                  } else if(userData.level == 'SERVER'){
+                  } else if(userData.level == 'SERVER' || userData.level == 'BAR'){
                     return widget.serverLayout();
                   }else if(userData.level == 'ACCOUNTING'){
                     return widget.accountingLayout(state.toString());

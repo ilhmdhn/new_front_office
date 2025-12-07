@@ -116,8 +116,7 @@ class _PrinterPageState extends State<PrinterPage> {
                           if (printer.connection == '2') {
                             BtprintExecutor().testPrint();
                           } else if (printer.connection == '3') {
-                            showToastWarning(
-                                'Fitur test print hanya tersedia untuk Bluetooth Printer');
+                            showToastWarning('Fitur test print hanya tersedia untuk Bluetooth Printer');
                           } else if (printer.connection == '4') {
                             LanprintExecutor().testPrint();
                           }
