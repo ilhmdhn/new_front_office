@@ -5,9 +5,6 @@ import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
-import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -37,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> insertLogin()async{
     final response = await CloudRequest.insertLogin();
     if(response.state != true){
-      showToastError(' Error upload fcm token ${response.message}');
+      showToastError(' Error upload fcm tokent ${response.message}');
     }
   }
 
@@ -88,133 +85,420 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColorStyle.background(),
-      body: 
-      
-      isLoading == true?
-      Center(
-        child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),
-      ):
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                flex: 1,
-                child: SizedBox(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              CustomColorStyle.appBarBackground().withOpacity(0.1),
+              CustomColorStyle.background(),
+              CustomColorStyle.appBarBackground().withOpacity(0.05),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: isLoading == true
+              ? Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: CircularProgressIndicator(
+                      color: CustomColorStyle.appBarBackground(),
+                      strokeWidth: 3,
+                    ),
+                  ),
+                )
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      AutoSizeText('Login FO', style: GoogleFonts.poppins(fontSize: 36, color: CustomColorStyle.appBarBackground(), fontWeight: FontWeight.w500),)
+                      const SizedBox(height: 40),
+
+                      // Logo/Title Section
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: CustomColorStyle.appBarBackground().withOpacity(0.1),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.business,
+                                size: 48,
+                                color: CustomColorStyle.appBarBackground(),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            AutoSizeText(
+                              'Happy Puppy Group POS',
+                              style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                color: CustomColorStyle.appBarBackground(),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Selamat datang kembali',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Login Form
+                      Container(
+                        padding: const EdgeInsets.all(32),
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 30,
+                              offset: const Offset(0, 15),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Username Field
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Username',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: tfUser,
+                                    autofillHints: const [AutofillHints.username],
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[50],
+                                      prefixIcon: Icon(
+                                        Icons.person_outline,
+                                        color: CustomColorStyle.appBarBackground(),
+                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                        horizontal: 20,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide(
+                                          color: CustomColorStyle.appBarBackground(),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      hintText: 'Masukkan username',
+                                      hintStyle: GoogleFonts.poppins(
+                                        color: Colors.grey[400],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Password Field
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Password',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: tfPassword,
+                                    autofillHints: const [AutofillHints.password],
+                                    obscureText: !showPassword,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[50],
+                                      prefixIcon: Icon(
+                                        Icons.lock_outline,
+                                        color: CustomColorStyle.appBarBackground(),
+                                      ),
+                                      suffixIcon: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            showPassword = !showPassword;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          showPassword
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                        horizontal: 20,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide(
+                                          color: CustomColorStyle.appBarBackground(),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      hintText: 'Masukkan password',
+                                      hintStyle: GoogleFonts.poppins(
+                                        color: Colors.grey[400],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Login Buttons
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          CustomColorStyle.appBarBackground(),
+                                          CustomColorStyle.appBarBackground().withOpacity(0.8),
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: CustomColorStyle.appBarBackground().withOpacity(0.3),
+                                          blurRadius: 15,
+                                          offset: const Offset(0, 8),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (isNullOrEmpty(tfUser.text) ||
+                                              isNullOrEmpty(tfPassword.text)) {
+                                            showToastWarning('Lengkapi User dan Password');
+                                            return;
+                                          }
+                                          doLogin(tfUser.text, tfPassword.text);
+                                        },
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 16),
+                                          child: Center(
+                                            child: Text(
+                                              'Login',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                                letterSpacing: 0.5,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 16),
+
+                                // Biometric Button
+                                Container(
+                                  width: 56,
+                                  height: 56,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                                      width: 1.5,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        final biometricState =
+                                            PreferencesData.getBiometricLoginState();
+                                        if (biometricState != true) {
+                                          showToastWarning(
+                                              'Autentikasi Biometric Belum Diaktifkan');
+                                          return;
+                                        }
+
+                                        final biometricRequest =
+                                            await FingerpintAuth().requestFingerprintAuth();
+                                        if (biometricRequest != true) {
+                                          return;
+                                        }
+                                        final user = PreferencesData.getUser();
+                                        doLogin(user.userId ?? '', user.pass ?? '');
+                                      },
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Center(
+                                        child: Image.asset(
+                                          'assets/icon/fingerprint.png',
+                                          width: 28,
+                                          height: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      // Configuration Link
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              ConfigurationDialog().setUrl(context);
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.settings_outlined,
+                                    size: 18,
+                                    color: CustomColorStyle.appBarBackground(),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Konfigurasi',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: CustomColorStyle.appBarBackground(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
-              ),
-              Flexible(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Username:', style: CustomTextStyle.blackStandard(),),
-                    SizedBox(
-                      height: 36,
-                      child: TextField(
-                        style: GoogleFonts.poppins(),
-                        controller: tfUser,
-                        autofillHints: const [AutofillHints.username],
-                        decoration: CustomTextfieldStyle.characterNormal(),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text('Password:', style: CustomTextStyle.blackStandard(),),
-                    SizedBox(
-                      height: 36,
-                      child: TextField(
-                        controller: tfPassword,
-                        style: GoogleFonts.poppins(),
-                        autofillHints: const [AutofillHints.password],
-                        obscureText: showPassword? false: true,
-                        decoration: InputDecoration(
-                          // contentPadding: EdgeInsets.symmetric(vertical: 40.0),
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(vertical: -10.0, horizontal: 12),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: const BorderSide(color: Colors.grey, width: 2.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: (){
-                              setState(() {
-                               showPassword = !showPassword;  
-                              });
-                            },
-                            icon: Icon(showPassword? Icons.visibility:Icons.visibility_off),)
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                            onTap: (){
-                              if(isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)){
-                                showToastWarning('Lengkapi User dan Password');
-                                return;
-                              }
-                              doLogin(tfUser.text, tfPassword.text);
-                            },
-                            child: Container(
-                              decoration: CustomContainerStyle.confirmButton(),
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              child: Text('Login', style: CustomTextStyle.whiteSize(19),))),
-                        const SizedBox(width: 12,),
-                        InkWell(
-                          onTap: ()async{
-                            final biometricState = PreferencesData.getBiometricLoginState();
-                            if(biometricState != true){
-                              showToastWarning('Autentikasi Biometric Belum Diaktifkan');
-                              return;
-                            }
-    
-                            final biometricRequest = await FingerpintAuth().requestFingerprintAuth();
-                            if(biometricRequest != true){
-                              return;
-                            }
-                            final user = PreferencesData.getUser();
-                            doLogin(user.userId??'', user.pass??'');
-                          },
-                          child: SizedBox(
-                            height: 46,
-                            width: 46,
-                            child: Image.asset('assets/icon/fingerprint.png'),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 2,
-                child: InkWell(
-                  onTap: (){
-                    ConfigurationDialog().setUrl(context);
-                  },
-                  child: Text('Konfigurasi', style: CustomTextStyle.blackMedium(),),
-                ),
-              ),
-            ]),
+        ),
       ),
     );
   }

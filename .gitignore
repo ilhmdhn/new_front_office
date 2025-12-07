@@ -35,19 +35,6 @@ migrate_working_dir/
 **/generated_plugin_registrant.dart
 **/GeneratedPluginRegistrant.*
 
-# Linux generated files
-/linux/flutter/generated_plugin_registrant.h
-/linux/flutter/generated_plugin_registrant.cc
-/linux/flutter/generated_plugins.cmake
-
-# macOS generated files
-/macos/Flutter/GeneratedPluginRegistrant.swift
-
-# Windows generated files
-/windows/flutter/generated_plugin_registrant.h
-/windows/flutter/generated_plugin_registrant.cc
-/windows/flutter/generated_plugins.cmake
-
 # Symbolication related
 app.*.symbols
 
@@ -60,10 +47,8 @@ app.*.map.json
 /android/app/release
 
 .env
-macos/firebase_app_id_file.json
 android/app/google-services.json
 ios/firebase_app_id_file.json
 ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
-macos/Runner/GoogleService-Info.plist
 data.dart

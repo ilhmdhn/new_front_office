@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 import 'package:device_information/device_information.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
+import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
@@ -26,7 +28,6 @@ import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{
@@ -306,7 +307,15 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     try{
       
       final url = Uri.parse('$serverUrl/sign');
-      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});  
+      final apiResponse = await http.get(
+        url, 
+        headers: {'Content-Type': 'application/json', 'authorization': token},
+      ).timeout(
+        const Duration(seconds: 10), // <--- set timeout
+        onTimeout: () {
+          throw Exception('Tidak terhubung ke server');
+        },
+      );
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
