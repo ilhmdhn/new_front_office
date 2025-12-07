@@ -28,6 +28,11 @@ class _PrinterPageState extends State<PrinterPage> {
   List<BluetoothDevice> printerList = List.empty(growable: true);
   PrinterModel printer = PreferencesData.getPrinter();
   bool isLoading = false;
+  String selectedLanPrinterType = 'Epson TMU82x';
+  String selectedBluetoothPrinterType = 'Bluetooth printer 80 mm';
+
+  final List<String> lanPrinterTypes = ['Epson TMU82x', 'Bixolon', 'TMU220'];
+  final List<String> bluetoothPrinterTypes = ['Bluetooth printer 80 mm', 'Bluetooth Printer 57mm'];
 
   @override
   void initState() {
@@ -282,6 +287,40 @@ class _PrinterPageState extends State<PrinterPage> {
               ],
             ),
             const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: selectedBluetoothPrinterType,
+              decoration: InputDecoration(
+                labelText: 'Printer Type',
+                prefixIcon: const Icon(Icons.print, color: Colors.blue),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                ),
+                filled: true,
+                fillColor: Colors.blue.shade50,
+              ),
+              items: bluetoothPrinterTypes.map((String type) {
+                return DropdownMenuItem<String>(
+                  value: type,
+                  child: Text(type),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedBluetoothPrinterType = newValue;
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -421,7 +460,7 @@ class _PrinterPageState extends State<PrinterPage> {
               PreferencesData.setPrinter(PrinterModel(
                 name: 'PC PRINTER',
                 connection: '3',
-                type: 'DOT MATRIX',
+                type: 'TMU220',
                 address: tfIpPc.text,
               ));
               setState(() {
@@ -449,6 +488,40 @@ class _PrinterPageState extends State<PrinterPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        DropdownButtonFormField<String>(
+          value: selectedLanPrinterType,
+          decoration: InputDecoration(
+            labelText: 'Printer Type',
+            prefixIcon: const Icon(Icons.print, color: Colors.orange),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.orange, width: 2),
+            ),
+            filled: true,
+            fillColor: Colors.orange.shade50,
+          ),
+          items: lanPrinterTypes.map((String type) {
+            return DropdownMenuItem<String>(
+              value: type,
+              child: Text(type),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                selectedLanPrinterType = newValue;
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 12),
         TextField(
           inputFormatters: [IPAddressInputFormatter()],
           keyboardType: TextInputType.number,
@@ -485,7 +558,7 @@ class _PrinterPageState extends State<PrinterPage> {
                   PreferencesData.setPrinter(PrinterModel(
                     name: 'LAN PRINTER',
                     connection: '4',
-                    type: 'LAN',
+                    type: selectedLanPrinterType,
                     address: tfIpLan.text,
                   ));
                   setState(() {
@@ -504,32 +577,7 @@ class _PrinterPageState extends State<PrinterPage> {
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton.icon(
-              onPressed: () async {
-                if (tfIpLan.text.isEmpty && printer.connection != '4') {
-                  showToastWarning('Simpan LAN Printer terlebih dahulu');
-                  return;
-                }
-                try {
-                  await LanprintExecutor().testPrint();
-                } catch (e) {
-                  // Error sudah di-handle di LanprintExecutor
-                }
-              },
-              icon: const Icon(Icons.print_outlined, size: 20),
-              label: const Text('Test'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
+            )
           ],
         ),
       ],
@@ -669,7 +717,7 @@ class _PrinterPageState extends State<PrinterPage> {
                     PreferencesData.setPrinter(PrinterModel(
                       name: device.name ?? 'Unknown',
                       connection: '2',
-                      type: 'Bluetooth',
+                      type: selectedBluetoothPrinterType,
                       address: device.address ?? '',
                     ));
                     setState(() {

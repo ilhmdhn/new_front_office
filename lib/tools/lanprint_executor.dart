@@ -36,16 +36,12 @@ class LanprintExecutor {
       port = defaultPort;
     }
 
-    debugPrint('LAN Printer IP: $ip, Port: $port');
-
     // SESUAI DOKUMENTASI: Gunakan FlutterThermalPrinterNetwork
     final service = FlutterThermalPrinterNetwork(ip, port: port);
 
     try {
       // Connect ke printer
-      debugPrint('Connecting to LAN printer: $ip:$port');
       await service.connect();
-      debugPrint('Connected successfully');
 
       // Load capability profile
       final profile = await CapabilityProfile.load();
@@ -72,18 +68,15 @@ class LanprintExecutor {
       bytes += helper.divider();
       bytes += helper.feed(1);
       bytes += helper.row("Kiri", "Kanan");
+      bytes += helper.feed(1);
+      bytes += helper.table("kirikirikirikiri", "tengahtengahtengah1", "kanankanankanan1", leftAlign: PosAlign.left, centerAlign: PosAlign.left, rightAlign: PosAlign.left);
       bytes += helper.feed(3);
-
+      
       // CRITICAL: Tambah CUT command (GS V)
       bytes += helper.cut();
-
       // Print data - SESUAI DOKUMENTASI: gunakan printTicket()
-      debugPrint('Printing ${bytes.length} bytes...');
-      debugPrint('Data preview: ${bytes.take(50)}...'); // Preview data
-
       await service.printTicket(bytes);
 
-      debugPrint('Print completed successfully');
       showToastSuccess('Test print LAN berhasil!');
     } catch (e) {
       debugPrint('Error during LAN print: $e');

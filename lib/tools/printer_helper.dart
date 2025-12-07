@@ -41,8 +41,61 @@ class ReceiptPrinterHelper {
     ]);
   }
 
-  List<int> barcode(String data) => generator.barcode(
-        Barcode.upcA(data as List),
+  List<int> table(
+    String leftText,
+    String centerText,
+    String rightText, {
+    PosAlign leftAlign = PosAlign.left,
+    PosAlign centerAlign = PosAlign.center,
+    PosAlign rightAlign = PosAlign.right,
+    int leftColWidth = 4,
+    int centerColWidth = 4,
+    int rightColWidth = 4,
+    bool? leftBold,
+    bool? centerBold,
+    bool? rightBold,
+    PosTextSize? leftTextWidth,
+    PosTextSize? centerTextWidth,
+    PosTextSize? rightTextWidth,
+    PosTextSize? leftTextHeight,
+    PosTextSize? centerTextHeight,
+    PosTextSize? rightTextHeight,
+  }) {
+    return generator.row([
+      PosColumn(
+        text: leftText,
+        width: leftColWidth,
+        styles: PosStyles(
+          align: leftAlign,
+          bold: leftBold ?? false,
+          width: leftTextWidth ?? PosTextSize.size1,
+          height: leftTextHeight ?? PosTextSize.size1,
+        ),
+      ),
+      PosColumn(
+        text: centerText,
+        width: centerColWidth,
+        styles: PosStyles(
+          align: centerAlign,
+          bold: centerBold ?? false,
+          width: centerTextWidth ?? PosTextSize.size1,
+          height: centerTextHeight ?? PosTextSize.size1,
+        ),
+      ),
+      PosColumn(
+        text: rightText,
+        width: rightColWidth,
+        styles: PosStyles(
+          align: rightAlign,
+          bold: rightBold ?? false,
+          width: rightTextWidth ?? PosTextSize.size1,
+          height: rightTextHeight ?? PosTextSize.size1,
+        ),
+      ),
+    ]);
+  }
+
+  List<int> barcode(String data) => generator.barcode(Barcode.upcA(data as List),
       );
 
   List<int> qr(String data) => generator.qrcode(data);
