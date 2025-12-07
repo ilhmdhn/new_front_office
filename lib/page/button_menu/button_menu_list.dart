@@ -24,8 +24,9 @@ class ButtonMenuWidget{
     final spaceCenter = ScreenSize.getSizePercent(context, 2);
     final widthRow = ScreenSize.getSizePercent(context, 94);
 
-    return
-    isPotrait?
+
+    return 
+    isPotrait?    
     Column(
       children: [
         SizedBox(
@@ -34,23 +35,23 @@ class ButtonMenuWidget{
             children: [
               SizedBox(
                 width: widthButton,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkin()),
               SizedBox(width: spaceCenter,),
               SizedBox(
                 width: widthButton,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkinReservation())
             ],
         ),
         ),
-        const SizedBox(height: 6,),
+        const SizedBox(height: 8,),
         SizedBox(
-          height: isPotrait == true? 68:null,
+          height: isPotrait == true? 83:null,
           width: widthRow,
           child: editCheckin(),
         ),
-        const SizedBox(height: 6,),
+        const SizedBox(height: 8,),
         SizedBox(
           width: widthRow,
           child: Row(
@@ -65,7 +66,7 @@ class ButtonMenuWidget{
             ],
         ),
         ),
-        const SizedBox(height: 6,),
+        const SizedBox(height: 8,),
         SizedBox(
           width: widthRow,
           child: Row(
@@ -80,7 +81,7 @@ class ButtonMenuWidget{
             ],
         ),
         ),
-        const SizedBox(height: 6,),
+        const SizedBox(height: 8,),
         SizedBox(
           width: widthRow,
           child: Row(
@@ -95,19 +96,19 @@ class ButtonMenuWidget{
             ],
         ),
         ),
-        const SizedBox(height: 6,),
+        const SizedBox(height: 8,),
         SizedBox(
           width: widthRow,
           child: Row(
             children: [
               SizedBox(
                 width: widthButton,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkinInfo()),
               SizedBox(width: spaceCenter,),
               SizedBox(
                 width: widthButton,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: reservationList())
             ],
         ),
@@ -121,44 +122,44 @@ class ButtonMenuWidget{
             children: [
               SizedBox(
                 width: widthButtonLandscape,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkin()),
               SizedBox(width: spaceCenter,),
               SizedBox(
                 width: widthButtonLandscape,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkinReservation()
               ),
               SizedBox(width: spaceCenter,),
               SizedBox(
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 width: widthButtonLandscape,
                 child: editCheckin(),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 9,),
+        const SizedBox(height: 12,),
         SizedBox(
           width: widthRow,
           child: Row(
             children: [
               SizedBox(
                 width: widthButtonLandscape,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: bill()),
               SizedBox(width: spaceCenter,)
             ],
           ),
         ),
-        const SizedBox(height: 9,),
+        const SizedBox(height: 12,),
         SizedBox(
           width: widthRow,
           child: Row(
             children: [
               SizedBox(
                 width: widthButtonLandscape,
-                height: isPotrait == true? 68:null,
+                height: isPotrait == true? 83:null,
                 child: checkinInfo()),
               SizedBox(width: spaceCenter,)
             ],
@@ -506,59 +507,52 @@ class ButtonMenuWidget{
 
 
   Widget checkin(){
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 2);
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 2.5);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     final isPotrait = isVertical(context);
 
     return InkWell(
             child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            // height: isPotrait == true? 83:null,
+            // width: widthButton,
+            padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue.shade400, Colors.blue.shade600],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.withValues(alpha: 0.3),
-                  spreadRadius: 0,
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+                  color: Colors.grey.withValues(alpha: 0.2),
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
                   ),
                 ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                  height: isPotrait? widthIconButton: widthIconButtonLandscape,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Image.asset('assets/menu_icon/karaoke.png', fit: BoxFit.contain,)
+                SizedBox(
+                  width: spacerpaddingButton,
+                ),
+                SizedBox(
+                  width:  isPotrait? widthIconButton: widthIconButtonLandscape,
+                  child: Image.asset('assets/menu_icon/karaoke.png')
                 ),
                 Expanded(
                   child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                  child: AutoSizeText('Checkin', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600), minFontSize: 12, wrapWords: false,maxLines: 1),
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                  child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, wrapWords: false,maxLines: 1),
                   )
                 ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-                ),
+                SizedBox(
+                  width: widthArrowButton,
+                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+                SizedBox(
+                    width: spacerpaddingButton,
+                )
               ]
             ),),
             onTap: ()async{
@@ -583,9 +577,13 @@ class ButtonMenuWidget{
   }
 
   Widget checkinReservation(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+    
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -593,57 +591,54 @@ class ButtonMenuWidget{
         showToastWarning('Checkin Reservation is coming soon');
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.purple.shade400, Colors.purple.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white, // Warna background
+          borderRadius: BorderRadius.circular(10), // Bentuk border
           boxShadow: [
             BoxShadow(
-              color: Colors.purple.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2), // Warna shadow
+              spreadRadius: 3, // Radius penyebaran shadow
+              blurRadius: 7, // Radius blur shadow
+              offset: const Offset(0, 3), // Offset shadow
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/reservation.png')
               ),
-              child: Image.asset('assets/menu_icon/reservation.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Checkin Reservasi', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 11, wrapWords: true, softWrap: true, maxLines: 2,),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Checkin Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 13, wrapWords: true, softWrap: true, maxLines: 2,),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget editCheckin(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     final isPotrait = isVertical(context);
 
@@ -652,57 +647,55 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.orange.shade400, Colors.orange.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white, // Warna background
+          borderRadius: BorderRadius.circular(10), // Bentuk border
           boxShadow: [
             BoxShadow(
-              color: Colors.orange.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2), // Warna shadow
+              spreadRadius: 3, // Radius penyebaran shadow
+              blurRadius: 7, // Radius blur shadow
+              offset: const Offset(0, 3), // Offset shadow
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/edit_checkin.png')
               ),
-              child: Image.asset('assets/menu_icon/edit_checkin.png', fit: BoxFit.contain,)
-            ),
             Flexible(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: Center(child: AutoSizeText('Edit Room Checkin', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 2,)),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2,)),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget extend(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     final isPotrait = isVertical(context);
 
@@ -711,58 +704,56 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.teal.shade400, Colors.teal.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.teal.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/extend.png')
               ),
-              child: Image.asset('assets/menu_icon/extend.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Duration', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Duration', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget transfer(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+    
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -770,58 +761,56 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 3);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.indigo.shade400, Colors.indigo.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.indigo.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/change.png')
               ),
-              child: Image.asset('assets/menu_icon/change.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Transfer', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget order(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -829,58 +818,56 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.green.shade400, Colors.green.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.green.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/fnb.png')
               ),
-              child: Image.asset('assets/menu_icon/fnb.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Order', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget bill(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -888,58 +875,56 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.pink.shade400, Colors.pink.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.pink.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/bill.png')
               ),
-              child: Image.asset('assets/menu_icon/bill.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Bayar', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
-
+  
   Widget checkout(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -947,58 +932,56 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange.shade400, Colors.deepOrange.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.deepOrange.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/checkout.png')
               ),
-              child: Image.asset('assets/menu_icon/checkout.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Checkout', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false, softWrap: false ,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false, softWrap: false ,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget clean(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -1006,117 +989,114 @@ class ButtonMenuWidget{
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.cyan.shade400, Colors.cyan.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.cyan.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/clean.png')
               ),
-              child: Image.asset('assets/menu_icon/clean.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Clean', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 1),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget checkinInfo(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
       onTap: ()async{
         showToastWarning('Checkin Info Cooming Soon');
+        // Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 8);
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.amber.shade400, Colors.amber.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.amber.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/room_checkin.png')
               ),
-              child: Image.asset('assets/menu_icon/room_checkin.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('Checkin Info', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 2),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('Checkin Info', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
   }
 
   Widget reservationList(){
-    final widthIconButton = ScreenSize.getSizePercent(context, 8);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 4);
+    // final widthButton = ScreenSize.getSizePercent(context, 45);
+    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
+    final widthIconButton = ScreenSize.getSizePercent(context, 10);
+    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
+    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
     final paddingButtonText = ScreenSize.getSizePercent(context, 1);
+
     final isPotrait = isVertical(context);
 
     return InkWell(
@@ -1124,49 +1104,43 @@ class ButtonMenuWidget{
         showToastWarning('List Reservation is Cooming Soon');
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // height: isPotrait == true? 83:null,
+          // width: widthButton,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple.shade400, Colors.deepPurple.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.deepPurple.withValues(alpha: 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
+              width: spacerpaddingButton,
+            ),
+            SizedBox(
               width: isPotrait? widthIconButton: widthIconButtonLandscape,
-              height: isPotrait? widthIconButton: widthIconButtonLandscape,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                child: Image.asset('assets/menu_icon/list_reservation.png')
               ),
-              child: Image.asset('assets/menu_icon/list_reservation.png', fit: BoxFit.contain,)
-            ),
             Expanded(
+              // width: widthTextButton,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: paddingButtonText + 4),
-                child: AutoSizeText('List Reservasi', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),  minFontSize: 12, wrapWords: false,maxLines: 2),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
+                child: AutoSizeText('List Reservasi', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
               )),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14,)
-            ),
+            SizedBox(
+              width: widthArrowButton,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            SizedBox(
+              width: spacerpaddingButton,
+            )
           ]),
       ),
     );
