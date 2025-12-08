@@ -245,6 +245,9 @@ class LanprintExecutor {
       bytes += helper.row('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan));
       bytes += helper.divider();
       bytes += printFooter(helper, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
+      if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
+        bytes += helper.table('Voucher', '', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', rightAlign: PosAlign.right);
+      }
       bytes += helper.feed(3);
       bytes += helper.cut();
       await service.printTicket(bytes);
@@ -440,50 +443,29 @@ class LanprintExecutor {
       bytes += helper.text('Harga Tertera sudah termasuk service dan pajak', align: PosAlign.center);
     } else if (style == 4) {
     } else if (style == 5) {
-      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Jumlah Service', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow('Jumlah pajak', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.writeBytes(right);
-      await bt.write('----------------\n');
-      await bt.writeBytes(normal);
-      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write('----------------\n');
+      // await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      // await bt.write(formatTableRow('Jumlah Service', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      bytes += helper.tableWithMaxChars('', 'Jumlah Service', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Jumlah Pajak', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+      bytes += helper.tableWithMaxChars('', 'Total', Formatter.formatRupiah(ivc.jumlahTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
     } else if (style == 6) {
-      await bt.write(formatTableRow(
-          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow(
-          'Service FnB ', Formatter.formatRupiah(ivc.fnbService), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow(
-          'Service Room', Formatter.formatRupiah(ivc.roomService), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.writeBytes(right);
-      await bt.write('----------------\n');
-      await bt.writeBytes(normal);
-      await bt.write(formatTableRow(
-          'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write('----------------\n');
+      bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Service FnB', Formatter.formatRupiah(ivc.fnbService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Service Room', Formatter.formatRupiah(ivc.roomService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+      bytes += helper.tableWithMaxChars('', 'Total', Formatter.formatRupiah(ivc.jumlahTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
     } else if (style == 7) {
-      await bt.write(formatTableRow(
-          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow(
-          'Pajak FnB ', Formatter.formatRupiah(ivc.fnbTax), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write(formatTableRow(
-          'Pajak Room', Formatter.formatRupiah(ivc.roomTax), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.writeBytes(right);
-      await bt.write('----------------\n');
-      await bt.writeBytes(normal);
-      await bt.write(formatTableRow(
-          'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,
-          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
-      await bt.write('----------------\n');
+      bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Pajak FnB', Formatter.formatRupiah(ivc.fnbTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Pajak Room', Formatter.formatRupiah(ivc.roomTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+      bytes += helper.tableWithMaxChars('', 'Total', Formatter.formatRupiah(ivc.jumlahTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
     } else {}
-    */
     return bytes;
   }
 
