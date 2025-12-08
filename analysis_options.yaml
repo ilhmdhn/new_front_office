@@ -9,6 +9,18 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+# Dart formatter settings
+analyzer:
+  language:
+    strict-casts: false
+    strict-inference: false
+    strict-raw-types: false
+
+# Line length for formatter (default is 80, set to 120 for better readability)
+# This affects when you manually format code (Shift+Option+F)
+# Note: This is controlled via dart format --line-length command
+# VS Code will use this when formatting Dart files
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

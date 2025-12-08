@@ -206,7 +206,7 @@ class LanprintExecutor {
       bytes += helper.textCenter(data.dataOutlet.telepon);
       bytes += helper.feed(1);
       bytes += helper.textCenter('INVOICE', bold: true);
-      bytes += helper.feed(2);
+      bytes += helper.feed(1);
       //Checkin Info
       bytes += helper.text('Ruangan : ${data.dataRoom.roomCode}');
       bytes += helper.text('Nama    : ${data.dataRoom.nama}');
@@ -226,7 +226,25 @@ class LanprintExecutor {
             rightAlign: PosAlign.right);
       }
       //FnB
-      if (isNotNullOrEmpty(orderFix)) {}
+      if (isNotNullOrEmpty(orderFix)) {
+        bytes += printFnB(orderFix, helper);
+        if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
+          bytes += helper.table('Voucher FnB', '', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', rightAlign: PosAlign.right);
+        }
+        num totalPromo = 0;
+        for (var element in orderFix) {
+          totalPromo += element.hargaPromo;
+        }
+        if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+          bytes += helper.feed(1);
+          bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
+        }
+      }
+      bytes += helper.divider();
+      bytes += helper.row('Jumlah Ruangan', Formatter.formatRupiah(data.dataInvoice.jumlahRuangan));
+      bytes += helper.row('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan));
+      bytes += helper.divider();
+      bytes += printFooter(helper, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
       bytes += helper.feed(3);
       bytes += helper.cut();
       await service.printTicket(bytes);
@@ -354,27 +372,121 @@ class LanprintExecutor {
     ApiRequest().updatePrintState(data.dataInvoice.reception, '2');
   }
 
-  List<int> printFnB(
-      List<OrderFinalModel> orderFix, ReceiptPrinterHelper helper) {
+  List<int> printFnB(List<OrderFinalModel> orderFix, helper) {
     List<int> bytes = [];
     final fnbList = mergeItems(orderFix);
-
+    bytes += helper.feed(1);
     bytes += helper.text('Rincian Penjualan');
+    bytes += helper.feed(1);
+
     for (var fnb in fnbList) {
-      bytes += helper.text(fnb.namaItem);
-      bytes += helper.table(
-          '${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
-          '',
-          Formatter.formatRupiah(fnb.totalSemua + fnb.hargaCancel),
-          rightAlign: PosAlign.right);
-      if (PreferencesData.getShowPromoBelowItem() == true && fnb.hargaPromo > 0) {
-        bytes += helper.table(
-            fnb.promoName, '', '(${Formatter.formatRupiah(fnb.hargaPromo)})',
-            rightAlign: PosAlign.right);
+      if (PreferencesData.getShowReturState() == true) {
+        bytes += helper.text(fnb.namaItem);
+        bytes += helper.row(
+            '${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
+            Formatter.formatRupiah(fnb.totalSemua + fnb.hargaCancel));
+        if (fnb.jumlahCancel > 0) {
+          bytes += helper.row(
+            '  RETUR ${fnb.namaItem} x ${fnb.jumlahCancel}',
+            '(${Formatter.formatRupiah(fnb.hargaCancel)})',
+          );
+        }
+        if (fnb.hargaPromo > 0 &&
+            PreferencesData.getShowPromoBelowItem() == true) {
+          bytes += helper.row(
+            fnb.promoName,
+            '(${Formatter.formatRupiah(fnb.hargaPromo)})',
+          );
+        }
+      } else {
+        if (fnb.jumlah > 0) {
+          bytes += helper.text(fnb.namaItem);
+          bytes += helper.row(
+            ' ${fnb.jumlah} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
+            Formatter.formatRupiah(fnb.totalSemua),
+          );
+          if (fnb.hargaPromo > 0 &&
+              PreferencesData.getShowPromoBelowItem() == true) {
+            bytes += helper.row(
+              fnb.promoName,
+              '(${Formatter.formatRupiah(fnb.hargaPromo)})',
+            );
+          }
+        }
       }
     }
     return bytes;
   }
+
+  List<int> printFooter(ReceiptPrinterHelper helper, InvoiceModel ivc, ServiceTaxPercentModel tns, int style) {
+    List<int> bytes = [];
+    if (style == 1) {
+      bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Service FnB ${tns.serviceFnbPercent}%', Formatter.formatRupiah(ivc.fnbService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Service Room ${tns.serviceRoomPercent}%', Formatter.formatRupiah(ivc.roomService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Pajak FnB ${tns.taxFnbPercent}%', Formatter.formatRupiah(ivc.fnbTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Pajak Room ${tns.taxRoomPercent}%', Formatter.formatRupiah(ivc.roomTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+      bytes += helper.tableWithMaxChars('', 'Total', Formatter.formatRupiah(ivc.jumlahTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+   } else if (style == 2) {
+      bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Jumlah Service ${(tns.serviceFnbPercent + tns.serviceRoomPercent) / 2}%', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.tableWithMaxChars('', 'Jumlah pajak ${(tns.taxFnbPercent + tns.taxRoomPercent) / 2}%', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+      bytes += helper.tableWithMaxChars('', 'Total', Formatter.formatRupiah(ivc.jumlahTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.row('','----------------');
+    } else if (style == 3) {
+      bytes += helper.text('Harga Tertera sudah termasuk service dan pajak', align: PosAlign.center);
+    } else if (style == 4) {
+    } else if (style == 5) {
+      await bt.write(formatTableRow('Jumlah', Formatter.formatRupiah(ivc.jumlah), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah Service', Formatter.formatRupiah(ivc.fnbService + ivc.roomService), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow('Jumlah pajak', Formatter.formatRupiah(ivc.fnbTax + ivc.roomTax), 48, leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow('Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    } else if (style == 6) {
+      await bt.write(formatTableRow(
+          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow(
+          'Service FnB ', Formatter.formatRupiah(ivc.fnbService), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow(
+          'Service Room', Formatter.formatRupiah(ivc.roomService), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow(
+          'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    } else if (style == 7) {
+      await bt.write(formatTableRow(
+          'Jumlah', Formatter.formatRupiah(ivc.jumlah), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow(
+          'Pajak FnB ', Formatter.formatRupiah(ivc.fnbTax), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write(formatTableRow(
+          'Pajak Room', Formatter.formatRupiah(ivc.roomTax), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.writeBytes(right);
+      await bt.write('----------------\n');
+      await bt.writeBytes(normal);
+      await bt.write(formatTableRow(
+          'Total', Formatter.formatRupiah(ivc.jumlahTotal), 48,
+          leftSize: 33, rightSize: 15, alignRight: true, alignLeft: true));
+      await bt.write('----------------\n');
+    } else {}
+    */
+    return bytes;
+  }
+
 
   List<OrderFinalModel> mergeItems(List<OrderFinalModel> orderList) {
     var groupedOrders = groupBy<OrderFinalModel, String>(

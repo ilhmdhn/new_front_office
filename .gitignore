@@ -52,3 +52,8 @@ ios/firebase_app_id_file.json
 ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
 data.dart
+
+# Platform folders (only Android and iOS are supported)
+linux/
+macos/
+windows/

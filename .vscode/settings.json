@@ -23,12 +23,15 @@
   "dart.enableCompletionCommitCharacters": true,
 
   // Editor Settings
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
+
+  // Dart Formatter Settings
+  "dart.lineLength": 120,
 
   // File Associations
   "files.associations": {
