@@ -3,7 +3,7 @@ PODS:
     - Flutter
   - blue_thermal_printer (0.0.1):
     - Flutter
-  - device_information (0.0.1):
+  - device_info_plus (0.0.1):
     - Flutter
   - Firebase/CoreOnly (12.2.0):
     - FirebaseCore (~> 12.2.0)
@@ -99,7 +99,7 @@ PODS:
 DEPENDENCIES:
   - animated_rating_stars (from `.symlinks/plugins/animated_rating_stars/ios`)
   - blue_thermal_printer (from `.symlinks/plugins/blue_thermal_printer/ios`)
-  - device_information (from `.symlinks/plugins/device_information/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -131,8 +131,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/animated_rating_stars/ios"
   blue_thermal_printer:
     :path: ".symlinks/plugins/blue_thermal_printer/ios"
-  device_information:
-    :path: ".symlinks/plugins/device_information/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -161,7 +161,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   animated_rating_stars: 127efa3d924c3d9ba9a73507bf6e6450639bb596
   blue_thermal_printer: d859595ae87fd0d2317a7f023d32551db13775df
-  device_information: 27f680afa6fe71e4c211d14257c37da07662c9f6
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Firebase: 26f6f8d460603af3df970ad505b16b15f5e2e9a1
   firebase_core: 3ff52146406557dddd01d570e807e203ec7e1302
   firebase_messaging: 3dcc998dd98e1e54af75d0cccae8606eba43553c

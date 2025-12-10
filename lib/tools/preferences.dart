@@ -1,9 +1,11 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:front_office_2/data/model/network.dart';
-import 'package:device_information/device_information.dart';
 
 class PreferencesData {
   static SharedPreferences? _prefs;
@@ -52,6 +54,19 @@ class PreferencesData {
     return state;
   }
 
+  static Future<String> getDeviceModel()async{
+    final deviceInfo = DeviceInfoPlugin();
+    String deviceModel = '';
+    if(Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      deviceModel = androidInfo.model ?? 'Unknown Android Device';
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+    }
+    return deviceModel;
+  }
+
   static UserDataModel getUser() {
     final userId = _prefs?.getString('USER_ID') ?? '';
     final level = _prefs?.getString('USER_LEVEL') ?? '';
@@ -82,8 +97,16 @@ class PreferencesData {
   }
 
   static Future<String> getImei()async{
-    try{
-      return await DeviceInformation.deviceIMEINumber;
+    try{  
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.id;
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor ?? '';
+    }
+    return '';
     }catch(e){
       showToastError(e.toString());
       return 'error $e';

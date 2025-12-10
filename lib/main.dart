@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,17 +23,15 @@ import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/status/state_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
-import 'package:front_office_2/tools/firebase_tools.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'firebase_options.dart';
 import 'package:get_it/get_it.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +48,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseTools.initToken();
   // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String? signalType = message.data['type'];
@@ -66,6 +65,9 @@ void main() async {
       eventBus.fire(RefreshApprovalCount());
     } else if (signalType == '3') {
       eventBus.fire(RefreshApprovalCount());
+    } else if(signalType == 'room_call'){
+      debugPrint('DEBUGGING room_call received');
+      showRoomCallDialog(message);
     }
   });
 

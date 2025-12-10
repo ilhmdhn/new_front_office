@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:device_information/device_information.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/rendering.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
@@ -131,7 +133,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-    Future<BaseResponse> doCheckinLobby(Map<String, dynamic> params)async{
+  Future<BaseResponse> doCheckinLobby(Map<String, dynamic> params)async{
     try{
       final url = Uri.parse('$serverUrl/checkin-direct/direct-lobby-member');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(params));
@@ -612,7 +614,15 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<BaseResponse> revisiOrder(OrderedModel data, String sol, String rcp, String oldQty)async{
     try{
       Uri url = Uri.parse('$serverUrl/order/revisi-order');
-      
+      final deviceInfo = DeviceInfoPlugin();
+      String deviceModel = '';
+      if(Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceModel = androidInfo.model ?? 'Unknown Android Device';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+      }
       final bodyParams = {
         "order_slip_order": sol,
         "order_inventory": data.invCode,
@@ -621,7 +631,7 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         "order_qty_temp": data.qty,
         "order_room_rcp": rcp,
         "order_room_user": PreferencesData.getUser().userId,
-        "order_model_android": await DeviceInformation.deviceModel
+        "order_model_android": deviceModel
       };
       
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -644,14 +654,22 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
   Future<BaseResponse> cancelSo(String invCode, String sol, String rcp, String oldQty)async{
     try{
       Uri url = Uri.parse('$serverUrl/order/cancelOrder');
-      
+      final deviceInfo = DeviceInfoPlugin();
+      String deviceModel = '';
+      if(Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceModel = androidInfo.model ?? 'Unknown Android Device';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+      }
       final bodyParams = {
         "order_slip_order": sol,
         "order_inventory": invCode,
         "order_qty": oldQty,
         "order_room_rcp": rcp,
         "order_room_user": PreferencesData.getUser().userId,
-        "order_model_android": await DeviceInformation.deviceModel
+        "order_model_android": deviceModel
       };
       
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -860,6 +878,38 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
+  Future<BaseResponse> tokenPost(String token)async{
+    try{
+      final url = Uri.parse('$serverUrl/firebase/token');
+      Map<String, dynamic> bodyParams = {
+        "token": PreferencesData.getFcmToken(),
+        "user": PreferencesData.getUser().userId,
+        "user_level": PreferencesData.getUser().level
+      };
+      final apiResponse = await http.post(
+        url, 
+        body: json.encode(bodyParams),
+        headers: {'Content-Type': 'application/json', 'authorization': token},
+      ).timeout(
+        const Duration(seconds: 10), // <--- set timeout
+        onTimeout: () {
+          throw Exception('Tidak terhubung ke server');
+        },
+      );
+      final convertedResult = json.decode(apiResponse.body);
+      debugPrint('DEBUGGING tokenPost: ${convertedResult.toString()}');
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      print('DEBUGGING Error tokenPost: ${e.toString()}');
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

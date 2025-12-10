@@ -5,6 +5,7 @@ import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/status/state_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/permissions.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -36,7 +37,12 @@ class _MainPageState extends State<MainPage> {
       Permissions().getNotificationPermission();
     }
   }
-
+  @override
+  void initState() {
+  FirebaseTools.initToken();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     notifPermissionState();

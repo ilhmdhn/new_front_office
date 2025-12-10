@@ -225,10 +225,6 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: ()async{
-                  /*final logoutState = await ConfirmationDialog.confirmation(context, 'Logout?');
-                  if(logoutState != true){
-                    return;
-                  }*/
                   PreferencesData.setLoginState(false);
                   FirebaseMessaging.instance.deleteToken();
                   if(context.mounted){

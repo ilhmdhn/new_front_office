@@ -68,7 +68,7 @@ class ConfirmationDialog{
 */
   static Future<bool> confirmation(BuildContext ctx, String title) async {
     if (!ctx.mounted) return false;
-  
+
     try {
       final result = await showDialog<bool>(
         context: ctx,
@@ -76,7 +76,10 @@ class ConfirmationDialog{
         builder: (BuildContext ctxDialog) {
           return AlertDialog(
             backgroundColor: Colors.white,
-            title: AutoSizeText(title, style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 12,),
+            title: Center(
+              child: Text(title, style: CustomTextStyle.blackMediumSize(19), textAlign: TextAlign.center),
+            ),
+            content: const SizedBox(height: 0),
             actions: [
               Row(
                 children: [
@@ -93,7 +96,7 @@ class ConfirmationDialog{
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
+                      child: Text('Cancel', style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -110,7 +113,7 @@ class ConfirmationDialog{
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
+                      child: Text('Konfirmasi', style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
                     ),
                   ),
                 ],
@@ -140,7 +143,7 @@ class ConfirmationDialog{
             builder: (ctxStfl, setState){
               return AlertDialog(
                 backgroundColor: Colors.white,
-                title: Center(child: AutoSizeText('Batalkan pesanan\n$itemName?', style: CustomTextStyle.blackMediumSize(16), maxLines: 3, minFontSize: 12, textAlign: TextAlign.center,)),
+                title: Center(child: Text('Batalkan pesanan\n$itemName?', style: CustomTextStyle.blackMediumSize(16), textAlign: TextAlign.center)),
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

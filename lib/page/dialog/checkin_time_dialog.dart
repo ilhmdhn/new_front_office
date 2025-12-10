@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/time_pax_model.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -37,7 +36,7 @@ class CheckinDurationDialog {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AutoSizeText('Durasi Jam', style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 11,),
+                            Text('Durasi Jam', style: CustomTextStyle.blackMediumSize(19)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -56,7 +55,12 @@ class CheckinDurationDialog {
                                   )
                                 ),
                                 const SizedBox(width: 9,),
-                                AutoSizeText(checkinTime.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                                SizedBox(
+                                  width: 40,
+                                  child: Center(
+                                    child: Text(checkinTime.toString(), style: CustomTextStyle.blackMediumSize(26)),
+                                  ),
+                                ),
                                 const SizedBox(width: 9,),
                                 InkWell(
                                   onTap: (){
@@ -77,13 +81,12 @@ class CheckinDurationDialog {
                           ],
                         ),
                       ],
-                    ):Container(color: Colors.amber,),
+                    ):const SizedBox.shrink(),
                     const SizedBox(height: 8,),
                     Row(
-                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('PAX', style: CustomTextStyle.blackMediumSize(19),),
+                        Text('PAX', style: CustomTextStyle.blackMediumSize(19)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -103,7 +106,12 @@ class CheckinDurationDialog {
                               )
                             ),
                             const SizedBox(width: 9,),
-                            AutoSizeText(pax.toString(), style: CustomTextStyle.blackMediumSize(26), maxLines: 1, minFontSize: 11,),
+                            SizedBox(
+                              width: 40,
+                              child: Center(
+                                child: Text(pax.toString(), style: CustomTextStyle.blackMediumSize(26)),
+                              ),
+                            ),
                             const SizedBox(width: 9,),
                             InkWell(
                               onTap: (){
