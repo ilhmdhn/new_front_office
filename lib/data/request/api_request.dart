@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/rendering.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/call_service_history.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
@@ -909,7 +910,55 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
     }
   }
 
-  
+  Future<BaseResponse> callResponse(String roomCode)async{
+    try{
+      final url = Uri.parse('$serverUrl/call/callroom/$roomCode');
+      Map<String, dynamic> bodyParams = {
+        "chusr": PreferencesData.getUser().userId
+      };
+      final apiResponse = await http.put(
+        url, 
+        body: json.encode(bodyParams),
+        headers: {'Content-Type': 'application/json', 'authorization': token},
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw Exception('Tidak terhubung ke server');
+        },
+      );
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<CallServiceHistoryResponse> getServiceHistory()async{
+    try{
+      final url = Uri.parse('$serverUrl/call/callroom');
+      final apiResponse = await http.get(
+        url, 
+        headers: {'Content-Type': 'application/json', 'authorization': token},
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw Exception('Tidak terhubung ke server');
+        },
+      );
+      final convertedResult = json.decode(apiResponse.body);
+      return CallServiceHistoryResponse.fromJson(convertedResult);
+    }catch(e){
+      return CallServiceHistoryResponse(
+        state: false,
+        message: e.toString(),
+        data: []
+      );
+    }
+  }
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

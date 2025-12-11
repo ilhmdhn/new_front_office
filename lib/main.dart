@@ -14,6 +14,7 @@ import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/order/fnb_main_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
+import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/cash_detail/cash_detail_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
 import 'package:front_office_2/page/report/report_page.dart';
@@ -109,7 +110,8 @@ class FrontOffice extends StatelessWidget {
         FnbMainPage.nameRoute: (context) => const FnbMainPage(),
         CashDetailPage.nameRoute: (context) => const CashDetailPage(),
         ReprintInvoicePage.nameRoute: (context) => const ReprintInvoicePage(),
-        PrinterStylePage.nameRoute: (context) => const PrinterStylePage()
+        PrinterStylePage.nameRoute: (context) => const PrinterStylePage(),
+        CallServiceHistoryPage.nameRoute: (context) => const CallServiceHistoryPage()
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -30,10 +31,12 @@ class _ReportPageState extends State<ReportPage> {
         padding: const EdgeInsets.only(top: 12),
         child: Column(
           children: [
-            // AddOnWidget.listButtonNavigation(context, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
+            // AddOnWidget.listButtonNavigation(coantext, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
             // const SizedBox(height: 9,),
             PreferencesData.getUser().level == 'KASIR' || PreferencesData.getUser().level == 'ACCOUNTING'?
-            AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox()
+            AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox(),
+            const SizedBox(height: 9,),
+            AddOnWidget.listButtonNavigation(context, CallServiceHistoryPage.nameRoute, 'assets/icon/call_service.png', 'Call Service'),
             /*SizedBox(
               width: double.infinity,
               child: ElevatedButton(

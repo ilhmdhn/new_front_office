@@ -44,9 +44,9 @@ class _OperationalPageState extends State<OperationalPage> {
         backgroundColor: CustomColorStyle.appBarBackground(),
         foregroundColor: Colors.white,
         title: Text('Operasional', style: CustomTextStyle.titleAppBar(),selectionColor: Colors.white,),
-        actions: [
-          IconButton(onPressed: (){}, icon: const Badge(label: Text('10') ,child: Icon(Icons.notifications,)),)
-        ],
+        // actions: [
+        //   IconButton(onPressed: (){}, icon: const Badge(label: Text('10') ,child: Icon(Icons.notifications,)),)
+        // ],
       ),
       backgroundColor: CustomColorStyle.background(),
       body: Padding(
@@ -88,7 +88,7 @@ class _OperationalPageState extends State<OperationalPage> {
                 child: BlocBuilder(
                 bloc: approvalCubit,
                 builder: (BuildContext ctxApproval, state){
-                  if(userData.level == 'KASIR' || userData.level == 'IT'){
+                  if(userData.level == 'KASIR'){
                     return widget.kasirLayout(state.toString());
                   } else if(userData.level == 'SUPERVISOR' || userData.level == 'KAPTEN'){
                     return widget.spvLayout(state.toString());
