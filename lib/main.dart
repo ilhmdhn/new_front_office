@@ -21,6 +21,7 @@ import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
+import 'package:front_office_2/page/setting/password/change_password_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/status/state_page.dart';
@@ -32,6 +33,7 @@ import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:get_it/get_it.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -111,7 +113,8 @@ class FrontOffice extends StatelessWidget {
         CashDetailPage.nameRoute: (context) => const CashDetailPage(),
         ReprintInvoicePage.nameRoute: (context) => const ReprintInvoicePage(),
         PrinterStylePage.nameRoute: (context) => const PrinterStylePage(),
-        CallServiceHistoryPage.nameRoute: (context) => const CallServiceHistoryPage()
+        CallServiceHistoryPage.nameRoute: (context) => const CallServiceHistoryPage(),
+        ChangePasswordPage.routeName: (context) => const ChangePasswordPage(),
       },
     );
   }
