@@ -1,41 +1,17 @@
 {
-  "state": true,
-  "message": "Success",
-  "data": [
-    {
-      "edc_code": "BCA",
-      "edc_name": "BCA",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "MANDIRI",
-      "edc_name": "Mandiri",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "BNI",
-      "edc_name": "BNI",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "BRI",
-      "edc_name": "BRI",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "GOPAY",
-      "edc_name": "GoPay",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "OVO",
-      "edc_name": "OVO",
-      "edc_fee": 0
-    },
-    {
-      "edc_code": "DANA",
-      "edc_name": "DANA",
-      "edc_fee": 0
-    }
-  ]
+"state": true,
+"length": 2,
+"message": "succes",
+"data": [
+{
+"nomor_edc": 1,
+"nama_mesin": "BCA",
+"status_aktif": 1
+},
+{
+"nomor_edc": 2,
+"nama_mesin": "BRI",
+"status_aktif": 1
+}
+]
 }

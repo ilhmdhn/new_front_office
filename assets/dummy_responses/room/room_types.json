@@ -1,24 +1,55 @@
 {
-  "state": true,
-  "message": "Success",
-  "data": [
-    {
-      "room_type": "VIP",
-      "room_price": 150000,
-      "room_count": 3,
-      "photo": "https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=VIP+Room"
-    },
-    {
-      "room_type": "REGULAR",
-      "room_price": 100000,
-      "room_count": 5,
-      "photo": "https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Regular+Room"
-    },
-    {
-      "room_type": "STANDARD",
-      "room_price": 75000,
-      "room_count": 8,
-      "photo": "https://via.placeholder.com/300x200/95E1D3/FFFFFF?text=Standard+Room"
-    }
-  ]
+"state": true,
+"length": 12,
+"message": "succes",
+"data": [
+{
+"jenis_kamar": "CHICAGO",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "DETROIT",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "EDINBURGH",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "FORBIDEN CITY",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "FUSHIMI INARI",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "LOUVRE",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "MARRAKESH",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "SHIBUYA",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "WALL STREET",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "XINTIANDI",
+"jumlah_available": 1
+},
+{
+"jenis_kamar": "BAR",
+"jumlah_available": 17
+},
+{
+"jenis_kamar": "LOBBY",
+"jumlah_available": 20
+}
+]
 }

@@ -38,6 +38,7 @@ class ApiRequest{
 
   final serverUrl = PreferencesData.getUrl();
   final token = PreferencesData.getUserToken();
+  final userId = PreferencesData.getUser().userId;
   
   Future<LoginResponse> loginFO(String userId, String password)async{
     try {
@@ -62,6 +63,10 @@ class ApiRequest{
 
   Future<CekMemberResponse> cekMember(String memberCode) async {
   try {
+    if(userId == 'TEST'){
+      final data =  await DummyResponseHelper.getCekMember(memberCode);
+      return data;
+    }
     final serverUrl = PreferencesData.getUrl();
     final url = Uri.parse('$serverUrl/member/membership/$memberCode');
     final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -83,6 +88,10 @@ class ApiRequest{
 
   Future<ListRoomTypeReadyResponse> getListRoomTypeReady()async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getListRoomTypeReady();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/room/all-room-type-ready-grouping');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -102,6 +111,10 @@ class ApiRequest{
 
   Future<RoomListResponse> getRoomList(String roomType)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getRoomListByType(roomType);
+        return data;
+      }
       final url = Uri.parse('$serverUrl/room/all-room-ready-by-type-grouping/$roomType');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -121,6 +134,10 @@ class ApiRequest{
 
   Future<BaseResponse> doCheckin(CheckinBody checkinData)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin-direct/direct-checkin-member');
       final body = GenerateCheckinParams().checkinBodyRequest(checkinData);
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(body));
@@ -141,6 +158,10 @@ class ApiRequest{
 
   Future<BaseResponse> doCheckinLobby(Map<String, dynamic> params)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin-direct/direct-lobby-member');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(params));
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -160,6 +181,10 @@ class ApiRequest{
 
   Future<EdcResponse> getEdc()async{
     try{ 
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getEdcList();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/edc/list-edc');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -178,6 +203,10 @@ class ApiRequest{
 
   Future<PromoRoomResponse> getPromoRoom(String roomType)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getPromoRoom();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/promo/promo-room/$roomType');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -196,6 +225,10 @@ class ApiRequest{
 
   Future<PromoFnbResponse> getPromoFnB(String roomType, String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getPromoFnb();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/promo/promo-food/$roomType/$roomCode');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -214,6 +247,10 @@ class ApiRequest{
 
   Future<BaseResponse> editCheckin(EditCheckinBody editData)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin-direct/edit-checkin');
       final body = GenerateCheckinParams().editCheckinBodyRequest(editData);
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json', 'authorization': token}, body: json.encode(body));
@@ -233,6 +270,10 @@ class ApiRequest{
 
   Future<RoomCheckinResponse> getListRoomCheckin(String? search)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getListRoomCheckin();
+        return data;
+      }
       if(isNullOrEmpty(search)){
         search = '';
       }
@@ -254,6 +295,10 @@ class ApiRequest{
 
   Future<RoomCheckinResponse> getListRoomPaid(String? search)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getListRoomCheckin();
+        return data;
+      }
       if(isNullOrEmpty(search)){
         search = '';
       }
@@ -275,6 +320,10 @@ class ApiRequest{
 
   Future<RoomCheckinResponse> getListRoomCheckout(String? search)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getListRoomCheckin();
+        return data;
+      }
       if(isNullOrEmpty(search)){
         search = '';
       }
@@ -296,6 +345,10 @@ class ApiRequest{
 
   Future<DetailCheckinResponse> getDetailRoomCheckin(String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getDetailRoomCheckin(roomCode);
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin/checkin-result/$roomCode');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -310,6 +363,7 @@ class ApiRequest{
       );
     }
   }
+  //end belum di mock
 
   Future<BaseResponse> cekSign()async{
     try{

@@ -2,11 +2,15 @@
   "state": true,
   "message": "Member ditemukan",
   "data": {
-    "member_code": "{MEMBER_CODE}",
-    "member_name": "Demo Member",
+    "member": "{MEMBER_CODE}",
+    "nama_lengkap": "Demo Member",
     "member_phone": "081234567890",
+    "jenis_member": "GOLD",
     "member_email": "demo@example.com",
     "member_point": 1000,
+    "photo_url": "https://example.com/photo.jpg",
     "member_level": "GOLD"
   }
 }
+
+
