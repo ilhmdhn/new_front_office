@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/rendering.dart';
+import 'package:front_office_2/data/dummy/dummy_response_helper.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/call_service_history.dart';
@@ -40,6 +41,10 @@ class ApiRequest{
   
   Future<LoginResponse> loginFO(String userId, String password)async{
     try {
+      if(userId == 'test'){
+        final data =  await DummyResponseHelper.getLoginResponse();
+        return data;
+      }
       final url = Uri.parse('$serverUrl/user/login-fo-droid');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
         'user_id': userId,
@@ -55,7 +60,7 @@ class ApiRequest{
     }
   }
 
-Future<CekMemberResponse> cekMember(String memberCode) async {
+  Future<CekMemberResponse> cekMember(String memberCode) async {
   try {
     final serverUrl = PreferencesData.getUrl();
     final url = Uri.parse('$serverUrl/member/membership/$memberCode');
@@ -402,7 +407,6 @@ Future<CekMemberResponse> cekMember(String memberCode) async {
         message: e.toString());
     }
   }
-
 
   Future<PreviewBillResponse> getBill(String roomCode)async{
     try{

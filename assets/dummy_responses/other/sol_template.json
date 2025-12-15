@@ -1,0 +1,15 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "sol": "{SOL}",
+      "inv_code": "FNB001",
+      "inv_name": "Nasi Goreng",
+      "qty": 2,
+      "price": 25000,
+      "total": 50000,
+      "notes": "Pedas"
+    }
+  ]
+}

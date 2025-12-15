@@ -1,0 +1,37 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": {
+    "invoice_number": "INV-{TIMESTAMP}",
+    "rcp": "{RCP}",
+    "outlet": "Happy Puppy Demo",
+    "date": "2025-12-15 15:00:00",
+    "cashier": "DEMO001",
+    "member_name": "John Doe",
+    "room_code": "VIP001",
+    "grand_total": 515000,
+    "payment": 515000,
+    "change": 0,
+    "payment_method": "CASH",
+    "items": [
+      {
+        "item_name": "Room VIP - 3 Jam",
+        "item_qty": 1,
+        "item_price": 450000,
+        "item_total": 450000
+      },
+      {
+        "item_name": "Nasi Goreng",
+        "item_qty": 2,
+        "item_price": 25000,
+        "item_total": 50000
+      },
+      {
+        "item_name": "Es Teh",
+        "item_qty": 3,
+        "item_price": 5000,
+        "item_total": 15000
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": {
+    "room_code": "{ROOM_CODE}",
+    "room_type": "VIP",
+    "room_rcp": "RCP001",
+    "member_code": "MBR001",
+    "member_name": "John Doe",
+    "member_phone": "081234567890",
+    "checkin_time": "2025-12-15 10:00:00",
+    "duration": 3,
+    "checkout_time": "2025-12-15 13:00:00",
+    "room_price": 150000,
+    "total_price": 450000,
+    "status": "CHECKIN"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "kamar": "VIP001",
+      "sisa_checkin": 7200,
+      "sisa_jam_checkin": 2,
+      "sisa_menit_checkin": 0,
+      "nama_member": "John Doe",
+      "status_print": "1",
+      "summary": "RCP001"
+    },
+    {
+      "kamar": "REGULAR002",
+      "sisa_checkin": 3600,
+      "sisa_jam_checkin": 1,
+      "sisa_menit_checkin": 0,
+      "nama_member": "Jane Smith",
+      "status_print": "1",
+      "summary": "RCP002"
+    },
+    {
+      "kamar": "STANDARD003",
+      "sisa_checkin": 5400,
+      "sisa_jam_checkin": 1,
+      "sisa_menit_checkin": 30,
+      "nama_member": "Michael Johnson",
+      "status_print": "0",
+      "summary": "RCP003"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "promo_code": "FNBPROMO001",
+      "promo_name": "Buy 1 Get 1 Drink",
+      "promo_type": "BUY_1_GET_1",
+      "promo_description": "Beli 1 minuman gratis 1"
+    },
+    {
+      "promo_code": "FNBPROMO002",
+      "promo_name": "Diskon 15% F&B",
+      "promo_type": "PERCENTAGE",
+      "promo_value": 15,
+      "promo_description": "Diskon 15% untuk semua menu"
+    }
+  ]
+}

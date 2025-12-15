@@ -1,0 +1,24 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "room_type": "VIP",
+      "room_price": 150000,
+      "room_count": 3,
+      "photo": "https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=VIP+Room"
+    },
+    {
+      "room_type": "REGULAR",
+      "room_price": 100000,
+      "room_count": 5,
+      "photo": "https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Regular+Room"
+    },
+    {
+      "room_type": "STANDARD",
+      "room_price": 75000,
+      "room_count": 8,
+      "photo": "https://via.placeholder.com/300x200/95E1D3/FFFFFF?text=Standard+Room"
+    }
+  ]
+}

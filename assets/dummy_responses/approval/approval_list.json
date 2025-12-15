@@ -1,0 +1,26 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "id_approval": "APV001",
+      "outlet": "HP000",
+      "user": "DEMO001",
+      "reception": "RCP001",
+      "room": "VIP001",
+      "note": "Request untuk diskon khusus",
+      "state": "PENDING",
+      "created_at": "2025-12-15 10:30:00"
+    },
+    {
+      "id_approval": "APV002",
+      "outlet": "HP000",
+      "user": "DEMO002",
+      "reception": "RCP002",
+      "room": "REGULAR002",
+      "note": "Komplain AC tidak dingin",
+      "state": "PENDING",
+      "created_at": "2025-12-15 11:00:00"
+    }
+  ]
+}

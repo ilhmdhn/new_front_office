@@ -1,0 +1,24 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": {
+    "VIP": {
+      "total": 10,
+      "checkin": 3,
+      "ready": 5,
+      "dirty": 2
+    },
+    "REGULAR": {
+      "total": 15,
+      "checkin": 5,
+      "ready": 8,
+      "dirty": 2
+    },
+    "STANDARD": {
+      "total": 20,
+      "checkin": 8,
+      "ready": 10,
+      "dirty": 2
+    }
+  }
+}

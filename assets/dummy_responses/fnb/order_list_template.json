@@ -1,0 +1,28 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "sol": "SOL001",
+      "inv_code": "FNB001",
+      "inv_name": "Nasi Goreng",
+      "qty": "2",
+      "price": 25000,
+      "total": 50000,
+      "notes": "Pedas",
+      "status": "PENDING",
+      "okl": "OKL001"
+    },
+    {
+      "sol": "SOL002",
+      "inv_code": "FNB003",
+      "inv_name": "Es Teh",
+      "qty": "3",
+      "price": 5000,
+      "total": 15000,
+      "notes": "",
+      "status": "DELIVERED",
+      "okl": "OKL002"
+    }
+  ]
+}

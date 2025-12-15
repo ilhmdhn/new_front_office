@@ -1,0 +1,12 @@
+{
+  "state": true,
+  "message": "Voucher valid",
+  "data": {
+    "voucher_code": "VOUCHER001",
+    "voucher_name": "Diskon 20%",
+    "voucher_type": "PERCENTAGE",
+    "voucher_value": 20,
+    "voucher_min_transaction": 100000,
+    "voucher_max_discount": 50000
+  }
+}

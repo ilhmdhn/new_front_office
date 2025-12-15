@@ -1,0 +1,15 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "kamar": "VIP002",
+      "sisa_checkin": 0,
+      "sisa_jam_checkin": 0,
+      "sisa_menit_checkin": 0,
+      "nama_member": "Sarah Williams",
+      "status_print": "1",
+      "summary": "RCP004"
+    }
+  ]
+}

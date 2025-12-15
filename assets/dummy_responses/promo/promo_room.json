@@ -1,0 +1,20 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "promo_code": "PROMO001",
+      "promo_name": "Diskon 10%",
+      "promo_type": "PERCENTAGE",
+      "promo_value": 10,
+      "promo_description": "Diskon 10% untuk semua tipe kamar"
+    },
+    {
+      "promo_code": "PROMO002",
+      "promo_name": "Cashback 50k",
+      "promo_type": "NOMINAL",
+      "promo_value": 50000,
+      "promo_description": "Cashback Rp 50.000"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": {
+    "content": [
+      {
+        "inv_code": "FNB001",
+        "inv_name": "Nasi Goreng",
+        "inv_category": "MAKANAN",
+        "inv_price": 25000,
+        "inv_stock": 50,
+        "inv_image": "https://via.placeholder.com/150x150/FFB6C1/FFFFFF?text=Nasi+Goreng"
+      },
+      {
+        "inv_code": "FNB002",
+        "inv_name": "Mie Goreng",
+        "inv_category": "MAKANAN",
+        "inv_price": 20000,
+        "inv_stock": 40,
+        "inv_image": "https://via.placeholder.com/150x150/FFB6C1/FFFFFF?text=Mie+Goreng"
+      },
+      {
+        "inv_code": "FNB003",
+        "inv_name": "Es Teh",
+        "inv_category": "MINUMAN",
+        "inv_price": 5000,
+        "inv_stock": 100,
+        "inv_image": "https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=Es+Teh"
+      },
+      {
+        "inv_code": "FNB004",
+        "inv_name": "Es Jeruk",
+        "inv_category": "MINUMAN",
+        "inv_price": 7000,
+        "inv_stock": 80,
+        "inv_image": "https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=Es+Jeruk"
+      },
+      {
+        "inv_code": "FNB005",
+        "inv_name": "Ayam Goreng",
+        "inv_category": "MAKANAN",
+        "inv_price": 30000,
+        "inv_stock": 30,
+        "inv_image": "https://via.placeholder.com/150x150/FFB6C1/FFFFFF?text=Ayam+Goreng"
+      },
+      {
+        "inv_code": "FNB006",
+        "inv_name": "Kopi",
+        "inv_category": "MINUMAN",
+        "inv_price": 10000,
+        "inv_stock": 60,
+        "inv_image": "https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=Kopi"
+      },
+      {
+        "inv_code": "FNB007",
+        "inv_name": "Sate Ayam",
+        "inv_category": "MAKANAN",
+        "inv_price": 35000,
+        "inv_stock": 25,
+        "inv_image": "https://via.placeholder.com/150x150/FFB6C1/FFFFFF?text=Sate+Ayam"
+      },
+      {
+        "inv_code": "FNB008",
+        "inv_name": "Jus Alpukat",
+        "inv_category": "MINUMAN",
+        "inv_price": 12000,
+        "inv_stock": 45,
+        "inv_image": "https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=Jus+Alpukat"
+      }
+    ],
+    "totalPages": 1,
+    "totalElements": 8,
+    "size": 10,
+    "number": 0
+  }
+}

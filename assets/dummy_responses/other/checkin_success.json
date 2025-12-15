@@ -1,0 +1,12 @@
+{
+  "state": true,
+  "message": "Checkin berhasil (DEMO MODE)",
+  "data": {
+    "checkin_room": {
+      "room_code": "VIP001",
+      "room_rcp": "RCP{TIMESTAMP}",
+      "member_name": "Demo Member",
+      "checkin_time": "{CURRENT_TIME}"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "state": true,
+  "message": "Member ditemukan",
+  "data": {
+    "member_code": "{MEMBER_CODE}",
+    "member_name": "Demo Member",
+    "member_phone": "081234567890",
+    "member_email": "demo@example.com",
+    "member_point": 1000,
+    "member_level": "GOLD"
+  }
+}

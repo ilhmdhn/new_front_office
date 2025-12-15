@@ -1,0 +1,27 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": [
+    {
+      "room_code": "{ROOM_TYPE}001",
+      "room_name": "Room {ROOM_TYPE} 001",
+      "room_type": "{ROOM_TYPE}",
+      "room_price": 150000,
+      "room_status": "READY"
+    },
+    {
+      "room_code": "{ROOM_TYPE}002",
+      "room_name": "Room {ROOM_TYPE} 002",
+      "room_type": "{ROOM_TYPE}",
+      "room_price": 150000,
+      "room_status": "READY"
+    },
+    {
+      "room_code": "{ROOM_TYPE}003",
+      "room_name": "Room {ROOM_TYPE} 003",
+      "room_type": "{ROOM_TYPE}",
+      "room_price": 150000,
+      "room_status": "READY"
+    }
+  ]
+}

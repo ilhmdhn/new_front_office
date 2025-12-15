@@ -1,0 +1,14 @@
+# Copy paste ini ke pubspec.yaml di bagian flutter: assets:
+
+flutter:
+  assets:
+    # Dummy Response JSON Files (untuk offline mode / demo)
+    - assets/dummy_responses/auth/
+    - assets/dummy_responses/room/
+    - assets/dummy_responses/fnb/
+    - assets/dummy_responses/billing/
+    - assets/dummy_responses/member/
+    - assets/dummy_responses/approval/
+    - assets/dummy_responses/payment/
+    - assets/dummy_responses/promo/
+    - assets/dummy_responses/other/

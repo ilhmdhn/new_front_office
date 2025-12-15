@@ -1,0 +1,40 @@
+{
+  "state": true,
+  "message": "Success",
+  "data": {
+    "room_code": "{ROOM_CODE}",
+    "room_rcp": "RCP001",
+    "member_name": "John Doe",
+    "checkin_time": "2025-12-15 10:00:00",
+    "checkout_time": "2025-12-15 13:00:00",
+    "room_price": 150000,
+    "room_total": 450000,
+    "fnb_total": 65000,
+    "promo_discount": 0,
+    "service_charge": 0,
+    "tax": 0,
+    "grand_total": 515000,
+    "payment": 0,
+    "remaining": 515000,
+    "items": [
+      {
+        "item_name": "Room VIP - 3 Jam",
+        "item_qty": 1,
+        "item_price": 450000,
+        "item_total": 450000
+      },
+      {
+        "item_name": "Nasi Goreng",
+        "item_qty": 2,
+        "item_price": 25000,
+        "item_total": 50000
+      },
+      {
+        "item_name": "Es Teh",
+        "item_qty": 3,
+        "item_price": 5000,
+        "item_total": 15000
+      }
+    ]
+  }
+}
