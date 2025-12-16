@@ -1,40 +1,106 @@
 {
-  "state": true,
-  "message": "Success",
-  "data": {
-    "room_code": "{ROOM_CODE}",
-    "room_rcp": "RCP001",
-    "member_name": "John Doe",
-    "checkin_time": "2025-12-15 10:00:00",
-    "checkout_time": "2025-12-15 13:00:00",
-    "room_price": 150000,
-    "room_total": 450000,
-    "fnb_total": 65000,
-    "promo_discount": 0,
-    "service_charge": 0,
-    "tax": 0,
-    "grand_total": 515000,
-    "payment": 0,
-    "remaining": 515000,
-    "items": [
-      {
-        "item_name": "Room VIP - 3 Jam",
-        "item_qty": 1,
-        "item_price": 450000,
-        "item_total": 450000
-      },
-      {
-        "item_name": "Nasi Goreng",
-        "item_qty": 2,
-        "item_price": 25000,
-        "item_total": 50000
-      },
-      {
-        "item_name": "Es Teh",
-        "item_qty": 3,
-        "item_price": 5000,
-        "item_total": 15000
-      }
-    ]
-  }
+"state": true,
+"message": "succes",
+"data": {
+"dataOutlet": {
+"nama_outlet": "BLACKHOLE",
+"alamat_outlet": "ONE BELPARK MALL",
+"telepon": "021",
+"kota": "Jakarta"
+},
+"dataInvoice": {
+"invoice": "IVC-2512160001",
+"reception": "RCP-2512160001",
+"member_name": "ILHAM ",
+"member_code": "000022061122",
+"sewa_ruangan": 0,
+"promo": 0,
+"jumlah_ruangan": 0,
+"jumlah_penjualan": 1700000,
+"jumlah": 1700000,
+"jumlah_service": 170000,
+"jumlah_pajak": 187000,
+"room_service": 0,
+"room_tax": 0,
+"fnb_service": 170000,
+"fnb_tax": 187000,
+"transfer": "",
+"status_print": "0",
+"overpax": 0,
+"diskon_kamar": 0,
+"surcharge_kamar": 0,
+"diskon_penjualan": 0,
+"voucher": 0,
+"charge_lain": 0,
+"jumlah_total": 2057000,
+"uang_muka": 0,
+"jumlah_bersih": 2057000
+},
+"dataRoom": {
+"tanggal": "16/12/2025 16:57",
+"nama": "ILHAM ",
+"room_code": "T16",
+"ruangan": "LOBBY",
+"Checkin": "16:57",
+"Checkout": "16:57"
+},
+"orderData": [
+{
+"order_code": "OKL-2512160001",
+"inventory_code": "GS01",
+"nama_item": "GS01-001",
+"jumlah": 2,
+"harga": 600000,
+"total": 1200000
+},
+{
+"order_code": "OKL-2512160002",
+"inventory_code": "CHRG-MN-015-05",
+"nama_item": "CORKAGE CHARGE 2",
+"jumlah": 2,
+"harga": 100000,
+"total": 200000
+},
+{
+"order_code": "OKL-2512160003",
+"inventory_code": "CHRG-MK-001",
+"nama_item": "CHARGE MAKANAN",
+"jumlah": 3,
+"harga": 100000,
+"total": 300000
+}
+],
+"cancelOrderData": [],
+"promoOrderData": [
+{
+"order_code": "OKL-2512160001",
+"inventory_code": "GS01",
+"promo_name": "DISKON OWNER LAIN FNB STD 15",
+"promo_price": 180000
+},
+{
+"order_code": "OKL-2512160002",
+"inventory_code": "CHRG-MN-015-05",
+"promo_name": "DISKON OWNER LAIN FNB STD 15",
+"promo_price": 30000
+},
+{
+"order_code": "OKL-2512160003",
+"inventory_code": "CHRG-MK-001",
+"promo_name": "DISKON OWNER LAIN FNB STD 15",
+"promo_price": 45000
+}
+],
+"promoOrderCancel": [],
+"transferListData": [],
+"transferBillData": [],
+"service_percent": {
+"service_room_percent": 10,
+"tax_room_percent": 40,
+"service_fnb_percent": 10,
+"tax_fnb_percent": 10
+},
+"footerStyle": 1,
+"voucher": null
+}
 }

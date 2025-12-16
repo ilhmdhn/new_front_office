@@ -135,7 +135,7 @@ class ApiRequest{
   Future<BaseResponse> doCheckin(CheckinBody checkinData)async{
     try{
       if(userId == 'TEST'){
-        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
       final url = Uri.parse('$serverUrl/checkin-direct/direct-checkin-member');
@@ -159,7 +159,7 @@ class ApiRequest{
   Future<BaseResponse> doCheckinLobby(Map<String, dynamic> params)async{
     try{
       if(userId == 'TEST'){
-        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
       final url = Uri.parse('$serverUrl/checkin-direct/direct-lobby-member');
@@ -248,7 +248,7 @@ class ApiRequest{
   Future<BaseResponse> editCheckin(EditCheckinBody editData)async{
     try{
       if(userId == 'TEST'){
-        final data =  await DummyResponseHelper.getBaseResponseSuccess();
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
       final url = Uri.parse('$serverUrl/checkin-direct/edit-checkin');
@@ -363,11 +363,13 @@ class ApiRequest{
       );
     }
   }
-  //end belum di mock
 
   Future<BaseResponse> cekSign()async{
     try{
-      
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/sign');
       final apiResponse = await http.get(
         url, 
@@ -391,12 +393,16 @@ class ApiRequest{
 
   Future<BaseResponse> extendRoom(String roomCode, String duration)async{
     try{
-      String userId = PreferencesData.getUser().userId??'UNKNOWN';
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      String userIdz = PreferencesData.getUser().userId??'UNKNOWN';
       final bodyRequest = {
         "room": roomCode,
         "durasi_jam": duration,
         "durasi_menit": "0",
-        "chusr": userId
+        "chusr": userIdz
       };
 
       final url = Uri.parse('$serverUrl/checkin-direct/extend-room');
@@ -419,11 +425,15 @@ class ApiRequest{
 
   Future<BaseResponse> reduceRoom(String reception, String duration)async{
     try{
-      String userId = PreferencesData.getUser().userId??'UNKNOWN';
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      String userIdz = PreferencesData.getUser().userId??'UNKNOWN';
       final bodyRequest = {
         "rcp": reception,
         "durasi": duration,
-        "chusr": userId
+        "chusr": userIdz
       };
 
       final url = Uri.parse('$serverUrl/checkin-direct/reduce_duration');
@@ -446,6 +456,10 @@ class ApiRequest{
 
   Future<PreviewBillResponse> previewBill(String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getPreviewBill('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/mobile-print/view-bill?room=$roomCode');
       final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -464,6 +478,10 @@ class ApiRequest{
 
   Future<PreviewBillResponse> getBill(String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getPreviewBill('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/mobile-print/view-bill?room=$roomCode');
       final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -482,6 +500,10 @@ class ApiRequest{
 
   Future<InvoiceResponse> getInvoice(String rcp)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getInvoice('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/mobile-print/invoice?rcp=$rcp');
       final apiResponse = await http.get(url ,headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -502,6 +524,10 @@ class ApiRequest{
 
   Future<BaseResponse> pay(Map<String, dynamic> params)async{
     try{
+        if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/payment/add');
       final apiResponse = await http.post(url , body: json.encode(params), headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -521,6 +547,10 @@ class ApiRequest{
 
   Future<BaseResponse> checkout(String room)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/room/checkout');
 
       final checkinBody = {
@@ -547,6 +577,10 @@ class ApiRequest{
 
   Future<BaseResponse> clean(String room)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/room/clean');
 
       final checkinBody = {
@@ -573,6 +607,10 @@ class ApiRequest{
 
   Future<BaseResponse> removePromoRoom(String rcpCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin-direct/remove_promo?rcp=$rcpCode');
       final apiResponse = await http.delete(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       
@@ -593,6 +631,10 @@ class ApiRequest{
 
   Future<BaseResponse> removePromoFood(String rcpCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/checkin-direct/remove-promo-fnb/$rcpCode');
       final apiResponse = await http.delete(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       
@@ -613,6 +655,10 @@ class ApiRequest{
 
   Future<FnBResultModel> fnbPage(int page, String category, String search)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getFnbList();
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/inventory/list-paging?page=$page&size=10&category=$category&search=$search');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       
@@ -633,6 +679,10 @@ class ApiRequest{
 
   Future<OrderResponse> getOrder(String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getOrderList('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/room/$roomCode/order');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -652,6 +702,10 @@ class ApiRequest{
 
   Future<BaseResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/order/single/room/sol/sod');
       final bodyParams = await GenerateOrderParams.orderParams(roomCode, rcp, roomType, checkinDuration, orderData);
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -672,6 +726,10 @@ class ApiRequest{
 
   Future<BaseResponse> revisiOrder(OrderedModel data, String sol, String rcp, String oldQty)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/order/revisi-order');
       final deviceInfo = DeviceInfoPlugin();
       String deviceModel = '';
@@ -712,6 +770,10 @@ class ApiRequest{
 
   Future<BaseResponse> cancelSo(String invCode, String sol, String rcp, String oldQty)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/order/cancelOrder');
       final deviceInfo = DeviceInfoPlugin();
       String deviceModel = '';
@@ -750,6 +812,10 @@ class ApiRequest{
 
   Future<BaseResponse> confirmDo(String roomCode, OrderedModel fnb)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/neworder/add');
       
       final bodyParams = {
@@ -783,6 +849,10 @@ class ApiRequest{
 
   Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb, int qty)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/cancelorder/add');
       
       final bodyParams = {
@@ -817,6 +887,10 @@ class ApiRequest{
 
   Future<SolResponse> getSol(String sol)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getSolResponse('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/mobile-print/list-so?sol=$sol');
       final apiResponse = await http.get(url);
 
@@ -833,6 +907,10 @@ class ApiRequest{
 
   Future<StringResponse> latestSo(String rcp)async{
     try{
+      if(userId == 'TEST'){
+        final data = StringResponse(state: true, message: 'SUCCESS', data: 'SO');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/mobile-print/latest-so?rcp=$rcp');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
 
@@ -849,6 +927,10 @@ class ApiRequest{
 
   Future<BaseResponse> transferRoomtoRoom(TransferParams data)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/checkin-direct/transfer-room-member');
       final bodyParams = JsonConverter.generateTransferParams(data);
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token} );
@@ -867,6 +949,10 @@ class ApiRequest{
 
   Future<BaseResponse> transferLobbytoLobby(TransferParams data)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/transfer/tolobby');
       final chusr = PreferencesData.getUser().userId;
       Map<String, dynamic> bodyParams = {
@@ -890,6 +976,10 @@ class ApiRequest{
 
   Future<BaseResponse> updatePrintState(String rcp, String state)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/mobile-print/update-status?rcp=$rcp&status_print=$state');
       final apiResponse = await http.get(url);
       
@@ -906,6 +996,10 @@ class ApiRequest{
 
   Future<CheckinSlipResponse> checkinSlip(String rcp)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getCheckinSlip('SUCCESS');
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/mobile-print/checkin-slip?rcp=$rcp');
       final apiResponse = await http.get(url);
 
@@ -923,6 +1017,10 @@ class ApiRequest{
 
   Future<RoomCheckinState> checkinState()async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getRoomCheckinState();
+        return data;
+      }
       Uri url = Uri.parse('$serverUrl/room/all-room-checkin-by-type');
       final apiResponse = await http.get(url);
 
@@ -939,6 +1037,10 @@ class ApiRequest{
 
   Future<BaseResponse> tokenPost(String token)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/firebase/token');
       Map<String, dynamic> bodyParams = {
         "token": PreferencesData.getFcmToken(),
@@ -970,6 +1072,10 @@ class ApiRequest{
 
   Future<BaseResponse> callResponse(String roomCode)async{
     try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
       final url = Uri.parse('$serverUrl/call/callroom/$roomCode');
       Map<String, dynamic> bodyParams = {
         "chusr": PreferencesData.getUser().userId
@@ -997,6 +1103,29 @@ class ApiRequest{
 
   Future<CallServiceHistoryResponse> getServiceHistory()async{
     try{
+      if(userId == 'TEST'){
+        final data =  CallServiceHistoryResponse(
+          state: true,
+          message: 'SUCCESS',
+          data: [
+            CallServiceHistory(
+              isNow: 1,
+              roomCode: '101',
+              callTime: '10:00',
+              callResponse: '',
+              responsedBy: 'Admin'
+            ),
+            CallServiceHistory(
+              isNow: 0,
+              roomCode: '101',
+              callTime: '10:00',
+              callResponse: '',
+              responsedBy: 'Admin'
+            ),
+          ]
+        );
+        return data;
+      }
       final url = Uri.parse('$serverUrl/call/callroom');
       final apiResponse = await http.get(
         url, 

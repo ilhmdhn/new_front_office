@@ -8,7 +8,7 @@
       "sisa_jam_checkin": 2,
       "sisa_menit_checkin": 0,
       "nama_member": "John Doe",
-      "status_print": "1",
+      "status_print": "0",
       "summary": "RCP001"
     },
     {
@@ -27,7 +27,7 @@
       "sisa_menit_checkin": 30,
       "nama_member": "Michael Johnson",
       "status_print": "0",
-      "summary": "RCP003"
+      "summary": ""
     }
   ]
 }

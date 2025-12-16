@@ -9,6 +9,7 @@ import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/printer_helper.dart';
+import 'package:front_office_2/tools/tcp_print_service.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:intl/intl.dart';
 
@@ -102,6 +103,60 @@ class LanprintExecutor {
         // Tidak perlu show toast untuk disconnect error
       }
       debugPrint('END PRINT TEST LAN PRINTER');
+    }
+  }
+
+  Future<void> testPrintDua()async{
+    try {
+      final printerData = PreferencesData.getPrinter();
+      final profile = await CapabilityProfile.load();
+      final generator = Generator(PaperSize.mm80, profile);
+      final helper = ReceiptPrinterHelper(generator);
+      PrinterModel printerConfig = PreferencesData.getPrinter();
+       // Generate test print data
+      List<int> bytes = [];
+
+      // IMPORTANT: Tambah ESC @ (Initialize printer)
+      bytes += [0x1B, 0x40];
+
+      bytes += helper.feed(2);
+      bytes +=
+          helper.text("TEST PRINT LAN", bold: true, align: PosAlign.center);
+      bytes += helper.divider();
+      bytes +=
+          helper.text("Happy Puppy POS", bold: true, align: PosAlign.center);
+      bytes += helper.feed(1);
+      bytes += helper.text("Printer : ${printerConfig.name}");
+      bytes += helper.text("IP      : ${printerConfig.address}");
+      bytes += helper.text("Type    : LAN Network");
+      bytes += helper.feed(1);
+      bytes += helper.divider();
+      bytes += helper.text("Test print berhasil!",
+          bold: true, align: PosAlign.center);
+      bytes += helper.divider();
+      bytes += helper.feed(1);
+      bytes += helper.row("Kiri", "Kanan");
+      bytes += helper.feed(1);
+      bytes += helper.table(
+          "kirikirikirikiri", "tengahtengahtengah1", "kanankanankanan1",
+          leftAlign: PosAlign.left,
+          centerAlign: PosAlign.left,
+          rightAlign: PosAlign.left);
+      bytes += helper.feed(3);
+      bytes += helper.cut();
+
+      bool printState = await TcpPrinterService.printOnce(
+        ip: printerData.address,
+        port: 9100,
+        data: bytes,
+      );
+      if(printState){
+        showToastSuccess('Test print LAN berhasil!');
+      } else {
+        showToastError('Test print LAN Gagal!');
+      }
+    } catch (e) {
+      showToastError('Gagal test print LAN: ${e.toString()}');
     }
   }
 
