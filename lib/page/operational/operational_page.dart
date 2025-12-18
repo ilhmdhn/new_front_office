@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/page/bloc/notif_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:front_office_2/tools/screen_size.dart';
 
 class OperationalPage extends StatefulWidget {
   static const nameRoute = '/operational';
@@ -29,7 +29,6 @@ class _OperationalPageState extends State<OperationalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final paddingEdgeSize = ScreenSize.getSizePercent(context, 3);
     final userData = PreferencesData.getUser();
 
     final widget = ButtonMenuWidget(context: context);
@@ -40,69 +39,62 @@ class _OperationalPageState extends State<OperationalPage> {
     
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: CustomColorStyle.appBarBackground(),
-        foregroundColor: Colors.white,
-        title: Text('Operasional', style: CustomTextStyle.titleAppBar(),selectionColor: Colors.white,),
-        // actions: [
-        //   IconButton(onPressed: (){}, icon: const Badge(label: Text('10') ,child: Icon(Icons.notifications,)),)
-        // ],
-      ),
       backgroundColor: CustomColorStyle.background(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: paddingEdgeSize),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const SizedBox(height: 16,),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: 55,
-                  child: CircleAvatar(
-                    backgroundImage: Image.asset('assets/icon/user.png').image,
-                  ),
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(userData.userId??'No Named', style: CustomTextStyle.blackMedium()),
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black,
-                      ),
-                      Text(userData.level??'Unknown', style: CustomTextStyle.blackMedium()),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: BlocBuilder(
-                bloc: approvalCubit,
-                builder: (BuildContext ctxApproval, state){
-                  if(userData.level == 'KASIR'){
-                    return widget.kasirLayout(state.toString());
-                  } else if(userData.level == 'SUPERVISOR' || userData.level == 'KAPTEN'){
-                    return widget.spvLayout(state.toString());
-                  } else if(userData.level == 'SERVER' || userData.level == 'BAR'){
-                    return widget.serverLayout();
-                  }else if(userData.level == 'ACCOUNTING'){
-                    return widget.accountingLayout(state.toString());
-                  }else{
-                    return const SizedBox();
-                  }
-                }),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(height: 16,),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AutoSizeText('Halo, ${userData.userId}', 
+                          style: CustomTextStyle.blackBoldSize(20),
+                          maxLines: 1,
+                          minFontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        AutoSizeText(userData.level??'', 
+                          style: CustomTextStyle.blackSize(11),
+                          maxLines: 1,
+                          minFontSize: 14,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: BlocBuilder(
+                  bloc: approvalCubit,
+                  builder: (BuildContext ctxApproval, state){
+                    if(userData.level == 'KASIR' || userData.level == 'IT'){
+                      return widget.kasirLayout(state.toString());
+                    } else if(userData.level == 'SUPERVISOR' || userData.level == 'KAPTEN'){
+                      return widget.spvLayout(state.toString());
+                    } else if(userData.level == 'SERVER' || userData.level == 'BAR'){
+                      return widget.serverLayout();
+                    }else if(userData.level == 'ACCOUNTING'){
+                      return widget.accountingLayout(state.toString());
+                    }else{
+                      return const SizedBox();
+                    }
+                  }),
+                ),
+              ),
+            ],
+          ),
         ),
       )
       );

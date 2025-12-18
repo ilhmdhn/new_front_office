@@ -1,10 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
 import 'package:front_office_2/page/status/state_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/permissions.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -40,7 +40,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
   FirebaseTools.initToken();
-    // TODO: implement initState
     super.initState();
   }
   @override
@@ -51,7 +50,7 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: CustomColorStyle.background(),
       bottomNavigationBar: NavigationBar(
         height: 55,
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: CustomColorStyle().hexToColor('#FEFEFE'),
         onDestinationSelected: (int index){
           setState(() {
             currentPageIndex = index;

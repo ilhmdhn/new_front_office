@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -77,6 +78,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       width: 26,
                       child: Checkbox(
+                        checkColor: CustomColorStyle.bluePrimary(),
+                        activeColor: CustomColorStyle.background(),
                         value: isBiometric,
                         onChanged: (value){
                           PreferencesData.setBiometricLogin(value??false);
@@ -225,6 +228,10 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: ()async{
+                  final confirm = await ConfirmationDialog.confirmation(context, 'Logout Akun?');
+                  if(confirm != true){
+                    return;
+                  }
                   PreferencesData.setLoginState(false);
                   FirebaseMessaging.instance.deleteToken();
                   if(context.mounted){

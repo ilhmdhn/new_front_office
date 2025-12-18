@@ -77,6 +77,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
                 height: ScreenSize.getHeightPercent(context, 10),
                 child: SearchBar(
                   hintText: 'Cari Room',
+                  backgroundColor: WidgetStateColor.resolveWith((states) => Colors.white),
                   surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
                   shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                   onChanged: ((value){

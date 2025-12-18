@@ -1,37 +1,185 @@
 {
-  "state": true,
-  "message": "Success",
-  "data": {
-    "invoice_number": "INV-{TIMESTAMP}",
-    "rcp": "{RCP}",
-    "outlet": "Happy Puppy Demo",
-    "date": "2025-12-15 15:00:00",
-    "cashier": "DEMO001",
-    "member_name": "John Doe",
-    "room_code": "VIP001",
-    "grand_total": 515000,
-    "payment": 515000,
-    "change": 0,
-    "payment_method": "CASH",
-    "items": [
-      {
-        "item_name": "Room VIP - 3 Jam",
-        "item_qty": 1,
-        "item_price": 450000,
-        "item_total": 450000
-      },
-      {
-        "item_name": "Nasi Goreng",
-        "item_qty": 2,
-        "item_price": 25000,
-        "item_total": 50000
-      },
-      {
-        "item_name": "Es Teh",
-        "item_qty": 3,
-        "item_price": 5000,
-        "item_total": 15000
-      }
-    ]
-  }
+"state": true,
+"message": "succes",
+"data": {
+"dataOutlet": {
+"nama_outlet": "BLACKHOLE",
+"alamat_outlet": "ONE BELPARK MALL",
+"telepon": "021",
+"kota": "Jakarta"
+},
+"dataInvoice": {
+"invoice": "IVC-2509120001",
+"reception": "RCP-2509120001",
+"member_name": "KOREK ",
+"member_code": "00002402114874",
+"sewa_ruangan": 0,
+"promo": 0,
+"jumlah_ruangan": 0,
+"jumlah_penjualan": 0,
+"jumlah": 0,
+"jumlah_service": 0,
+"jumlah_pajak": 0,
+"transfer": "",
+"status_print": "2",
+"room_service": 0,
+"room_tax": 0,
+"fnb_service": 0,
+"fnb_tax": 0,
+"overpax": 0,
+"diskon_kamar": 0,
+"surcharge_kamar": 0,
+"diskon_penjualan": 0,
+"voucher": 0,
+"charge_lain": 0,
+"jumlah_total": 0,
+"uang_muka": 0,
+"jumlah_bersih": 0
+},
+"dataRoom": {
+"tanggal": "12/09/2025 12:28",
+"nama": "KOREK ",
+"room_code": "BAR16",
+"ruangan": "BAR",
+"Checkin": "12:28",
+"Checkout": "12:28"
+},
+"orderData": [
+{
+"order_code": "OKL-2509120017",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 6,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120019",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120031",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 2,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120036",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120037",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120059",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120073",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 2,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120088",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120092",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120095",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120119",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 2,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120120",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120138",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 2,
+"harga": 0,
+"total": 0
+},
+{
+"order_code": "OKL-2509120140",
+"inventory_code": "RKOK16",
+"nama_item": "KOREK API CRICKET BLACKHOLE PROMO",
+"jumlah": 1,
+"harga": 0,
+"total": 0
+}
+],
+"cancelOrderData": [],
+"promoOrderData": [],
+"transferListData": [],
+"paymentData": [
+{
+"nama_payment": "CASH",
+"total": 0
+}
+],
+"promoOrderCancel": [],
+"transferBillData": [],
+"paymentDetail": {
+"pay_value": 0,
+"pay_change": 0
+},
+"service_percent": {
+"service_room_percent": 10,
+"tax_room_percent": 40,
+"service_fnb_percent": 10,
+"tax_fnb_percent": 10
+},
+"footerStyle": 1,
+"voucher": null
+}
 }

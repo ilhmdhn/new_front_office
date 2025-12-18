@@ -107,7 +107,7 @@ class _StatePageState extends State<StatePage> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         SizedBox(
-                                          width: 70,
+                                          width: 90,
                                           child: Row(
                                             children: [
                                               const SizedBox( height: 16, width: 16,
@@ -129,7 +129,7 @@ class _StatePageState extends State<StatePage> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         SizedBox(
-                                          width: 70,
+                                          width: 90,
                                           child: Row(
                                             children: [
                                               const SizedBox(
@@ -161,7 +161,7 @@ class _StatePageState extends State<StatePage> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         SizedBox(
-                                          width: 70,
+                                          width: 90,
                                           child: Row(
                                             children: [
                                               const SizedBox(
@@ -192,7 +192,7 @@ class _StatePageState extends State<StatePage> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         SizedBox(
-                                          width: 70,
+                                          width: 90,
                                           child: Row(
                                             children: [
                                               const SizedBox(

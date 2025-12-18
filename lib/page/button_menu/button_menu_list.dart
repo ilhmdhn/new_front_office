@@ -18,543 +18,103 @@ class ButtonMenuWidget{
   final myGroup = AutoSizeGroup();
   
   Widget kasirLayout(String approvalCount){
-    final isPotrait = isVertical(context);
-    final widthButton = ScreenSize.getSizePercent(context, 46);
-    final widthButtonLandscape = ScreenSize.getSizePercent(context, 30);
-    final spaceCenter = ScreenSize.getSizePercent(context, 2);
-    final widthRow = ScreenSize.getSizePercent(context, 94);
-
-
-    return 
-    isPotrait?    
-    Column(
+    return Column(
       children: [
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: checkin()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: checkinReservation())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          height: isPotrait == true? 83:null,
-          width: widthRow,
-          child: editCheckin(),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: extend()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: transfer())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: order()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: bill())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: checkout()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: clean())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: checkinInfo()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: reservationList())
-            ],
-        ),
-        )
-      ],
-    ):Column(
-      children: [
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButtonLandscape,
-                height: isPotrait == true? 83:null,
-                child: checkin()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButtonLandscape,
-                height: isPotrait == true? 83:null,
-                child: checkinReservation()
-              ),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                height: isPotrait == true? 83:null,
-                width: widthButtonLandscape,
-                child: editCheckin(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButtonLandscape,
-                height: isPotrait == true? 83:null,
-                child: bill()),
-              SizedBox(width: spaceCenter,)
-            ],
-          ),
-        ),
-        const SizedBox(height: 12,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButtonLandscape,
-                height: isPotrait == true? 83:null,
-                child: checkinInfo()),
-              SizedBox(width: spaceCenter,)
-            ],
-          ),
+        buildGridMenu(
+          'Operasional',
+          2, 
+          [                  
+            checkin(),
+            editCheckin(),
+            extend(),
+            transfer(),
+            order(),
+            bill(),
+            checkout(),
+            clean()
+          ]
         ),
       ],
     );
   }
 
   Widget accountingLayout(String approvalCount) {
-    final isPotrait = isVertical(context);
-    final widthButton = ScreenSize.getSizePercent(context, 46);
-    final widthButtonLandscape = ScreenSize.getSizePercent(context, 30);
-    final spaceCenter = ScreenSize.getSizePercent(context, 2);
-    final widthRow = ScreenSize.getSizePercent(context, 94);
-
-    return isPotrait
-        ? Column(
-            children: [
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButton,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkin()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(
-                        width: widthButton,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkinReservation())
-       
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                height: isPotrait == true ? 83 : null,
-                width: widthRow,
-                child: editCheckin(),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(width: widthButton, child: extend()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(width: widthButton, child: transfer())
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(width: widthButton, child: order()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(width: widthButton, child: bill())
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(width: widthButton, child: checkout()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(width: widthButton, child: clean())
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButton,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkinInfo()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(
-                        width: widthButton,
-                        height: isPotrait == true ? 83 : null,
-                        child: reservationList())
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButton, child: approval(approvalCount)),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    // SizedBox(
-                    //   width: widthButton,
-                    //   height: isPotrait == true? 83:null,
-                    //   child: checkinReservation())
-                  ],
-                ),
-              ),
-            ],
-          )
-        : Column(
-            children: [
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButtonLandscape,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkin()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(
-                        width: widthButtonLandscape,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkinReservation()),
-                    SizedBox(
-                      width: spaceCenter,
-                    ),
-                    SizedBox(
-                      height: isPotrait == true ? 83 : null,
-                      width: widthButtonLandscape,
-                      child: editCheckin(),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButtonLandscape,
-                        height: isPotrait == true ? 83 : null,
-                        child: bill()),
-                    SizedBox(
-                      width: spaceCenter,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              SizedBox(
-                width: widthRow,
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: widthButtonLandscape,
-                        height: isPotrait == true ? 83 : null,
-                        child: checkinInfo()),
-                    SizedBox(
-                      width: spaceCenter,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          );
-  }
-
-  Widget serverLayout(){
-    final widthButton = ScreenSize.getSizePercent(context, 46);  
-    final spaceCenter = ScreenSize.getSizePercent(context, 2);
-    final widthRow = ScreenSize.getSizePercent(context, 94);
-
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: order()),
-              SizedBox(
-                width: spaceCenter
-              ),
-              SizedBox(
-                width: widthButton,
-                child: bill()
-              ),
-            ],
-          ),
+        buildGridMenu(
+          'Operasional',
+          2, 
+          [                  
+            checkin(),
+            editCheckin(),
+            extend(),
+            transfer(),
+            order(),
+            bill(),
+            checkout(),
+            clean()
+          ]
         ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: clean()),
-              SizedBox(
-                width: spaceCenter
-              ),
-              SizedBox(
-                width: widthButton,
-              ),
-            ],
-          ),
+        SizedBox(height: 12,),
+        buildGridMenu(
+          'Management',
+          2, 
+          [                  
+            approval(approvalCount)
+          ]
         ),
       ],
     );
-
   }
 
-  Widget spvLayout(String approvalCount){
-    final widthButton = ScreenSize.getSizePercent(context, 46);  
-    final spaceCenter = ScreenSize.getSizePercent(context, 2);
-    final widthRow = ScreenSize.getSizePercent(context, 94);
-
+  Widget serverLayout(){
     return Column(
       children: [
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: approval(approvalCount)),
-              SizedBox(width: spaceCenter,),
-              // SizedBox(
-              //   width: widthButton,
-              //   height: isPotrait == true? 83:null,
-              //   child: checkinReservation())
-            ],
+        buildGridMenu(
+          'Operasional',
+          2, 
+          [
+            order(),
+            bill(),
+            clean()
+          ]
         ),
-        ),
-       /* const SizedBox(height: 8,),
-        SizedBox(
-          height: isPotrait == true? 83:null,
-          width: widthRow,
-          child: editCheckin(),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: extend()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: transfer())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: order()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: bill())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                child: checkout()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                child: clean())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        SizedBox(
-          width: widthRow,
-          child: Row(
-            children: [
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: checkinInfo()),
-              SizedBox(width: spaceCenter,),
-              SizedBox(
-                width: widthButton,
-                height: isPotrait == true? 83:null,
-                child: reservationList())
-            ],
-        ),
-        ),
-        const SizedBox(height: 8,),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: widthButton,
-            child: approval(approvalCount),
-          ),
-        )
-    */],
+      ]
     );
   }
 
+  Widget spvLayout(String approvalCount){
+    return Column(
+      children: [
+        buildGridMenu(
+          'Operasional',
+          2, 
+          [       
+            checkin(),
+            editCheckin(),
+            extend(),
+            transfer(),
+            order(),
+            bill(),
+            checkout(),
+            clean()
+          ]
+        ),
+        SizedBox(height: 12,),
+        buildGridMenu(
+          'Management',
+          2, 
+          [                  
+            approval(approvalCount)
+          ]
+        ),
+      ],
+    );
+  }
 
   Widget checkin(){
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    final isPotrait = isVertical(context);
-
     return InkWell(
-            child: Container(
-            // height: isPotrait == true? 83:null,
-            // width: widthButton,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                  spreadRadius: 3,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                  ),
-                ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: spacerpaddingButton,
-                ),
-                SizedBox(
-                  width:  isPotrait? widthIconButton: widthIconButtonLandscape,
-                  child: Image.asset('assets/menu_icon/karaoke.png')
-                ),
-                Expanded(
-                  child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                  child: AutoSizeText('Checkin', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, wrapWords: false,maxLines: 1),
-                  )
-                ),
-                SizedBox(
-                  width: widthArrowButton,
-                  child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-                SizedBox(
-                    width: spacerpaddingButton,
-                )
-              ]
-            ),),
+      child: itemButton('assets/menu_icon/karaoke.png', 'Checkin'),
             onTap: ()async{
               String? result = await showQRScannerDialog(context);
               if(isNotNullOrEmpty(result)){
@@ -634,400 +194,65 @@ class ButtonMenuWidget{
   }
 
   Widget editCheckin(){
-
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 1);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white, // Warna background
-          borderRadius: BorderRadius.circular(10), // Bentuk border
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2), // Warna shadow
-              spreadRadius: 3, // Radius penyebaran shadow
-              blurRadius: 7, // Radius blur shadow
-              offset: const Offset(0, 3), // Offset shadow
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/edit_checkin.png')
-              ),
-            Flexible(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: Center(child: AutoSizeText('Edit Room Checkin', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2,)),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/edit_checkin.png', 'Edit Room Checkin'),
     );
   }
 
   Widget extend(){
-
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 2);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/extend.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Duration', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/extend.png', 'Duration'),
     );
   }
 
   Widget transfer(){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-    
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 3);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/change.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Transfer', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/change.png', 'Transfer Room')
     );
   }
 
   Widget order(){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 4);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/fnb.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Order', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/fnb.png', 'Order')
     );
   }
 
   Widget bill(){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 5);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/bill.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Bayar', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/bill.png', 'Bayar'),
     );
   }
   
   Widget checkout(){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 6);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/checkout.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Checkout', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false, softWrap: false ,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/checkout.png', 'Checkout')
     );
   }
 
   Widget clean(){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
-
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, RoomCheckinListPage.nameRoute, arguments: 7);
       },
-      child: Container(
-        // height: isPotrait == true? 83:null,
-          // width: widthButton,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: spacerpaddingButton,
-            ),
-            SizedBox(
-              width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                child: Image.asset('assets/menu_icon/clean.png')
-              ),
-            Expanded(
-              // width: widthTextButton,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                child: AutoSizeText('Clean', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-              )),
-            SizedBox(
-              width: widthArrowButton,
-              child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-            SizedBox(
-              width: spacerpaddingButton,
-            )
-          ]),
-      ),
+      child: itemButton('assets/menu_icon/clean.png', 'Clean'),
     );
   }
 
@@ -1147,16 +372,8 @@ class ButtonMenuWidget{
   }
 
   Widget approval(String notif){
-    // final widthButton = ScreenSize.getSizePercent(context, 45);
-    final spacerpaddingButton = ScreenSize.getSizePercent(context, 3);
-    final widthIconButton = ScreenSize.getSizePercent(context, 10);
-    final widthIconButtonLandscape = ScreenSize.getSizePercent(context, 5);
-    final widthArrowButton = ScreenSize.getSizePercent(context, 3);
-    final paddingButtonText = ScreenSize.getSizePercent(context, 1);
     int? notifCount = int.tryParse(notif);
     notifCount ??= 0;
-    final isPotrait = isVertical(context);
-
     return InkWell(
       onTap: (){
         Navigator.pushNamed(context, ApprovalListPage.nameRoute);
@@ -1164,45 +381,123 @@ class ButtonMenuWidget{
       child: Badge(
         label: Text(notifCount.toString()),
         isLabelVisible: notifCount>0?true:false,
-        child: Container(
-          // height: isPotrait == true? 83:null,
-            // width: widthButton,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.2),
-                spreadRadius: 3,
-                blurRadius: 7,
-                offset: const Offset(0, 3),
-              ),
-            ],
+        child: itemButton('assets/menu_icon/fingeprint.png', 'Approval')
+      ),
+    );
+  }
+
+  Widget itemButton(String image, String title){
+    return Container(
+      height: 65,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withValues(alpha: 0.2),
+            spreadRadius: 3,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: spacerpaddingButton,
-              ),
-              SizedBox(
-                width: isPotrait? widthIconButton: widthIconButtonLandscape,
-                  child: Image.asset('assets/menu_icon/fingeprint.png')
-                ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: paddingButtonText),
-                  child: AutoSizeText('Approval', style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 1),
-                )),
-              SizedBox(
-                width: widthArrowButton,
-                child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)),
-              SizedBox(
-                width: spacerpaddingButton,
-              )
-            ]),
-        ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(width: 15),
+          Image.asset(image, width: 39, height: 39,),
+          const SizedBox(width: 4,),
+          Flexible(
+            fit: FlexFit.tight,
+            child: AutoSizeText(
+              title, 
+              style: CustomTextStyle.blackMedium(), 
+              minFontSize: 12, 
+              maxLines: 2, 
+              textAlign: TextAlign.start
+            )
+          ),
+          const SizedBox(width: 4,),
+          SizedBox(
+            width: 10,
+            child: const Icon(Icons.arrow_forward_ios, color: Colors.green,)
+          ),
+          const SizedBox(width: 15),
+        ],
+      ),
+    );
+  }
+
+  Widget buildGridMenu(String title, int columnCount, List<Widget> menuItems) {
+    List<Widget> rows = [];
+    List<Widget> currentRow = [];
+
+    for (int i = 0; i < menuItems.length; i++) {
+      Widget item;
+
+      if (i % columnCount == 0) {
+        item = Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.only(right: 3),
+            child: Center(child: menuItems[i]),
+          ),
+        );
+      } else if ((i + 1) % columnCount == 0) {
+        item = Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.only(left: 3),
+            child: Center(child: menuItems[i]),
+          ),
+        );
+      } else {
+        item = Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: Center(child: menuItems[i]),
+          ),
+        );
+      }
+
+      currentRow.add(item);
+
+      if ((i + 1) % columnCount == 0 || i == menuItems.length - 1) {
+        // Add empty expanded widgets to fill the row if needed
+        while (currentRow.length < columnCount) {
+          currentRow.add(const Expanded(child: SizedBox()));
+        }
+        
+        rows.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: currentRow,
+          ),
+        );
+        currentRow = [];
+        if (i != menuItems.length - 1) {
+          rows.add(const SizedBox(height: 12));
+        }
+      }
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(145), 
+        borderRadius: BorderRadius.all(Radius.circular(10))
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Text(title, style: CustomTextStyle.blackMedium(),),
+          ),
+          ...rows
+          ],
       ),
     );
   }

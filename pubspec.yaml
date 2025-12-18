@@ -66,6 +66,7 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
@@ -119,3 +120,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_launcher_icons:
+  ios: true
+  image_path: "android/app/src/main/res/drawable/app_icon.png"
+  remove_alpha_ios: true

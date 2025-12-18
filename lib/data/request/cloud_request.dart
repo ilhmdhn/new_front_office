@@ -84,7 +84,7 @@ class CloudRequest{
     try{
       String outlet = PreferencesData.getOutlet();
 
-      final url = Uri.parse('http://172.188.42.60:3200/approval/list?outlet=$outlet');
+      final url = Uri.parse('$baseUrl/approval/list?outlet=$outlet');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       final convertedResult = json.decode(apiResponse.body);
       return RequestApprovalResponse.fromJson(convertedResult);
@@ -204,7 +204,7 @@ class CloudRequest{
     }
   }
 
-    static Future<BaseResponse> insertRate(String? invoice, String? member, double? rate, String? reason)async{
+  static Future<BaseResponse> insertRate(String? invoice, String? member, double? rate, String? reason)async{
       try{
         String outlet = PreferencesData.getOutlet();
         final url = Uri.parse('$baseUrl/transaction/insert-rating');
@@ -263,7 +263,7 @@ class CloudRequest{
     }
   }
 
-    static Future<VoucherMemberResponse> memberVoucher(String memberCode, String voucherCode)async{
+  static Future<VoucherMemberResponse> memberVoucher(String memberCode, String voucherCode)async{
     try{
         final url = Uri.parse('$membershipServer/voucher-info?member_code=$memberCode&voucher_code=$voucherCode');
         final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json','authorization': membershipToken});

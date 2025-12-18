@@ -26,6 +26,10 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black);
   }
 
+  static TextStyle blackSize(int size){
+    return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black);
+  }
+
   static TextStyle blackMedium(){
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500);
   }
@@ -42,8 +46,12 @@ class CustomTextStyle{
     return GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.w500);
   }
 
-    static TextStyle blackMediumSize(int size){
+  static TextStyle blackMediumSize(int size){
     return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black, fontWeight: FontWeight.w500);
+  }
+
+  static TextStyle blackBoldSize(int size){
+    return GoogleFonts.poppins(fontSize: size.toDouble(), color: Colors.black, fontWeight: FontWeight.bold);
   }
 
   static TextStyle blackSemi(){

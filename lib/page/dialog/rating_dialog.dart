@@ -86,8 +86,6 @@ class RatingDialog{
 
   static void submitRate(BuildContext ctx, String invoice, String memberCode, String memberName)async{
 
-    final isPotrait = isVertical(ctx);
-
     showDialog(
       context: ctx,
       barrierDismissible: true,
@@ -95,46 +93,50 @@ class RatingDialog{
         double rate = 3;
         String hint = '';
         bool isOk = false;
+        bool isNavigating = false;
         TextEditingController reasonController = TextEditingController();
         return StatefulBuilder(
           builder: (BuildContext ctxStateful, setState){
+            final isPotrait = isVertical(ctxStateful);
+
             if(rate < 1.5){
               hint = 'Sampaikan keluhan kamu';
             }else{
               hint = 'Tulis pendapat kamu mengenai pelayanan kami';
             }
-            
-            if(isOk == true){
-              Future.delayed(const Duration(seconds: 3), () {
-              // if(ctx.mounted){
-                
-              // }else{
-                // navigatorKey.
-                getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
-                // Navigator.pop(ctx);
-              // }
-              });
 
-              return SizedBox(
-                child: LottieBuilder.asset('assets/animation/done.json'),
+            if(isOk == true){
+              if(!isNavigating){
+                isNavigating = true;
+                Future.delayed(const Duration(seconds: 3), () {
+                  if(ctxStateful.mounted){
+                    getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+                  }
+                });
+              }
+
+              return Dialog(
+                child: SizedBox(
+                  width: isPotrait ? ScreenSize.getSizePercent(ctxStateful, 60) : ScreenSize.getSizePercent(ctxStateful, 30),
+                  height: isPotrait ? ScreenSize.getHeightPercent(ctxStateful, 25) : ScreenSize.getHeightPercent(ctxStateful, 25),
+                  child: LottieBuilder.asset('assets/animation/done.json'),
+                ),
               );
             }
             
             return PopScope(
               canPop: true,
-              child: AlertDialog(
-                title: Center(child: SizedBox(
-                  child: 
-                  isPotrait?
-                  AutoSizeText('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1, minFontSize: 10,):
-                  Text('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1,)
-                  )),
-                content: SizedBox(
-                  width: isPotrait?null: ScreenSize.getSizePercent(ctx, 40),
-                  height: isPotrait?null: ScreenSize.getHeightPercent(ctx, 30),
+              child: Dialog(
+                child: Container(
+                  width: isPotrait ? ScreenSize.getSizePercent(ctxStateful, 90) : ScreenSize.getSizePercent(ctxStateful, 40),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      isPotrait?
+                      AutoSizeText('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1, minFontSize: 10,):
+                      Text('Berikan rating kami', style: CustomTextStyle.titleAlertDialogSize(21), maxLines: 1,),
+                      const SizedBox(height: 16,),
                       AutoSizeText(memberName, style: CustomTextStyle.blackMediumSize(19), maxLines: 1, minFontSize: 9,),
                       const SizedBox(height: 12,),
                       RatingBar.builder(

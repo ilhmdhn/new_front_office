@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -91,7 +92,7 @@ class ConfirmationDialog{
                         }
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.grey.shade200,
+                        backgroundColor: Colors.redAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

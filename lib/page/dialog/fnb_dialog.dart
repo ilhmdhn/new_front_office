@@ -18,52 +18,57 @@ class FnBDialog{
   static Future<String?> note(BuildContext ctx, String name, String note){
     Completer<String?> completer = Completer<String?>();
     showDialog(
-      context: ctx, 
+      context: ctx,
       builder: (ctxDialog){
         TextEditingController tfNoteController = TextEditingController();
         tfNoteController.text = note;
-        return AlertDialog(
+        return Dialog(
           backgroundColor: Colors.white,
-          title: AutoSizeText('Tulis Catatan Pesanan $name', style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: CustomTextfieldStyle.characterNormal(),
-                controller: tfNoteController,
-              ),
-              const SizedBox(height: 6,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, null);
-                      },
-                      child: Container(
-                        decoration: CustomContainerStyle.cancelButton(),
-                        padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                        child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+          child: Container(
+            width: ScreenSize.getSizePercent(ctxDialog, 80),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AutoSizeText('Tulis Catatan Pesanan $name', style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
+                const SizedBox(height: 12,),
+                TextField(
+                  decoration: CustomTextfieldStyle.characterNormal(),
+                  controller: tfNoteController,
+                ),
+                const SizedBox(height: 6,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Flexible(
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.pop(ctx, null);
+                        },
+                        child: Container(
+                          decoration: CustomContainerStyle.cancelButton(),
+                          padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                          child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 19,),
-                  Flexible(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(ctx, tfNoteController.text);
-                      },
-                      child: Container(
-                        decoration: CustomContainerStyle.confirmButton(),
-                        padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                        child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                    const SizedBox(width: 19,),
+                    Flexible(
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.pop(ctx, tfNoteController.text);
+                        },
+                        child: Container(
+                          decoration: CustomContainerStyle.confirmButton(),
+                          padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                          child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         );
       }).then((value) => completer.complete(value));
@@ -84,13 +89,10 @@ class FnBDialog{
               if(orderlist.isEmpty){
                 Navigator.pop(ctx, true);
               }
-              return AlertDialog(
+              return Dialog(
                 backgroundColor: Colors.white,
-                actionsPadding: const EdgeInsets.all(0),
-                contentPadding: const EdgeInsets.all(0),
-                titlePadding: const EdgeInsets.only(left: 12, right: 12, top: 6),
-                buttonPadding: const EdgeInsets.all(0),
-                content: Container(
+                child: Container(
+                  width: ScreenSize.getSizePercent(ctxDialog, 85),
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),

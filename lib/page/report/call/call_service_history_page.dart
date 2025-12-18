@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/call_service_history.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -409,6 +410,7 @@ class _CallServiceHistoryPageState extends State<CallServiceHistoryPage> {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: ElevatedButton(
                 onPressed: () async{
+                  final result = ConfirmationDialog.confirmation(context, 'Respond to call service for room $room?');
                   await ApiRequest().callResponse(data.roomCode);
                   getData();
                 },
