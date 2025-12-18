@@ -7,6 +7,9 @@ import 'package:get_it/get_it.dart';
   bool isNullOrEmpty(value){
     return value == null || value.isEmpty;
   }
+  
+  class T {
+  }
 
   bool isNotNullOrEmpty(value) {
     return value != null && value.isNotEmpty;

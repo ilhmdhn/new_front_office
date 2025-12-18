@@ -410,7 +410,10 @@ class _CallServiceHistoryPageState extends State<CallServiceHistoryPage> {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: ElevatedButton(
                 onPressed: () async{
-                  final result = ConfirmationDialog.confirmation(context, 'Respond to call service for room $room?');
+                  final result = await ConfirmationDialog.confirmation(context, 'Respond to call service for room $room?');
+                  if(!result){
+                    return;
+                  }
                   await ApiRequest().callResponse(data.roomCode);
                   getData();
                 },

@@ -328,7 +328,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           width: 150,
                           decoration: CustomContainerStyle.blueButton(),
                           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          child: Text('Pilih Promo Room', style: CustomTextStyle.whiteStandard(),),
+                          child: AutoSizeText('Pilih Promo Room', style: CustomTextStyle.whiteStandard(), maxLines: 1,),
                         ),
                       )
                     ],
@@ -434,7 +434,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           decoration: CustomContainerStyle.blueButton(),
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          child: Text('Pilih Promo FnB', style: CustomTextStyle.whiteStandard(),),
+                          child: AutoSizeText('Pilih Promo FnB', style: CustomTextStyle.whiteStandard(), maxLines: 1,),
                         ),),
                     ],
                   )):Padding(

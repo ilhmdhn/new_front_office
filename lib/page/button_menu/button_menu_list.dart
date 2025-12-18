@@ -494,7 +494,7 @@ class ButtonMenuWidget{
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Text(title, style: CustomTextStyle.blackMedium(),),
+            child: Text(title, style: CustomTextStyle.blackBoldSize(16),),
           ),
           ...rows
           ],

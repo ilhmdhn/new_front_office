@@ -59,10 +59,10 @@ class PreferencesData {
     String deviceModel = '';
     if(Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
-      deviceModel = androidInfo.model ?? 'Unknown Android Device';
+      deviceModel = androidInfo.model;
     } else if (Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
-      deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+      deviceModel = iosInfo.utsname.machine;
     }
     return deviceModel;
   }

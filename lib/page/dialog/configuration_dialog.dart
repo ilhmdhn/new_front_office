@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -46,7 +47,7 @@ class ConfigurationDialog{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Expanded( flex: 2,child: Text('Ip Server', style: CustomTextStyle.blackStandard(),)),
+                      Expanded( flex: 2,child: AutoSizeText('Ip Server', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)),
                       const SizedBox(width: 16,),
                       Expanded(
                         flex: 5,
@@ -100,29 +101,39 @@ class ConfigurationDialog{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(onPressed: (){
-                        Navigator.pop(context);
-                      },
-                      style: CustomButtonStyle.cancel(),
-                      child: const Text('CANCEL')),
-                  const SizedBox(width: 20,),
-                      ElevatedButton(onPressed: ()async{
-                        if(isNotNullOrEmpty(tfIp.text) && isNotNullOrEmpty(tfPort.text) && isNotNullOrEmpty(tfOutlet.text)){
-                          await PreferencesData.setUrl(BaseUrlModel(
-                            ip: tfIp.text,
-                            port: tfPort.text,
-                            outlet: tfOutlet.text
-                          ));
-                          if(context.mounted){
+                      SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                          onPressed: (){
                             Navigator.pop(context);
-                          }
-                        }else{
-                          showToastWarning('Isi semua field');
-                        }
-                      }, 
-                      style: CustomButtonStyle.confirm(),
-                      child: const Text('SIMPAN'))
-                    ],)
+                          },
+                          style: CustomButtonStyle.cancel(),
+                          child: const Text('CANCEL')
+                        ),
+                      ),
+                      const SizedBox(width: 20,),
+                      SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                          onPressed: ()async{
+                            if(isNotNullOrEmpty(tfIp.text) && isNotNullOrEmpty(tfPort.text) && isNotNullOrEmpty(tfOutlet.text)){
+                              await PreferencesData.setUrl(BaseUrlModel(
+                                ip: tfIp.text,
+                                port: tfPort.text,
+                                outlet: tfOutlet.text
+                              ));
+                              if(context.mounted){
+                                Navigator.pop(context);
+                              }
+                            }else{
+                              showToastWarning('Isi semua field');
+                            }
+                          }, 
+                        style: CustomButtonStyle.confirm(),
+                        child: const Text('SIMPAN')),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),

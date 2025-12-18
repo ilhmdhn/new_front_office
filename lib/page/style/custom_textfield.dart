@@ -37,7 +37,7 @@ class CustomTextfieldStyle{
     );
   }
   
-  static InputDecoration normalHintBlue(hint){
+  static InputDecoration normalHintBlue(String hint){
     return InputDecoration(
       hintText: hint,
       hintStyle: GoogleFonts.poppins(fontSize: 12),

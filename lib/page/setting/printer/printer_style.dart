@@ -27,86 +27,87 @@ class _PrinterStylePageState extends State<PrinterStylePage> {
       ),
       backgroundColor: CustomColorStyle.appBarBackground(),
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          color: CustomColorStyle.background()
+        ),
         padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AutoSizeText('Tampilkan Retur Item', style:  CustomTextStyle.blackMediumSize(16),),
-                  SizedBox(
-                    height: 12,
-                    child: Transform.scale(
-                      scale: 0.75,
-                      child: Switch(
-                        activeTrackColor: CustomColorStyle.bluePrimary(),
-                        value: PreferencesData.getShowReturState(),
-                        onChanged: ((value) {
-                          setState(() {
-                            PreferencesData.setShowRetur(value);
-                          });
-                        })),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16,),
-              Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AutoSizeText(
-                  'Tampilkan Total Promo Item',
-                  style: CustomTextStyle.blackMediumSize(16),
-                ),
-                SizedBox(
-                  height: 12,
-                  child: Transform.scale(
-                    scale: 0.75,
-                    child: Switch(
-                        activeTrackColor: CustomColorStyle.bluePrimary(),
-                        value: PreferencesData.getShowTotalItemPromo(),
-                        onChanged: ((value) {
-                          setState(() {
-                            PreferencesData.setShowTotalItemPromo(value);
-                          });
-                        })),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
+        child: Column(
+          children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AutoSizeText(
-                  'Tampilan promo dibawah item',
-                  style: CustomTextStyle.blackMediumSize(16),
-                ),
+                AutoSizeText('Tampilkan Retur Item', style:  CustomTextStyle.blackMediumSize(16),),
                 SizedBox(
                   height: 12,
                   child: Transform.scale(
                     scale: 0.75,
                     child: Switch(
-                        activeTrackColor: CustomColorStyle.bluePrimary(),
-                        value: PreferencesData.getShowPromoBelowItem(),
-                        onChanged: ((value) {
-                          setState(() {
-                            PreferencesData.setShowPromoBelowItem(value);
-                          });
-                        })),
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: PreferencesData.getShowReturState(),
+                      onChanged: ((value) {
+                        setState(() {
+                          PreferencesData.setShowRetur(value);
+                        });
+                      })),
                   ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 12,
-            ),
+            const SizedBox(height: 16,),
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Tampilkan Total Promo Item',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: PreferencesData.getShowTotalItemPromo(),
+                      onChanged: ((value) {
+                        setState(() {
+                          PreferencesData.setShowTotalItemPromo(value);
+                        });
+                      })),
+                ),
+              ),
             ],
           ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Tampilan promo dibawah item',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: PreferencesData.getShowPromoBelowItem(),
+                      onChanged: ((value) {
+                        setState(() {
+                          PreferencesData.setShowPromoBelowItem(value);
+                        });
+                      })),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          ],
         ),
       ),
     );

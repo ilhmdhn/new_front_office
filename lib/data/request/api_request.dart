@@ -735,10 +735,10 @@ class ApiRequest{
       String deviceModel = '';
       if(Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        deviceModel = androidInfo.model ?? 'Unknown Android Device';
+        deviceModel = androidInfo.model;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
-        deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+        deviceModel = iosInfo.utsname.machine;
       }
       final bodyParams = {
         "order_slip_order": sol,
@@ -779,10 +779,10 @@ class ApiRequest{
       String deviceModel = '';
       if(Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        deviceModel = androidInfo.model ?? 'Unknown Android Device';
+        deviceModel = androidInfo.model;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
-        deviceModel = iosInfo.utsname.machine ?? 'Unknown iOS Device';
+        deviceModel = iosInfo.utsname.machine;
       }
       final bodyParams = {
         "order_slip_order": sol,
@@ -1061,7 +1061,6 @@ class ApiRequest{
       debugPrint('DEBUGGING tokenPost: ${convertedResult.toString()}');
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
-      print('DEBUGGING Error tokenPost: ${e.toString()}');
       return BaseResponse(
         isLoading: false,
         state: false,
@@ -1119,7 +1118,7 @@ class ApiRequest{
               isNow: 0,
               roomCode: '101',
               callTime: '10:00',
-              callResponse: '',
+              callResponse: '10:02',
               responsedBy: 'Admin'
             ),
           ]

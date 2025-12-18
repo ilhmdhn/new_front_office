@@ -287,7 +287,7 @@ class _PrinterPageState extends State<PrinterPage> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: selectedBluetoothPrinterType,
+              initialValue: selectedBluetoothPrinterType,
               decoration: InputDecoration(
                 labelText: 'Printer Type',
                 prefixIcon: const Icon(Icons.print, color: Colors.blue),
@@ -488,7 +488,7 @@ class _PrinterPageState extends State<PrinterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<String>(
-          value: selectedLanPrinterType,
+          initialValue: selectedLanPrinterType,
           decoration: InputDecoration(
             labelText: 'Printer Type',
             prefixIcon: const Icon(Icons.print, color: Colors.orange),

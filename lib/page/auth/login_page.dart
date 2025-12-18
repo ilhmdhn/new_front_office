@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
@@ -91,9 +90,9 @@ class _LoginPageState extends State<LoginPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              CustomColorStyle.appBarBackground().withOpacity(0.1),
+              CustomColorStyle.appBarBackground().withAlpha(26),
               CustomColorStyle.background(),
-              CustomColorStyle.appBarBackground().withOpacity(0.05),
+              CustomColorStyle.appBarBackground().withAlpha(13),
             ],
           ),
         ),
@@ -107,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -132,11 +131,11 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: CustomColorStyle.appBarBackground().withOpacity(0.1),
+                            color: CustomColorStyle.appBarBackground().withAlpha(26),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                                color: CustomColorStyle.appBarBackground().withAlpha(51),
                                 blurRadius: 20,
                                 offset: const Offset(0, 8),
                               ),
@@ -148,18 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: CustomColorStyle.appBarBackground(),
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        AutoSizeText(
-                          'Happy Puppy Group POS',
-                          style: GoogleFonts.poppins(
-                            fontSize: 32,
-                            color: CustomColorStyle.appBarBackground(),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                        ],
                     ),
                   ),
                   // Login Form
@@ -171,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withAlpha(20),
                           blurRadius: 30,
                           offset: const Offset(0, 15),
                         ),
@@ -198,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withAlpha(13),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -264,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withAlpha(13),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -336,12 +324,12 @@ class _LoginPageState extends State<LoginPage> {
                                   gradient: LinearGradient(
                                     colors: [
                                       CustomColorStyle.appBarBackground(),
-                                      CustomColorStyle.appBarBackground().withOpacity(0.8),
+                                      CustomColorStyle.appBarBackground().withAlpha(204),
                                     ],
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: CustomColorStyle.appBarBackground().withOpacity(0.3),
+                                      color: CustomColorStyle.appBarBackground().withAlpha(77),
                                       blurRadius: 15,
                                       offset: const Offset(0, 8),
                                     ),
@@ -388,12 +376,12 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                                  color: CustomColorStyle.appBarBackground().withAlpha(51),
                                   width: 1.5,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withAlpha(13),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -454,10 +442,10 @@ class _LoginPageState extends State<LoginPage> {
                             vertical: 12,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withAlpha(204),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: CustomColorStyle.appBarBackground().withOpacity(0.2),
+                              color: CustomColorStyle.appBarBackground().withAlpha(51),
                             ),
                           ),
                           child: Row(

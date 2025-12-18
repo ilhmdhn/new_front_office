@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:front_office_2/data/dummy/dummy_response_helper.dart';
+import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-import 'package:front_office_2/data/model/base_response.dart';
 
 class CloudRequest{
 
@@ -83,7 +83,11 @@ class CloudRequest{
   static Future<RequestApprovalResponse> approvalList()async{
     try{
       String outlet = PreferencesData.getOutlet();
-
+      String? userId = PreferencesData.getUser().userId;
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getApprovalList();
+        return data;
+      }
       final url = Uri.parse('$baseUrl/approval/list?outlet=$outlet');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       final convertedResult = json.decode(apiResponse.body);
