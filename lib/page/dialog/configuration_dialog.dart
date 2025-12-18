@@ -101,8 +101,8 @@ class ConfigurationDialog{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 120,
+                      Flexible(
+                        fit: FlexFit.tight,
                         child: ElevatedButton(
                           onPressed: (){
                             Navigator.pop(context);
@@ -112,8 +112,8 @@ class ConfigurationDialog{
                         ),
                       ),
                       const SizedBox(width: 20,),
-                      SizedBox(
-                        width: 120,
+                      Flexible(
+                        fit: FlexFit.tight,
                         child: ElevatedButton(
                           onPressed: ()async{
                             if(isNotNullOrEmpty(tfIp.text) && isNotNullOrEmpty(tfPort.text) && isNotNullOrEmpty(tfOutlet.text)){

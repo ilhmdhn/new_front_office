@@ -269,6 +269,11 @@ class CloudRequest{
 
   static Future<VoucherMemberResponse> memberVoucher(String memberCode, String voucherCode)async{
     try{
+        final userId = PreferencesData.getUser().userId;
+        if(userId == 'TEST'){
+          final data =  await DummyResponseHelper.getVoucherMember();
+          return data;
+        }
         final url = Uri.parse('$membershipServer/voucher-info?member_code=$memberCode&voucher_code=$voucherCode');
         final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json','authorization': membershipToken});
         final convertedResult = json.decode(apiResponse.body);

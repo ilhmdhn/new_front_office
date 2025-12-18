@@ -114,13 +114,9 @@ class RatingDialog{
                   }
                 });
               }
-
               return Dialog(
-                child: SizedBox(
-                  width: isPotrait ? ScreenSize.getSizePercent(ctxStateful, 60) : ScreenSize.getSizePercent(ctxStateful, 30),
-                  height: isPotrait ? ScreenSize.getHeightPercent(ctxStateful, 25) : ScreenSize.getHeightPercent(ctxStateful, 25),
-                  child: LottieBuilder.asset('assets/animation/done.json'),
-                ),
+                backgroundColor: Colors.transparent,
+                child: LottieBuilder.asset('assets/animation/done.json'),
               );
             }
             

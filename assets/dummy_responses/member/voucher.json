@@ -1,12 +1,28 @@
 {
-  "state": true,
-  "message": "Voucher valid",
-  "data": {
-    "voucher_code": "VOUCHER001",
-    "voucher_name": "Diskon 20%",
-    "voucher_type": "PERCENTAGE",
-    "voucher_value": 20,
-    "voucher_min_transaction": 100000,
-    "voucher_max_discount": 50000
-  }
+    "state": true,
+    "data": {
+        "voucher_code": "V-177942176222140713",
+        "voucher_name": "Voucher Free 1 Jam",
+        "voucher_hour": 1,
+        "voucher_room_price": null,
+        "voucher_room_discount": null,
+        "condition_room_type": "SMALL",
+        "condition_hour": 2,
+        "condition_room_price": null,
+        "condition_item_qty": null,
+        "condition_item_price": null,
+        "voucher_fnb_price": 0,
+        "voucher_fnb_discount": null,
+        "condition_fnb_discount": null,
+        "voucher_price": null,
+        "condition_price": null,
+        "voucher_discount": null,
+        "condition_discount": null,
+        "description": "<p>Selamat datang anggota baru Puppy Club! Kamu mendapatkan voucher 1 Jam Gratis. Voucher ini bisa kamu gunakan dengan minimum karaoke 2 jam berlaku untuk ruangan Small dan Medium.</p>\n<p>Syarat Penggunaan : </p>\n<ol>\n<li>Buka halaman \"Hadiah\" kamu</li>\n<li>Pilih voucher yang akan kamu gunakan</li>\n<li>Tunjukkan kode barcode voucher ini ke staff Happy Puppy di awal kedatangan</li>\n<li>Staff Happy Puppy akan menunjukkan cara melakukan scan barcode</li>\n<li>Masa berlaku voucher ini 60 hari sejak pendaftaran</li>\n<li>Berlaku hari Minggu s/d Kamis ruangan Small, Medium pada jam Happy Hour dan Bisnis Hour</li>\n<li>Setelah di scan barcode oleh staff Happy Puppy voucher tidak dapat dibatalkan atau diganti</li>\n<li>Voucher ini tidak dapat digabungkan dengan promo lain yang tertera di Outlet dan Voucher lainnya</li>\n<li>Voucher ini tidak dapat diuangkan</li>\n</ol>",
+        "voucher_qty": null,
+        "image": "uploads/Voucher/3.jpg",
+        "condition_fnb_price": null,
+        "item_code": ""
+    },
+    "message": "succes"
 }
