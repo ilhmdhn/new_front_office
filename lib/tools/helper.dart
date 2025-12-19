@@ -4,18 +4,19 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:get_it/get_it.dart';
 
-  bool isNullOrEmpty(value){
-    return value == null || value.isEmpty;
-  }
-  
-  class T {
-  }
+bool isNullOrEmpty(dynamic value) {
+  if (value == null) return true;
 
-  bool isNotNullOrEmpty(value) {
-    return value != null && value.isNotEmpty;
-  }
+  if (value is String) return value.isEmpty;
+  if (value is Iterable || value is Map) return value.isEmpty;
 
-  bool _isRoomCallDialogOpen = false;
+  return false;
+}
+
+bool isNotNullOrEmpty(dynamic value) => !isNullOrEmpty(value);
+
+
+bool _isRoomCallDialogOpen = false;
 
 void showRoomCallDialog(RemoteMessage message) {
   if (_isRoomCallDialogOpen) return;

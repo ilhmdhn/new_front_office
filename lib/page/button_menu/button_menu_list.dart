@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
+import 'package:front_office_2/page/checkin/checkin_page.dart';
 import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
@@ -31,7 +32,8 @@ class ButtonMenuWidget{
             order(),
             bill(),
             checkout(),
-            clean()
+            clean(),
+            checkinPage()
           ]
         ),
       ],
@@ -135,6 +137,16 @@ class ButtonMenuWidget{
             },
         );
   }
+
+  Widget checkinPage(){
+    return InkWell(
+      child: itemButton('assets/menu_icon/karaoke.png', 'Checkin'),
+            onTap: (){
+              Navigator.pushNamed(context, CheckinPage.nameRoute);
+            },
+        );
+  }
+
 
   Widget checkinReservation(){
     // final widthButton = ScreenSize.getSizePercent(context, 45);
