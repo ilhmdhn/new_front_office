@@ -11,7 +11,7 @@ class LoginResponse{
     this.data
   });
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json){
+  factory LoginResponse.fromJson(Map<String, dynamic> json, String pass){
     if (json['state'] != true) {
       throw json['message'];
     }
@@ -19,7 +19,7 @@ class LoginResponse{
       state: json['state'],
       isLoading: false,
       message: json['message'],
-      data: UserDataModel.fromJson(json['data'])
+      data: UserDataModel.fromJson(json['data'], pass)
     );
   }
 }
@@ -35,15 +35,15 @@ class UserDataModel{
     required this.userId,
     required this.level,
     required this.token,
-    required this.pass,
+    this.pass = '',
     required this.outlet
   });
 
-  factory UserDataModel.fromJson(Map<String, dynamic> json)=>UserDataModel(
+  factory UserDataModel.fromJson(Map<String, dynamic> json, String pass)=>UserDataModel(
     userId: json['user_id'],
     level: json['level_user'],
     token: json['token'],
-    pass: json['pass'],
+    pass: pass,
     outlet: json['outlet']
   );
 }

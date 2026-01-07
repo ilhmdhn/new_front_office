@@ -1,11 +1,15 @@
 import 'package:front_office_2/data/model/fnb_model.dart';
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 
 class GenerateOrderParams{
 
   static Future<Map<String, dynamic>> orderParams(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
-    final chusr = PreferencesData.getUser().userId;
-    final deviceId = await PreferencesData.getDeviceModel();
+    // Akses user menggunakan GlobalProviders (tanpa parameter tambahan)
+    final chusr = GlobalProviders.read(userProvider).userId;
+
+    // Akses device model langsung tanpa await (sudah di-load saat app start)
+    final deviceId = GlobalProviders.read(deviceModelProvider);
+
     List<String> invCodeList = List.empty(growable: true);
     List<String> qtyList = List.empty(growable: true);
     List<String> noteList = List.empty(growable: true);

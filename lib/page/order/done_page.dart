@@ -8,6 +8,7 @@ import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -107,7 +108,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             ),
                             InkWell(
                               onTap: ()async{
-                                String userLevel = PreferencesData.getUser().level;
+                                final userLevel = GlobalProviders.read(userProvider).level;
                                 if(userLevel != 'KASIR' || userLevel != 'ACCOUNTING'){
                                   showToastWarning('Hanya user kasir');
                                   return;

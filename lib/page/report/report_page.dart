@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/user_provider.dart';
 
 class ReportPage extends StatefulWidget {
     static const nameRoute = '/report';
@@ -15,6 +17,9 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+
+  UserDataModel user = GlobalProviders.read(userProvider);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +38,7 @@ class _ReportPageState extends State<ReportPage> {
           children: [
             // AddOnWidget.listButtonNavigation(coantext, CashDetailPage.nameRoute, 'assets/icon/money.png', 'Rincian Pecahan'),
             // const SizedBox(height: 9,),
-            PreferencesData.getUser().level == 'ACCOUNTING'?
+            user.level == 'ACCOUNTING'?
             AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox(),
             const SizedBox(height: 9,),
             AddOnWidget.listButtonNavigation(context, CallServiceHistoryPage.nameRoute, 'assets/icon/call_service.png', 'Call Service'),

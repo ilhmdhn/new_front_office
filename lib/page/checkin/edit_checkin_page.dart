@@ -17,6 +17,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -545,9 +546,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         listPromo.add(promoFnb!.promoName!);
                       }
     
-                      final chusr = PreferencesData.getUser().userId;
-    
-                      
+                      final chusr = GlobalProviders.read(userProvider).userId;
     
                       final params = EditCheckinBody(
                         room: dataCheckin!.roomCode,

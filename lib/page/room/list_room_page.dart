@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
+import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/time_pax_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -9,6 +10,7 @@ import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/checkin_time_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -27,7 +29,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
   CheckinParams checkinParams = CheckinParams();
   bool isLoading = false;
   bool gettedData = false;
-
+  UserDataModel user = GlobalProviders.read(userProvider);
   @override
   Widget build(BuildContext contextz) {
     checkinParams = ModalRoute.of(context)?.settings.arguments as CheckinParams;
@@ -87,7 +89,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                     if(isRoomCheckin == true){
     
                       final checkinResult = await ApiRequest().doCheckin(CheckinBody(
-                        chusr: PreferencesData.getUser().userId,
+                        chusr: user.userId,
                         hour: result.duration,
                         minute: 0,
                         pax: result.pax,
@@ -126,7 +128,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                           'member': checkinParams.memberCode,
                           'nama_lengkap': checkinParams.memberName
                         },
-                        'chusr': PreferencesData.getUser().userId,
+                        'chusr': user.userId,
                         'durasi_jam': 0,
                         'durasi_menit': 0,
                         'pax': result.pax,

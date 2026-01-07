@@ -1,4 +1,6 @@
 import 'package:front_office_2/data/model/voucher_model.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/data.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:intl/intl.dart';
@@ -6,8 +8,8 @@ import 'package:intl/intl.dart';
 class Calculate{
   VoucherModel calculateCashbackVoucher(String invoice, num value){
 
-    final outletCode = PreferencesData.getOutlet();
-    final voucherCode = 'V$outletCode-${invoice.split('-')[1]}';
+    final user = GlobalProviders.read(userProvider);
+    final voucherCode = 'V${user.outlet}-${invoice.split('-')[1]}';
     int voucherValue = 0;
     List<String> snk = List.empty(growable: true);
 
@@ -26,7 +28,7 @@ class Calculate{
       voucherValue = 150000;
     }
 
-    snk.add('Berlaku di ${Data.getOutletName(outletCode)}');
+    snk.add('Berlaku di ${Data.getOutletName(user.outlet)}');
 
     return VoucherModel(
       code: voucherCode, 

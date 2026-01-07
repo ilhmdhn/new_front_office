@@ -4,3 +4,4 @@ export 'user_provider.dart';
 export 'printer_provider.dart';
 export 'app_settings_provider.dart';
 export 'device_info_provider.dart';
+export 'provider_container.dart';

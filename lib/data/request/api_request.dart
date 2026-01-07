@@ -27,19 +27,20 @@ import 'package:front_office_2/data/model/status_room_checkin.dart';
 import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{
 
-  final serverUrl = PreferencesData.getUrl();
-  final token = PreferencesData.getUserToken();
-  final userId = PreferencesData.getUser().userId;
+  // Gunakan getter untuk akses GlobalProviders
+  String get serverUrl => GlobalProviders.read(serverUrlProvider);
+  String get token => GlobalProviders.read(userTokenProvider);
+  String get userId => GlobalProviders.read(userProvider).userId;
   
   Future<LoginResponse> loginFO(String userId, String password)async{
     try {
@@ -53,8 +54,9 @@ class ApiRequest{
         'user_password': password
       }));
       final convertedResult = json.decode(apiResponse.body);
-      return LoginResponse.fromJson(convertedResult);
-    } catch (e) {
+      return LoginResponse.fromJson(convertedResult, password);
+    } catch (e, stakTrace) {
+      debugPrint('ERROR loginFO: $e\n$stakTrace');
       return LoginResponse(
         state: false,
         message: e.toString()
@@ -68,7 +70,6 @@ class ApiRequest{
       final data =  await DummyResponseHelper.getCekMember(memberCode);
       return data;
     }
-    final serverUrl = PreferencesData.getUrl();
     final url = Uri.parse('$serverUrl/member/membership/$memberCode');
     final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
     if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -402,7 +403,7 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
-      String userIdz = PreferencesData.getUser().userId;
+      final userIdz = GlobalProviders.read(userProvider).userId;
       final bodyRequest = {
         "room": roomCode,
         "durasi_jam": duration,
@@ -434,7 +435,7 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
-      String userIdz = PreferencesData.getUser().userId;
+      final userIdz = GlobalProviders.read(userProvider).userId;
       final bodyRequest = {
         "rcp": reception,
         "durasi": duration,
@@ -560,7 +561,7 @@ class ApiRequest{
 
       final checkinBody = {
         'room': room,
-        'chusr': PreferencesData.getUser().userId
+        'chusr': GlobalProviders.read(userProvider).userId
       };
 
       final apiResponse = await http.post(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -590,7 +591,7 @@ class ApiRequest{
 
       final checkinBody = {
         'room': room,
-        'chusr': PreferencesData.getUser().userId
+        'chusr': GlobalProviders.read(userProvider).userId
       };
 
       final apiResponse = await http.post(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -752,7 +753,7 @@ class ApiRequest{
         "order_qty": oldQty,
         "order_qty_temp": data.qty,
         "order_room_rcp": rcp,
-        "order_room_user": PreferencesData.getUser().userId,
+        "order_room_user": GlobalProviders.read(userProvider).userId,
         "order_model_android": deviceModel
       };
       
@@ -794,7 +795,7 @@ class ApiRequest{
         "order_inventory": invCode,
         "order_qty": oldQty,
         "order_room_rcp": rcp,
-        "order_room_user": PreferencesData.getUser().userId,
+        "order_room_user": GlobalProviders.read(userProvider).userId,
         "order_model_android": deviceModel
       };
       
@@ -825,7 +826,7 @@ class ApiRequest{
       
       final bodyParams = {
         "room": roomCode,
-        "chusr": PreferencesData.getUser().userId,
+        "chusr": GlobalProviders.read(userProvider).userId,
         "order_inventory": [{
           'inventory': fnb.invCode,
           'nama': fnb.name,
@@ -862,7 +863,7 @@ class ApiRequest{
       
       final bodyParams = {
         "room": roomCode,
-        "chusr": PreferencesData.getUser().userId,
+        "chusr": GlobalProviders.read(userProvider).userId,
         "order_inventory": [{
           'inventory': fnb.invCode,
           'nama': fnb.name,
@@ -959,7 +960,7 @@ class ApiRequest{
         return data;
       }
       Uri url = Uri.parse('$serverUrl/transfer/tolobby');
-      final chusr = PreferencesData.getUser().userId;
+      final chusr = GlobalProviders.read(userProvider).userId;
       Map<String, dynamic> bodyParams = {
         "room_code": data.oldRoom,
         "room_destination": data.roomDestination,
@@ -1040,7 +1041,7 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> tokenPost(String token)async{
+  Future<BaseResponse> tokenPost()async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
@@ -1048,9 +1049,9 @@ class ApiRequest{
       }
       final url = Uri.parse('$serverUrl/firebase/token');
       Map<String, dynamic> bodyParams = {
-        "token": PreferencesData.getFcmToken(),
-        "user": PreferencesData.getUser().userId,
-        "user_level": PreferencesData.getUser().level
+        "token": GlobalProviders.read(fcmTokenProvider),
+        "user": GlobalProviders.read(userProvider).userId,
+        "user_level": GlobalProviders.read(userProvider).level
       };
       final apiResponse = await http.post(
         url, 
@@ -1082,7 +1083,7 @@ class ApiRequest{
       }
       final url = Uri.parse('$serverUrl/call/callroom/$roomCode');
       Map<String, dynamic> bodyParams = {
-        "chusr": PreferencesData.getUser().userId
+        "chusr": GlobalProviders.read(userProvider).userId
       };
       final apiResponse = await http.put(
         url, 

@@ -5,6 +5,7 @@ import 'package:front_office_2/page/bloc/notif_bloc.dart';
 import 'package:front_office_2/page/button_menu/button_menu_list.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
@@ -29,7 +30,7 @@ class _OperationalPageState extends State<OperationalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userData = PreferencesData.getUser();
+    final userData = GlobalProviders.read(userProvider);
 
     final widget = ButtonMenuWidget(context: context);
 

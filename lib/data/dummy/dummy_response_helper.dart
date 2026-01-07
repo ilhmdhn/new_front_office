@@ -32,7 +32,7 @@ class DummyResponseHelper {
   /// Login Response
   static Future<LoginResponse> getLoginResponse() async {
     final json = await DummyJsonLoader.load('auth/login.json');
-    return LoginResponse.fromJson(json);
+    return LoginResponse.fromJson(json, '');
   }
 
   // ========== ROOM MANAGEMENT ==========

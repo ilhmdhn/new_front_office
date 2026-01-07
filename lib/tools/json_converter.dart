@@ -1,6 +1,8 @@
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
 class JsonConverter{
@@ -208,7 +210,7 @@ class JsonConverter{
   }
 
   static Map<String, dynamic> generateTransferParams(TransferParams data){
-    final chusr = PreferencesData.getUser().userId;
+    final userData = GlobalProviders.read(userProvider);
     return {
       "checkin_room":{
         "kamar": data.roomDestination
@@ -218,7 +220,7 @@ class JsonConverter{
         "jenis_kamar": data.roomTypeDestination,
         "kapasitas": data.capacity,
       },
-      "chusr": chusr,
+      "chusr": userData.userId,
       "old_room_before_transfer":{
         "kamar": data.oldRoom
       },

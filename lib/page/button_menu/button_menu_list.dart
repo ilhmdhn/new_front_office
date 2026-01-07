@@ -60,7 +60,7 @@ class ButtonMenuWidget{
         ),
         SizedBox(height: 12,),
         buildGridMenu(
-          'Management',
+          'Verification',
           2, 
           [                  
             approval(approvalCount)
@@ -105,7 +105,7 @@ class ButtonMenuWidget{
         ),
         SizedBox(height: 12,),
         buildGridMenu(
-          'Management',
+          'Verification',
           2, 
           [                  
             approval(approvalCount)

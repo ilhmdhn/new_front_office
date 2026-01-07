@@ -40,11 +40,12 @@ class PreferencesData {
     _prefs?.setString('OUTLET', outletCode);
   }
 
-  static Future<void> setUser(UserDataModel data, pass) async {
+  static Future<void> setUser(UserDataModel data) async {
     _prefs?.setString('USER_ID', data.userId);
     _prefs?.setString('USER_LEVEL', data.level);
     _prefs?.setString('USER_TOKEN', data.token);
-    _prefs?.setString('USER_PASS', pass);
+    _prefs?.setString('USER_PASS', data.pass);
+    _prefs?.setString('OUTLET', data.outlet);
   }
 
   static void setBiometricLogin(bool value){
@@ -54,19 +55,6 @@ class PreferencesData {
   static bool getBiometricLoginState(){
     final state = _prefs?.getBool('BIOMETRIC_LOGIN')??false;
     return state;
-  }
-
-  static Future<String> getDeviceModel()async{
-    final deviceInfo = DeviceInfoPlugin();
-    String deviceModel = '';
-    if(Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      deviceModel = androidInfo.model;
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      deviceModel = iosInfo.utsname.machine;
-    }
-    return deviceModel;
   }
 
   static UserDataModel getUser() {
@@ -89,14 +77,6 @@ class PreferencesData {
   static String getUserToken() {
     final token = _prefs?.getString('USER_TOKEN') ?? '';
     return token;
-  }
-
-  static Future<void> setFcmToken(String token)async{
-    _prefs?.setString('FCM_TOKEN', token);
-  }
-
-  static String getFcmToken(){
-    return _prefs?.getString('FCM_TOKEN')??'';
   }
 
   static Future<String> getImei()async{

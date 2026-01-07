@@ -1,4 +1,4 @@
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 
 class PaymentDetail{
   num nominal;
@@ -52,7 +52,7 @@ class PaymentDetail{
 
 class GeneratePaymentParams{
   static Map<String, dynamic> generatePaymentParams(bool isSendEmail, String room, List<PaymentDetail> paymentList){
-    final chusr = PreferencesData.getUser().userId;
+    final chusr = GlobalProviders.read(userProvider).userId;
     return <String, dynamic>{
       "chusr": chusr,
       "is_send_email_invoice": isSendEmail,

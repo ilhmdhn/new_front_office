@@ -29,9 +29,11 @@ import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/status/state_page.dart';
 import 'package:front_office_2/page/transfer/list_room_transfer_page.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
+import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:get_it/get_it.dart';
@@ -48,7 +50,7 @@ void main() async {
   ]);
 
   await dotenv.load(fileName: ".env");
-  
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -58,7 +60,7 @@ void main() async {
     String? signalType = message.data['type'];
     String? signalCode = message.data['code'];
     bool state = false;
-  
+
     if (message.data['state'] == 'true') {
       state = true;
     }
@@ -71,14 +73,26 @@ void main() async {
     } else if (signalType == '3') {
       eventBus.fire(RefreshApprovalCount());
     } else if(signalType == 'room_call'){
-      debugPrint('DEBUGGING room_call received');
       showRoomCallDialog(message);
     }
   });
 
   await PreferencesData.initialize();
   setupLocator();
-  runApp(const ProviderScope(child: FrontOffice()));
+
+  // Inisialisasi Global ProviderContainer
+  final container = ProviderContainer();
+  GlobalProviders.initialize(container);
+
+  // Pre-load providers saat app start (agar fetch data di awal)
+  container.read(fcmTokenProvider);        // Load FCM token
+  container.read(deviceModelProvider);     // Load device model
+  // FirebaseTools.initToken();
+
+  runApp(UncontrolledProviderScope(
+    container: container,
+    child: const FrontOffice(),
+  ));
 }
 
 

@@ -28,9 +28,11 @@ class _StatePageState extends State<StatePage> {
     }
 
     data = await ApiRequest().checkinState();
-    setState(() {
-      data;
-    });
+    if(mounted){
+      setState(() {
+        data;
+      });
+    }
   }
 
 

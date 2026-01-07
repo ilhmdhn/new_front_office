@@ -20,8 +20,8 @@ class UserNotifier extends StateNotifier<UserDataModel> {
     state = PreferencesData.getUser();
   }
 
-  Future<void> setUser(UserDataModel userData, String password) async {
-    await PreferencesData.setUser(userData, password);
+  Future<void> setUser(UserDataModel userData) async {
+    await PreferencesData.setUser(userData);
     state = userData;
   }
 

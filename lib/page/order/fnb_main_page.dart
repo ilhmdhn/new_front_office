@@ -10,6 +10,7 @@ import 'package:front_office_2/page/order/send_order_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 
@@ -26,9 +27,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
 
   final PageController slideController = PageController();
   DetailCheckinResponse? dataCheckin;
-
-  String userLevel = PreferencesData.getUser().level;
-
+  final userLevel = GlobalProviders.read(userProvider).level;
+  
   List<String> namePage = [];
 
   int activePageIndex = 0;

@@ -10,11 +10,12 @@ import 'package:front_office_2/page/bloc/send_approval_bloc.dart';
 import 'package:front_office_2/page/dialog/textfield_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/user_provider.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:lottie/lottie.dart';
@@ -23,7 +24,7 @@ import 'package:slide_countdown/slide_countdown.dart';
 class VerificationDialog{
   static Future<bool?> requestVerification(BuildContext ctx, String reception, String room, String note)async{
 
-    final user = PreferencesData.getUser();
+    final user = GlobalProviders.read(userProvider);
     final isPotrait = isVertical(ctx);
 
     bool isLoading = true;

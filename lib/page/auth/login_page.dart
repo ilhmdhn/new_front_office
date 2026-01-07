@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
   static const nameRoute = '/reservation';
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   bool showPassword = false;
   TextEditingController tfUser = TextEditingController();
   TextEditingController tfPassword = TextEditingController();
@@ -30,27 +31,26 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  Future<void> insertLogin()async{
-    final response = await CloudRequest.insertLogin();
-    if(response.state != true){
-      showToastError(' Error upload fcm tokent ${response.message}');
-    }
-  }
-
   void doLogin(String user, String pass)async{
     setState(() {
       isLoading = true;
     });
+    debugPrint('DEBUGGING Attempting login with user: $user');
     final loginResult = await ApiRequest().loginFO(user, pass);
+    debugPrint('DEBUGGING Login result state: ${loginResult.state}');
     if(loginResult.state == true){
-      if(user != PreferencesData.getUser().userId){
-          PreferencesData.setBiometricLogin(false);
+      // Cek jika user berbeda, disable biometric
+      final currentUser = ref.read(userProvider);
+      if(user != currentUser.userId){
+        ref.read(biometricLoginProvider.notifier).setBiometricLogin(false);
       }
 
-      PreferencesData.setUser(loginResult.data!, pass);
-      PreferencesData.setLoginState(true);
-
-      await insertLogin();
+      await ref.read(userProvider.notifier).setUser(loginResult.data!);
+      ref.read(loginStateProvider.notifier).setLoginState(true);
+      ref.read(outletProvider.notifier).updateOutlet(loginResult.data?.outlet??'');
+      CloudRequest.insertLogin();
+      ApiRequest().tokenPost();
+      
       BuildContext ctx = context;
       if(ctx.mounted){
         Navigator.pushNamedAndRemoveUntil(ctx, MainPage.nameRoute, (route) => false);
@@ -58,9 +58,6 @@ class _LoginPageState extends State<LoginPage> {
         showToastError('Gagal, jangan berpindah halaman');
       }
     }else{
-      setState((){
-        isLoading = false;
-      });
       showToastWarning(loginResult.message??'Gagal Login');
     }
     setState(() {
@@ -70,9 +67,14 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginState()async{
     final apiResponse = await ApiRequest().cekSign();
-    final user = PreferencesData.getUser();
-    final loginState = PreferencesData.getLoginState();
+
+    // Baca user dan login state dari Riverpod
+    final user = ref.read(userProvider);
+    final loginState = ref.read(loginStateProvider);
+
     if(apiResponse.state == true && isNotNullOrEmpty(user.userId) && isNotNullOrEmpty(user.level) && isNotNullOrEmpty(user.token) && loginState == true){
+      CloudRequest.insertLogin();
+      ApiRequest().tokenPost();
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{
       setState((){
@@ -391,20 +393,22 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () async {
-                                    final biometricState =
-                                        PreferencesData.getBiometricLoginState();
+                                    // Baca biometric state dari Riverpod
+                                    final biometricState = ref.read(biometricLoginProvider);
                                     if (biometricState != true) {
                                       showToastWarning(
                                           'Autentikasi Biometric Belum Diaktifkan');
                                       return;
                                     }
-              
+
                                     final biometricRequest =
                                         await FingerpintAuth().requestFingerprintAuth();
                                     if (biometricRequest != true) {
                                       return;
                                     }
-                                    final user = PreferencesData.getUser();
+
+                                    // Baca user dari Riverpod
+                                    final user = ref.read(userProvider);
                                     doLogin(user.userId, user.pass);
                                   },
                                   borderRadius: BorderRadius.circular(16),
@@ -433,7 +437,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          ConfigurationDialog().setUrl(context);
+                          ConfigurationDialog().setUrl(context, ref);
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(

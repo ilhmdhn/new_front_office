@@ -8,6 +8,8 @@ import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -25,7 +27,7 @@ class BillPage extends StatefulWidget {
 class _BillPageState extends State<BillPage> {
   String roomCode = '';
   bool isLoading = true;
-
+  final user = GlobalProviders.read(userProvider);
   PreviewBillResponse result = PreviewBillResponse(state: false, message: 'loading');
 
   void getData()async{
@@ -251,8 +253,7 @@ class _BillPageState extends State<BillPage> {
                     InkWell(
                       onTap: ()async{
                         // DoPrint.printBill(roomCode); return;
-                        final userLevel = PreferencesData.getUser();
-                        if(userLevel.level != 'KASIR' && userLevel.level != 'SERVER'){
+                        if(user.level != 'KASIR' && user.level != 'SERVER'){
                           showToastWarning('User tidak memiliki akses');
                           return;
                         }else{
@@ -281,8 +282,7 @@ class _BillPageState extends State<BillPage> {
                     Expanded(
                       child: InkWell(
                         onTap: (){
-                          final userLevel = PreferencesData.getUser();
-                          if(userLevel.level != 'KASIR' && userLevel.level != 'ACCOUNTING'){
+                          if(user.level != 'KASIR' && user.level != 'ACCOUNTING'){
                             showToastWarning('User tidak memiliki akses');
                             return;
                           }

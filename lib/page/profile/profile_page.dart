@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
@@ -8,23 +8,22 @@ import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/toast.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   static const nameRoute = '/profile';
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  UserDataModel user = PreferencesData.getUser();
-
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    bool isBiometric = PreferencesData.getBiometricLoginState();
+    UserDataModel user = ref.watch(userProvider);
+    bool biometricProv = ref.watch(biometricLoginProvider);
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       appBar: AppBar(
@@ -36,16 +35,15 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             SizedBox(
-                  width: 75,
-                  height: 75,
-                  child: CircleAvatar(
-                    backgroundImage: Image.asset('assets/icon/user.png').image,
-                  ),
+              width: 75,
+              height: 75,
+              child: CircleAvatar(
+                backgroundImage: Image.asset('assets/icon/user.png').image,
+              ),
             ),
             const SizedBox(height: 4,),
             AutoSizeText(user.userId, style: CustomTextStyle.blackMediumSize(18),),
             AutoSizeText(user.level, style: CustomTextStyle.blackMediumSize(15),),
-
             const SizedBox(height: 8,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal:  8.0),
@@ -80,12 +78,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Checkbox(
                         checkColor: CustomColorStyle.bluePrimary(),
                         activeColor: CustomColorStyle.background(),
-                        value: isBiometric,
+                        value: biometricProv,
                         onChanged: (value){
-                          PreferencesData.setBiometricLogin(value??false);
-                          setState(() {
-                            isBiometric = PreferencesData.getLoginState();
-                          });
+                          ref.read(biometricLoginProvider.notifier).setBiometricLogin(value ?? false);
                         }
                       )
                     ),
@@ -232,8 +227,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   if(confirm != true){
                     return;
                   }
-                  PreferencesData.setLoginState(false);
-                  FirebaseMessaging.instance.deleteToken();
+
+                  // Logout menggunakan Riverpod
+                  ref.read(loginStateProvider.notifier).setLoginState(false);
+                  await ref.read(fcmTokenProvider.notifier).deleteToken();
+
                   if(context.mounted){
                     Navigator.pushNamedAndRemoveUntil(context, LoginPage.nameRoute, (route) => false);
                   }else{
