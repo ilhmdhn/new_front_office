@@ -3,7 +3,8 @@
     "allow": [
       "Bash(flutter build:*)",
       "Bash(mkdir:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(flutter analyze lib/page/setting/printer/printer_page.dart)"
     ],
     "deny": [],
     "ask": []

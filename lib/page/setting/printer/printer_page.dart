@@ -1,26 +1,27 @@
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
 import 'package:front_office_2/tools/lanprint_executor.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/printer_tools.dart';
 import 'package:front_office_2/tools/toast.dart';
 
-class PrinterPage extends StatefulWidget {
+class PrinterPage extends ConsumerStatefulWidget {
   static const nameRoute = '/printer';
   const PrinterPage({super.key});
 
   @override
-  State<PrinterPage> createState() => _PrinterPageState();
+  ConsumerState<PrinterPage> createState() => _PrinterPageState();
 }
 
-class _PrinterPageState extends State<PrinterPage> {
+class _PrinterPageState extends ConsumerState<PrinterPage> {
   List<PrinterList> listPrinter = List.empty(growable: true);
   PrinterList chosedPrinter = PrinterList(name: '', address: '');
   TextEditingController tfIpPc = TextEditingController();
@@ -28,7 +29,6 @@ class _PrinterPageState extends State<PrinterPage> {
   TextEditingController tfIpLan = TextEditingController();
   TextEditingController tfPortLan = TextEditingController();
   List<BluetoothDevice> printerList = List.empty(growable: true);
-  PrinterModel printer = PreferencesData.getPrinter();
   bool isLoading = false;
 
   PrinterModelType selectedPcPrinterType = PrinterModelType.tmu220u;
@@ -42,6 +42,8 @@ class _PrinterPageState extends State<PrinterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final printer = ref.watch(printerProvider);
+
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       appBar: AppBar(
@@ -60,13 +62,13 @@ class _PrinterPageState extends State<PrinterPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildCurrentPrinterCard(),
+              _buildCurrentPrinterCard(printer),
               const SizedBox(height: 20),
               _buildPCPrinterCard(),
               const SizedBox(height: 20),
               _buildLanPrinterCard(),
               const SizedBox(height: 20),
-              _buildBluetoothPrinterCard(),
+              _buildBluetoothPrinterCard(printer),
             ],
           ),
         ),
@@ -74,7 +76,7 @@ class _PrinterPageState extends State<PrinterPage> {
     );
   }
 
-  Widget _buildCurrentPrinterCard() {
+  Widget _buildCurrentPrinterCard(PrinterModel printer) {
     final isConnected = printer.name.isNotEmpty;
 
     return Card(
@@ -254,7 +256,7 @@ class _PrinterPageState extends State<PrinterPage> {
     );
   }
 
-  Widget _buildBluetoothPrinterCard() {
+  Widget _buildBluetoothPrinterCard(PrinterModel printer) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(
@@ -369,7 +371,7 @@ class _PrinterPageState extends State<PrinterPage> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildBluetoothPrinterList(),
+            _buildBluetoothPrinterList(printer),
           ],
         ),
       ),
@@ -524,16 +526,13 @@ class _PrinterPageState extends State<PrinterPage> {
                   return;
                 }
               }
-              PreferencesData.setPrinter(PrinterModel(
+              ref.read(printerProvider.notifier).setPrinter(PrinterModel(
                 name: 'PC PRINTER',
                 port: port,
                 printerModel: selectedPcPrinterType,
                 connectionType: PrinterConnectionType.printerDriver,
                 address: tfIpPc.text,
               ));
-              setState(() {
-                printer = PreferencesData.getPrinter();
-              });
               showToastSuccess('PC Printer berhasil disimpan');
             },
             icon: const Icon(Icons.save, size: 20),
@@ -654,16 +653,13 @@ class _PrinterPageState extends State<PrinterPage> {
                       return;
                     }
                   }
-                  PreferencesData.setPrinter(PrinterModel(
+                  ref.read(printerProvider.notifier).setPrinter(PrinterModel(
                     name: 'LAN PRINTER',
                     port: port,
                     printerModel: selectedLanPrinterType,
                     connectionType: PrinterConnectionType.lan,
                     address: tfIpLan.text,
                   ));
-                  setState(() {
-                    printer = PreferencesData.getPrinter();
-                  });
                   showToastSuccess('LAN Printer berhasil disimpan');
                 },
                 icon: const Icon(Icons.save, size: 20),
@@ -684,7 +680,7 @@ class _PrinterPageState extends State<PrinterPage> {
     );
   }
 
-  Widget _buildBluetoothPrinterList() {
+  Widget _buildBluetoothPrinterList(PrinterModel printer) {
     if (isLoading) {
       return Center(
         child: Padding(
@@ -814,15 +810,12 @@ class _PrinterPageState extends State<PrinterPage> {
                     isLoading = true;
                   });
                   try {
-                    PreferencesData.setPrinter(PrinterModel(
+                    ref.read(printerProvider.notifier).setPrinter(PrinterModel(
                       name: device.name ?? 'Unknown',
                       printerModel: selectedBluetoothPrinterType,
                       connectionType: PrinterConnectionType.bluetooth,
                       address: device.address ?? '',
                     ));
-                    setState(() {
-                      printer = PreferencesData.getPrinter();
-                    });
                     await BtPrint().connectToDevice(device);
                     showToastSuccess(
                         'Printer ${device.name} berhasil terhubung');
