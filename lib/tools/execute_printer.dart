@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:front_office_2/data/model/invoice_response.dart';
+import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -18,9 +19,9 @@ class DoPrint {
       final apiResponse = await ApiRequest().checkinSlip(rcp);
       final printerData = PreferencesData.getPrinter();
 
-      if (printerData.connection == '2') {
+      if (printerData.connectionType == PrinterConnectionType.bluetooth) {
         BtprintExecutor().slipCheckin(apiResponse.data!);
-      } else if (printerData.connection == '4') {
+      } else if (printerData.connectionType == PrinterConnectionType.lan) {
         // LanprintExecutor.slipCheckin(apiResponse.data!);
       }
     } catch (e) {
@@ -43,10 +44,10 @@ class DoPrint {
   }
 
   static void printSo(
-      String sol, String roomCode, String guestName, int pax) async {
+    String sol, String roomCode, String guestName, int pax) async {
     final printerData = PreferencesData.getPrinter();
 
-    if (printerData.connection == '3') {
+    if (printerData.connectionType == PrinterConnectionType.printerDriver) {
       try {
         final dataSol = await ApiRequest().getSol(sol);
 
@@ -78,8 +79,7 @@ class DoPrint {
           'sol_list': listSol
         };
 
-        final UdpSender udpSender =
-            UdpSender(address: printerData.address, port: 3911);
+        final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
 
         final sendData = jsonEncode(data);
 
@@ -87,7 +87,7 @@ class DoPrint {
       } catch (e) {
         showToastError('Gagal print SO $e');
       }
-    } else if (printerData.connection == '2') {
+    } else if (printerData.connectionType == PrinterConnectionType.bluetooth) {
     } else {
       showToastWarning('Printer belum di setting');
     }
@@ -96,7 +96,7 @@ class DoPrint {
   static void printBill(String roomCode) async {
     try {
       final printerData = PreferencesData.getPrinter();
-      if (printerData.connection == '3') {
+      if (printerData.connectionType == PrinterConnectionType.printerDriver) {
         try {
           final billData = await ApiRequest().getBill(roomCode);
 
@@ -130,7 +130,7 @@ class DoPrint {
         } catch (e) {
           showToastError('Gagal print bill $e');
         }
-      } else if (printerData.connection == '2') {
+      } else if (printerData.connectionType == PrinterConnectionType.bluetooth) {
         final billData = await ApiRequest().getBill(roomCode);
         ApiRequest()
             .updatePrintState(billData.data?.dataInvoice.reception ?? '', '1');
@@ -147,7 +147,7 @@ class DoPrint {
     try {
       final printerData = PreferencesData.getPrinter();
 
-      if (printerData.connection == '3') {
+      if (printerData.connectionType == PrinterConnectionType.printerDriver) {
         final invoiceData = await ApiRequest().getInvoice(rcp);
         ApiRequest().updatePrintState(rcp, '2');
         if (invoiceData.state != true) {
@@ -173,7 +173,7 @@ class DoPrint {
 
         await udpSender.sendUdpMessage(sendData);
         return;
-      } else if (printerData.connection == '2') {
+      } else if (printerData.connectionType == PrinterConnectionType.bluetooth) {
         final invoiceData = await ApiRequest().getInvoice(rcp);
         if (invoiceData.state != true) {
           showToastError(invoiceData.message);
@@ -183,7 +183,7 @@ class DoPrint {
           return;
         }
         BtprintExecutor().printInvoice(invoiceData.data!);
-      } else if (printerData.connection == '4') {
+      } else if (printerData.connectionType == PrinterConnectionType.lan) {
         final invoiceData = await ApiRequest().getInvoice(rcp);
         if (invoiceData.state != true) {
           showToastError(invoiceData.message);

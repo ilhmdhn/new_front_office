@@ -24,15 +24,16 @@ class _PrinterPageState extends State<PrinterPage> {
   List<PrinterList> listPrinter = List.empty(growable: true);
   PrinterList chosedPrinter = PrinterList(name: '', address: '');
   TextEditingController tfIpPc = TextEditingController();
+  TextEditingController tfPortPc = TextEditingController();
   TextEditingController tfIpLan = TextEditingController();
+  TextEditingController tfPortLan = TextEditingController();
   List<BluetoothDevice> printerList = List.empty(growable: true);
   PrinterModel printer = PreferencesData.getPrinter();
   bool isLoading = false;
-  String selectedLanPrinterType = 'Epson TMU82x';
-  String selectedBluetoothPrinterType = 'Bluetooth printer 80 mm';
 
-  final List<String> lanPrinterTypes = ['Epson TMU82x', 'Bixolon', 'TMU220'];
-  final List<String> bluetoothPrinterTypes = ['Bluetooth printer 80 mm', 'Bluetooth Printer 57mm'];
+  PrinterModelType selectedPcPrinterType = PrinterModelType.tmu220u;
+  PrinterModelType selectedLanPrinterType = PrinterModelType.tm82x;
+  PrinterModelType selectedBluetoothPrinterType = PrinterModelType.bluetooth80mm;
 
   @override
   void initState() {
@@ -113,11 +114,11 @@ class _PrinterPageState extends State<PrinterPage> {
                 isConnected
                     ? ElevatedButton.icon(
                         onPressed: () {
-                          if (printer.connection == '2') {
+                          if (printer.connectionType == PrinterConnectionType.bluetooth) {
                             BtprintExecutor().testPrint();
-                          } else if (printer.connection == '3') {
-                            showToastWarning('Fitur test print hanya tersedia untuk Bluetooth Printer');
-                          } else if (printer.connection == '4') {
+                          } else if (printer.connectionType == PrinterConnectionType.printerDriver) {
+                            // TcpPrinterService.printOnce(ip: printer.address, port: printer.port!, data: )
+                          } else if (printer.connectionType == PrinterConnectionType.lan) {
                             LanprintExecutor().testPrint();
                           }
                         },
@@ -157,11 +158,13 @@ class _PrinterPageState extends State<PrinterPage> {
             const Divider(height: 24),
             _buildInfoRow('Printer', printer.name),
             const SizedBox(height: 8),
-            _buildInfoRow('Connection', printer.connection),
+            _buildInfoRow('Connection', printer.connectionType.displayName),
             const SizedBox(height: 8),
             _buildInfoRow('Address', printer.address),
             const SizedBox(height: 8),
-            _buildInfoRow('Printer Type', printer.type),
+            _buildInfoRow('Port', printer.port?.toString()),
+            const SizedBox(height: 8),
+            _buildInfoRow('Printer Type', printer.printerModel.displayName),
           ],
         ),
       ),
@@ -286,7 +289,7 @@ class _PrinterPageState extends State<PrinterPage> {
               ],
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<PrinterModelType>(
               initialValue: selectedBluetoothPrinterType,
               decoration: InputDecoration(
                 labelText: 'Printer Type',
@@ -305,13 +308,13 @@ class _PrinterPageState extends State<PrinterPage> {
                 filled: true,
                 fillColor: Colors.blue.shade50,
               ),
-              items: bluetoothPrinterTypes.map((String type) {
-                return DropdownMenuItem<String>(
+              items: PrinterModelType.values.map((PrinterModelType type) {
+                return DropdownMenuItem<PrinterModelType>(
                   value: type,
-                  child: Text(type),
+                  child: Text(type.displayName),
                 );
               }).toList(),
-              onChanged: (String? newValue) {
+              onChanged: (PrinterModelType? newValue) {
                 if (newValue != null) {
                   setState(() {
                     selectedBluetoothPrinterType = newValue;
@@ -424,6 +427,40 @@ class _PrinterPageState extends State<PrinterPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        DropdownButtonFormField<PrinterModelType>(
+          initialValue: selectedPcPrinterType,
+          decoration: InputDecoration(
+            labelText: 'Printer Type',
+            prefixIcon: const Icon(Icons.print, color: Colors.blue),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.blue, width: 2),
+            ),
+            filled: true,
+            fillColor: Colors.blue.shade50,
+          ),
+          items: PrinterModelType.values.map((PrinterModelType type) {
+            return DropdownMenuItem<PrinterModelType>(
+              value: type,
+              child: Text(type.displayName),
+            );
+          }).toList(),
+          onChanged: (PrinterModelType? newValue) {
+            if (newValue != null) {
+              setState(() {
+                selectedPcPrinterType = newValue;
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 12),
         TextField(
           inputFormatters: [IPAddressInputFormatter()],
           keyboardType: TextInputType.number,
@@ -448,6 +485,29 @@ class _PrinterPageState extends State<PrinterPage> {
           ),
         ),
         const SizedBox(height: 12),
+        TextField(
+          keyboardType: TextInputType.number,
+          controller: tfPortPc,
+          decoration: InputDecoration(
+            hintText: 'Enter Port (e.g., 9100)',
+            labelText: 'Port',
+            prefixIcon: const Icon(Icons.settings_ethernet, color: Colors.blue),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.blue, width: 2),
+            ),
+            filled: true,
+            fillColor: Colors.grey.shade50,
+          ),
+        ),
+        const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -456,10 +516,19 @@ class _PrinterPageState extends State<PrinterPage> {
                 showToastWarning('Masukkan IP Address terlebih dahulu');
                 return;
               }
+              int? port;
+              if (tfPortPc.text.isNotEmpty) {
+                port = int.tryParse(tfPortPc.text);
+                if (port == null) {
+                  showToastWarning('Port harus berupa angka');
+                  return;
+                }
+              }
               PreferencesData.setPrinter(PrinterModel(
                 name: 'PC PRINTER',
-                connection: '3',
-                type: 'TMU220',
+                port: port,
+                printerModel: selectedPcPrinterType,
+                connectionType: PrinterConnectionType.printerDriver,
                 address: tfIpPc.text,
               ));
               setState(() {
@@ -487,7 +556,7 @@ class _PrinterPageState extends State<PrinterPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DropdownButtonFormField<String>(
+        DropdownButtonFormField<PrinterModelType>(
           initialValue: selectedLanPrinterType,
           decoration: InputDecoration(
             labelText: 'Printer Type',
@@ -506,13 +575,13 @@ class _PrinterPageState extends State<PrinterPage> {
             filled: true,
             fillColor: Colors.orange.shade50,
           ),
-          items: lanPrinterTypes.map((String type) {
-            return DropdownMenuItem<String>(
+          items: PrinterModelType.values.map((PrinterModelType type) {
+            return DropdownMenuItem<PrinterModelType>(
               value: type,
-              child: Text(type),
+              child: Text(type.displayName),
             );
           }).toList(),
-          onChanged: (String? newValue) {
+          onChanged: (PrinterModelType? newValue) {
             if (newValue != null) {
               setState(() {
                 selectedLanPrinterType = newValue;
@@ -545,6 +614,29 @@ class _PrinterPageState extends State<PrinterPage> {
           ),
         ),
         const SizedBox(height: 12),
+        TextField(
+          keyboardType: TextInputType.number,
+          controller: tfPortLan,
+          decoration: InputDecoration(
+            hintText: 'Enter Port (e.g., 9100)',
+            labelText: 'Port',
+            prefixIcon: const Icon(Icons.settings_ethernet, color: Colors.orange),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.orange, width: 2),
+            ),
+            filled: true,
+            fillColor: Colors.orange.shade50,
+          ),
+        ),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -554,10 +646,19 @@ class _PrinterPageState extends State<PrinterPage> {
                     showToastWarning('Masukkan IP Address terlebih dahulu');
                     return;
                   }
+                  int? port;
+                  if (tfPortLan.text.isNotEmpty) {
+                    port = int.tryParse(tfPortLan.text);
+                    if (port == null) {
+                      showToastWarning('Port harus berupa angka');
+                      return;
+                    }
+                  }
                   PreferencesData.setPrinter(PrinterModel(
                     name: 'LAN PRINTER',
-                    connection: '4',
-                    type: selectedLanPrinterType,
+                    port: port,
+                    printerModel: selectedLanPrinterType,
+                    connectionType: PrinterConnectionType.lan,
                     address: tfIpLan.text,
                   ));
                   setState(() {
@@ -715,8 +816,8 @@ class _PrinterPageState extends State<PrinterPage> {
                   try {
                     PreferencesData.setPrinter(PrinterModel(
                       name: device.name ?? 'Unknown',
-                      connection: '2',
-                      type: selectedBluetoothPrinterType,
+                      printerModel: selectedBluetoothPrinterType,
+                      connectionType: PrinterConnectionType.bluetooth,
                       address: device.address ?? '',
                     ));
                     setState(() {

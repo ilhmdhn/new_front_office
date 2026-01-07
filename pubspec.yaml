@@ -64,6 +64,7 @@ dependencies:
   slide_countdown: ^1.5.2
   udp: ^5.0.3
   flutter_riverpod: ^2.0.0
+  esc_pos_utils_plus: 2.0.4
 
 dev_dependencies:
   flutter_lints: ^6.0.0

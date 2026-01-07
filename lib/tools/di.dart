@@ -27,9 +27,16 @@ class NavigationService {
 
 void setupLocator() {
   getIt.registerLazySingleton(() => NavigationService(navigatorKey: navigatorKey));
-  if(PreferencesData.getPrinter().connection == '2'){
-    getIt.registerLazySingleton(() => BtPrint());
-    BtPrint().stateInfo();
+
+  // Only setup Bluetooth printer if a printer has been configured
+  final printer = PreferencesData.getPrinter();
+  if(printer.name.isNotEmpty && printer.connectionType == PrinterConnectionType.bluetooth){
+    try {
+      getIt.registerLazySingleton(() => BtPrint());
+      getIt<BtPrint>().stateInfo();
+    } catch (e) {
+      // Bluetooth printer initialization failed, continue without it
+    }
   }
 }
 

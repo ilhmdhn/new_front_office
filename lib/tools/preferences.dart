@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -97,18 +98,32 @@ class PreferencesData {
   }
 
   static void setPrinter(PrinterModel printer){
-    _prefs?.setString('PRINTER_NAME', printer.name);
-    _prefs?.setString('PRINTER_CONNECTION', printer.connection);
-    _prefs?.setString('PRINTER_TYPE', printer.type);
-    _prefs?.setString('PRINTER_ADDRESS', printer.address);
+    final jsonString = jsonEncode(printer.toJson());
+    _prefs?.setString('PRINTER_DATA', jsonString);
   }
 
   static PrinterModel getPrinter(){
+    final jsonString = _prefs?.getString('PRINTER_DATA');
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        final json = jsonDecode(jsonString) as Map<String, dynamic>;
+        return PrinterModel.fromJson(json);
+      } catch (e) {
+        return PrinterModel(
+          name: '',
+          printerModel: PrinterModelType.bluetooth80mm,
+          connectionType: PrinterConnectionType.bluetooth,
+          address: '',
+        );
+      }
+    }
+    // Return default printer if no data
     return PrinterModel(
-      name: _prefs?.getString('PRINTER_NAME')??'', 
-      connection: _prefs?.getString('PRINTER_CONNECTION')??'', 
-      type: _prefs?.getString('PRINTER_TYPE')??'', 
-      address: _prefs?.getString('PRINTER_ADDRESS')??'');
+      name: '',
+      printerModel: PrinterModelType.bluetooth80mm,
+      connectionType: PrinterConnectionType.bluetooth,
+      address: '',
+    );
   }
 
   static void setShowRetur(bool state){
