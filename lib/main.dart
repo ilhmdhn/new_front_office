@@ -33,7 +33,6 @@ import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/background_service.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
-import 'package:front_office_2/tools/firebase_tools.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:get_it/get_it.dart';

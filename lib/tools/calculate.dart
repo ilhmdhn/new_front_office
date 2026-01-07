@@ -1,8 +1,6 @@
 import 'package:front_office_2/data/model/voucher_model.dart';
-import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/data.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:intl/intl.dart';
 
 class Calculate{

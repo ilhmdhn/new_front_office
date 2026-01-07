@@ -20,7 +20,6 @@ import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
 class EditCheckinPage extends StatefulWidget {

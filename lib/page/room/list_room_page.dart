@@ -12,7 +12,6 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ListRoomReadyPage extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
-import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/preferences.dart';
 

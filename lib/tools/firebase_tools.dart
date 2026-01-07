@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:front_office_2/riverpod/providers.dart';
 
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
