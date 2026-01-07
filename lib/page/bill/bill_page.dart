@@ -71,233 +71,239 @@ class _BillPageState extends State<BillPage> {
       result.state != true?
         Center(
           child: Text(result.message),):
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ),
-                    promoRoom>0?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    ):const SizedBox(),
-                    /*(result.data?.voucherValue?.roomPrice??0)>0?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('Voucher Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        AutoSizeText('(${Formatter.formatRupiah((result.data?.voucherValue?.roomPrice ?? 0))})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                      ],
-                    )
-                    : const SizedBox(),*/
-                    const SizedBox(height: 6,),
-                    orderList.isNotEmpty?
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+        SafeArea(
+          left: false,
+          right: false,
+          top: false,
+          bottom: true,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AutoSizeText('Rincian Penjualan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
-                          const SizedBox(height: 6,),
-                          Flexible(
-                            child: ListView.builder(
-                              itemCount: orderList.length,
-                              shrinkWrap: true,
-                              itemBuilder: (ctx, index){
-                                final order = orderList[index];
-                                final cancelOrder = cancelOrderList.where((element) => element.orderCode == order.orderCode && element.inventoryCode == order.inventoryCode).toList();
-                                final promoOrder = promoOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
-                                final promoCancelOrder = promoCancelOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
-                            
-                                num pricePromo = 0;
-                                if(promoOrder.isNotEmpty){
-                                  pricePromo = promoOrder[0].promoPrice;
-                                }
-                            
-                                if(promoCancelOrder.isNotEmpty){
-                                  pricePromo = promoOrder[0].promoPrice - promoCancelOrder[0].promoPrice;
-                                }
-                                                
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 2),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        AutoSizeText('${order.jumlah} x ${order.harga}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                                        AutoSizeText(Formatter.formatRupiah(order.total), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                                      ],
-                                    ),
-                                    cancelOrder.isNotEmpty?
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        AutoSizeText('RETUR ${cancelOrder[0].namaItem}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            AutoSizeText('${cancelOrder[0].jumlah} x ${cancelOrder[0].harga}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
-                                            AutoSizeText('(${Formatter.formatRupiah(cancelOrder[0].total)})', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
-                                          ],
-                                        ),
-                                      ],
-                                    ):const SizedBox(),
-                                    promoOrder.isNotEmpty?
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        AutoSizeText(promoOrder[0].promoName, style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
-                                        AutoSizeText('(${Formatter.formatRupiah(pricePromo)})', style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
-                                      ],
-                                    ):const SizedBox(),
-                                    const SizedBox(height: 6,)
-                                  ],
-                                );
-                              }),
-                          )
+                          AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                         ],
                       ),
-                    ): const SizedBox(),
-                  ],
+                      promoRoom>0?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                        ],
+                      ):const SizedBox(),
+                      /*(result.data?.voucherValue?.roomPrice??0)>0?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('Voucher Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText('(${Formatter.formatRupiah((result.data?.voucherValue?.roomPrice ?? 0))})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                        ],
+                      )
+                      : const SizedBox(),*/
+                      const SizedBox(height: 6,),
+                      orderList.isNotEmpty?
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AutoSizeText('Rincian Penjualan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
+                            const SizedBox(height: 6,),
+                            Flexible(
+                              child: ListView.builder(
+                                itemCount: orderList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (ctx, index){
+                                  final order = orderList[index];
+                                  final cancelOrder = cancelOrderList.where((element) => element.orderCode == order.orderCode && element.inventoryCode == order.inventoryCode).toList();
+                                  final promoOrder = promoOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
+                                  final promoCancelOrder = promoCancelOrderList.where((element) => element.orderCode == order.orderCode  && element.inventoryCode == order.inventoryCode).toList();
+                              
+                                  num pricePromo = 0;
+                                  if(promoOrder.isNotEmpty){
+                                    pricePromo = promoOrder[0].promoPrice;
+                                  }
+                              
+                                  if(promoCancelOrder.isNotEmpty){
+                                    pricePromo = promoOrder[0].promoPrice - promoCancelOrder[0].promoPrice;
+                                  }
+                                                  
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                        AutoSizeText(order.namaItem, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 2),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AutoSizeText('${order.jumlah} x ${order.harga}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                          AutoSizeText(Formatter.formatRupiah(order.total), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                        ],
+                                      ),
+                                      cancelOrder.isNotEmpty?
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText('RETUR ${cancelOrder[0].namaItem}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              AutoSizeText('${cancelOrder[0].jumlah} x ${cancelOrder[0].harga}', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                              AutoSizeText('(${Formatter.formatRupiah(cancelOrder[0].total)})', style: CustomTextStyle.cancelOrder(), minFontSize: 14, maxLines: 1),
+                                            ],
+                                          ),
+                                        ],
+                                      ):const SizedBox(),
+                                      promoOrder.isNotEmpty?
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AutoSizeText(promoOrder[0].promoName, style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                                          AutoSizeText('(${Formatter.formatRupiah(pricePromo)})', style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                                        ],
+                                      ):const SizedBox(),
+                                      const SizedBox(height: 6,)
+                                    ],
+                                  );
+                                }),
+                            )
+                          ],
+                        ),
+                      ): const SizedBox(),
+                    ],
+                  ),
                 ),
-              ),
-              Column(
-                children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    AutoSizeText('Ruangan + FnB', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                    AutoSizeText(Formatter.formatRupiah(roomTotal + fnbTotal), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AutoSizeText('Service', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                    AutoSizeText(Formatter.formatRupiah(serviceFnb + serviceRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                  ],
-                ),
-                
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AutoSizeText('Pajak', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                    AutoSizeText(Formatter.formatRupiah(taxFnb + taxRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                  ],
-                ),
-                isNotNullOrEmpty(result.data?.transferList)?
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
-                  child: Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Transfer List', style: CustomTextStyle.blackMedium())),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: result.data?.transferList.length,
-                        itemBuilder: (ctxList, index){
-                          String roomName = result.data?.transferList[index].room??'room name';
-                          num value  = result.data?.transferList[index].transferTotal??0;
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AutoSizeText(roomName, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                              AutoSizeText(Formatter.formatRupiah(value), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                            ],
-                          ); 
-                        }
+                      AutoSizeText('Ruangan + FnB', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(roomTotal + fnbTotal), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Service', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(serviceFnb + serviceRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Pajak', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(taxFnb + taxRoom), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  isNotNullOrEmpty(result.data?.transferList)?
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Transfer List', style: CustomTextStyle.blackMedium())),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: result.data?.transferList.length,
+                          itemBuilder: (ctxList, index){
+                            String roomName = result.data?.transferList[index].room??'room name';
+                            num value  = result.data?.transferList[index].transferTotal??0;
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AutoSizeText(roomName, style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                                AutoSizeText(Formatter.formatRupiah(value), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                              ],
+                            ); 
+                          }
+                        ),
+                      ],
+                    ),
+                  ):
+                  const SizedBox(),
+                  (result.data?.voucherValue?.totalPrice ?? 0) > 0? 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Voucher', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah((result.data?.voucherValue?.totalPrice ?? 0)), style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ): const SizedBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText('Total', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(Formatter.formatRupiah(totalAll), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: ()async{
+                          // DoPrint.printBill(roomCode); return;
+                          if(user.level != 'KASIR' && user.level != 'SERVER'){
+                            showToastWarning('User tidak memiliki akses');
+                            return;
+                          }else{
+              
+                            if(result.data?.dataInvoice.statusPrint != '0'){
+                              final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
+                              if(reprintBillState!= true){
+                                showToastWarning('Permintaan dibatalkan');
+                                return;
+                              }
+                              DoPrint.printBill(roomCode);
+                            }else{
+                              final confirmationState = await ConfirmationDialog.confirmation(context, 'Cetak Tagihan');
+                              if(confirmationState == true){
+                                DoPrint.printBill(roomCode);
+                              }
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: CustomContainerStyle.blueButton(),
+                          child: const Icon(Icons.print, color: Colors.white, size: 32,)),
+                      ),
+                      const SizedBox(width: 5,),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            if(user.level != 'KASIR' && user.level != 'ACCOUNTING'){
+                              showToastWarning('User tidak memiliki akses');
+                              return;
+                            }
+                            Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 11),
+                            decoration: CustomContainerStyle.confirmButton(),
+                            child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ):
-                const SizedBox(),
-                (result.data?.voucherValue?.totalPrice ?? 0) > 0? 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AutoSizeText('Voucher', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                    AutoSizeText(Formatter.formatRupiah((result.data?.voucherValue?.totalPrice ?? 0)), style: CustomTextStyle.discountOrder(), minFontSize: 14, maxLines: 1),
                   ],
-                ): const SizedBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AutoSizeText('Total', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                    AutoSizeText(Formatter.formatRupiah(totalAll), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: ()async{
-                        // DoPrint.printBill(roomCode); return;
-                        if(user.level != 'KASIR' && user.level != 'SERVER'){
-                          showToastWarning('User tidak memiliki akses');
-                          return;
-                        }else{
-    
-                          if(result.data?.dataInvoice.statusPrint != '0'){
-                            final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
-                            if(reprintBillState!= true){
-                              showToastWarning('Permintaan dibatalkan');
-                              return;
-                            }
-                            DoPrint.printBill(roomCode);
-                          }else{
-                            final confirmationState = await ConfirmationDialog.confirmation(context, 'Cetak Tagihan');
-                            if(confirmationState == true){
-                              DoPrint.printBill(roomCode);
-                            }
-                          }
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: CustomContainerStyle.blueButton(),
-                        child: const Icon(Icons.print, color: Colors.white, size: 32,)),
-                    ),
-                    const SizedBox(width: 5,),
-                    Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          if(user.level != 'KASIR' && user.level != 'ACCOUNTING'){
-                            showToastWarning('User tidak memiliki akses');
-                            return;
-                          }
-                          Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 11),
-                          decoration: CustomContainerStyle.confirmButton(),
-                          child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         )
       ,
