@@ -33,7 +33,7 @@ class ButtonMenuWidget{
             bill(),
             checkout(),
             clean(),
-            checkinPage()
+            // checkinPage()
           ]
         ),
       ],
@@ -54,7 +54,8 @@ class ButtonMenuWidget{
             order(),
             bill(),
             checkout(),
-            clean()
+            clean(),
+            checkinPage()
           ]
         ),
         SizedBox(height: 12,),

@@ -87,7 +87,7 @@ class _ListRoomReadyPageState extends State<ListRoomReadyPage> {
                     if(isRoomCheckin == true){
     
                       final checkinResult = await ApiRequest().doCheckin(CheckinBody(
-                        chusr: PreferencesData.getUser().userId??'UNKNOWN',
+                        chusr: PreferencesData.getUser().userId,
                         hour: result.duration,
                         minute: 0,
                         pax: result.pax,

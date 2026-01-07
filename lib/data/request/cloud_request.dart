@@ -21,8 +21,8 @@ class CloudRequest{
       final url = Uri.parse('$baseUrl/user-login');
       
       String outlet = PreferencesData.getOutlet();
-      String userId = PreferencesData.getUser().userId??'';
-      String level = PreferencesData.getUser().level??'';
+      String userId = PreferencesData.getUser().userId;
+      String level = PreferencesData.getUser().level;
       String fcmToken = PreferencesData.getFcmToken();
       String device = await PreferencesData.getImei();
       
@@ -52,7 +52,7 @@ class CloudRequest{
     try{
       
       String outlet = PreferencesData.getOutlet();
-      String userId = PreferencesData.getUser().userId??'';
+      String userId = PreferencesData.getUser().userId;
 
       final body = {
       "outlet": outlet,
@@ -103,7 +103,7 @@ class CloudRequest{
   static Future<BaseResponse> confirmApproval(String idApproval)async{
     try{
       String outlet = PreferencesData.getOutlet();
-      String userId = PreferencesData.getUser().userId??'';
+      String userId = PreferencesData.getUser().userId;
       final url = Uri.parse('$baseUrl/approval/confirm/$outlet/$idApproval');
     
       final apiResponse = await http.put(url, 
@@ -125,7 +125,7 @@ class CloudRequest{
   static Future<BaseResponse> rejectApproval(String idApproval)async{
     try{
       String outlet = PreferencesData.getOutlet();
-      String userId = PreferencesData.getUser().userId??'';
+      String userId = PreferencesData.getUser().userId;
       final url = Uri.parse('$baseUrl/approval/reject/$outlet/$idApproval');
       
       final apiResponse = await http.put(url, 

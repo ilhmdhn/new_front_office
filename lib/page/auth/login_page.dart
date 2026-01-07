@@ -405,7 +405,7 @@ class _LoginPageState extends State<LoginPage> {
                                       return;
                                     }
                                     final user = PreferencesData.getUser();
-                                    doLogin(user.userId ?? '', user.pass ?? '');
+                                    doLogin(user.userId, user.pass);
                                   },
                                   borderRadius: BorderRadius.circular(16),
                                   child: Center(

@@ -17,7 +17,6 @@ class PreferencesData {
   static Future<void> setUrl(BaseUrlModel data) async {
     _prefs?.setString('SERVER_URL', data.ip!);
     _prefs?.setString('SERVER_PORT', data.port!);
-    _prefs?.setString('OUTLET', data.outlet!);
   }
 
   static String getUrl() {
@@ -29,8 +28,7 @@ class PreferencesData {
   static BaseUrlModel getConfigUrl(){
     return BaseUrlModel(
       ip: _prefs?.getString('SERVER_URL'),
-      port: _prefs?.getString('SERVER_PORT'),
-      outlet: _prefs?.getString('OUTLET'),
+      port: _prefs?.getString('SERVER_PORT')
     );
   }
 
@@ -38,10 +36,14 @@ class PreferencesData {
     return _prefs?.getString('OUTLET') ?? 'HP000';
   }
 
+  static void setOutlet(String outletCode) {
+    _prefs?.setString('OUTLET', outletCode);
+  }
+
   static Future<void> setUser(UserDataModel data, pass) async {
-    _prefs?.setString('USER_ID', data.userId!);
-    _prefs?.setString('USER_LEVEL', data.level!);
-    _prefs?.setString('USER_TOKEN', data.token!);
+    _prefs?.setString('USER_ID', data.userId);
+    _prefs?.setString('USER_LEVEL', data.level);
+    _prefs?.setString('USER_TOKEN', data.token);
     _prefs?.setString('USER_PASS', pass);
   }
 
@@ -72,7 +74,8 @@ class PreferencesData {
     final level = _prefs?.getString('USER_LEVEL') ?? '';
     final token = _prefs?.getString('USER_TOKEN') ?? '';
     final pass = _prefs?.getString('USER_PASS')??'';
-    return UserDataModel(userId: userId, level: level, token: token, pass: pass);
+    final outlet = _prefs?.getString('OUTLET') ?? '';
+    return UserDataModel(userId: userId, level: level, token: token, pass: pass, outlet: outlet);
   }
 
   static void setLoginState(bool value){

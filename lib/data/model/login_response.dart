@@ -25,21 +25,25 @@ class LoginResponse{
 }
 
 class UserDataModel{
-  String? userId;
-  String? level;
-  String? token;
-  String? pass;
+  String userId;
+  String level;
+  String token;
+  String pass;
+  String outlet;
 
   UserDataModel({
-    this.userId,
-    this.level,
-    this.token,
-    this.pass
+    required this.userId,
+    required this.level,
+    required this.token,
+    required this.pass,
+    required this.outlet
   });
 
   factory UserDataModel.fromJson(Map<String, dynamic> json)=>UserDataModel(
     userId: json['user_id'],
     level: json['level_user'],
     token: json['token'],
+    pass: json['pass'],
+    outlet: json['outlet']
   );
 }

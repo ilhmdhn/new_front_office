@@ -30,10 +30,13 @@ class FnBDialog{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AutoSizeText('Tulis Catatan Pesanan $name', style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
+                AutoSizeText('Tulis Catatan Pesanan', style: CustomTextStyle.blackStandard(), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
+                AutoSizeText(name, style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
                 const SizedBox(height: 12,),
                 TextField(
                   decoration: CustomTextfieldStyle.characterNormal(),
+                  minLines: 1,
+                  maxLines: 3,
                   controller: tfNoteController,
                 ),
                 const SizedBox(height: 6,),
@@ -41,6 +44,7 @@ class FnBDialog{
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Flexible(
+                      fit: FlexFit.tight,
                       child: InkWell(
                         onTap: (){
                           Navigator.pop(ctx, null);
@@ -48,12 +52,13 @@ class FnBDialog{
                         child: Container(
                           decoration: CustomContainerStyle.cancelButton(),
                           padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                          child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                          child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
                         ),
                       ),
                     ),
                     const SizedBox(width: 19,),
                     Flexible(
+                      fit: FlexFit.tight,
                       child: InkWell(
                         onTap: (){
                           Navigator.pop(ctx, tfNoteController.text);
@@ -61,7 +66,7 @@ class FnBDialog{
                         child: Container(
                           decoration: CustomContainerStyle.confirmButton(),
                           padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                          child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+                          child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
                         ),
                       ),
                     ),
@@ -108,10 +113,12 @@ class FnBDialog{
                         height: ScreenSize.getHeightPercent(ctx, 50),
                         child: Center(child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),)):
                       Column(
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    // Membungkus ListView.builder dengan Expanded
-    Flexible(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AutoSizeText('Konfirmasi Pesanan', style: CustomTextStyle.blackMediumSize(18), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
+                          const SizedBox(height: 12,),
+                        // Membungkus ListView.builder dengan Expanded
+                          Flexible(
       fit: FlexFit.loose,
       child: ListView.builder(
         itemCount: orderlist.length,
@@ -175,28 +182,45 @@ class FnBDialog{
                         )
                       ],
                     ),
-                    Column(
+                    const SizedBox(height: 6,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 6,),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: ()async{
-                                final noteResult = await note(ctx, order.name, order.note);
-                                if(noteResult != null){
-                                  setState((){
-                                    orderlist[index].note = noteResult;
-                                  });
-                                }
-                              },
-                              child: const Icon(Icons.notes),
-                            ),
-                            const SizedBox(width: 2,),
-                            AutoSizeText(order.note, style: CustomTextStyle.blackStandard(), maxLines: 3,)
-                          ],
-                        )
-                        ],
-                    )
+                        InkWell(
+                          onTap: ()async{
+                            final noteResult = await note(ctx, order.name, order.note);
+                            if(noteResult != null){
+                              setState((){
+                                orderlist[index].note = noteResult;
+                              });
+                            }
+                          },
+                          child: const Icon(Icons.notes),
+                        ),
+                        const SizedBox(width: 2,),
+                        AutoSizeText(order.note, style: CustomTextStyle.blackStandard(), maxLines: 3,)
+                      ],
+                    ),
+                   /* const SizedBox(height: 6,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Transform.scale(
+                          scale: 1.1,
+                          child: Checkbox(
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            value: order.dineIn,
+                            fillColor: order.dineIn? WidgetStateProperty.all(CustomColorStyle.bluePrimary()): WidgetStateProperty.all(Colors.white),
+                            onChanged: (value){
+                              setState((){
+                                orderlist[index].dineIn = value ?? true;
+                              });
+                            }
+                          ),
+                        ),
+                        AutoSizeText('Dine in', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 10,),
+                      ],
+                    ),*/
                   ],
                 ),
               ),
@@ -211,6 +235,7 @@ class FnBDialog{
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
+          fit: FlexFit.tight,
           child: InkWell(
             onTap: (){
               Navigator.pop(ctx, false);
@@ -218,12 +243,13 @@ class FnBDialog{
             child: Container(
               decoration: CustomContainerStyle.cancelButton(),
               padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+              child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
             ),
           ),
         ),
-        const SizedBox(width: 19,),
+        const SizedBox(width: 9,),
         Flexible(
+          fit: FlexFit.tight,
           child: InkWell(
             onTap: ()async{
               setState((){
@@ -272,7 +298,7 @@ class FnBDialog{
             child: Container(
               decoration: CustomContainerStyle.confirmButton(),
               padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1,),
+              child: AutoSizeText('SEND SO', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center),
             ),
           ),
         ),

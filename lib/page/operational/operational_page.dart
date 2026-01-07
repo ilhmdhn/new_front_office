@@ -61,7 +61,7 @@ class _OperationalPageState extends State<OperationalPage> {
                           minFontSize: 16,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        AutoSizeText(userData.level??'', 
+                        AutoSizeText(userData.level,
                           style: CustomTextStyle.blackSize(11),
                           maxLines: 1,
                           minFontSize: 14,

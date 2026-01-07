@@ -27,7 +27,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
   final PageController slideController = PageController();
   DetailCheckinResponse? dataCheckin;
 
-  String userLevel = PreferencesData.getUser().level??'';
+  String userLevel = PreferencesData.getUser().level;
 
   List<String> namePage = [];
 
@@ -64,7 +64,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
   Widget build(BuildContext context) {
   final roomCode = ModalRoute.of(context)!.settings.arguments as String;
 
-  if(userLevel == 'KASIR'){
+  if(userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'){
     namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
   }else{
     namePage = ['ORDER', 'SEND ORDER', 'DONE', 'CANCEL'];
@@ -117,9 +117,10 @@ class _FnbMainPageState extends State<FnbMainPage> {
             ),
           ),
           Flexible(
+            fit: FlexFit.tight,
             child: 
             
-            userLevel == 'KASIR' || userLevel == 'SUPERVISOR' || userLevel == 'IT'?
+            userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'?
             
             PageView(
               controller: slideController,

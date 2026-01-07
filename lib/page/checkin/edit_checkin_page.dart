@@ -545,7 +545,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         listPromo.add(promoFnb!.promoName!);
                       }
     
-                      final chusr = PreferencesData.getUser().userId??'Relogin';
+                      final chusr = PreferencesData.getUser().userId;
     
                       
     

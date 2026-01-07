@@ -43,8 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
             ),
             const SizedBox(height: 4,),
-            AutoSizeText(user.userId??'user', style: CustomTextStyle.blackMediumSize(18),),
-            AutoSizeText(user.level??'level', style: CustomTextStyle.blackMediumSize(15),),
+            AutoSizeText(user.userId, style: CustomTextStyle.blackMediumSize(18),),
+            AutoSizeText(user.level, style: CustomTextStyle.blackMediumSize(15),),
 
             const SizedBox(height: 8,),
             Padding(

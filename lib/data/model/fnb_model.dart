@@ -53,6 +53,7 @@ class SendOrderModel{
   num price;
   String name;
   int location;
+  bool dineIn = true;
 
   SendOrderModel({
     this.invCode = '',

@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/bill/bill_page.dart';
@@ -77,7 +78,7 @@ void main() async {
 
   await PreferencesData.initialize();
   setupLocator();
-  runApp(const FrontOffice());
+  runApp(const ProviderScope(child: FrontOffice()));
 }
 
 

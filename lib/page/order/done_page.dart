@@ -107,7 +107,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             ),
                             InkWell(
                               onTap: ()async{
-                                String userLevel = PreferencesData.getUser().level??'';
+                                String userLevel = PreferencesData.getUser().level;
                                 if(userLevel != 'KASIR' || userLevel != 'ACCOUNTING'){
                                   showToastWarning('Hanya user kasir');
                                   return;

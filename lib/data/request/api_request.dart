@@ -32,6 +32,7 @@ import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
 import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequest{
@@ -145,9 +146,13 @@ class ApiRequest{
           loginPage();
       }
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('DEBUGGING checkin response: $convertedResult');
       DoPrint.checkin(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
-    }catch(err){
+    }catch(err, stackTrace){
+      showToastError('Gagal checkin $err');
+      debugPrint('DEBUGGING Error apa ini $err');
+      debugPrint('DEBUGGING line error $stackTrace');
       return BaseResponse(
         isLoading: false,
         state: false,
@@ -397,7 +402,7 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
-      String userIdz = PreferencesData.getUser().userId??'UNKNOWN';
+      String userIdz = PreferencesData.getUser().userId;
       final bodyRequest = {
         "room": roomCode,
         "durasi_jam": duration,
@@ -429,7 +434,7 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
         return data;
       }
-      String userIdz = PreferencesData.getUser().userId??'UNKNOWN';
+      String userIdz = PreferencesData.getUser().userId;
       final bodyRequest = {
         "rcp": reception,
         "durasi": duration,
