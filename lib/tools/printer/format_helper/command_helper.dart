@@ -16,6 +16,29 @@ class CommandHelper {
     return 48; // Default for thermal printers (80mm)
   }
 
+  /// Initialize printer with correct settings for TMU-220
+  /// Call this at the start of every document
+  List<int> initializePrinter() {
+    if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
+      // ESC @ - Initialize printer (reset to defaults)
+      bytes += [0x1B, 0x40];
+
+      // ESC ! 0 - Select Font A (bit 0 = 0), NOT Font B
+      // Font A = 10 CPI (~42 chars at 72mm) - larger font, fits 40 chars
+      // Font B = 12 CPI (~50 chars at 72mm) - smaller font, only 33 chars readable
+      bytes += [0x1B, 0x21, 0x00];
+
+      debugPrint('TMU-220 initialized: Font A (10 CPI), 40 chars per line');
+
+      return bytes;
+    }
+
+    // For thermal printers, just initialize
+    return [0x1B, 0x40];
+  }
+
   /// Manual alignment for printers that don't support ESC a commands
   String _alignText(String text, PosAlign align) {
     if (text.length >= maxCharsPerLine) {
@@ -36,13 +59,16 @@ class CommandHelper {
 
   /// Generate ESC ! command for TMU-220 dot matrix printer
   /// ESC ! n - Master select character font
-  /// bit 0: Font B (12 cpi)
+  /// bit 0: Font B (12 cpi) - NEVER SET! Use Font A (10 cpi) for 40 chars
   /// bit 3: Bold/Emphasized
   /// bit 4: Double height
   /// bit 5: Double width
   /// bit 7: Underline
   int _getTmu220FontFlag(bool bold, PosTextSize width, PosTextSize height) {
-    int flag = 0x00;
+    int flag = 0x00; // Start with Font A (bit 0 = 0)
+
+    // IMPORTANT: Never set bit 0 (Font B)!
+    // Font B only fits 33 chars, we need Font A for 40 chars
 
     // Bold
     if (bold) flag |= 0x08; // bit 3

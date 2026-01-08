@@ -18,7 +18,7 @@ class EscPosGenerator {
 
       List<int> bytes = [];
 
-      bytes += [0x1B, 0x40];
+      bytes += helper.initializePrinter();
       bytes += helper.feed(2);
       bytes +=helper.text("TEST PRINT LAN", bold: true, align: PosAlign.center);
       bytes += helper.divider();
