@@ -1,17 +1,16 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
-import 'package:front_office_2/tools/btprint_executor.dart';
-import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/input_formatter.dart';
-import 'package:front_office_2/tools/lanprint_executor.dart';
-import 'package:front_office_2/tools/printer_tools.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
+import 'package:front_office_2/tools/printer/sender/ble_print_service.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PrinterPage extends ConsumerStatefulWidget {
   static const nameRoute = '/printer';
@@ -28,7 +27,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
   TextEditingController tfPortPc = TextEditingController();
   TextEditingController tfIpLan = TextEditingController();
   TextEditingController tfPortLan = TextEditingController();
-  List<BluetoothDevice> printerList = List.empty(growable: true);
+  List<Map<String, String>> printerList = List.empty(growable: true);
   bool isLoading = false;
 
   PrinterModelType selectedPcPrinterType = PrinterModelType.tmu220u;
@@ -38,6 +37,53 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  /// Request Bluetooth permissions untuk BLE scan (Android 12+)
+  Future<bool> _requestBluetoothPermissions() async {
+    // Request Bluetooth Scan & Connect permissions
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+    ].request();
+
+    final scanGranted = statuses[Permission.bluetoothScan]?.isGranted ?? false;
+    final connectGranted = statuses[Permission.bluetoothConnect]?.isGranted ?? false;
+
+    if (!scanGranted || !connectGranted) {
+      // Check if permanently denied
+      if (statuses[Permission.bluetoothScan]?.isPermanentlyDenied ?? false) {
+        // Show dialog to open settings
+        if (!mounted) return false;
+        final shouldOpen = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Permission Required'),
+            content: const Text(
+              'Bluetooth permission is required to scan for BLE devices.\n\n'
+              'Please enable Bluetooth permission in Settings.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Open Settings'),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldOpen == true) {
+          await openAppSettings();
+        }
+      }
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -116,13 +162,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                 isConnected
                     ? ElevatedButton.icon(
                         onPressed: () {
-                          if (printer.connectionType == PrinterConnectionType.bluetooth) {
-                            BtprintExecutor().testPrint();
-                          } else if (printer.connectionType == PrinterConnectionType.printerDriver) {
-                            // TcpPrinterService.printOnce(ip: printer.address, port: printer.port!, data: )
-                          } else if (printer.connectionType == PrinterConnectionType.lan) {
-                            LanprintExecutor().testPrint();
-                          }
+                          PrintExecutor.testPrint();
                         },
                         icon: const Icon(Icons.print_outlined, size: 20),
                         label: const Text(
@@ -334,15 +374,60 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                         showToastWarning('Tunggu proses selesai');
                         return;
                       }
+
+                      // Request Bluetooth permissions (Android 12+)
+                      final permissions = await _requestBluetoothPermissions();
+                      if (!permissions) {
+                        showToastError('Permission Bluetooth ditolak.\nBuka Settings untuk mengaktifkan permission.');
+                        return;
+                      }
+
+                      // Check Bluetooth enabled
+                      final btEnabled = await BlePrintService.isBluetoothEnabled();
+                      if (!btEnabled) {
+                        showToastWarning('Bluetooth belum aktif. Aktifkan Bluetooth terlebih dahulu');
+                        return;
+                      }
+
                       setState(() {
                         isLoading = true;
                       });
-                      final printerListResult =
-                          await PrinterTools().getBluetoothDevices();
-                      setState(() {
-                        isLoading = false;
-                        printerList = printerListResult;
-                      });
+
+                      try {
+                        final printerListResult = await BlePrintService.scanDevices(
+                          scanDuration: const Duration(seconds: 5),
+                        );
+                        setState(() {
+                          isLoading = false;
+                          printerList = printerListResult;
+                        });
+
+                        if (printerListResult.isEmpty) {
+                          showToastWarning('Tidak ada BLE device ditemukan');
+                        } else {
+                          showToastSuccess('Ditemukan ${printerListResult.length} device');
+                        }
+                      } on PlatformException catch (e) {
+                        setState(() {
+                          isLoading = false;
+                        });
+
+                        // Handle specific error codes
+                        if (e.code == 'PERMISSION_DENIED') {
+                          showToastError('Permission Bluetooth ditolak.\nBuka Settings > Apps > Happy Puppy POS > Permissions\ndan aktifkan "Nearby devices"');
+                        } else if (e.code == 'BLUETOOTH_OFF') {
+                          showToastWarning('Bluetooth tidak aktif atau tidak tersedia');
+                        } else if (e.code == 'BLE_NOT_AVAILABLE') {
+                          showToastError('BLE tidak tersedia di perangkat ini');
+                        } else {
+                          showToastError('Gagal scan: ${e.message}');
+                        }
+                      } catch (e) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        showToastError('Gagal scan device: $e');
+                      }
                     },
                     icon: isLoading
                         ? const SizedBox(
@@ -355,7 +440,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                           )
                         : const Icon(Icons.search, size: 20),
                     label: Text(
-                      isLoading ? 'Scanning...' : 'Scan Devices',
+                      isLoading ? 'Scanning...' : 'Scan BLE Devices',
                       style: const TextStyle(fontSize: 14),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -745,7 +830,9 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final device = printerList[index];
-            final isCurrentPrinter = printer.address == device.address;
+            final deviceName = device['name'] ?? 'Unknown Device';
+            final deviceId = device['id'] ?? '';
+            final isCurrentPrinter = printer.address == deviceId;
 
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
@@ -768,7 +855,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                   ),
                 ),
                 title: Text(
-                  device.name ?? 'Unknown Device',
+                  deviceName,
                   style: TextStyle(
                     fontWeight:
                         isCurrentPrinter ? FontWeight.bold : FontWeight.w500,
@@ -776,10 +863,16 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                 ),
                 subtitle: Row(
                   children: [
-                    Icon(Icons.location_on,
+                    Icon(Icons.fingerprint,
                         size: 14, color: Colors.grey.shade600),
                     const SizedBox(width: 4),
-                    Text(device.address ?? 'No Address'),
+                    Expanded(
+                      child: Text(
+                        deviceId,
+                        style: const TextStyle(fontSize: 11),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
                 trailing: isCurrentPrinter
@@ -801,30 +894,18 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                       )
                     : Icon(Icons.arrow_forward_ios,
                         size: 16, color: Colors.grey.shade400),
-                onTap: () async {
-                  if (isLoading) {
-                    showToastWarning('Tunggu proses selesai');
-                    return;
-                  }
-                  setState(() {
-                    isLoading = true;
-                  });
+                onTap: () {
+                  // BLE: Langsung simpan device ID, tidak perlu connect
                   try {
                     ref.read(printerProvider.notifier).setPrinter(PrinterModel(
-                      name: device.name ?? 'Unknown',
+                      name: deviceName,
                       printerModel: selectedBluetoothPrinterType,
                       connectionType: PrinterConnectionType.bluetooth,
-                      address: device.address ?? '',
+                      address: deviceId,
                     ));
-                    await BtPrint().connectToDevice(device);
-                    showToastSuccess(
-                        'Printer ${device.name} berhasil terhubung');
+                    showToastSuccess('Printer BLE "$deviceName" berhasil disimpan');
                   } catch (e) {
-                    showToastError('Gagal terhubung ke printer');
-                  } finally {
-                    setState(() {
-                      isLoading = false;
-                    });
+                    showToastError('Gagal menyimpan printer: $e');
                   }
                 },
               ),

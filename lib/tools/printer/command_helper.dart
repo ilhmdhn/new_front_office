@@ -1,8 +1,8 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 
-class ReceiptPrinterHelper {
+class CommandHelper {
   final Generator generator;
-  ReceiptPrinterHelper(this.generator);
+  CommandHelper(this.generator);
 
   List<int> text(
     String value, {

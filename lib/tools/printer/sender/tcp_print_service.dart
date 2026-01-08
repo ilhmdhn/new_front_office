@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 /// Service untuk print via TCP/IP raw socket
 /// Compatible dengan Printer Forwarder (Windows) atau Network Printer
@@ -18,7 +16,7 @@ class TcpPrinterService {
     this.responseTimeout = const Duration(seconds: 2),
   });
 
-  /// Print ESC/POS data ke printer via TCP
+  /// Send ESC/POS data ke printer via TCP
   ///
   /// Returns:
   /// - `true` jika print berhasil
@@ -28,7 +26,7 @@ class TcpPrinterService {
   /// - `SocketException` jika connection gagal
   /// - `TimeoutException` jika timeout
   /// - `Exception` untuk error lainnya
-  Future<bool> print(List<int> escPosData) async {
+  Future<bool> send(List<int> escPosData) async {
     if (escPosData.isEmpty) {
       throw ArgumentError('ESC/POS data tidak boleh kosong');
     }
@@ -43,56 +41,35 @@ class TcpPrinterService {
         timeout: connectTimeout,
       );
 
-      print('[TcpPrinter] Connected to $ip:$port' as List<int>);
+      print('[TcpPrinter] Connected to $ip:$port');
 
       // 2. Kirim data ESC/POS
       socket.add(escPosData);
       await socket.flush();
 
-      print('[TcpPrinter] Sent ${escPosData.length} bytes' as List<int>);
+      print('[TcpPrinter] Sent ${escPosData.length} bytes');
 
-      // 3. Tunggu response dari server (optional)
-      try {
-        final response = await socket
-            .timeout(responseTimeout)
-            .transform(const Utf8Decoder() as StreamTransformer<Uint8List, dynamic>)
-            .first;
-
-        final responseText = response.trim();
-        print('[TcpPrinter] Server response: $responseText' as List<int>);
-
-        if (responseText == 'OK') {
-          print('[TcpPrinter] Print SUCCESS' as List<int>);
-          return true;
-        } else if (responseText == 'ERROR') {
-          print('[TcpPrinter] Print FAILED (server error)' as List<int>);
-          return false;
-        }
-      } on TimeoutException {
-        // Timeout waiting for response is OK
-        // Some printers don't send response
-        print('[TcpPrinter] No response from server (timeout - this is OK)' as List<int>);
-        return true;
-      }
+      // 3. Tunggu sebentar untuk memastikan data terkirim
+      await Future.delayed(const Duration(milliseconds: 500));
 
       // 4. Close connection
       await socket.close();
-      print('[TcpPrinter] Connection closed' as List<int>);
+      print('[TcpPrinter] Connection closed');
 
       return true;
     } on SocketException catch (e) {
-      print('[TcpPrinter] Socket error: $e' as List<int>);
+      print('[TcpPrinter] Socket error: $e');
       throw SocketException(
         'Gagal connect ke printer $ip:$port - ${e.message}',
       );
     } on TimeoutException catch (e) {
-      print('[TcpPrinter] Timeout: $e' as List<int>);
+      print('[TcpPrinter] Timeout: $e');
       throw TimeoutException(
         'Timeout connect ke printer $ip:$port',
         connectTimeout,
       );
     } catch (e) {
-      print('[TcpPrinter] Unexpected error: $e' as List<int>);
+      print('[TcpPrinter] Unexpected error: $e');
       rethrow;
     } finally {
       socket?.destroy();
@@ -122,7 +99,7 @@ class TcpPrinterService {
       connectTimeout: connectTimeout,
       responseTimeout: responseTimeout,
     );
-    return await service.print(data);
+    return await service.send(data);
   }
 
   /// Test connection ke printer (tidak print, hanya test connect)
@@ -137,10 +114,10 @@ class TcpPrinterService {
         timeout: connectTimeout,
       );
       await socket.close();
-      print('[TcpPrinter] Connection test SUCCESS to $ip:$port' as List<int>);
+      print('[TcpPrinter] Connection test SUCCESS to $ip:$port');
       return true;
     } catch (e) {
-      print('[TcpPrinter] Connection test FAILED to $ip:$port - $e' as List<int>);
+      print('[TcpPrinter] Connection test FAILED to $ip:$port - $e');
       return false;
     } finally {
       socket?.destroy();

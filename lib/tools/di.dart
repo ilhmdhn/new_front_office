@@ -28,7 +28,9 @@ class NavigationService {
 void setupLocator() {
   getIt.registerLazySingleton(() => NavigationService(navigatorKey: navigatorKey));
 
-  // Only setup Bluetooth printer if a printer has been configured
+  // Setup Bluetooth Classic printer (SPP) jika dikonfigurasi
+  // Note: Ini untuk backward compatibility dengan printer lama
+  // Printer BLE baru menggunakan BlePrintService (tidak perlu setup di sini)
   final printer = PreferencesData.getPrinter();
   if(printer.name.isNotEmpty && printer.connectionType == PrinterConnectionType.bluetooth){
     try {
@@ -42,7 +44,7 @@ void setupLocator() {
 
 class BtPrint {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
-  
+
   void stateInfo(){
     bluetooth.onStateChanged().listen((state) {
       switch (state) {

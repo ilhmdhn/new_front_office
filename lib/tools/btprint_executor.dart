@@ -14,6 +14,9 @@ import 'package:front_office_2/tools/printerenum.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:intl/intl.dart';
 
+// Note: File ini menggunakan BtPrint (Bluetooth Classic/SPP) untuk backward compatibility
+// Untuk printer BLE baru, gunakan BlePrintService
+
 class BtprintExecutor {
   final bold = Uint8List.fromList([0x1B, 0x21, 0x08]);
   final offBold = Uint8List.fromList([0x1B, 0x21, 0x00]);

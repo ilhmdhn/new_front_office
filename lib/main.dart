@@ -35,7 +35,6 @@ import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:get_it/get_it.dart';
 
 import 'firebase_options.dart';
 
@@ -101,7 +100,7 @@ class FrontOffice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: true,
       title: 'Happy Puppy POS',
       initialRoute: LoginPage.nameRoute,

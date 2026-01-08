@@ -8,8 +8,8 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:front_office_2/tools/printer_helper.dart';
-import 'package:front_office_2/tools/tcp_print_service.dart';
+import 'package:front_office_2/tools/printer/command_helper.dart';
+import 'package:front_office_2/tools/printer/sender/tcp_print_service.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:intl/intl.dart';
 
@@ -51,7 +51,7 @@ class LanprintExecutor {
       // Load capability profile
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
-      final helper = ReceiptPrinterHelper(generator);
+      final helper = CommandHelper(generator);
 
       // Generate test print data
       List<int> bytes = [];
@@ -111,7 +111,7 @@ class LanprintExecutor {
       final printerData = PreferencesData.getPrinter();
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
-      final helper = ReceiptPrinterHelper(generator);
+      final helper = CommandHelper(generator);
       PrinterModel printerConfig = PreferencesData.getPrinter();
        // Generate test print data
       List<int> bytes = [];
@@ -167,7 +167,7 @@ class LanprintExecutor {
       // Load capability profile
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
-      final helper = ReceiptPrinterHelper(generator);
+      final helper = CommandHelper(generator);
 
       // Generate test print data
       List<int> bytes = printBillGenerator(data, helper);
@@ -186,7 +186,7 @@ class LanprintExecutor {
     ApiRequest().updatePrintState(data.dataInvoice.reception, '1');
   }
 
-  List<int> printBillGenerator(PreviewBillModel data, ReceiptPrinterHelper helper){
+  List<int> printBillGenerator(PreviewBillModel data, CommandHelper helper){
     final user = PreferencesData.getUser().userId;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
@@ -331,7 +331,7 @@ class LanprintExecutor {
       // Load capability profile
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
-      final helper = ReceiptPrinterHelper(generator);
+      final helper = CommandHelper(generator);
 
       // Generate test print data
       List<int> bytes = [];
@@ -549,7 +549,7 @@ class LanprintExecutor {
     return bytes;
   }
 
-  List<int> printFooter(ReceiptPrinterHelper helper, InvoiceModel ivc, ServiceTaxPercentModel tns, int style) {
+  List<int> printFooter(CommandHelper helper, InvoiceModel ivc, ServiceTaxPercentModel tns, int style) {
     List<int> bytes = [];
     if (style == 1) {
       bytes += helper.tableWithMaxChars('', 'Jumlah', Formatter.formatRupiah(ivc.jumlah), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
@@ -597,7 +597,7 @@ class LanprintExecutor {
     return bytes;
   }
 
-  List<int> printTransfer(ReceiptPrinterHelper helper, TransferModel data, int footerStyle) {
+  List<int> printTransfer(CommandHelper helper, TransferModel data, int footerStyle) {
     List<OrderFinalModel> orderFix = List.empty(growable: true);
     List<int> bytes = [];
     if (isNotNullOrEmpty(data.dataOrder)) {

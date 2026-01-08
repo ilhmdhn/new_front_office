@@ -8,6 +8,10 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+
+    // Register custom plugins
+    BlePrintPlugin.register(with: registrar(forPlugin: "BlePrintPlugin")!)
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
