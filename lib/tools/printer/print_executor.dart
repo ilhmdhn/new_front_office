@@ -27,8 +27,8 @@ class PrintExecutor {
           printer.printerModel == PrinterModelType.tm82x) {
         generator = Generator(PaperSize.mm80, profile);
       } else if (printer.printerModel == PrinterModelType.tmu220u) {
-        // TMU-220 dot matrix: 72mm paper = 42 chars/line
-        // Note: Alignment commands might not work properly on dot matrix
+        // TMU-220 dot matrix: 72mm paper
+        // Library default mm72 = 48 chars, but TMU-220 actual = ~42 chars
         generator = Generator(PaperSize.mm72, profile, spaceBetweenRows: 0);
       } else {
         generator = Generator(PaperSize.mm58, profile);

@@ -9,7 +9,10 @@ class EscPosGenerator {
   static List<int> testPrint(Generator printerGenerator){
       final printerConfig = GlobalProviders.read(printerProvider);
 
-      final helper = CommandHelper(printerGenerator);
+      final helper = CommandHelper(
+        printerGenerator,
+        printerModel: printerConfig.printerModel,
+      );
       List<int> bytes = [];
 
       bytes += [0x1B, 0x40];

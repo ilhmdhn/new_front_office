@@ -1,8 +1,28 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:front_office_2/data/model/other_model.dart';
 
 class CommandHelper {
   final Generator generator;
-  CommandHelper(this.generator);
+  final PrinterModelType? printerModel;
+
+  CommandHelper(this.generator, {this.printerModel});
+
+  /// Get max characters per line for current printer
+  int get maxCharsPerLine {
+    if (printerModel == PrinterModelType.tmu220u) {
+      return 42; // TMU-220 dot matrix: 72mm = 42 chars
+    }
+    return 48; // Default for thermal printers (80mm)
+  }
+
+  /// Manual center alignment for printers that don't support ESC a commands
+  String _centerText(String text) {
+    if (text.length >= maxCharsPerLine) {
+      return text.substring(0, maxCharsPerLine);
+    }
+    final padding = (maxCharsPerLine - text.length) ~/ 2;
+    return '${' ' * padding}$text';
+  }
 
   List<int> text(
     String value, {
@@ -11,6 +31,19 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
+    // For TMU-220, use manual center alignment instead of ESC a commands
+    if (printerModel == PrinterModelType.tmu220u && align == PosAlign.center) {
+      return generator.text(
+        _centerText(value),
+        styles: PosStyles(
+          bold: bold,
+          align: PosAlign.left, // Force left, padding already added
+          width: width,
+          height: height,
+        ),
+      );
+    }
+
     return generator.text(
       value,
       styles: PosStyles(
@@ -22,7 +55,13 @@ class CommandHelper {
     );
   }
 
-  List<int> divider() => generator.hr();
+  List<int> divider() {
+    // For TMU-220, use manual divider with correct width
+    if (printerModel == PrinterModelType.tmu220u) {
+      return generator.text('-' * maxCharsPerLine);
+    }
+    return generator.hr();
+  }
 
   List<int> feed([int lines = 1]) => generator.feed(lines);
 
@@ -171,7 +210,8 @@ class CommandHelper {
         ? rightText.substring(0, maxRightChars)
         : rightText;
 
-    // Total paper width adalah 48 karakter untuk thermal printer 80mm
+    // Total paper width depends on printer model
+    // TMU-220: 42 chars, Thermal 80mm: 48 chars
     // Hitung proporsi width berdasarkan maxChars
     int totalChars = maxLeftChars + maxCenterChars + maxRightChars;
     const int totalWidth = 12; // Total width dalam grid system (12 kolom)
