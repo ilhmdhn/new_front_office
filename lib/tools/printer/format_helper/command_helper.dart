@@ -98,21 +98,30 @@ class CommandHelper {
       bytes += [0x0A]; // Line feed
 
       // Reset font to normal after double size
-      bytes += [0x1B, 0x21, 0x00];
+      bytes += [0x1B, 0x21, 0x00]; // ESC ! 0 - Reset font
+      bytes += [0x12]; // DC2 - Cancel condensed mode
+      bytes += [0x1B, 0x50]; // ESC P - Select 10 CPI (Pica) font
 
       return bytes;
     }
 
-    // For TMU-220 normal size, only handle alignment manually
+    // For TMU-220 normal size, force reset font first then use library
     if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
+      // Force reset font to normal (in case previous was double size)
+      bytes += [0x1B, 0x21, 0x00]; // ESC ! 0 - Reset to normal font
+
       final alignedText = _alignText(value, align);
-      return generator.text(
+      bytes += generator.text(
         alignedText,
         styles: PosStyles(
           bold: bold,
           align: PosAlign.left, // Already manually aligned
         ),
       );
+
+      return bytes;
     }
 
     return generator.text(
@@ -127,10 +136,17 @@ class CommandHelper {
   }
 
   List<int> divider() {
-    // For TMU-220, use library generator with exact char count
+    // For TMU-220, force reset font then use library generator
     if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
+      // Force reset font to normal (in case previous was double size)
+      bytes += [0x1B, 0x21, 0x00]; // ESC ! 0 - Reset to normal font
+
       final dividerLine = '-' * maxCharsPerLine;
-      return generator.text(dividerLine);
+      bytes += generator.text(dividerLine);
+
+      return bytes;
     }
     return generator.hr();
   }
@@ -140,6 +156,11 @@ class CommandHelper {
   List<int> row(String left, String right, {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
     // For TMU-220, format manually then use library generator
     if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
+      // Force reset font to normal (in case previous was double size)
+      bytes += [0x1B, 0x21, 0x00]; // ESC ! 0 - Reset to normal font
+
       // Calculate character widths based on total 40 chars
       final leftChars = (maxCharsPerLine * leftWidth / 12).floor();
       final rightChars = maxCharsPerLine - leftChars;
@@ -157,7 +178,9 @@ class CommandHelper {
       debugPrint('TMU-220 Row: left="$left" right="$right" finalLength=${finalText.length}');
 
       // Use library generator for better font handling
-      return generator.text(finalText, styles: PosStyles(bold: bold));
+      bytes += generator.text(finalText, styles: PosStyles(bold: bold));
+
+      return bytes;
     }
 
     return generator.row([
@@ -265,8 +288,15 @@ class CommandHelper {
       final finalText = leftPart + centerPart + rightPart;
       final isBold = leftBold ?? centerBold ?? rightBold ?? false;
 
+      List<int> bytes = [];
+
+      // Force reset font to normal (in case previous was double size)
+      bytes += [0x1B, 0x21, 0x00]; // ESC ! 0 - Reset to normal font
+
       // Use library generator for better font handling
-      return generator.text(finalText, styles: PosStyles(bold: isBold));
+      bytes += generator.text(finalText, styles: PosStyles(bold: isBold));
+
+      return bytes;
     }
 
     return generator.row([
