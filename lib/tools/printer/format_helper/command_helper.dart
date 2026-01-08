@@ -19,25 +19,8 @@ class CommandHelper {
   /// Initialize printer with correct settings for TMU-220
   /// Call this at the start of every document
   List<int> initializePrinter() {
-    if (printerModel == PrinterModelType.tmu220u) {
-      List<int> bytes = [];
-
-      // ESC @ - Initialize printer (reset to defaults)
-      bytes += [0x1B, 0x40];
-
-      // ESC M - Select Elite font (12 CPI)
-      bytes += [0x1B, 0x4D];
-
-      // SI (0x0F) - Enable condensed mode for smaller font (~17 CPI)
-      // This should fit 40+ chars in 72mm
-      bytes += [0x0F];
-
-      debugPrint('TMU-220 initialized: Elite + Condensed (~17 CPI) for 40 chars');
-
-      return bytes;
-    }
-
-    // For thermal printers, just initialize
+    // Just initialize printer (reset to defaults)
+    // Library generator will handle font sizing for normal text
     return [0x1B, 0x40];
   }
 
@@ -91,37 +74,46 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
-    // For TMU-220, bypass library and use raw ESC/P commands
-    if (printerModel == PrinterModelType.tmu220u) {
+    // For TMU-220, only use custom commands for double width/height
+    if (printerModel == PrinterModelType.tmu220u &&
+        (width == PosTextSize.size2 || height == PosTextSize.size2)) {
       List<int> bytes = [];
 
-      // ESC ! n - Set font style for dot matrix
+      // ESC ! n - Set font style for dot matrix (double width/height)
       final fontFlag = _getTmu220FontFlag(bold, width, height);
       bytes += [0x1B, 0x21, fontFlag];
 
-      // Re-enable condensed mode after ESC ! (ESC ! cancels condensed)
-      bytes += [0x0F]; // SI - condensed ON
-
-      // Add text with manual alignment - use raw bytes
+      // Manual alignment for TMU-220
       final alignedText = _alignText(value, align);
 
       // Adjust max chars based on font size
       int effectiveMaxChars = maxCharsPerLine;
-      if (width == PosTextSize.size2) effectiveMaxChars = maxCharsPerLine ~/ 2; // Double width = half chars
+      if (width == PosTextSize.size2) effectiveMaxChars = maxCharsPerLine ~/ 2;
 
-      // Truncate if needed
       final finalText = alignedText.length > effectiveMaxChars
           ? alignedText.substring(0, effectiveMaxChars)
           : alignedText;
 
-      bytes += finalText.codeUnits; // Raw ASCII bytes
-      bytes += [0x0A]; // Line feed (LF)
+      bytes += finalText.codeUnits;
+      bytes += [0x0A];
 
-      // Reset font to normal and re-enable condensed
-      bytes += [0x1B, 0x21, 0x00]; // Reset font
-      bytes += [0x0F]; // Re-enable condensed mode (SI)
+      // Reset font to normal
+      bytes += [0x1B, 0x21, 0x00];
 
       return bytes;
+    }
+
+    // For normal size or non-TMU-220, use library generator
+    // Manual alignment for TMU-220 even on normal text
+    if (printerModel == PrinterModelType.tmu220u) {
+      final alignedText = _alignText(value, align);
+      return generator.text(
+        alignedText,
+        styles: PosStyles(
+          bold: bold,
+          align: PosAlign.left, // Already manually aligned
+        ),
+      );
     }
 
     return generator.text(
@@ -136,25 +128,10 @@ class CommandHelper {
   }
 
   List<int> divider() {
-    // For TMU-220, bypass library and use raw bytes
+    // For TMU-220, use library generator with exact char count
     if (printerModel == PrinterModelType.tmu220u) {
-      List<int> bytes = [];
-      // Generate divider line with exact char count
       final dividerLine = '-' * maxCharsPerLine;
-      bytes += dividerLine.codeUnits; // Raw ASCII bytes
-      bytes += [0x0A]; // Line feed (LF)
-
-      // Comprehensive debugging
-      debugPrint('=== TMU-220 DIVIDER DEBUG ===');
-      debugPrint('String length: ${dividerLine.length}');
-      debugPrint('Bytes length: ${bytes.length}');
-      debugPrint('String: "$dividerLine"');
-      debugPrint('Bytes: $bytes');
-      debugPrint('First 10 bytes: ${bytes.take(10).toList()}');
-      debugPrint('Last 10 bytes: ${bytes.skip(bytes.length - 10).toList()}');
-      debugPrint('===========================');
-
-      return bytes;
+      return generator.text(dividerLine);
     }
     return generator.hr();
   }
@@ -162,10 +139,8 @@ class CommandHelper {
   List<int> feed([int lines = 1]) => generator.feed(lines);
 
   List<int> row(String left, String right, {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
-    // For TMU-220, use manual row formatting with raw bytes
+    // For TMU-220, format manually then use library generator
     if (printerModel == PrinterModelType.tmu220u) {
-      List<int> bytes = [];
-
       // Calculate character widths based on total 40 chars
       final leftChars = (maxCharsPerLine * leftWidth / 12).floor();
       final rightChars = maxCharsPerLine - leftChars;
@@ -180,25 +155,10 @@ class CommandHelper {
 
       final finalText = leftPart + rightPart;
 
-      // Set bold if needed
-      if (bold) {
-        bytes += [0x1B, 0x21, 0x08]; // ESC ! with bold bit
-        bytes += [0x0F]; // Re-enable condensed after ESC !
-      }
-
-      // Add text as raw bytes
-      bytes += finalText.codeUnits;
-      bytes += [0x0A]; // Line feed
-
-      // Reset font and re-enable condensed
-      if (bold) {
-        bytes += [0x1B, 0x21, 0x00]; // Reset font
-        bytes += [0x0F]; // Re-enable condensed mode
-      }
-
       debugPrint('TMU-220 Row: left="$left" right="$right" finalLength=${finalText.length}');
 
-      return bytes;
+      // Use library generator for better font handling
+      return generator.text(finalText, styles: PosStyles(bold: bold));
     }
 
     return generator.row([
@@ -275,10 +235,8 @@ class CommandHelper {
     PosTextSize? centerTextHeight,
     PosTextSize? rightTextHeight,
   }) {
-    // For TMU-220, use manual table formatting with raw bytes
+    // For TMU-220, format manually then use library generator
     if (printerModel == PrinterModelType.tmu220u) {
-      List<int> bytes = [];
-
       // Calculate character widths based on total 40 chars and grid widths
       final totalGridWidth = leftColWidth + centerColWidth + rightColWidth;
       final leftChars = (maxCharsPerLine * leftColWidth / totalGridWidth).floor();
@@ -308,23 +266,8 @@ class CommandHelper {
       final finalText = leftPart + centerPart + rightPart;
       final isBold = leftBold ?? centerBold ?? rightBold ?? false;
 
-      // Set bold if needed
-      if (isBold) {
-        bytes += [0x1B, 0x21, 0x08];
-        bytes += [0x0F]; // Re-enable condensed after ESC !
-      }
-
-      // Add text as raw bytes
-      bytes += finalText.codeUnits;
-      bytes += [0x0A];
-
-      // Reset font and re-enable condensed
-      if (isBold) {
-        bytes += [0x1B, 0x21, 0x00]; // Reset font
-        bytes += [0x0F]; // Re-enable condensed mode
-      }
-
-      return bytes;
+      // Use library generator for better font handling
+      return generator.text(finalText, styles: PosStyles(bold: isBold));
     }
 
     return generator.row([
