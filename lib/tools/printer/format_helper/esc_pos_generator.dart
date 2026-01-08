@@ -547,7 +547,7 @@ static List<int> combineZ(CommandHelper helper){
       bytes += helper.row('', '----------------');
       bytes += helper.row('', Formatter.formatRupiah(data.payment.payValue));
       bytes += helper.feed(1);
-      bytes += helper.tableWithMaxChars('', 'Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', '', centerBold: true, centerTextHeight: PosTextSize.size1, centerTextWidth: PosTextSize.size2, maxCenterChars: 48);
+      bytes += helper.text('Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', bold: true, align: PosAlign.center, height: PosTextSize.size1, width: PosTextSize.size2);
       bytes += helper.feed(1);
       bytes += helper.row('', '$formattedDate $user');
       bytes += helper.feed(3);

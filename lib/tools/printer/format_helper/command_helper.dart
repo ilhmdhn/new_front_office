@@ -1,4 +1,5 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 
 class CommandHelper {
@@ -62,7 +63,7 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
-    // For TMU-220, use raw ESC/P commands for font control
+    // For TMU-220, bypass library and use raw ESC/P commands
     if (printerModel == PrinterModelType.tmu220u) {
       List<int> bytes = [];
 
@@ -70,16 +71,20 @@ class CommandHelper {
       final fontFlag = _getTmu220FontFlag(bold, width, height);
       bytes += [0x1B, 0x21, fontFlag];
 
-      // Add text with manual alignment
-      bytes += generator.text(
-        _alignText(value, align),
-        styles: PosStyles(
-          bold: false, // Already handled by ESC !
-          align: PosAlign.left, // Force left, padding already added
-          width: PosTextSize.size1, // Size handled by ESC !
-          height: PosTextSize.size1, // Size handled by ESC !
-        ),
-      );
+      // Add text with manual alignment - use raw bytes
+      final alignedText = _alignText(value, align);
+
+      // Adjust max chars based on font size
+      int effectiveMaxChars = maxCharsPerLine;
+      if (width == PosTextSize.size2) effectiveMaxChars = maxCharsPerLine ~/ 2; // Double width = half chars
+
+      // Truncate if needed
+      final finalText = alignedText.length > effectiveMaxChars
+          ? alignedText.substring(0, effectiveMaxChars)
+          : alignedText;
+
+      bytes += finalText.codeUnits; // Raw ASCII bytes
+      bytes += [0x0A]; // Line feed (LF)
 
       // Reset font to normal
       bytes += [0x1B, 0x21, 0x00];
@@ -99,17 +104,22 @@ class CommandHelper {
   }
 
   List<int> divider() {
-    // For TMU-220, use manual divider with correct width
+    // For TMU-220, bypass library and use raw bytes
     if (printerModel == PrinterModelType.tmu220u) {
-      return generator.text('-' * maxCharsPerLine);
+      debugPrint('TMU-220 Divider: $maxCharsPerLine chars (raw bytes)');
+      List<int> bytes = [];
+      // Generate divider line with exact char count
+      final dividerLine = '-' * maxCharsPerLine;
+      bytes += dividerLine.codeUnits; // Raw ASCII bytes
+      bytes += [0x0A]; // Line feed (LF)
+      return bytes;
     }
     return generator.hr();
   }
 
   List<int> feed([int lines = 1]) => generator.feed(lines);
 
-  List<int> row(String left, String right,
-      {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
+  List<int> row(String left, String right, {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
     // For TMU-220, use manual row formatting
     if (printerModel == PrinterModelType.tmu220u) {
       // Calculate character widths based on total 40 chars
