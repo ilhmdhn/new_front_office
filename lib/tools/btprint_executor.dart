@@ -6,10 +6,10 @@ import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/printerenum.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:intl/intl.dart';
@@ -124,7 +124,7 @@ class BtprintExecutor {
 
   void printBill(PreviewBillModel data) async {
     final bluetooth = await BtPrint().getInstance();
-    final user = PreferencesData.getUser().userId;
+    final user = GlobalProviders.read(userProvider).userId;
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
@@ -258,7 +258,7 @@ class BtprintExecutor {
             totalPromo += element.hargaPromo;
           }
 
-          if ((PreferencesData.getShowTotalItemPromo() || PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+          if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
             await bluetooth.printNewLine();
             await bluetooth.write(formatTable('Total Promo Item','(${Formatter.formatRupiah(totalPromo)})', 48));
           }
@@ -329,7 +329,7 @@ class BtprintExecutor {
 
   void printInvoice(PrintInvoiceModel data) async {
     final bluetooth = await BtPrint().getInstance();
-    final user = PreferencesData.getUser().userId;
+    final user = GlobalProviders.read(userProvider).userId;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
 
@@ -470,7 +470,7 @@ class BtprintExecutor {
           totalPromo += element.hargaPromo;
         }
 
-        if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+        if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
           await bluetooth.printNewLine();
           await bluetooth.write(formatTable('Total Promo Item','(${Formatter.formatRupiah(totalPromo)})', 48));
         }
@@ -832,7 +832,7 @@ class BtprintExecutor {
     await bt.printNewLine();
 
     for (var fnb in fnbList) {
-      if (PreferencesData.getShowReturState() == true) {
+      if (GlobalProviders.read(showReturProvider) == true) {
         await bt.write('${fnb.namaItem}\n');
         await bt.write(formatTable(
             '  ${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
@@ -845,7 +845,7 @@ class BtprintExecutor {
               48));
         }
         if (fnb.hargaPromo > 0 &&
-            PreferencesData.getShowPromoBelowItem() == true) {
+            GlobalProviders.read(showPromoBelowItemProvider) == true) {
           await bt.write(formatTable(fnb.promoName,
               '(${Formatter.formatRupiah(fnb.hargaPromo)})', 48));
         }
@@ -857,7 +857,7 @@ class BtprintExecutor {
               Formatter.formatRupiah(fnb.totalSemua),
               48));
           if (fnb.hargaPromo > 0 &&
-              PreferencesData.getShowPromoBelowItem() == true) {
+              GlobalProviders.read(showPromoBelowItemProvider) == true) {
             await bt.write(formatTable(fnb.promoName,
                 '(${Formatter.formatRupiah(fnb.hargaPromo)})', 48));
           }
