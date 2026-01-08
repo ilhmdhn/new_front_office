@@ -74,44 +74,18 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
-    // For TMU-220, only use custom commands for double width/height
-    if (printerModel == PrinterModelType.tmu220u &&
-        (width == PosTextSize.size2 || height == PosTextSize.size2)) {
-      List<int> bytes = [];
-
-      // ESC ! n - Set font style for dot matrix (double width/height)
-      final fontFlag = _getTmu220FontFlag(bold, width, height);
-      bytes += [0x1B, 0x21, fontFlag];
-
-      // Manual alignment for TMU-220
-      final alignedText = _alignText(value, align);
-
-      // Adjust max chars based on font size
-      int effectiveMaxChars = maxCharsPerLine;
-      if (width == PosTextSize.size2) effectiveMaxChars = maxCharsPerLine ~/ 2;
-
-      final finalText = alignedText.length > effectiveMaxChars
-          ? alignedText.substring(0, effectiveMaxChars)
-          : alignedText;
-
-      bytes += finalText.codeUnits;
-      bytes += [0x0A];
-
-      // Reset font to normal
-      bytes += [0x1B, 0x21, 0x00];
-
-      return bytes;
-    }
-
-    // For normal size or non-TMU-220, use library generator
-    // Manual alignment for TMU-220 even on normal text
+    // For TMU-220, only handle alignment manually, let library handle font
     if (printerModel == PrinterModelType.tmu220u) {
       final alignedText = _alignText(value, align);
+
+      // Let library generator handle everything else (font, bold, width, height)
       return generator.text(
         alignedText,
         styles: PosStyles(
           bold: bold,
           align: PosAlign.left, // Already manually aligned
+          width: width,
+          height: height,
         ),
       );
     }
