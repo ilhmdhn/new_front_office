@@ -6,7 +6,6 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/btprint_executor.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
-import 'package:front_office_2/tools/lanprint_executor.dart';
 import 'package:front_office_2/tools/preferences.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:front_office_2/tools/udp_sender.dart';
@@ -191,7 +190,7 @@ class DoPrint {
           showToastError('data invoice null\n${invoiceData.message}');
           return;
         }
-        LanprintExecutor().printInvoice(invoiceData.data!);
+        // LanprintExecutor().printInvoice(invoiceData.data!);
       }
     } catch (e) {
       showToastError(e.toString());
