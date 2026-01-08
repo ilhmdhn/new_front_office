@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
-import 'package:front_office_2/tools/execute_printer.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ReprintInvoicePage extends StatefulWidget {
@@ -56,14 +55,15 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                     child: InkWell(
                       onTap: () async {
                         //fix before compile
-                        final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
-                        // final reprintBillState = true;
+                        // final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
+                        final reprintBillState = true;
                         if (reprintBillState != true) {
                           showToastWarning('Permintaan dibatalkan');
                           return;
                         }
                         showToastWarning(tfRcp.text);
-                        DoPrint.printInvoice(tfRcp.text);
+                        PrintExecutor.printInvoice(tfRcp.text);
+                        // DoPrint.printInvoice(tfRcp.text);
                       },
                       child: Container(
                         width: double.infinity,

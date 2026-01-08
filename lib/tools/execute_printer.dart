@@ -167,8 +167,7 @@ class DoPrint {
           'style': JsonConverter.style()
         };
 
-        final UdpSender udpSender =
-            UdpSender(address: printerData.address, port: 3911);
+        final UdpSender udpSender = UdpSender(address: printerData.address, port: 3911);
         final sendData = jsonEncode(data);
 
         await udpSender.sendUdpMessage(sendData);

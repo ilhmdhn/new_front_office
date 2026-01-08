@@ -33,6 +33,28 @@ class CommandHelper {
     }
   }
 
+  /// Generate ESC ! command for TMU-220 dot matrix printer
+  /// ESC ! n - Master select character font
+  /// bit 0: Font B (12 cpi)
+  /// bit 3: Bold/Emphasized
+  /// bit 4: Double height
+  /// bit 5: Double width
+  /// bit 7: Underline
+  int _getTmu220FontFlag(bool bold, PosTextSize width, PosTextSize height) {
+    int flag = 0x00;
+
+    // Bold
+    if (bold) flag |= 0x08; // bit 3
+
+    // Double height
+    if (height == PosTextSize.size2) flag |= 0x10; // bit 4
+
+    // Double width
+    if (width == PosTextSize.size2) flag |= 0x20; // bit 5
+
+    return flag;
+  }
+
   List<int> text(
     String value, {
     bool bold = false,
@@ -40,17 +62,29 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
-    // For TMU-220, use manual alignment instead of ESC a commands
+    // For TMU-220, use raw ESC/P commands for font control
     if (printerModel == PrinterModelType.tmu220u) {
-      return generator.text(
+      List<int> bytes = [];
+
+      // ESC ! n - Set font style for dot matrix
+      final fontFlag = _getTmu220FontFlag(bold, width, height);
+      bytes += [0x1B, 0x21, fontFlag];
+
+      // Add text with manual alignment
+      bytes += generator.text(
         _alignText(value, align),
         styles: PosStyles(
-          bold: bold,
+          bold: false, // Already handled by ESC !
           align: PosAlign.left, // Force left, padding already added
-          width: width,
-          height: height,
+          width: PosTextSize.size1, // Size handled by ESC !
+          height: PosTextSize.size1, // Size handled by ESC !
         ),
       );
+
+      // Reset font to normal
+      bytes += [0x1B, 0x21, 0x00];
+
+      return bytes;
     }
 
     return generator.text(
@@ -115,6 +149,17 @@ class CommandHelper {
     PosTextSize? width,
     PosTextSize? height,
   }) {
+    // For TMU-220, use text() method with center alignment
+    if (printerModel == PrinterModelType.tmu220u) {
+      return text(
+        value,
+        bold: bold ?? false,
+        align: PosAlign.center,
+        width: width ?? PosTextSize.size1,
+        height: height ?? PosTextSize.size1,
+      );
+    }
+
     return generator.row([
       PosColumn(
         text: '',
