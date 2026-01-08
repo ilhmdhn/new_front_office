@@ -7,7 +7,7 @@ import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
 import 'package:front_office_2/tools/printer/sender/tcp_print_service.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -187,7 +187,7 @@ class LanprintExecutor {
   }
 
   List<int> printBillGenerator(PreviewBillModel data, CommandHelper helper){
-    final user = PreferencesData.getUser().userId;
+    final user = GlobalProviders.read(userProvider).userId;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
 
@@ -288,7 +288,7 @@ class LanprintExecutor {
         for (var element in orderFix) {
           totalPromo += element.hargaPromo;
         }
-        if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+        if ((GlobalProviders.read(showTotalItemPromoProvider) ||GlobalProviders.read(showPromoBelowItemProvider) == false) ==true && totalPromo > 0) {
           bytes += helper.feed(1);
           bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
         }
@@ -338,7 +338,7 @@ class LanprintExecutor {
       // IMPORTANT: Tambah ESC @ (Initialize printer)
       bytes += [0x1B, 0x40];
 
-      final user = PreferencesData.getUser().userId;
+      final user = GlobalProviders.read(userProvider).userId;
       DateTime now = DateTime.now();
       String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
 
@@ -446,7 +446,7 @@ class LanprintExecutor {
         for (var element in orderFix) {
           totalPromo += element.hargaPromo;
         }
-        if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+        if ((GlobalProviders.read(showTotalItemPromoProvider) ||GlobalProviders.read(showPromoBelowItemProvider) == false) ==true && totalPromo > 0) {
           bytes += helper.feed(1);
           bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
         }
@@ -511,7 +511,7 @@ class LanprintExecutor {
     bytes += helper.feed(1);
 
     for (var fnb in fnbList) {
-      if (PreferencesData.getShowReturState() == true) {
+      if (GlobalProviders.read(showReturProvider) == true) {
         bytes += helper.text(fnb.namaItem);
         bytes += helper.row(
             '${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
@@ -523,7 +523,7 @@ class LanprintExecutor {
           );
         }
         if (fnb.hargaPromo > 0 &&
-            PreferencesData.getShowPromoBelowItem() == true) {
+            GlobalProviders.read(showPromoBelowItemProvider) == true) {
           bytes += helper.row(
             fnb.promoName,
             '(${Formatter.formatRupiah(fnb.hargaPromo)})',
@@ -537,7 +537,7 @@ class LanprintExecutor {
             Formatter.formatRupiah(fnb.totalSemua),
           );
           if (fnb.hargaPromo > 0 &&
-              PreferencesData.getShowPromoBelowItem() == true) {
+              GlobalProviders.read(showPromoBelowItemProvider) == true) {
             bytes += helper.row(
               fnb.promoName,
               '(${Formatter.formatRupiah(fnb.hargaPromo)})',
@@ -693,7 +693,7 @@ class LanprintExecutor {
       for (var element in orderFix) {
         totalPromo += element.hargaPromo;
       }
-      if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+      if ((GlobalProviders.read(showTotalItemPromoProvider) ||GlobalProviders.read(showPromoBelowItemProvider) == false) ==true && totalPromo > 0) {
         bytes += helper.feed(1);
         bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
       }
