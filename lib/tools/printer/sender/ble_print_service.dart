@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 /// Service untuk print via BLE (Bluetooth Low Energy)
 /// Support Android & iOS
@@ -41,7 +42,7 @@ class BlePrintService {
     }
 
     try {
-      print('[BlePrint] Sending ${escPosData.length} bytes to $deviceName');
+      debugPrint('[BlePrint] Sending ${escPosData.length} bytes to $deviceName');
 
       // Send via method channel
       // Native side akan handle: connect → discover → write → disconnect
@@ -52,16 +53,16 @@ class BlePrintService {
         'writeCharUuid': writeCharUuid,
       });
 
-      print('[BlePrint] Send result: $result');
+      debugPrint('[BlePrint] Send result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Platform error: ${e.message}');
+      debugPrint('[BlePrint] Platform error: ${e.message}');
       throw PlatformException(
         code: e.code,
         message: 'BLE print error: ${e.message}',
       );
     } catch (e) {
-      print('[BlePrint] Unexpected error: $e');
+      debugPrint('[BlePrint] Unexpected error: $e');
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class BlePrintService {
     String? writeCharUuid,
   }) async {
     try {
-      print('[BlePrint] Print once to $deviceName');
+      debugPrint('[BlePrint] Print once to $deviceName');
 
       final result = await _channel.invokeMethod('send', {
         'deviceId': deviceId,
@@ -95,7 +96,7 @@ class BlePrintService {
 
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Print once error: ${e.message}');
+      debugPrint('[BlePrint] Print once error: ${e.message}');
       return false;
     }
   }
@@ -109,7 +110,7 @@ class BlePrintService {
     Duration scanDuration = const Duration(seconds: 5),
   }) async {
     try {
-      print('[BlePrint] Scanning for ${scanDuration.inSeconds} seconds...');
+      debugPrint('[BlePrint] Scanning for ${scanDuration.inSeconds} seconds...');
 
       final result = await _channel.invokeMethod('scanDevices', {
         'duration': scanDuration.inMilliseconds,
@@ -126,7 +127,7 @@ class BlePrintService {
 
       return [];
     } on PlatformException catch (e) {
-      print('[BlePrint] Scan error: ${e.message}');
+      debugPrint('[BlePrint] Scan error: ${e.message}');
       return [];
     }
   }
@@ -135,9 +136,9 @@ class BlePrintService {
   static Future<void> stopScan() async {
     try {
       await _channel.invokeMethod('stopScan');
-      print('[BlePrint] Scan stopped');
+      debugPrint('[BlePrint] Scan stopped');
     } on PlatformException catch (e) {
-      print('[BlePrint] Stop scan error: ${e.message}');
+      debugPrint('[BlePrint] Stop scan error: ${e.message}');
     }
   }
 
@@ -147,7 +148,7 @@ class BlePrintService {
       final result = await _channel.invokeMethod('isBluetoothEnabled');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Check bluetooth error: ${e.message}');
+      debugPrint('[BlePrint] Check bluetooth error: ${e.message}');
       return false;
     }
   }
@@ -160,7 +161,7 @@ class BlePrintService {
       final result = await _channel.invokeMethod('enableBluetooth');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Enable bluetooth error: ${e.message}');
+      debugPrint('[BlePrint] Enable bluetooth error: ${e.message}');
       return false;
     }
   }
@@ -170,16 +171,16 @@ class BlePrintService {
   /// Returns `true` jika berhasil connect
   Future<bool> connect() async {
     try {
-      print('[BlePrint] Connecting to $deviceName');
+      debugPrint('[BlePrint] Connecting to $deviceName');
 
       final result = await _channel.invokeMethod('connect', {
         'deviceId': deviceId,
       });
 
-      print('[BlePrint] Connect result: $result');
+      debugPrint('[BlePrint] Connect result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Connect error: ${e.message}');
+      debugPrint('[BlePrint] Connect error: ${e.message}');
       return false;
     }
   }
@@ -187,16 +188,16 @@ class BlePrintService {
   /// Disconnect dari device
   Future<bool> disconnect() async {
     try {
-      print('[BlePrint] Disconnecting from $deviceName');
+      debugPrint('[BlePrint] Disconnecting from $deviceName');
 
       final result = await _channel.invokeMethod('disconnect', {
         'deviceId': deviceId,
       });
 
-      print('[BlePrint] Disconnect result: $result');
+      debugPrint('[BlePrint] Disconnect result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] Disconnect error: ${e.message}');
+      debugPrint('[BlePrint] Disconnect error: ${e.message}');
       return false;
     }
   }
@@ -209,7 +210,7 @@ class BlePrintService {
       });
       return result == true;
     } on PlatformException catch (e) {
-      print('[BlePrint] isConnected error: ${e.message}');
+      debugPrint('[BlePrint] isConnected error: ${e.message}');
       return false;
     }
   }

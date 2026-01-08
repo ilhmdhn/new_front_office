@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Service untuk print via Bluetooth menggunakan Platform Channel
@@ -32,23 +33,23 @@ class BluetoothPrintService {
     }
 
     try {
-      print('[BluetoothPrint] Sending ${escPosData.length} bytes to $deviceName');
+      debugPrint('[BluetoothPrint] Sending ${escPosData.length} bytes to $deviceName');
 
       final result = await _channel.invokeMethod('send', {
         'address': deviceAddress,
         'data': Uint8List.fromList(escPosData),
       });
 
-      print('[BluetoothPrint] Send result: $result');
+      debugPrint('[BluetoothPrint] Send result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Platform error: ${e.message}');
+      debugPrint('[BluetoothPrint] Platform error: ${e.message}');
       throw PlatformException(
         code: e.code,
         message: 'Bluetooth print error: ${e.message}',
       );
     } catch (e) {
-      print('[BluetoothPrint] Unexpected error: $e');
+      debugPrint('[BluetoothPrint] Unexpected error: $e');
       rethrow;
     }
   }
@@ -80,16 +81,16 @@ class BluetoothPrintService {
   /// Returns `true` jika berhasil connect
   Future<bool> connect() async {
     try {
-      print('[BluetoothPrint] Connecting to $deviceName ($deviceAddress)');
+      debugPrint('[BluetoothPrint] Connecting to $deviceName ($deviceAddress)');
 
       final result = await _channel.invokeMethod('connect', {
         'address': deviceAddress,
       });
 
-      print('[BluetoothPrint] Connect result: $result');
+      debugPrint('[BluetoothPrint] Connect result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Connect error: ${e.message}');
+      debugPrint('[BluetoothPrint] Connect error: ${e.message}');
       return false;
     }
   }
@@ -97,16 +98,16 @@ class BluetoothPrintService {
   /// Disconnect dari Bluetooth device
   Future<bool> disconnect() async {
     try {
-      print('[BluetoothPrint] Disconnecting from $deviceName');
+      debugPrint('[BluetoothPrint] Disconnecting from $deviceName');
 
       final result = await _channel.invokeMethod('disconnect', {
         'address': deviceAddress,
       });
 
-      print('[BluetoothPrint] Disconnect result: $result');
+      debugPrint('[BluetoothPrint] Disconnect result: $result');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Disconnect error: ${e.message}');
+      debugPrint('[BluetoothPrint] Disconnect error: ${e.message}');
       return false;
     }
   }
@@ -119,7 +120,7 @@ class BluetoothPrintService {
       });
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] isConnected error: ${e.message}');
+      debugPrint('[BluetoothPrint] isConnected error: ${e.message}');
       return false;
     }
   }
@@ -129,7 +130,7 @@ class BluetoothPrintService {
   /// Returns list of devices: [{'name': 'Printer', 'address': 'XX:XX:XX'}]
   static Future<List<Map<String, String>>> scanDevices() async {
     try {
-      print('[BluetoothPrint] Scanning for devices...');
+      debugPrint('[BluetoothPrint] Scanning for devices...');
 
       final result = await _channel.invokeMethod('scanDevices');
 
@@ -144,7 +145,7 @@ class BluetoothPrintService {
 
       return [];
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Scan error: ${e.message}');
+      debugPrint('[BluetoothPrint] Scan error: ${e.message}');
       return [];
     }
   }
@@ -154,7 +155,7 @@ class BluetoothPrintService {
   /// Returns list of paired devices
   static Future<List<Map<String, String>>> getPairedDevices() async {
     try {
-      print('[BluetoothPrint] Getting paired devices...');
+      debugPrint('[BluetoothPrint] Getting paired devices...');
 
       final result = await _channel.invokeMethod('getPairedDevices');
 
@@ -169,7 +170,7 @@ class BluetoothPrintService {
 
       return [];
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Get paired devices error: ${e.message}');
+      debugPrint('[BluetoothPrint] Get paired devices error: ${e.message}');
       return [];
     }
   }
@@ -180,7 +181,7 @@ class BluetoothPrintService {
       final result = await _channel.invokeMethod('isBluetoothEnabled');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Check bluetooth error: ${e.message}');
+      debugPrint('[BluetoothPrint] Check bluetooth error: ${e.message}');
       return false;
     }
   }
@@ -191,7 +192,7 @@ class BluetoothPrintService {
       final result = await _channel.invokeMethod('enableBluetooth');
       return result == true;
     } on PlatformException catch (e) {
-      print('[BluetoothPrint] Enable bluetooth error: ${e.message}');
+      debugPrint('[BluetoothPrint] Enable bluetooth error: ${e.message}');
       return false;
     }
   }

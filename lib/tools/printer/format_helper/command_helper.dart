@@ -106,12 +106,22 @@ class CommandHelper {
   List<int> divider() {
     // For TMU-220, bypass library and use raw bytes
     if (printerModel == PrinterModelType.tmu220u) {
-      debugPrint('TMU-220 Divider: $maxCharsPerLine chars (raw bytes)');
       List<int> bytes = [];
       // Generate divider line with exact char count
       final dividerLine = '-' * maxCharsPerLine;
       bytes += dividerLine.codeUnits; // Raw ASCII bytes
       bytes += [0x0A]; // Line feed (LF)
+
+      // Comprehensive debugging
+      debugPrint('=== TMU-220 DIVIDER DEBUG ===');
+      debugPrint('String length: ${dividerLine.length}');
+      debugPrint('Bytes length: ${bytes.length}');
+      debugPrint('String: "$dividerLine"');
+      debugPrint('Bytes: $bytes');
+      debugPrint('First 10 bytes: ${bytes.take(10).toList()}');
+      debugPrint('Last 10 bytes: ${bytes.skip(bytes.length - 10).toList()}');
+      debugPrint('===========================');
+
       return bytes;
     }
     return generator.hr();
@@ -120,8 +130,10 @@ class CommandHelper {
   List<int> feed([int lines = 1]) => generator.feed(lines);
 
   List<int> row(String left, String right, {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
-    // For TMU-220, use manual row formatting
+    // For TMU-220, use manual row formatting with raw bytes
     if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
       // Calculate character widths based on total 40 chars
       final leftChars = (maxCharsPerLine * leftWidth / 12).floor();
       final rightChars = maxCharsPerLine - leftChars;
@@ -134,10 +146,25 @@ class CommandHelper {
           ? right.substring(0, rightChars)
           : right.padLeft(rightChars);
 
-      return generator.text(
-        leftPart + rightPart,
-        styles: PosStyles(bold: bold),
-      );
+      final finalText = leftPart + rightPart;
+
+      // Set bold if needed
+      if (bold) {
+        bytes += [0x1B, 0x21, 0x08]; // ESC ! with bold bit
+      }
+
+      // Add text as raw bytes
+      bytes += finalText.codeUnits;
+      bytes += [0x0A]; // Line feed
+
+      // Reset font
+      if (bold) {
+        bytes += [0x1B, 0x21, 0x00];
+      }
+
+      debugPrint('TMU-220 Row: left="$left" right="$right" finalLength=${finalText.length}');
+
+      return bytes;
     }
 
     return generator.row([
@@ -214,8 +241,10 @@ class CommandHelper {
     PosTextSize? centerTextHeight,
     PosTextSize? rightTextHeight,
   }) {
-    // For TMU-220, use manual table formatting
+    // For TMU-220, use manual table formatting with raw bytes
     if (printerModel == PrinterModelType.tmu220u) {
+      List<int> bytes = [];
+
       // Calculate character widths based on total 40 chars and grid widths
       final totalGridWidth = leftColWidth + centerColWidth + rightColWidth;
       final leftChars = (maxCharsPerLine * leftColWidth / totalGridWidth).floor();
@@ -242,10 +271,24 @@ class CommandHelper {
       final centerPart = alignInColumn(centerText, centerChars, centerAlign);
       final rightPart = alignInColumn(rightText, rightChars, rightAlign);
 
-      return generator.text(
-        leftPart + centerPart + rightPart,
-        styles: PosStyles(bold: leftBold ?? centerBold ?? rightBold ?? false),
-      );
+      final finalText = leftPart + centerPart + rightPart;
+      final isBold = leftBold ?? centerBold ?? rightBold ?? false;
+
+      // Set bold if needed
+      if (isBold) {
+        bytes += [0x1B, 0x21, 0x08];
+      }
+
+      // Add text as raw bytes
+      bytes += finalText.codeUnits;
+      bytes += [0x0A];
+
+      // Reset font
+      if (isBold) {
+        bytes += [0x1B, 0x21, 0x00];
+      }
+
+      return bytes;
     }
 
     return generator.row([

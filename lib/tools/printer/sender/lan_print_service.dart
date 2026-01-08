@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 /// Service untuk print langsung ke LAN Printer via raw TCP Socket
 /// Mengirim ESC/POS commands langsung ke printer network
 class LanPrintService {
@@ -40,13 +42,13 @@ class LanPrintService {
         timeout: connectTimeout,
       );
 
-      print('[LanPrint] Connected to $ip:$port');
+      debugPrint('[LanPrint] Connected to $ip:$port');
 
       // 2. Kirim ESC/POS data ke printer
       socket.add(escPosData);
       await socket.flush();
 
-      print('[LanPrint] Sent ${escPosData.length} bytes');
+      debugPrint('[LanPrint] Sent ${escPosData.length} bytes');
 
       // 3. Tunggu sebentar untuk memastikan data sampai ke printer
       // LAN printer tidak perlu response, jadi langsung delay saja
@@ -54,22 +56,22 @@ class LanPrintService {
 
       // 4. Close connection
       await socket.close();
-      print('[LanPrint] Connection closed');
+      debugPrint('[LanPrint] Connection closed');
 
       return true;
     } on SocketException catch (e) {
-      print('[LanPrint] Socket error: $e');
+      debugPrint('[LanPrint] Socket error: $e');
       throw SocketException(
         'Gagal connect ke printer LAN $ip:$port - ${e.message}',
       );
     } on TimeoutException catch (e) {
-      print('[LanPrint] Timeout: $e');
+      debugPrint('[LanPrint] Timeout: $e');
       throw TimeoutException(
         'Timeout connect ke printer LAN $ip:$port',
         connectTimeout,
       );
     } catch (e) {
-      print('[LanPrint] Unexpected error: $e');
+      debugPrint('[LanPrint] Unexpected error: $e');
       rethrow;
     } finally {
       socket?.destroy();
@@ -114,10 +116,10 @@ class LanPrintService {
         timeout: connectTimeout,
       );
       await socket.close();
-      print('[LanPrint] Connection test SUCCESS to $ip:$port');
+      debugPrint('[LanPrint] Connection test SUCCESS to $ip:$port');
       return true;
     } catch (e) {
-      print('[LanPrint] Connection test FAILED to $ip:$port - $e');
+      debugPrint('[LanPrint] Connection test FAILED to $ip:$port - $e');
       return false;
     } finally {
       socket?.destroy();

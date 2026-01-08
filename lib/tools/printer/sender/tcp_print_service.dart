@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/rendering.dart';
+
 /// Service untuk print via TCP/IP raw socket
 /// Compatible dengan Printer Forwarder (Windows) atau Network Printer
 class TcpPrinterService {
@@ -41,35 +43,35 @@ class TcpPrinterService {
         timeout: connectTimeout,
       );
 
-      print('[TcpPrinter] Connected to $ip:$port');
+      debugPrint('[TcpPrinter] Connected to $ip:$port');
 
       // 2. Kirim data ESC/POS
       socket.add(escPosData);
       await socket.flush();
 
-      print('[TcpPrinter] Sent ${escPosData.length} bytes');
+      debugPrint('[TcpPrinter] Sent ${escPosData.length} bytes');
 
       // 3. Tunggu sebentar untuk memastikan data terkirim
       await Future.delayed(const Duration(milliseconds: 500));
 
       // 4. Close connection
       await socket.close();
-      print('[TcpPrinter] Connection closed');
+      debugPrint('[TcpPrinter] Connection closed');
 
       return true;
     } on SocketException catch (e) {
-      print('[TcpPrinter] Socket error: $e');
+      debugPrint('[TcpPrinter] Socket error: $e');
       throw SocketException(
         'Gagal connect ke printer $ip:$port - ${e.message}',
       );
     } on TimeoutException catch (e) {
-      print('[TcpPrinter] Timeout: $e');
+      debugPrint('[TcpPrinter] Timeout: $e');
       throw TimeoutException(
         'Timeout connect ke printer $ip:$port',
         connectTimeout,
       );
     } catch (e) {
-      print('[TcpPrinter] Unexpected error: $e');
+      debugPrint('[TcpPrinter] Unexpected error: $e');
       rethrow;
     } finally {
       socket?.destroy();
@@ -114,10 +116,10 @@ class TcpPrinterService {
         timeout: connectTimeout,
       );
       await socket.close();
-      print('[TcpPrinter] Connection test SUCCESS to $ip:$port');
+      debugPrint('[TcpPrinter] Connection test SUCCESS to $ip:$port');
       return true;
     } catch (e) {
-      print('[TcpPrinter] Connection test FAILED to $ip:$port - $e');
+      debugPrint('[TcpPrinter] Connection test FAILED to $ip:$port - $e');
       return false;
     } finally {
       socket?.destroy();
