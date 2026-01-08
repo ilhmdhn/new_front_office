@@ -70,16 +70,10 @@ class CommandHelper {
       final fontFlag = _getTmu220FontFlag(bold, width, height);
       bytes += [0x1B, 0x21, fontFlag];
 
-      // Add text with manual alignment
-      bytes += generator.text(
-        _alignText(value, align),
-        styles: PosStyles(
-          bold: false, // Already handled by ESC !
-          align: PosAlign.left, // Force left, padding already added
-          width: PosTextSize.size1, // Size handled by ESC !
-          height: PosTextSize.size1, // Size handled by ESC !
-        ),
-      );
+      // Add text with manual alignment - use raw bytes to avoid library padding
+      final alignedText = _alignText(value, align);
+      bytes += alignedText.codeUnits;
+      bytes += [0x0A]; // Line feed
 
       // Reset font to normal
       bytes += [0x1B, 0x21, 0x00];
@@ -101,7 +95,13 @@ class CommandHelper {
   List<int> divider() {
     // For TMU-220, use manual divider with correct width
     if (printerModel == PrinterModelType.tmu220u) {
-      return generator.text('-' * maxCharsPerLine);
+      // Use raw bytes instead of generator to avoid library's default width
+      List<int> bytes = [];
+      bytes += [0x1B, 0x21, 0x00]; // Reset font
+      final dividerLine = '-' * maxCharsPerLine;
+      bytes += dividerLine.codeUnits;
+      bytes += [0x0A]; // Line feed
+      return bytes;
     }
     return generator.hr();
   }
