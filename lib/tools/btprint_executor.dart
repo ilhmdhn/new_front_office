@@ -72,7 +72,7 @@ class BtprintExecutor {
         await bluetooth.write('${data.outlet.telepon}\n');
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(bold);
-        await bluetooth.write('TAGIHAN\n');
+        await bluetooth.write('SLIP CHECKIN\n');
         await bluetooth.printNewLine();
         await bluetooth.writeBytes(offBold);
 
@@ -90,8 +90,7 @@ class BtprintExecutor {
         await bluetooth.write('Lama Sewa         : ');
         await bluetooth.write('${data.detail.checkinDuration}\n');
         await bluetooth.write('Jumlah Biaya Sewa : ');
-        await bluetooth
-            .write('${Formatter.formatRupiah(data.detail.checkinFee)}\n');
+        await bluetooth.write('${Formatter.formatRupiah(data.detail.checkinFee)}\n');
         await bluetooth.write('Jam Checkout      : ');
         await bluetooth.write('${data.detail.checkoutTime}\n');
         await bluetooth

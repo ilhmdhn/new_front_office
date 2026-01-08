@@ -3,10 +3,13 @@
 import 'package:collection/collection.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/checkin_slip_response.dart';
+import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
+import 'package:intl/intl.dart';
 
 class EscPosGenerator {
   
@@ -47,7 +50,334 @@ class EscPosGenerator {
       return bytes;
   }
 
-    List<int> printFnB(List<OrderFinalModel> orderFix, helper) {
+  List<int> printSlipCheckin(CheckinSlipModel data, CommandHelper helper){
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.textCenter(data.outlet.namaOutlet);
+    bytes += helper.textCenter(data.outlet.alamatOutlet);
+    bytes += helper.textCenter(data.outlet.kota);
+    bytes += helper.textCenter(data.outlet.telepon);
+    bytes += helper.feed(1);
+    bytes += helper.textCenter('SLIP CHECK IN', bold: true);
+    bytes += helper.feed(1);
+    bytes += helper.text('Ruangan           : ${data.detail.roomName}');
+    bytes += helper.text('Nama              : ${data.detail.name}');
+    bytes += helper.text('Jumlah Tamu       : ${data.detail.pax}');
+    bytes += helper.text('Jenis Kamar       : ${data.detail.roomType}');
+    bytes += helper.text('Jam Checkin       : ${data.detail.checkinTime}');
+    bytes += helper.text('Lama Sewa         : ${data.detail.checkinDuration}');
+    bytes += helper.text('Jumlah Biaya Sewa : ${Formatter.formatRupiah(data.detail.checkinFee)}');
+    bytes += helper.text('Jam Checkout      : ${data.detail.checkoutTime}');
+    bytes += helper.divider();
+    bytes += helper.textCenter('PERNYATAAN', bold: true);
+    bytes += helper.feed(3);
+    bytes += helper.text('Saya&rekan tidak akan membawa masuk dan');
+    bytes += helper.text('mengkonsumsi makanan/minuman yang bukan');
+    bytes += helper.text('berasal  dari  outlet  ini apabila saya');
+    bytes += helper.text('terbukti, saya bersedia dikenakan denda');
+    bytes += helper.text('sesuai daftar yang berlaku', align: PosAlign.center);
+    bytes += helper.feed(2);
+    bytes += helper.text('Tanda tangan tamu:', align: PosAlign.left);
+    bytes += helper.feed(2);
+    bytes += helper.text(data.detail.name, align: PosAlign.left);
+    bytes += helper.text(data.detail.phone, align: PosAlign.left);
+
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    bytes += helper.row('', formattedDate);
+    bytes += helper.feed(3);
+    bytes += helper.cut();
+    return bytes;
+  }
+
+  List<int> printBillGenerator(PreviewBillModel data, CommandHelper helper){
+    final user = GlobalProviders.read(userProvider).userId;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+
+    List<OrderFinalModel> orderFix = List.empty(growable: true);
+
+    if (isNotNullOrEmpty(data.dataOrder)) {
+      for (var order in data.dataOrder) {
+        String orderCode = order.orderCode;
+        String inventoryCode = order.inventoryCode;
+        String namaItem = order.namaItem;
+        String promoName = '';
+        int jumlah = order.jumlah;
+        num hargaSatuan = order.harga;
+        num totalSemua = order.total;
+
+        num hargaPromo = 0;
+        int jumlahCancel = 0;
+        num hargaCancel = 0;
+        num hargaPromoCancel = 0;
+
+        List<PromoOrderModel>? promo;
+        List<CancelOrderModel>? cancel;
+        List<PromoCancelOrderModel>? promoCancel;
+
+        if (isNotNullOrEmpty(data.dataPromoOrder)) {
+          promo = data.dataPromoOrder.where((element) =>
+            element.orderCode == orderCode &&
+            element.inventoryCode == inventoryCode).toList();
+          if (isNotNullOrEmpty(promo)) {
+            promoName = promo[0].promoName;
+            hargaPromo += promo[0].promoPrice;
+          }
+        }
+
+        if (isNotNullOrEmpty(data.dataCancelOrder)) {
+          cancel = data.dataCancelOrder.where((element) => element.orderCode == orderCode &&
+            element.inventoryCode == inventoryCode).toList();
+          if (isNotNullOrEmpty(cancel)) {
+            jumlahCancel = cancel[0].jumlah;
+            hargaCancel = cancel[0].harga;
+            jumlah -= cancel[0].jumlah;
+            totalSemua -= cancel[0].total;
+
+            if (isNotNullOrEmpty(data.dataPromoCancelOrder)) {
+              promoCancel = data.dataPromoCancelOrder.where((element) =>
+                element.orderCode == orderCode &&
+                element.inventoryCode == inventoryCode &&
+                element.orderCancelCode == cancel![0].cancelOrderCode).toList();
+              if (isNotNullOrEmpty(promoCancel)) {
+                hargaPromo -= promoCancel[0].promoPrice;
+              }
+            }
+          }
+        }
+        orderFix.add(OrderFinalModel(
+          orderCode: orderCode,
+          inventoryCode: inventoryCode,
+          namaItem: namaItem,
+          jumlah: jumlah,
+          hargaSatuan: hargaSatuan,
+          hargaPromo: hargaPromo,
+          promoName: promoName,
+          jumlahCancel: jumlahCancel,
+          hargaCancel: hargaCancel,
+          hargaPromoCancel: hargaPromoCancel,
+          totalSemua: totalSemua,
+        ));
+      }
+    }
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.feed(2);
+    bytes += helper.textCenter(data.dataOutlet.namaOutlet);
+    bytes += helper.textCenter(data.dataOutlet.alamatOutlet);
+    bytes += helper.textCenter(data.dataOutlet.kota);
+    bytes += helper.textCenter(data.dataOutlet.telepon);
+    bytes += helper.feed(1);
+    bytes += helper.textCenter('TAGIHAN', bold: true);
+    bytes += helper.feed(1);
+    //Checkin Info
+    bytes += helper.text('Ruangan : ${data.dataRoom.roomCode}');
+    bytes += helper.text('Nama    : ${data.dataRoom.nama}');
+    bytes += helper.text('Tanggal : ${data.dataRoom.tanggal}');
+    bytes += helper.feed(1);
+    bytes += helper.table('Sewa Ruangan', '', Formatter.formatRupiah(data.dataInvoice.sewaRuangan), rightAlign: PosAlign.right);
+    if (data.dataInvoice.promo > 0) {
+      bytes += helper.table('Promo', '', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', rightAlign: PosAlign.right);
+    }
+    if ((data.voucherValue?.roomPrice ?? 0) > 0) {
+      bytes += helper.table('Voucher Room', '', '(${Formatter.formatRupiah(data.voucherValue!.roomPrice)})', rightAlign: PosAlign.right);
+    }
+          if (isNotNullOrEmpty(orderFix)) {
+        bytes += _printFnB(orderFix, helper);
+        if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
+          bytes += helper.table('Voucher FnB', '', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', rightAlign: PosAlign.right);
+        }
+        num totalPromo = 0;
+        for (var element in orderFix) {
+          totalPromo += element.hargaPromo;
+        }
+      if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
+          bytes += helper.feed(1);
+          bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
+        }
+      }
+      bytes += helper.divider();
+      bytes += helper.row('Jumlah Ruangan', Formatter.formatRupiah(data.dataInvoice.jumlahRuangan));
+      bytes += helper.row('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan));
+      bytes += helper.divider();
+      bytes += _printFooter(helper, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
+      if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
+        bytes += helper.table('Voucher', '', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', rightAlign: PosAlign.right);
+      }
+      if (isNotNullOrEmpty(data.transferList)) {
+        bytes += helper.feed(1);
+        bytes += helper.row('','Transfer Room');
+        for (var teep in data.transferList) {
+          bytes += helper.tableWithMaxChars('', teep.room, Formatter.formatRupiah(teep.transferTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+        }
+        bytes += helper.feed(1);
+      }
+      bytes += helper.tableWithMaxChars('', 'Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      bytes += helper.feed(1);
+      bytes += helper.tableWithMaxChars('', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), '', centerBold: true, centerTextHeight: PosTextSize.size1, centerTextWidth: PosTextSize.size2, maxCenterChars: 48);
+      bytes += helper.feed(1);
+      bytes += helper.row('', '$formattedDate $user');
+      
+      bytes += helper.feed(3);
+      if(isNotNullOrEmpty(data.transferData)){
+        for (var element in data.transferData) {
+          bytes += _printTransfer(helper, element, data.footerStyle ?? 1);
+        }
+      }
+    return bytes;
+  }
+
+  List<int> printInvoice(PrintInvoiceModel data, CommandHelper helper){
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+
+    final user = GlobalProviders.read(userProvider).userId;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+
+    List<OrderFinalModel> orderFix = List.empty(growable: true);
+
+    if (isNotNullOrEmpty(data.dataOrder)) {
+      for (var order in data.dataOrder) {
+        String orderCode = order.orderCode;
+        String inventoryCode = order.inventoryCode;
+        String namaItem = order.namaItem;
+        String promoName = '';
+        int jumlah = order.jumlah;
+        num hargaSatuan = order.harga;
+        num totalSemua = order.total;
+
+        num hargaPromo = 0;
+        int jumlahCancel = 0;
+        num hargaCancel = 0;
+        num hargaPromoCancel = 0;
+
+        List<PromoOrderModel>? promo;
+        List<CancelOrderModel>? cancel;
+        List<PromoCancelOrderModel>? promoCancel;
+
+        if (isNotNullOrEmpty(data.dataPromoOrder)) {
+          promo = data.dataPromoOrder.where((element) =>
+            element.orderCode == orderCode &&
+            element.inventoryCode == inventoryCode).toList();
+            if (isNotNullOrEmpty(promo)) {
+              promoName = promo[0].promoName;
+              hargaPromo += promo[0].promoPrice;
+            }
+          }
+
+          if (isNotNullOrEmpty(data.dataCancelOrder)) {
+            cancel = data.dataCancelOrder.where((element) => element.orderCode == orderCode &&
+              element.inventoryCode == inventoryCode).toList();
+            if (isNotNullOrEmpty(cancel)) {
+              jumlahCancel = cancel[0].jumlah;
+              hargaCancel = cancel[0].harga;
+              jumlah -= cancel[0].jumlah;
+              totalSemua -= cancel[0].total;
+
+              if (isNotNullOrEmpty(data.dataPromoCancelOrder)) {
+                promoCancel = data.dataPromoCancelOrder.where((element) =>
+                  element.orderCode == orderCode && element.inventoryCode == inventoryCode && element.orderCancelCode == cancel![0].cancelOrderCode).toList();
+                if (isNotNullOrEmpty(promoCancel)) {
+                  hargaPromo -= promoCancel[0].promoPrice;
+                }
+              }
+            }
+          }
+          orderFix.add(OrderFinalModel(
+            orderCode: orderCode,
+            inventoryCode: inventoryCode,
+            namaItem: namaItem,
+            jumlah: jumlah,
+            hargaSatuan: hargaSatuan,
+            hargaPromo: hargaPromo,
+            promoName: promoName,
+            jumlahCancel: jumlahCancel,
+            hargaCancel: hargaCancel,
+            hargaPromoCancel: hargaPromoCancel,
+            totalSemua: totalSemua,
+          ));
+        }
+      }
+      bytes += [0x1B, 0x40];
+      bytes += helper.feed(2);
+      bytes += helper.textCenter(data.dataOutlet.namaOutlet);
+      bytes += helper.textCenter(data.dataOutlet.alamatOutlet);
+      bytes += helper.textCenter(data.dataOutlet.kota);
+      bytes += helper.textCenter(data.dataOutlet.telepon);
+      bytes += helper.feed(1);
+      bytes += helper.textCenter('INVOICE', bold: true);
+      bytes += helper.feed(1);
+      //Checkin Info
+      bytes += helper.text('Ruangan : ${data.dataRoom.roomCode}');
+      bytes += helper.text('Nama    : ${data.dataRoom.nama}');
+      bytes += helper.text('Tanggal : ${data.dataRoom.tanggal}');
+      bytes += helper.feed(1);
+      bytes += helper.table('Sewa Ruangan', '', Formatter.formatRupiah(data.dataInvoice.sewaRuangan), rightAlign: PosAlign.right);
+      if (data.dataInvoice.promo > 0) {
+        bytes += helper.table('Promo', '', '(${Formatter.formatRupiah(data.dataInvoice.promo)})', rightAlign: PosAlign.right);
+      }
+      if ((data.voucherValue?.roomPrice ?? 0) > 0) {
+        bytes += helper.table('Voucher Room', '', '(${Formatter.formatRupiah(data.voucherValue!.roomPrice)})', rightAlign: PosAlign.right);
+      }
+      //FnB
+      if (isNotNullOrEmpty(orderFix)) {
+        bytes += _printFnB(orderFix, helper);
+        if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
+          bytes += helper.table('Voucher FnB', '', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', rightAlign: PosAlign.right);
+        }
+        num totalPromo = 0;
+        for (var element in orderFix) {
+          totalPromo += element.hargaPromo;
+        }
+      if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
+          bytes += helper.feed(1);
+          bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
+        }
+      }
+      bytes += helper.divider();
+      bytes += helper.row('Jumlah Ruangan', Formatter.formatRupiah(data.dataInvoice.jumlahRuangan));
+      bytes += helper.row('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan));
+      bytes += helper.divider();
+      bytes += _printFooter(helper, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
+      if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
+        bytes += helper.table('Voucher', '', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', rightAlign: PosAlign.right);
+      }
+      if (isNotNullOrEmpty(data.transferList)) {
+        bytes += helper.feed(1);
+        bytes += helper.row('','Transfer Room');
+        for (var teep in data.transferList) {
+          bytes += helper.tableWithMaxChars('', teep.room, Formatter.formatRupiah(teep.transferTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+        }
+        bytes += helper.feed(1);
+      }
+
+      bytes += helper.tableWithMaxChars('', 'Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
+      if (isNotNullOrEmpty(data.paymentList)) {
+        for (var payment in data.paymentList) {
+          bytes += helper.tableWithMaxChars('', payment.paymentName, Formatter.formatRupiah(payment.value), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15, centerBold: true);
+        }
+      } else {
+        bytes += helper.row('', 'Data Pembayaran Tidak Ditemukan');
+      }
+      bytes += helper.row('', '----------------');
+      bytes += helper.row('', Formatter.formatRupiah(data.payment.payValue));
+      bytes += helper.feed(1);
+      bytes += helper.tableWithMaxChars('', 'Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', '', centerBold: true, centerTextHeight: PosTextSize.size1, centerTextWidth: PosTextSize.size2, maxCenterChars: 48);
+      bytes += helper.feed(1);
+      bytes += helper.row('', '$formattedDate $user');
+      bytes += helper.feed(3);
+      if(isNotNullOrEmpty(data.transferData)){
+        for (var element in data.transferData) {
+          bytes += _printTransfer(helper, element, data.footerStyle ?? 1);
+        }
+      }
+      bytes += helper.cut();
+      return bytes;
+  }
+
+  List<int> _printFnB(List<OrderFinalModel> orderFix, helper) {
     List<int> bytes = [];
     final fnbList = _mergeItems(orderFix);
     bytes += helper.feed(1);
@@ -55,7 +385,7 @@ class EscPosGenerator {
     bytes += helper.feed(1);
 
     for (var fnb in fnbList) {
-      if (PreferencesData.getShowReturState() == true) {
+      if (GlobalProviders.read(showReturProvider) == true) {
         bytes += helper.text(fnb.namaItem);
         bytes += helper.row(
             '${fnb.jumlah + fnb.jumlahCancel} x ${Formatter.formatRupiah(fnb.hargaSatuan)}',
@@ -67,7 +397,7 @@ class EscPosGenerator {
           );
         }
         if (fnb.hargaPromo > 0 &&
-            PreferencesData.getShowPromoBelowItem() == true) {
+            GlobalProviders.read(showPromoBelowItemProvider) == true) {
           bytes += helper.row(
             fnb.promoName,
             '(${Formatter.formatRupiah(fnb.hargaPromo)})',
@@ -81,7 +411,7 @@ class EscPosGenerator {
             Formatter.formatRupiah(fnb.totalSemua),
           );
           if (fnb.hargaPromo > 0 &&
-              PreferencesData.getShowPromoBelowItem() == true) {
+              GlobalProviders.read(showPromoBelowItemProvider) == true) {
             bytes += helper.row(
               fnb.promoName,
               '(${Formatter.formatRupiah(fnb.hargaPromo)})',
@@ -229,7 +559,7 @@ class EscPosGenerator {
     }
 
     if (isNotNullOrEmpty(orderFix)) {
-      bytes += printFnB(orderFix, helper);
+      bytes += _printFnB(orderFix, helper);
       if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
         bytes += helper.table('Voucher FnB', '', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', rightAlign: PosAlign.right);
       }
@@ -237,7 +567,7 @@ class EscPosGenerator {
       for (var element in orderFix) {
         totalPromo += element.hargaPromo;
       }
-      if ((PreferencesData.getShowTotalItemPromo() ||PreferencesData.getShowPromoBelowItem() == false) ==true && totalPromo > 0) {
+      if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
         bytes += helper.feed(1);
         bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
       }
@@ -296,5 +626,4 @@ class EscPosGenerator {
 
     return mergedList;
   }
-
 }
