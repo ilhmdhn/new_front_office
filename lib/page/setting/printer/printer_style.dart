@@ -1,21 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/preferences.dart';
+import 'package:front_office_2/riverpod/app_settings_provider.dart';
 
-class PrinterStylePage extends StatefulWidget {
+class PrinterStylePage extends ConsumerWidget {
   static const nameRoute = '/printer-style';
   const PrinterStylePage({super.key});
 
   @override
-  State<PrinterStylePage> createState() => _PrinterStylePageState();
-}
-
-class _PrinterStylePageState extends State<PrinterStylePage> {
-  
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -44,12 +39,11 @@ class _PrinterStylePageState extends State<PrinterStylePage> {
                     scale: 0.75,
                     child: Switch(
                       activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: PreferencesData.getShowReturState(),
-                      onChanged: ((value) {
-                        setState(() {
-                          PreferencesData.setShowRetur(value);
-                        });
-                      })),
+                      value: ref.watch(showReturProvider),
+                      onChanged: (value) {
+                        ref.read(showReturProvider.notifier).setShowRetur(value);
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -68,12 +62,11 @@ class _PrinterStylePageState extends State<PrinterStylePage> {
                   scale: 0.75,
                   child: Switch(
                       activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: PreferencesData.getShowTotalItemPromo(),
-                      onChanged: ((value) {
-                        setState(() {
-                          PreferencesData.setShowTotalItemPromo(value);
-                        });
-                      })),
+                      value: ref.watch(showTotalItemPromoProvider),
+                      onChanged: (value) {
+                        ref.read(showTotalItemPromoProvider.notifier).setShowTotalItemPromo(value);
+                      },
+                    ),
                 ),
               ),
             ],
@@ -94,12 +87,11 @@ class _PrinterStylePageState extends State<PrinterStylePage> {
                   scale: 0.75,
                   child: Switch(
                       activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: PreferencesData.getShowPromoBelowItem(),
-                      onChanged: ((value) {
-                        setState(() {
-                          PreferencesData.setShowPromoBelowItem(value);
-                        });
-                      })),
+                      value: ref.watch(showPromoBelowItemProvider),
+                      onChanged: (value) {
+                        ref.read(showPromoBelowItemProvider.notifier).setShowPromoBelowItem(value);
+                      },
+                    ),
                 ),
               ),
             ],

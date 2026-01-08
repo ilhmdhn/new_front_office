@@ -55,6 +55,7 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                     flex: 1,
                     child: InkWell(
                       onTap: () async {
+                        //fix before compile
                         final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
                         // final reprintBillState = true;
                         if (reprintBillState != true) {

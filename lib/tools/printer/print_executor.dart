@@ -1,7 +1,7 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/riverpod/providers.dart';
-import 'package:front_office_2/tools/printer/esc_pos_generator.dart';
+import 'package:front_office_2/tools/printer/format_helper/esc_pos_generator.dart';
 import 'package:front_office_2/tools/printer/sender/ble_print_service.dart';
 import 'package:front_office_2/tools/printer/sender/lan_print_service.dart';
 import 'package:front_office_2/tools/printer/sender/tcp_print_service.dart';

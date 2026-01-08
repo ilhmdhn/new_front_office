@@ -8,7 +8,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
-import 'package:front_office_2/tools/printer/command_helper.dart';
+import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
 import 'package:front_office_2/tools/printer/sender/tcp_print_service.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:intl/intl.dart';
