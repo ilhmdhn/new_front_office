@@ -10,18 +10,27 @@ class CommandHelper {
   /// Get max characters per line for current printer
   int get maxCharsPerLine {
     if (printerModel == PrinterModelType.tmu220u) {
-      return 42; // TMU-220 dot matrix: 72mm = 42 chars
+      return 40; // TMU-220 dot matrix: 72mm = 40 chars
     }
     return 48; // Default for thermal printers (80mm)
   }
 
-  /// Manual center alignment for printers that don't support ESC a commands
-  String _centerText(String text) {
+  /// Manual alignment for printers that don't support ESC a commands
+  String _alignText(String text, PosAlign align) {
     if (text.length >= maxCharsPerLine) {
       return text.substring(0, maxCharsPerLine);
     }
-    final padding = (maxCharsPerLine - text.length) ~/ 2;
-    return '${' ' * padding}$text';
+
+    switch (align) {
+      case PosAlign.center:
+        final padding = (maxCharsPerLine - text.length) ~/ 2;
+        return '${' ' * padding}$text';
+      case PosAlign.right:
+        final padding = maxCharsPerLine - text.length;
+        return '${' ' * padding}$text';
+      case PosAlign.left:
+        return text;
+    }
   }
 
   List<int> text(
@@ -31,10 +40,10 @@ class CommandHelper {
     PosTextSize width = PosTextSize.size1,
     PosTextSize height = PosTextSize.size1,
   }) {
-    // For TMU-220, use manual center alignment instead of ESC a commands
-    if (printerModel == PrinterModelType.tmu220u && align == PosAlign.center) {
+    // For TMU-220, use manual alignment instead of ESC a commands
+    if (printerModel == PrinterModelType.tmu220u) {
       return generator.text(
-        _centerText(value),
+        _alignText(value, align),
         styles: PosStyles(
           bold: bold,
           align: PosAlign.left, // Force left, padding already added
@@ -67,6 +76,26 @@ class CommandHelper {
 
   List<int> row(String left, String right,
       {bool bold = false, int leftWidth = 6, int rightWidth = 6}) {
+    // For TMU-220, use manual row formatting
+    if (printerModel == PrinterModelType.tmu220u) {
+      // Calculate character widths based on total 40 chars
+      final leftChars = (maxCharsPerLine * leftWidth / 12).floor();
+      final rightChars = maxCharsPerLine - leftChars;
+
+      final leftPart = left.length > leftChars
+          ? left.substring(0, leftChars)
+          : left.padRight(leftChars);
+
+      final rightPart = right.length > rightChars
+          ? right.substring(0, rightChars)
+          : right.padLeft(rightChars);
+
+      return generator.text(
+        leftPart + rightPart,
+        styles: PosStyles(bold: bold),
+      );
+    }
+
     return generator.row([
       PosColumn(text: left, width: leftWidth, styles: PosStyles(bold: bold)),
       PosColumn(
@@ -130,6 +159,40 @@ class CommandHelper {
     PosTextSize? centerTextHeight,
     PosTextSize? rightTextHeight,
   }) {
+    // For TMU-220, use manual table formatting
+    if (printerModel == PrinterModelType.tmu220u) {
+      // Calculate character widths based on total 40 chars and grid widths
+      final totalGridWidth = leftColWidth + centerColWidth + rightColWidth;
+      final leftChars = (maxCharsPerLine * leftColWidth / totalGridWidth).floor();
+      final centerChars = (maxCharsPerLine * centerColWidth / totalGridWidth).floor();
+      final rightChars = maxCharsPerLine - leftChars - centerChars;
+
+      // Helper to align text within column
+      String alignInColumn(String text, int width, PosAlign align) {
+        if (text.length > width) {
+          return text.substring(0, width);
+        }
+        switch (align) {
+          case PosAlign.center:
+            final padding = (width - text.length) ~/ 2;
+            return '${' ' * padding}$text${' ' * (width - text.length - padding)}';
+          case PosAlign.right:
+            return text.padLeft(width);
+          case PosAlign.left:
+            return text.padRight(width);
+        }
+      }
+
+      final leftPart = alignInColumn(leftText, leftChars, leftAlign);
+      final centerPart = alignInColumn(centerText, centerChars, centerAlign);
+      final rightPart = alignInColumn(rightText, rightChars, rightAlign);
+
+      return generator.text(
+        leftPart + centerPart + rightPart,
+        styles: PosStyles(bold: leftBold ?? centerBold ?? rightBold ?? false),
+      );
+    }
+
     return generator.row([
       PosColumn(
         text: leftText,
