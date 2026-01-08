@@ -25,12 +25,14 @@ class CommandHelper {
       // ESC @ - Initialize printer (reset to defaults)
       bytes += [0x1B, 0x40];
 
-      // ESC ! 0 - Select Font A (bit 0 = 0), NOT Font B
-      // Font A = 10 CPI (~42 chars at 72mm) - larger font, fits 40 chars
-      // Font B = 12 CPI (~50 chars at 72mm) - smaller font, only 33 chars readable
-      bytes += [0x1B, 0x21, 0x00];
+      // ESC M - Select Elite font (12 CPI)
+      bytes += [0x1B, 0x4D];
 
-      debugPrint('TMU-220 initialized: Font A (10 CPI), 40 chars per line');
+      // SI (0x0F) - Enable condensed mode for smaller font (~17 CPI)
+      // This should fit 40+ chars in 72mm
+      bytes += [0x0F];
+
+      debugPrint('TMU-220 initialized: Elite + Condensed (~17 CPI) for 40 chars');
 
       return bytes;
     }
@@ -97,6 +99,9 @@ class CommandHelper {
       final fontFlag = _getTmu220FontFlag(bold, width, height);
       bytes += [0x1B, 0x21, fontFlag];
 
+      // Re-enable condensed mode after ESC ! (ESC ! cancels condensed)
+      bytes += [0x0F]; // SI - condensed ON
+
       // Add text with manual alignment - use raw bytes
       final alignedText = _alignText(value, align);
 
@@ -112,8 +117,9 @@ class CommandHelper {
       bytes += finalText.codeUnits; // Raw ASCII bytes
       bytes += [0x0A]; // Line feed (LF)
 
-      // Reset font to normal
-      bytes += [0x1B, 0x21, 0x00];
+      // Reset font to normal and re-enable condensed
+      bytes += [0x1B, 0x21, 0x00]; // Reset font
+      bytes += [0x0F]; // Re-enable condensed mode (SI)
 
       return bytes;
     }
@@ -177,15 +183,17 @@ class CommandHelper {
       // Set bold if needed
       if (bold) {
         bytes += [0x1B, 0x21, 0x08]; // ESC ! with bold bit
+        bytes += [0x0F]; // Re-enable condensed after ESC !
       }
 
       // Add text as raw bytes
       bytes += finalText.codeUnits;
       bytes += [0x0A]; // Line feed
 
-      // Reset font
+      // Reset font and re-enable condensed
       if (bold) {
-        bytes += [0x1B, 0x21, 0x00];
+        bytes += [0x1B, 0x21, 0x00]; // Reset font
+        bytes += [0x0F]; // Re-enable condensed mode
       }
 
       debugPrint('TMU-220 Row: left="$left" right="$right" finalLength=${finalText.length}');
@@ -303,15 +311,17 @@ class CommandHelper {
       // Set bold if needed
       if (isBold) {
         bytes += [0x1B, 0x21, 0x08];
+        bytes += [0x0F]; // Re-enable condensed after ESC !
       }
 
       // Add text as raw bytes
       bytes += finalText.codeUnits;
       bytes += [0x0A];
 
-      // Reset font
+      // Reset font and re-enable condensed
       if (isBold) {
-        bytes += [0x1B, 0x21, 0x00];
+        bytes += [0x1B, 0x21, 0x00]; // Reset font
+        bytes += [0x0F]; // Re-enable condensed mode
       }
 
       return bytes;
