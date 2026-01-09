@@ -14,10 +14,10 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
-import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/list.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/rupiah.dart';
 import 'package:front_office_2/tools/toast.dart';
 
@@ -653,9 +653,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           showToastError(paymentResult.message.toString());
                           return;
                         }
-    
-                        DoPrint.printInvoice(billData?.data?.dataInvoice.reception??'');
-    
+  
+                        PrintExecutor.printInvoice(billData?.data?.dataInvoice.reception??'');
+   
                         if(context.mounted){
                           final invoiceCode = billData?.data?.dataInvoice.invoice??'';
                           final memberCode = billData?.data?.dataInvoice.memberCode??'';

@@ -9,9 +9,9 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
-import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class BillPage extends StatefulWidget {
@@ -267,11 +267,11 @@ class _BillPageState extends State<BillPage> {
                                 showToastWarning('Permintaan dibatalkan');
                                 return;
                               }
-                              DoPrint.printBill(roomCode);
+                              PrintExecutor.printBill(roomCode);
                             }else{
                               final confirmationState = await ConfirmationDialog.confirmation(context, 'Cetak Tagihan');
                               if(confirmationState == true){
-                                DoPrint.printBill(roomCode);
+                                PrintExecutor.printBill(roomCode);
                               }
                             }
                           }

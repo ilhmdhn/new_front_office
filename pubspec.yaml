@@ -30,7 +30,6 @@ environment:
 dependencies:
   animated_rating_stars: ^1.0.1
   auto_size_text: ^3.0.0
-  blue_thermal_printer: ^1.2.3
   calendar_date_picker2: ^1.1.5
   collection: ^1.18.0
   cupertino_icons: ^1.0.2
@@ -46,7 +45,6 @@ dependencies:
   flutter_dotenv: ^6.0.0
   flutter_local_notifications: ^19.4.1
   flutter_rating_bar: ^4.0.1
-  flutter_thermal_printer: ^1.2.4
   fluttertoast: ^8.2.12
   get_it: ^8.2.0
   google_fonts: ^6.3.1

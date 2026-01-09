@@ -32,7 +32,7 @@ class PrintExecutor {
         showToastError(apiResponse.message);
         return;
       } else if(apiResponse.data == null){
-        showToastError('data invoice null\n${apiResponse.message}');
+        showToastError('data invoice null ${apiResponse.message}');
         return;
       }
 
@@ -42,6 +42,89 @@ class PrintExecutor {
       ApiRequest().updatePrintState(rcp, '2');
     } catch (e) {
       showToastError('Gagal cetak invoice: $e');
+      return;
+    }
+  }
+
+  static Future<void> printBill(String roomCode)async{
+    try {
+      final apiResponse = await ApiRequest().getBill(roomCode);
+      if(!apiResponse.state){
+        showToastError(apiResponse.message);
+        return;
+      } else if(apiResponse.data == null){
+        showToastError('data tagihan null ${apiResponse.message}');
+        return;
+      }
+
+      final helper = await _getPrinter();
+      final posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
+      await _execute(posContent);
+      ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
+    }catch (e) {
+      showToastError('Gagal cetak bill: $e');
+      return;
+    }
+  }
+
+  static Future<void> printSlip(String rcp)async{
+    try {
+      final apiResponse = await ApiRequest().checkinSlip(rcp);
+      if(!apiResponse.state){
+        showToastError(apiResponse.message);
+        return;
+      } else if(apiResponse.data == null){
+        showToastError('data slip null\n${apiResponse.message}');
+        return;
+      }
+
+      final helper = await _getPrinter();
+      final posContent = EscPosGenerator().printSlipCheckin(apiResponse.data!, helper);
+      await _execute(posContent);
+    }catch (e) {
+      showToastError('Gagal cetak slip: $e');
+      return;
+    }
+  }
+
+  static Future<void> printSo(String sol, String roomCode, String guestName, int pax) async {
+    try {
+      final apiResponse = await ApiRequest().getSol(sol);
+      
+      if(!apiResponse.state){
+        showToastError(apiResponse.message??'Gagal mendapatkan data so');
+        return;
+      } else if(apiResponse.data == null){
+        showToastError('data so null\n${apiResponse.message}');
+        return;
+      }
+
+      final helper = await _getPrinter();
+      // final posContent = EscPosGenerator().printSo(apiResponse.data!, helper, roomCode, guestName, pax);
+      // await _execute(posContent);
+    }catch (e) {
+      showToastError('Gagal cetak so: $e');
+      return;
+    }
+  }
+
+  static Future<void> printLastSo(String rcp, String roomCode, String guestName, int pax)async{
+    try {
+      final apiResponse = await ApiRequest().latestSo(rcp);
+      
+      if(apiResponse.state == null || (!apiResponse.state!)){
+        showToastError(apiResponse.message??'Gagal mendapatkan data so terakhir');
+        return;
+      } else if(apiResponse.data == null){
+        showToastError('data so terakhir null\n${apiResponse.message}');
+        return;
+      }
+
+      final helper = await _getPrinter();
+      // final posContent = EscPosGenerator().printSo(apiResponse.data!, helper, roomCode, guestName, pax);
+      // await _execute(posContent);
+    }catch (e) {
+      showToastError('Gagal cetak so terakhir: $e');
       return;
     }
   }

@@ -29,9 +29,9 @@ import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
-import 'package:front_office_2/tools/execute_printer.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/json_converter.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:http/http.dart' as http;
 
@@ -148,10 +148,10 @@ class ApiRequest{
       }
       final convertedResult = json.decode(apiResponse.body);
       debugPrint('DEBUGGING checkin response: $convertedResult');
-      DoPrint.checkin(convertedResult['data']['checkin_room']['room_rcp']);
+      PrintExecutor.printInvoice(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(err, stackTrace){
-      showToastError('Gagal checkin $err');
+      showToastError('Gagal checkin $err\n${stackTrace.toString()}');
       return BaseResponse(
         isLoading: false,
         state: false,
@@ -944,7 +944,7 @@ class ApiRequest{
       }
 
       final convertedResult = json.decode(apiResponse.body);
-      DoPrint.checkin(convertedResult['data']['kode_rcp']);
+      PrintExecutor.printSlip(convertedResult['data']['kode_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(state: false, message: e.toString());
