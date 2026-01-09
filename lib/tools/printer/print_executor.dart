@@ -13,10 +13,8 @@ class PrintExecutor {
   
   static Future<void> testPrint() async {
     try {
-
       final helper = await _getPrinter();
-      // Use combineZ for TMU-220 font size testing
-      final posContent = EscPosGenerator.combineZ(helper);
+      final posContent = EscPosGenerator.testPrint(helper);
       await _execute(posContent);
       showToastSuccess('Test print berhasil');
     } catch (e) {

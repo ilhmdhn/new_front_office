@@ -5,6 +5,7 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
+import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
@@ -13,225 +14,28 @@ import 'package:intl/intl.dart';
 
 class EscPosGenerator {
   
+
   static List<int> testPrint(CommandHelper helper){
-      final printerConfig = GlobalProviders.read(printerProvider);
-
-      List<int> bytes = [];
-
-      bytes += helper.initializePrinter();
-      bytes += helper.feed(2);
-      bytes +=helper.text("TEST PRINT LAN", bold: true, align: PosAlign.center);
-      bytes += helper.divider();
-      bytes +=helper.text("Happy Puppy POS", bold: true, align: PosAlign.center);
-      bytes += helper.feed(1);
-      bytes += helper.text("Printer : ${printerConfig.name}");
-      bytes += helper.text("IP      : ${printerConfig.address}");
-      bytes += helper.text("Type    : LAN Network");
-      bytes += helper.feed(1);
-      bytes += helper.divider();
-      bytes += helper.text("Test print berhasil!",
-          bold: true, align: PosAlign.center);
-      bytes += helper.divider();
-      bytes += helper.feed(1);
-      // bytes += [0x1B, 0x21, 0x30];
-      // bytes += [0x1D, 0x21, 0x01]; 
-      bytes += [0x1D, 0x21, 0x10];
-      bytes += helper.text("Thank you!", bold: true, align: PosAlign.center);
-      bytes += [0x1B, 0x21, 0x00];
-      bytes += helper.feed(1);
-      bytes += helper.row("Kiri", "Kanan");
-      bytes += helper.feed(1);
-      bytes += helper.table(
-          "kiri", "tengah", "kanan",
-          leftAlign: PosAlign.left,
-          centerAlign: PosAlign.right,
-          rightAlign: PosAlign.right);
-      bytes += helper.text('agak besar 1 - 2', 
-          bold: true,
-          align: PosAlign.center,
-          width: PosTextSize.size1,
-          height: PosTextSize.size2);
-      bytes += helper.text('agak besar 2 - 1', 
-          bold: true,
-          align: PosAlign.center,
-          width: PosTextSize.size2,
-          height: PosTextSize.size1);
-      bytes += helper.text('agak besar 2 - 2', 
-          bold: true,
-          align: PosAlign.center,
-          width: PosTextSize.size2,
-          height: PosTextSize.size2);
-      bytes += helper.feed(3);
-      bytes += helper.cut();
-      
-      return bytes;
-  }
-
-
-Future<List<int>> buildPrint() async {
-  final profile = await CapabilityProfile.load();
-  final generator = Generator(PaperSize.mm72, profile);
-
-  List<int> bytes = [];
-
-  bytes += generator.text(
-    'TEST TEXT SIZE',
-    styles: PosStyles(
-      align: PosAlign.center,
-      bold: true,
-      height: PosTextSize.size2,
-      width: PosTextSize.size2,
-    ),
-  );
-
-  bytes += generator.feed(1);
-
-  /// daftar size karena PosTextSize tidak punya `.values`
-  final sizes = [
-    PosTextSize.size1,
-    PosTextSize.size2,
-    PosTextSize.size3,
-    PosTextSize.size4,
-    PosTextSize.size5,
-    PosTextSize.size6,
-    PosTextSize.size7,
-    PosTextSize.size8,
-  ];
-
-  for (var w = 0; w < 8; w++) {
-    for (var h = 0; h < 8; h++) {
-      bytes += generator.text(
-        'W${w + 1}  H${h + 1}',
-        styles: PosStyles(
-          bold: true,
-          align: PosAlign.center,
-          width: sizes[w],
-          height: sizes[h],
-        ),
-      );
-    }
-
-    /// biar tiap blok kebaca jelas
-    bytes += generator.feed(1);
-  }
-
-  bytes += generator.cut();
-
-  return bytes;
-}
-
-static List<int> bruteForceSize() {
-  List<int> bytes = [];
-
-  bytes += [0x1B, 0x40]; // init
-  bytes += [0x1B, 0x61, 0x01]; // center
-
-  for (var w = 0; w <= 7; w++) {
-    for (var h = 0; h <= 7; h++) {
-      int value = (w << 4) | h; // gabung width+height ke GS !
-      bytes += [0x1D, 0x21, value];
-      
-      bytes += "font W$w  H$h\n".codeUnits;
-    }
-    bytes += "\n".codeUnits;
-  }
-
-  // reset font
-  bytes += [0x1D, 0x21, 0x00];
-  bytes += [0x1D, 0x56, 0x42]; // partial cut
-
-  return bytes;
-}
-
-static List<int> combine(CommandHelper helper){
-    // =======================
-    // FONT TEST AREA
-    // =======================
-  List<int> bytes = [];
-    bytes += helper.divider();
-    bytes += helper.text("FONT TEST", bold: true, align: PosAlign.center);
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
+    bytes += helper.text("TMU-220 FONT TEST", bold: true, align: PosAlign.center);
+    bytes += helper.divider();
+    bytes += helper.text("Normal Text", align: PosAlign.left);
+    bytes += helper.text("Bold Text Center", bold: true, align: PosAlign.center);
+    bytes += helper.text("Double Width", width: PosTextSize.size2);
+    bytes += helper.text("Double Width bold", width: PosTextSize.size2, bold: true);
+    bytes += helper.text("Double Height", height: PosTextSize.size2, align: PosAlign.center);
+    bytes += helper.text("Double Height bold", height: PosTextSize.size2, align: PosAlign.center, bold: true);
+    bytes += helper.text("Normal Text", align: PosAlign.left);
+    bytes += helper.feed(1);
+    bytes += helper.divider();
+    bytes += helper.textCenter("Test Complete", bold: true);
+    bytes += helper.feed(3);
+    bytes += helper.cut();
 
-    // Font A normal
-    bytes += helper.text("Font A Normal");
-
-    // Font B normal
-    bytes += [0x1B, 0x4D, 0x01]; // ESC M 1  => Font B
-    bytes += helper.text("Font B Normal");
-    bytes += [0x1B, 0x4D, 0x00]; // balik ke Font A
-
-
-    // ========== FONT B VARIASI SIZE ==========
-
-    // Font B + Double Height
-    bytes += [0x1B, 0x4D, 0x01]; // Font B
-    bytes += [0x1D, 0x21, 0x10]; // Double height
-    bytes += helper.text("Font B Double Height", align: PosAlign.center);
-
-    // Reset
-    bytes += [0x1D, 0x21, 0x00];
-
-
-    // Font B + Double Width
-    bytes += [0x1D, 0x21, 0x01];
-    bytes += helper.text("Font B Double Width", align: PosAlign.center);
-    bytes += [0x1D, 0x21, 0x00];
-
-
-    // Font B + Double Width + Height (gede tapi ga segede thermal)
-    bytes += [0x1D, 0x21, 0x11];
-    bytes += helper.text("Font B Double WH", align: PosAlign.center);
-    bytes += [0x1D, 0x21, 0x00];
-
-    // Balik ke font normal lagi
-    bytes += [0x1B, 0x4D, 0x00];
     return bytes;
   }
-
-static List<int> combineZ(CommandHelper helper){
-    // =======================
-    // TMU-220 FONT SIZE TEST
-    // =======================
-  List<int> bytes = [];
-  bytes += [0x1B, 0x40]; // Initialize
-
-  bytes += helper.feed(2);
-  bytes += helper.text("TMU-220 FONT TEST", bold: true, align: PosAlign.center);
-  bytes += helper.divider();
-  bytes += helper.feed(1);
-
-  // Normal text
-  bytes += helper.text("Normal Text", align: PosAlign.left);
-  bytes += helper.feed(1);
-
-  // Bold text
-  bytes += helper.text("Bold Text", bold: true, align: PosAlign.left);
-  bytes += helper.feed(1);
-
-  // Double width
-  bytes += helper.text("Double Width", width: PosTextSize.size2);
-  bytes += helper.feed(1);
-
-  // Double height
-  bytes += helper.text("Double Height", height: PosTextSize.size2, align: PosAlign.center);
-  bytes += helper.feed(1);
-
-  // Double WH
-  bytes += helper.text("Double WH", width: PosTextSize.size2, height: PosTextSize.size2, align: PosAlign.center);
-  bytes += helper.feed(1);
-
-  // Double WH + Bold
-  bytes += helper.text("Big Bold", bold: true, width: PosTextSize.size2, height: PosTextSize.size2, align: PosAlign.center);
-  bytes += helper.feed(1);
-
-  bytes += helper.divider();
-  bytes += helper.textCenter("Test Complete", bold: true);
-  bytes += helper.feed(3);
-  bytes += helper.cut();
-
-  return bytes;
-}
-
 
   List<int> printSlipCheckin(CheckinSlipModel data, CommandHelper helper){
     List<int> bytes = [];
@@ -275,6 +79,7 @@ static List<int> combineZ(CommandHelper helper){
 
   List<int> printBillGenerator(PreviewBillModel data, CommandHelper helper){
     final user = GlobalProviders.read(userProvider).userId;
+    final printer = GlobalProviders.read(printerProvider);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
 
@@ -398,7 +203,11 @@ static List<int> combineZ(CommandHelper helper){
       }
       bytes += helper.tableWithMaxChars('', 'Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
       bytes += helper.feed(1);
-      bytes += helper.tableWithMaxChars('', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), '', centerBold: true, centerTextHeight: PosTextSize.size1, centerTextWidth: PosTextSize.size2, maxCenterChars: 48);
+      bytes += helper.text(Formatter.formatRupiah(data.dataInvoice.jumlahBersih),
+        bold: true,
+        height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
+        width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
+      );
       bytes += helper.feed(1);
       bytes += helper.row('', '$formattedDate $user');
       
@@ -416,6 +225,7 @@ static List<int> combineZ(CommandHelper helper){
     bytes += [0x1B, 0x40];
 
     final user = GlobalProviders.read(userProvider).userId;
+    final printer = GlobalProviders.read(printerProvider);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
 
@@ -547,7 +357,10 @@ static List<int> combineZ(CommandHelper helper){
       bytes += helper.row('', '----------------');
       bytes += helper.row('', Formatter.formatRupiah(data.payment.payValue));
       bytes += helper.feed(1);
-      bytes += helper.text('Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', bold: true, align: PosAlign.center, height: PosTextSize.size1, width: PosTextSize.size2);
+      bytes += helper.text('Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', bold: true, align: PosAlign.center, 
+        height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
+        width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
+      );
       bytes += helper.feed(1);
       bytes += helper.row('', '$formattedDate $user');
       bytes += helper.feed(3);
@@ -655,6 +468,7 @@ static List<int> combineZ(CommandHelper helper){
   }
 
   List<int> _printTransfer(CommandHelper helper, TransferModel data, int footerStyle) {
+    final printer = GlobalProviders.read(printerProvider);
     List<OrderFinalModel> orderFix = List.empty(growable: true);
     List<int> bytes = [];
     if (isNotNullOrEmpty(data.dataOrder)) {
@@ -769,7 +583,11 @@ static List<int> combineZ(CommandHelper helper){
 
     bytes += helper.tableWithMaxChars('', 'Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
     bytes += helper.feed(1);
-    bytes += helper.tableWithMaxChars('', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), '', centerBold: true, centerTextHeight: PosTextSize.size1, centerTextWidth: PosTextSize.size2, maxCenterChars: 48);
+    bytes += helper.text(Formatter.formatRupiah(data.dataInvoice.jumlahBersih),
+      bold: true,
+      height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
+      width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
+    );
     bytes += helper.feed(2);
     return bytes;
   }

@@ -112,8 +112,8 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
               const SizedBox(height: 20),
               _buildPCPrinterCard(),
               const SizedBox(height: 20),
-              _buildLanPrinterCard(),
-              const SizedBox(height: 20),
+              // _buildLanPrinterCard(),
+              // const SizedBox(height: 20),
               _buildBluetoothPrinterCard(printer),
             ],
           ),
@@ -237,12 +237,12 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
             Row(
               children: [
                 Icon(
-                  Icons.computer,
+                  Icons.lan,
                   color: Colors.blue.shade700,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
-                Text('Android Printer Driver',
+                Text('Network Printer',
                     style: CustomTextStyle.blackMediumSize(18)),
               ],
             ),
