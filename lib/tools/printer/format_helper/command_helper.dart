@@ -336,6 +336,43 @@ class CommandHelper {
     PosTextSize? centerTextHeight,
     PosTextSize? rightTextHeight,
   }) {
+    // For TMU-220, format manually based on maxChars
+    if (printerModel == PrinterModelType.tmu220u) {
+      // Calculate actual char allocation based on maxChars and available width (40)
+      int totalMaxChars = maxLeftChars + maxCenterChars + maxRightChars;
+      int leftChars = (maxCharsPerLine * maxLeftChars / totalMaxChars).floor();
+      int centerChars = (maxCharsPerLine * maxCenterChars / totalMaxChars).floor();
+      int rightChars = maxCharsPerLine - leftChars - centerChars;
+
+      // Helper to align text within column
+      String alignInColumn(String text, int width, PosAlign align) {
+        // Truncate if too long
+        if (text.length > width) {
+          return text.substring(0, width);
+        }
+        switch (align) {
+          case PosAlign.center:
+            final padding = (width - text.length) ~/ 2;
+            return '${' ' * padding}$text${' ' * (width - text.length - padding)}';
+          case PosAlign.right:
+            return text.padLeft(width);
+          case PosAlign.left:
+            return text.padRight(width);
+        }
+      }
+
+      final leftPart = alignInColumn(leftText, leftChars, leftAlign);
+      final centerPart = alignInColumn(centerText, centerChars, centerAlign);
+      final rightPart = alignInColumn(rightText, rightChars, rightAlign);
+
+      final finalText = leftPart + centerPart + rightPart;
+      final isBold = leftBold ?? centerBold ?? rightBold ?? false;
+
+      // Use library generator for better font handling
+      return generator.text(finalText, styles: PosStyles(bold: isBold));
+    }
+
+    // For thermal printers, use original logic
     // Truncate text jika melebihi maksimal karakter
     String truncatedLeft = leftText.length > maxLeftChars
         ? leftText.substring(0, maxLeftChars)
