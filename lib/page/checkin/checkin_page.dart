@@ -167,6 +167,7 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   void _submitCheckIn() {
+    
     if (_formKey.currentState!.validate()) {
       if (_isMember && _qrCode.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(

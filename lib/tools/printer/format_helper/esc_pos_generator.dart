@@ -209,7 +209,7 @@ static List<int> combineZ(CommandHelper helper){
   bytes += helper.feed(1);
 
   // Double width
-  bytes += helper.text("Double Width", width: PosTextSize.size2, align: PosAlign.center);
+  bytes += helper.text("Double Width", width: PosTextSize.size2);
   bytes += helper.feed(1);
 
   // Double height

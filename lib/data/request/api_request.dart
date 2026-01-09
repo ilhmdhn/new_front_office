@@ -152,8 +152,6 @@ class ApiRequest{
       return BaseResponse.fromJson(convertedResult);
     }catch(err, stackTrace){
       showToastError('Gagal checkin $err');
-      debugPrint('DEBUGGING Error apa ini $err');
-      debugPrint('DEBUGGING line error $stackTrace');
       return BaseResponse(
         isLoading: false,
         state: false,
