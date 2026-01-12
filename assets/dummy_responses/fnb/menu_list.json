@@ -26,7 +26,7 @@
 },
 {
 "inventory_code": "BBHP-BH-022-03",
-"name": "ANGGUR HIJAU",
+"name": "FREE NASI PUTIH",
 "price": 0,
 "location": 3,
 "inventory_global_id": "BBHP-BH-022-03"
@@ -61,14 +61,14 @@
 },
 {
 "inventory_code": "MNKM-WR-065",
-"name": "BAILEYS",
+"name": "ES JERUK PITCHER",
 "price": 1588000,
 "location": 3,
 "inventory_global_id": "MNKM-WR-065"
 },
 {
 "inventory_code": "MNKM-WR-065-13",
-"name": "BAILEYS 1L",
+"name": "ES JERUK PITCHERS (13 GLASS)",
 "price": 1677000,
 "location": 3,
 "inventory_global_id": "MNKM-WR-065-13"

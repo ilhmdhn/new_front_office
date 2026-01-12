@@ -2,6 +2,7 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
@@ -71,6 +72,12 @@ class PrintExecutor {
 
   static Future<void> printSlip(String rcp)async{
     try {
+
+      final slipCheckinState = GlobalProviders.read(printSlipCheckinProvider);
+      if(slipCheckinState == false){
+        return;
+      }
+
       final apiResponse = await ApiRequest().checkinSlip(rcp);
       if(!apiResponse.state){
         showToastError(apiResponse.message);
@@ -91,6 +98,10 @@ class PrintExecutor {
 
   static Future<void> printSo(String sol, String roomCode, String guestName, int pax) async {
     try {
+      final printSoState = GlobalProviders.read(printSlipOrderProvider);
+      if(printSoState == false){
+        return;
+      }
       final apiResponse = await ApiRequest().getSol(sol);
       
       if(!apiResponse.state){
@@ -112,7 +123,10 @@ class PrintExecutor {
 
   static Future<void> printDo(OrderedModel order, String roomCode) async {
     try {
-      
+      final printDoState = GlobalProviders.read(printSlipDeliveryOrderProvider);
+      if(printDoState == false){
+        return;
+      }
       final helper = await _getPrinter();
       final posContent = EscPosGenerator().printDo(order, roomCode, helper);
       await _execute(posContent);
@@ -121,7 +135,6 @@ class PrintExecutor {
       return;
     }
   }
-
 
   static Future<void> printLastSo(String rcp, String roomCode, String guestName, int pax)async{
     try {
