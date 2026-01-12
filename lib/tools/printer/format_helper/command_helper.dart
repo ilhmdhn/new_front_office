@@ -320,7 +320,7 @@ class CommandHelper {
         }
         bytes += leftPart.codeUnits;
         if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         // Print center column
@@ -332,7 +332,7 @@ class CommandHelper {
         }
         bytes += centerPart.codeUnits;
         if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         // Print right column
@@ -344,10 +344,14 @@ class CommandHelper {
         }
         bytes += rightPart.codeUnits;
         if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         bytes += [0x0A]; // Line feed
+
+        // Full reset printer at the end
+        bytes += [0x1B, 0x40]; // ESC @ - Reset printer
+
         return bytes;
       }
 
@@ -477,7 +481,7 @@ class CommandHelper {
         }
         bytes += leftPart.codeUnits;
         if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         // Print center column
@@ -489,7 +493,7 @@ class CommandHelper {
         }
         bytes += centerPart.codeUnits;
         if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         // Print right column
@@ -501,10 +505,14 @@ class CommandHelper {
         }
         bytes += rightPart.codeUnits;
         if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
-          bytes += [0x1B, 0x40]; // Reset
+          bytes += [0x1B, 0x21, 0x00]; // Reset font only
         }
 
         bytes += [0x0A]; // Line feed
+
+        // Full reset printer at the end
+        bytes += [0x1B, 0x40]; // ESC @ - Reset printer
+
         return bytes;
       }
 
