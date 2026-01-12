@@ -9,6 +9,7 @@ import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
@@ -119,7 +120,9 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                                   setState(() {
                                     isLoading = false;
                                   });
+                                  // String roomCode, String guestName, int pax
                                 }else{
+                                  PrintExecutor.printDo(order, widget.roomCode);
                                   getData();
                                 }
                               },

@@ -1,4 +1,5 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -107,6 +108,19 @@ class PrintExecutor {
       return;
     }
   }
+
+  static Future<void> printDo(OrderedModel order, String roomCode) async {
+    try {
+      
+      final helper = await _getPrinter();
+      final posContent = EscPosGenerator().printDo(order, roomCode, helper);
+      await _execute(posContent);
+    }catch (e) {
+      showToastError('Gagal cetak so: $e');
+      return;
+    }
+  }
+
 
   static Future<void> printLastSo(String rcp, String roomCode, String guestName, int pax)async{
     try {

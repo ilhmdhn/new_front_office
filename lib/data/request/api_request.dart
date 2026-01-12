@@ -847,7 +847,6 @@ class ApiRequest{
 
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
-
     }catch(e){
       return BaseResponse(
         isLoading: false,

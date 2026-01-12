@@ -5,6 +5,7 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
+import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -383,23 +384,23 @@ class EscPosGenerator {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('HH:mm').format(now);
 
-    bytes += helper.textCenter(data.outlet.namaOutlet);
-    bytes += helper.textCenter(data.outlet.alamatOutlet);
-    bytes += helper.textCenter(data.outlet.kota);
-    bytes += helper.textCenter(data.outlet.telepon);
-    bytes += helper.feed(1);
-    bytes += helper.textCenter(data.outlet.telepon, bold: true);
+    // bytes += helper.textCenter(data.outlet.namaOutlet);
+    // bytes += helper.textCenter(data.outlet.alamatOutlet);
+    // bytes += helper.textCenter(data.outlet.kota);
+    // bytes += helper.textCenter(data.outlet.telepon);
+    // bytes += helper.feed(1);
+    // bytes += helper.textCenter(data.outlet.telepon, bold: true);
+    // bytes += helper.feed(1);
+    bytes += helper.textCenter('SLIP ORDER', bold: true);
     bytes += helper.feed(1);
 
     bytes += helper.tableWithMaxChars('Ruangan  : ', roomCode, '',
-      centerTextWidth: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
-      centerTextHeight: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1,
+      centerTextWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
     bytes += helper.tableWithMaxChars('Jam      : ',  formattedDate,'',
-      centerTextWidth: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
-      centerTextHeight: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1,
+      centerTextWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
@@ -431,6 +432,68 @@ class EscPosGenerator {
     bytes += helper.cut();
     return bytes;
   }
+
+  List<int> printDo(OrderedModel order, String roomCode, CommandHelper helper){
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+
+    final user = GlobalProviders.read(userProvider).userId;
+    final printer = GlobalProviders.read(printerProvider);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('HH:mm').format(now);
+
+    // bytes += helper.textCenter(data.outlet.namaOutlet);
+    // bytes += helper.textCenter(data.outlet.alamatOutlet);
+    // bytes += helper.textCenter(data.outlet.kota);
+    // bytes += helper.textCenter(data.outlet.telepon);
+    // bytes += helper.feed(1);
+    // bytes += helper.textCenter(data.outlet.telepon, bold: true);
+    // bytes += helper.feed(1);
+    bytes += helper.textCenter('DELIVERY ORDER', bold: true);
+    bytes += helper.feed(1);
+
+    bytes += helper.tableWithMaxChars('Ruangan  : ', roomCode, '',
+      centerTextWidth: PosTextSize.size2,
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13
+    );
+    bytes += helper.tableWithMaxChars('Jam      : ',  formattedDate,'',
+      centerTextWidth: PosTextSize.size2,
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13
+    );
+    bytes += helper.tableWithMaxChars('No Bukti : ', roomCode, '',
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13);
+    bytes += helper.divider();
+
+    // for (var order in data.solList) {
+    //   bytes += helper.text('${order.qty} ${order.name}',
+    //     width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
+    //     height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1
+    //   );
+    //   if(isNotNullOrEmpty(order.note)){
+    //     bytes += helper.text('  ${order.note}'??'');
+    //     bytes += helper.feed(1);
+    //   }
+    // }
+
+    bytes += helper.text('${order.qty} ${order.name}',
+        width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
+        height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1
+    );
+    if(isNotNullOrEmpty(order.notes)){
+      bytes += helper.text('  ${order.notes}');
+      bytes += helper.feed(1);
+    }
+
+    bytes += helper.divider();
+    bytes += helper.text('Dibuat Oleh: $user', align: PosAlign.right);
+    bytes += helper.feed(1);
+    bytes += helper.cut();
+    return bytes;
+  }
+
 
   List<int> _printFnB(List<OrderFinalModel> orderFix, helper) {
     List<int> bytes = [];

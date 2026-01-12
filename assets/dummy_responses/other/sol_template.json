@@ -1,15 +1,34 @@
 {
   "state": true,
-  "message": "Success",
-  "data": [
+  "message": "succes",
+  "data": {
+    "outlet": {
+      "nama_outlet": "BLACKHOLE",
+      "alamat_outlet": "ONE BELPARK MALL",
+      "telepon": "021",
+      "kota": "Jakarta"
+    },
+  "sod": [
     {
-      "sol": "{SOL}",
-      "inv_code": "FNB001",
-      "inv_name": "Nasi Goreng",
-      "qty": 2,
-      "price": 25000,
-      "total": 50000,
-      "notes": "Pedas"
+      "name": "ADDITIONAL TELUR",
+      "qty": 1,
+      "note": "TELOR MENTah"
+    },
+    {
+      "name": "AMERICANO PANAS",
+      "qty": 1,
+      "note": ""
+    },
+    {
+      "name": "CHEESE STICK",
+      "qty": 1,
+      "note": ""
+    },
+    {
+      "name": "CHICKEN SATAY",
+      "qty": 1,
+      "note": "CS"
     }
   ]
+}
 }
