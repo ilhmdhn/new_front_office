@@ -115,6 +115,40 @@ class CommandHelper {
       );
     }
 
+    // For thermal printers, use generator.row() for center/right alignment
+    // because generator.text() with PosStyles(align: ...) doesn't work reliably
+    if (align == PosAlign.center) {
+      return generator.row([
+        PosColumn(text: '', width: 3, styles: PosStyles()),
+        PosColumn(
+          text: value,
+          width: 6,
+          styles: PosStyles(
+            align: PosAlign.center,
+            bold: bold,
+            width: width,
+            height: height,
+          ),
+        ),
+        PosColumn(text: '', width: 3, styles: PosStyles()),
+      ]);
+    } else if (align == PosAlign.right) {
+      return generator.row([
+        PosColumn(text: '', width: 6, styles: PosStyles()),
+        PosColumn(
+          text: value,
+          width: 6,
+          styles: PosStyles(
+            align: PosAlign.right,
+            bold: bold,
+            width: width,
+            height: height,
+          ),
+        ),
+      ]);
+    }
+
+    // For left align, use generator.text()
     return generator.text(
       value,
       styles: PosStyles(
