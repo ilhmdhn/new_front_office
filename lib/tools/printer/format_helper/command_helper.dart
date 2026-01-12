@@ -402,13 +402,24 @@ class CommandHelper {
     PosTextSize? centerTextHeight,
     PosTextSize? rightTextHeight,
   }) {
-    // For TMU-220, format manually based on maxChars
+    // For TMU-220, format manually based on maxChars and handle size variations
     if (printerModel == PrinterModelType.tmu220u) {
+      // Check if any column has double width/height
+      final hasDoubleSize =
+        (leftTextWidth == PosTextSize.size2 || leftTextHeight == PosTextSize.size2) ||
+        (centerTextWidth == PosTextSize.size2 || centerTextHeight == PosTextSize.size2) ||
+        (rightTextWidth == PosTextSize.size2 || rightTextHeight == PosTextSize.size2);
+
       // Calculate actual char allocation based on maxChars and available width (40)
       int totalMaxChars = maxLeftChars + maxCenterChars + maxRightChars;
       int leftChars = (maxCharsPerLine * maxLeftChars / totalMaxChars).floor();
       int centerChars = (maxCharsPerLine * maxCenterChars / totalMaxChars).floor();
       int rightChars = maxCharsPerLine - leftChars - centerChars;
+
+      // Adjust for double width columns
+      if (leftTextWidth == PosTextSize.size2) leftChars = leftChars ~/ 2;
+      if (centerTextWidth == PosTextSize.size2) centerChars = centerChars ~/ 2;
+      if (rightTextWidth == PosTextSize.size2) rightChars = rightChars ~/ 2;
 
       // Helper to align text within column
       String alignInColumn(String text, int width, PosAlign align) {
@@ -432,9 +443,30 @@ class CommandHelper {
       final rightPart = alignInColumn(rightText, rightChars, rightAlign);
 
       final finalText = leftPart + centerPart + rightPart;
-      final isBold = leftBold ?? centerBold ?? rightBold ?? false;
 
-      // Use library generator for better font handling
+      // If has double size, use custom ESC ! commands
+      if (hasDoubleSize) {
+        List<int> bytes = [];
+
+        // Calculate font flag (use center column's size as primary)
+        final width = centerTextWidth ?? PosTextSize.size1;
+        final height = centerTextHeight ?? PosTextSize.size1;
+        final bold = leftBold ?? centerBold ?? rightBold ?? false;
+
+        final fontFlag = _getTmu220FontFlag(bold, width, height);
+        bytes += [0x1B, 0x21, fontFlag];
+
+        bytes += finalText.codeUnits;
+        bytes += [0x0A];
+
+        // Reset printer after double size
+        bytes += [0x1B, 0x40];
+
+        return bytes;
+      }
+
+      // For normal size, use library generator
+      final isBold = leftBold ?? centerBold ?? rightBold ?? false;
       return generator.text(finalText, styles: PosStyles(bold: isBold));
     }
 
