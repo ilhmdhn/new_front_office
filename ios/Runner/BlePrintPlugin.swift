@@ -218,8 +218,24 @@ class BlePrintPlugin: NSObject, FlutterPlugin, CBCentralManagerDelegate, CBPerip
             return
         }
 
-        guard centralManager.state == .poweredOn else {
-            result(FlutterError(code: "BLUETOOTH_OFF", message: "Bluetooth is not powered on", details: nil))
+        // Check Bluetooth state
+        switch centralManager.state {
+        case .poweredOn:
+            break // Continue with scan
+        case .poweredOff:
+            result(FlutterError(code: "BLUETOOTH_OFF", message: "Bluetooth is turned off. Please enable Bluetooth in Settings.", details: nil))
+            return
+        case .unauthorized:
+            result(FlutterError(code: "PERMISSION_DENIED", message: "Bluetooth permission denied. Please enable Bluetooth permission in Settings > Happy Puppy POS.", details: nil))
+            return
+        case .unsupported:
+            result(FlutterError(code: "BLE_NOT_AVAILABLE", message: "Bluetooth Low Energy is not supported on this device.", details: nil))
+            return
+        case .unknown, .resetting:
+            result(FlutterError(code: "BLUETOOTH_UNAVAILABLE", message: "Bluetooth is currently unavailable. Please try again.", details: nil))
+            return
+        @unknown default:
+            result(FlutterError(code: "BLUETOOTH_ERROR", message: "Unknown Bluetooth state.", details: nil))
             return
         }
 

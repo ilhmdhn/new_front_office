@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,47 +41,58 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
   }
 
   /// Request Bluetooth permissions untuk BLE scan (Android 12+)
+  /// iOS: Bluetooth permission handled automatically by CoreBluetooth
   Future<bool> _requestBluetoothPermissions() async {
-    // Request Bluetooth Scan & Connect permissions
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-    ].request();
+    // iOS: CoreBluetooth handles permissions automatically
+    // Just check if Bluetooth is enabled
+    if (Platform.isIOS) {
+      return true; // Let CoreBluetooth handle permission prompts
+    }
 
-    final scanGranted = statuses[Permission.bluetoothScan]?.isGranted ?? false;
-    final connectGranted = statuses[Permission.bluetoothConnect]?.isGranted ?? false;
+    // Android 12+: Request explicit permissions
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.bluetoothScan,
+        Permission.bluetoothConnect,
+      ].request();
 
-    if (!scanGranted || !connectGranted) {
-      // Check if permanently denied
-      if (statuses[Permission.bluetoothScan]?.isPermanentlyDenied ?? false) {
-        // Show dialog to open settings
-        if (!mounted) return false;
-        final shouldOpen = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Permission Required'),
-            content: const Text(
-              'Bluetooth permission is required to scan for BLE devices.\n\n'
-              'Please enable Bluetooth permission in Settings.',
+      final scanGranted = statuses[Permission.bluetoothScan]?.isGranted ?? false;
+      final connectGranted = statuses[Permission.bluetoothConnect]?.isGranted ?? false;
+
+      if (!scanGranted || !connectGranted) {
+        // Check if permanently denied
+        if (statuses[Permission.bluetoothScan]?.isPermanentlyDenied ?? false) {
+          // Show dialog to open settings
+          if (!mounted) return false;
+          final shouldOpen = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Permission Required'),
+              content: const Text(
+                'Bluetooth permission is required to scan for BLE devices.\n\n'
+                'Please enable Bluetooth permission in Settings.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Open Settings'),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Open Settings'),
-              ),
-            ],
-          ),
-        );
+          );
 
-        if (shouldOpen == true) {
-          await openAppSettings();
+          if (shouldOpen == true) {
+            await openAppSettings();
+          }
         }
+        return false;
       }
-      return false;
+
+      return true;
     }
 
     return true;
@@ -415,9 +427,20 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
 
                         // Handle specific error codes
                         if (e.code == 'PERMISSION_DENIED') {
-                          showToastError('Permission Bluetooth ditolak.\nBuka Settings > Apps > Happy Puppy POS > Permissions\ndan aktifkan "Nearby devices"');
+                          // Different messages for iOS and Android
+                          if (Platform.isIOS) {
+                            showToastError('Permission Bluetooth ditolak.\nBuka Settings > Happy Puppy POS > Bluetooth\ndan aktifkan permission Bluetooth');
+                          } else {
+                            showToastError('Permission Bluetooth ditolak.\nBuka Settings > Apps > Happy Puppy POS > Permissions\ndan aktifkan "Nearby devices"');
+                          }
                         } else if (e.code == 'BLUETOOTH_OFF') {
-                          showToastWarning('Bluetooth tidak aktif atau tidak tersedia');
+                          if (Platform.isIOS) {
+                            showToastWarning('Bluetooth tidak aktif.\nBuka Settings > Bluetooth untuk mengaktifkan');
+                          } else {
+                            showToastWarning('Bluetooth tidak aktif atau tidak tersedia');
+                          }
+                        } else if (e.code == 'BLUETOOTH_UNAVAILABLE') {
+                          showToastWarning('Bluetooth sedang tidak tersedia. Coba lagi sebentar');
                         } else if (e.code == 'BLE_NOT_AVAILABLE') {
                           showToastError('BLE tidak tersedia di perangkat ini');
                         } else {
