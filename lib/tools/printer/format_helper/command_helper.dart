@@ -348,6 +348,10 @@ class CommandHelper {
         }
 
         bytes += [0x0A]; // Line feed
+
+        // Full reset printer at the end
+        bytes += [0x1B, 0x40]; // ESC @ - Reset printer
+
         return bytes;
       }
 
@@ -505,6 +509,10 @@ class CommandHelper {
         }
 
         bytes += [0x0A]; // Line feed
+
+        // Full reset printer at the end
+        bytes += [0x1B, 0x40]; // ESC @ - Reset printer
+
         return bytes;
       }
 
