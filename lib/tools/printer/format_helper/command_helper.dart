@@ -307,31 +307,53 @@ class CommandHelper {
       final centerPart = alignInColumn(centerText, centerChars, centerAlign);
       final rightPart = alignInColumn(rightText, rightChars, rightAlign);
 
-      final finalText = leftPart + centerPart + rightPart;
-
-      // If has double size, use custom ESC ! commands
+      // If has double size, print each column separately with its own size
       if (hasDoubleSize) {
         List<int> bytes = [];
 
-        // Calculate font flag (use center column's size as primary)
-        final width = centerTextWidth ?? PosTextSize.size1;
-        final height = centerTextHeight ?? PosTextSize.size1;
-        final bold = leftBold ?? centerBold ?? rightBold ?? false;
+        // Print left column
+        final leftWidth = leftTextWidth ?? PosTextSize.size1;
+        final leftHeight = leftTextHeight ?? PosTextSize.size1;
+        if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(leftBold ?? false, leftWidth, leftHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += leftPart.codeUnits;
+        if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        final fontFlag = _getTmu220FontFlag(bold, width, height);
-        bytes += [0x1B, 0x21, fontFlag];
+        // Print center column
+        final centerWidth = centerTextWidth ?? PosTextSize.size1;
+        final centerHeight = centerTextHeight ?? PosTextSize.size1;
+        if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(centerBold ?? false, centerWidth, centerHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += centerPart.codeUnits;
+        if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        bytes += finalText.codeUnits;
-        bytes += [0x0A];
+        // Print right column
+        final rightWidth = rightTextWidth ?? PosTextSize.size1;
+        final rightHeight = rightTextHeight ?? PosTextSize.size1;
+        if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(rightBold ?? false, rightWidth, rightHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += rightPart.codeUnits;
+        if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        // Reset printer after double size
-        bytes += [0x1B, 0x40];
-
+        bytes += [0x0A]; // Line feed
         return bytes;
       }
 
       // For normal size, use library generator
       final isBold = leftBold ?? centerBold ?? rightBold ?? false;
+      final finalText = leftPart + centerPart + rightPart;
       return generator.text(finalText, styles: PosStyles(bold: isBold));
     }
 
@@ -442,31 +464,53 @@ class CommandHelper {
       final centerPart = alignInColumn(centerText, centerChars, centerAlign);
       final rightPart = alignInColumn(rightText, rightChars, rightAlign);
 
-      final finalText = leftPart + centerPart + rightPart;
-
-      // If has double size, use custom ESC ! commands
+      // If has double size, print each column separately with its own size
       if (hasDoubleSize) {
         List<int> bytes = [];
 
-        // Calculate font flag (use center column's size as primary)
-        final width = centerTextWidth ?? PosTextSize.size1;
-        final height = centerTextHeight ?? PosTextSize.size1;
-        final bold = leftBold ?? centerBold ?? rightBold ?? false;
+        // Print left column
+        final leftWidth = leftTextWidth ?? PosTextSize.size1;
+        final leftHeight = leftTextHeight ?? PosTextSize.size1;
+        if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(leftBold ?? false, leftWidth, leftHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += leftPart.codeUnits;
+        if (leftWidth == PosTextSize.size2 || leftHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        final fontFlag = _getTmu220FontFlag(bold, width, height);
-        bytes += [0x1B, 0x21, fontFlag];
+        // Print center column
+        final centerWidth = centerTextWidth ?? PosTextSize.size1;
+        final centerHeight = centerTextHeight ?? PosTextSize.size1;
+        if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(centerBold ?? false, centerWidth, centerHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += centerPart.codeUnits;
+        if (centerWidth == PosTextSize.size2 || centerHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        bytes += finalText.codeUnits;
-        bytes += [0x0A];
+        // Print right column
+        final rightWidth = rightTextWidth ?? PosTextSize.size1;
+        final rightHeight = rightTextHeight ?? PosTextSize.size1;
+        if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
+          final fontFlag = _getTmu220FontFlag(rightBold ?? false, rightWidth, rightHeight);
+          bytes += [0x1B, 0x21, fontFlag];
+        }
+        bytes += rightPart.codeUnits;
+        if (rightWidth == PosTextSize.size2 || rightHeight == PosTextSize.size2) {
+          bytes += [0x1B, 0x40]; // Reset
+        }
 
-        // Reset printer after double size
-        bytes += [0x1B, 0x40];
-
+        bytes += [0x0A]; // Line feed
         return bytes;
       }
 
       // For normal size, use library generator
       final isBold = leftBold ?? centerBold ?? rightBold ?? false;
+      final finalText = leftPart + centerPart + rightPart;
       return generator.text(finalText, styles: PosStyles(bold: isBold));
     }
 
