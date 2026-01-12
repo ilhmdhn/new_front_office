@@ -930,7 +930,8 @@ class ApiRequest{
 
       final convertedResult = json.decode(apiResponse.body);
       return StringResponse.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('ERROR latestSo: $e\n$stackTrace');
       return StringResponse(state: false, message: e.toString(), data: '');
     }
   }

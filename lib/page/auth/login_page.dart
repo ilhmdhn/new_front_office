@@ -122,10 +122,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 )
               : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  // Logo/Title Section
-                  
+                children: [            
+                  Text(
+                    'Poin Of Sales',
+                    style: GoogleFonts.pridi(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w500,
+                      color: CustomColorStyle.appBarBackground(),
+                    ),
+                  ),      
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 32),
                     child: Column(
@@ -143,10 +148,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               ),
                             ],
                           ),
-                          child: Icon(
-                            Icons.business,
-                            size: 48,
-                            color: CustomColorStyle.appBarBackground(),
+                          child: SizedBox(
+                            width: 112,
+                            child: Image.asset(
+                              'assets/icon/app_icon.png',
+                            ),
                           ),
                         ),
                         ],
@@ -428,7 +434,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
               
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
               
                   // Configuration Link
                   Container(
@@ -474,9 +480,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       ),
                     ),
-                  ),
-              
-                  const SizedBox(height: 20),
+                  ),              
                 ],
               ),
         ),

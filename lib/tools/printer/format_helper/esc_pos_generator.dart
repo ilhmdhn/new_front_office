@@ -421,7 +421,7 @@ class EscPosGenerator {
         height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1
       );
       if(isNotNullOrEmpty(order.note)){
-        bytes += helper.text('  ${order.note}'??'');
+        bytes += helper.text('  ${order.note}');
         bytes += helper.feed(1);
       }
     }
@@ -462,7 +462,7 @@ class EscPosGenerator {
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
-    bytes += helper.tableWithMaxChars('No Bukti : ', roomCode, '',
+    bytes += helper.tableWithMaxChars('No Bukti : ', order.sol??'', '',
       centerAlign: PosAlign.left,
       maxLeftChars: 13);
     bytes += helper.divider();

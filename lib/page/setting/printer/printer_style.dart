@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/app_settings_provider.dart';
+import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 
 class PrinterStylePage extends ConsumerWidget {
   static const nameRoute = '/printer-style';
@@ -90,6 +91,81 @@ class PrinterStylePage extends ConsumerWidget {
                       value: ref.watch(showPromoBelowItemProvider),
                       onChanged: (value) {
                         ref.read(showPromoBelowItemProvider.notifier).setShowPromoBelowItem(value);
+                      },
+                    ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Cetak Slip Checkin',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: ref.watch(printSlipCheckinProvider),
+                      onChanged: (value) {
+                        ref.read(printSlipCheckinProvider.notifier).setPrintSlipCheckin(value);
+                      },
+                    ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Cetak Slip Order',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: ref.watch(printSlipOrderProvider),
+                      onChanged: (value) {
+                        ref.read(printSlipOrderProvider.notifier).setPrintSlipOrder(value);
+                      },
+                    ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Cetak Delivery Order',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: ref.watch(printSlipDeliveryOrderProvider),
+                      onChanged: (value) {
+                        ref.read(printSlipDeliveryOrderProvider.notifier).setPrintSlipDeliveryOrder(value);
                       },
                     ),
                 ),

@@ -254,6 +254,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildLanPrinterCard() {
     return Card(
       elevation: 3,

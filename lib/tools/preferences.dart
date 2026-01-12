@@ -149,4 +149,28 @@ class PreferencesData {
   static bool getShowPromoBelowItem() {
     return _prefs?.getBool('SHOW_PROMO_BELOW_ITEM') ?? false;
   }
+
+  static void setPrintSlipCheckin(bool state) {
+    _prefs?.setBool('PRINT_SLIP_CHECKIN', state);
+  }
+
+  static bool getPrintSlipCheckin() {
+    return _prefs?.getBool('PRINT_SLIP_CHECKIN') ?? true;
+  }
+
+  static void setPrintSlipOrder(bool state) {
+    _prefs?.setBool('PRINT_SLIP_ORDER', state);
+  }
+
+  static bool getPrintSlipOrder() {
+    return _prefs?.getBool('PRINT_SLIP_ORDER') ?? true;
+  }
+
+  static void setPrintSlipDeliveryOrder(bool state) {
+    _prefs?.setBool('PRINT_SLIP_DELIVERY_ORDER', state);
+  }
+
+  static bool getPrintSlipDeliveryOrder() {
+    return _prefs?.getBool('PRINT_SLIP_DELIVERY_ORDER') ?? true;
+  }
 }

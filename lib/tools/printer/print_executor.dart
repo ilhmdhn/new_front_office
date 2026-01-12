@@ -3,6 +3,7 @@ import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/riverpod/providers.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/esc_pos_generator.dart';
 import 'package:front_office_2/tools/printer/sender/ble_print_service.dart';
@@ -124,9 +125,18 @@ class PrintExecutor {
 
   static Future<void> printLastSo(String rcp, String roomCode, String guestName, int pax)async{
     try {
-      final apiResponse = await ApiRequest().latestSo(rcp);
-      
-      if(apiResponse.state == null || (!apiResponse.state!)){
+      final apiResponseSo = await ApiRequest().latestSo(rcp);
+      if(apiResponseSo.state != true){
+        showToastError('Gagal mendapatkan so STATUS FALSE\n${apiResponseSo.message}');
+        return;
+      }
+
+      if(isNullOrEmpty(apiResponseSo.data)){
+        showToastError('Gagal mendapatkan so terakhir\n${apiResponseSo.message}');
+        return;
+      }
+      final apiResponse = await ApiRequest().getSol(apiResponseSo.data??'');
+      if((!apiResponse.state)){
         showToastError(apiResponse.message??'Gagal mendapatkan data so terakhir');
         return;
       } else if(apiResponse.data == null){
@@ -135,8 +145,9 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      // final posContent = EscPosGenerator().printSo(apiResponse.data!, helper, roomCode, guestName, pax);
-      // await _execute(posContent);
+
+      final posContent = EscPosGenerator().printSo(apiResponse.data!, roomCode, guestName, pax, helper);
+      await _execute(posContent);
     }catch (e) {
       showToastError('Gagal cetak so terakhir: $e');
       return;
