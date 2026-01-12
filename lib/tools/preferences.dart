@@ -21,8 +21,8 @@ class PreferencesData {
   }
 
   static String getUrl() {
-    final url = _prefs?.getString('SERVER_URL') ?? '192.168.1.136';
-    final port = _prefs?.getString('SERVER_PORT') ?? '3000';
+    final url = _prefs?.getString('SERVER_URL') ?? '';
+    final port = _prefs?.getString('SERVER_PORT') ?? '';
     return 'http://$url:$port';
   }
 

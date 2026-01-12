@@ -98,10 +98,10 @@ class PrintExecutor {
         showToastError('data so null\n${apiResponse.message}');
         return;
       }
-
+      
       final helper = await _getPrinter();
-      // final posContent = EscPosGenerator().printSo(apiResponse.data!, helper, roomCode, guestName, pax);
-      // await _execute(posContent);
+      final posContent = EscPosGenerator().printSo(apiResponse.data!, roomCode, guestName, pax, helper);
+      await _execute(posContent);
     }catch (e) {
       showToastError('Gagal cetak so: $e');
       return;

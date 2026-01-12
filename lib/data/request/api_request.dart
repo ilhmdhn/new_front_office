@@ -48,6 +48,12 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getLoginResponse();
         return data;
       }
+      if(serverUrl == 'http://:'){
+        return LoginResponse(
+          state: false,
+          message: 'Silakan atur konfigurasi server terlebih dahulu.'
+        );
+      }
       final url = Uri.parse('$serverUrl/user/login-fo-droid');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
         'user_id': userId,
@@ -904,8 +910,9 @@ class ApiRequest{
 
       final convertedResult = json.decode(apiResponse.body);
       return SolResponse.fromJson(convertedResult);
-    }catch(e){
-      return SolResponse(state: false, message: e.toString(), data: List.empty());
+    }catch(e, stackTrace){
+      debugPrint('ERROR getSol: $e\n$stackTrace');
+      return SolResponse(state: false, message: e.toString(), data: null);
     }
   }
 
