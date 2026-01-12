@@ -20,7 +20,7 @@ class EscPosGenerator {
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
-    bytes += helper.text("TMU-220 FONT TEST", bold: true, align: PosAlign.center);
+    bytes += helper.text("PRINT TEST", bold: true, align: PosAlign.center);
     bytes += helper.divider();
     bytes += helper.text("Normal Text", align: PosAlign.left);
     bytes += helper.text("Bold Text Center", bold: true, align: PosAlign.center);
@@ -391,22 +391,27 @@ class EscPosGenerator {
     bytes += helper.textCenter(data.outlet.telepon, bold: true);
     bytes += helper.feed(1);
 
-    bytes += helper.table('Ruangan  : ', roomCode, '',
+    bytes += helper.tableWithMaxChars('Ruangan  : ', roomCode, '',
       centerTextWidth: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
       centerTextHeight: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1,
-      centerAlign: PosAlign.left
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13
     );
-    bytes += helper.table('Jam      : ',  formattedDate,'',
+    bytes += helper.tableWithMaxChars('Jam      : ',  formattedDate,'',
       centerTextWidth: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2,
       centerTextHeight: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1,
-      centerAlign: PosAlign.left
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13
     );
-    bytes += helper.table('Nama     : ', guestName, '',
-      centerAlign: PosAlign.left);
-    bytes += helper.table('Pax      : ', pax.toString(), '',
-      centerAlign: PosAlign.left);
-    bytes += helper.table('No Bukti : ', roomCode, '',
-      centerAlign: PosAlign.left);
+    bytes += helper.tableWithMaxChars('Nama     : ', guestName, '',
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13);
+    bytes += helper.tableWithMaxChars('Pax      : ', pax.toString(), '',
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13);
+    bytes += helper.tableWithMaxChars('No Bukti : ', roomCode, '',
+      centerAlign: PosAlign.left,
+      maxLeftChars: 13);
     bytes += helper.divider();
 
     for (var order in data.solList) {
@@ -421,7 +426,7 @@ class EscPosGenerator {
     }
 
     bytes += helper.divider();
-    bytes += helper.text('Dibuat Oleh: $user', align: PosAlign.left);
+    bytes += helper.text('Dibuat Oleh: $user', align: PosAlign.right);
     bytes += helper.feed(1);
     bytes += helper.cut();
     return bytes;
