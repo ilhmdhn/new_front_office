@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
 // Provider untuk User Data
@@ -23,10 +24,24 @@ class UserNotifier extends StateNotifier<UserDataModel> {
   Future<void> setUser(UserDataModel userData) async {
     await PreferencesData.setUser(userData);
     state = userData;
+
+    // Invalidate userTokenProvider agar di-refresh dengan nilai baru
+    try {
+      GlobalProviders.invalidate(userTokenProvider);
+    } catch (e) {
+      // Jika dipanggil dari widget context, tidak perlu invalidate manual
+    }
   }
 
   void refresh() {
     _loadUser();
+
+    // Invalidate userTokenProvider agar di-refresh dengan nilai baru
+    try {
+      GlobalProviders.invalidate(userTokenProvider);
+    } catch (e) {
+      // Jika dipanggil dari widget context, tidak perlu invalidate manual
+    }
   }
 
   String getToken() {

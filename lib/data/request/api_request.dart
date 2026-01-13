@@ -54,6 +54,7 @@ class ApiRequest{
           message: 'Silakan atur konfigurasi server terlebih dahulu.'
         );
       }
+      debugPrint('DEBUGGING loginFO to server: $serverUrl $serverUrl');
       final url = Uri.parse('$serverUrl/user/login-fo-droid');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
         'user_id': userId,

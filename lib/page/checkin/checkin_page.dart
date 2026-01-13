@@ -1,36 +1,34 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/model/checkin_body.dart';
+import 'package:front_office_2/data/model/room_list_model.dart';
+import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
+import 'package:front_office_2/riverpod/providers.dart';
+import 'package:front_office_2/riverpod/room/room_provider.dart';
 
-class CheckinPage extends StatefulWidget {
-  const CheckinPage({super.key});
+class CheckinPage extends ConsumerStatefulWidget {
   static const nameRoute = '/checkin-page';
+  const CheckinPage({super.key});
 
   @override
-  State<CheckinPage> createState() => _CheckinPageState();
+  ConsumerState<CheckinPage> createState() => _CheckinPageState();
 }
 
-class _CheckinPageState extends State<CheckinPage> {
+class _CheckinPageState extends ConsumerState<CheckinPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _durationController = TextEditingController(text: '1');
   final _paxController = TextEditingController(text: '1');
 
   bool _isMember = true;
-  String? _selectedRoomType;
-  String? _selectedRoom;
   bool _noDuration = false;
   String _qrCode = '';
   String _memberName = '';
   String _memberGrade = '';
-
-  final List<String> _roomTypes = ['Regular', 'VIP', 'Lobby', 'Meeting Room'];
-  final List<String> _memberGrades = ['Blue', 'Silver', 'Gold', 'Black', 'Platinum'];
-
-  final Map<String, List<String>> _roomsByType = {
-    'Regular': ['R101', 'R102', 'R103', 'R104', 'R105'],
-    'VIP': ['V201', 'V202', 'V203', 'V204'],
-    'Lobby': ['Lobby A', 'Lobby B', 'Lobby C'],
-    'Meeting Room': ['M301', 'M302', 'M303', 'M304', 'M305', 'M306'],
-  };
+  num? _memberPoint;
+  String? _memberPhoto;
 
   @override
   void dispose() {
@@ -93,81 +91,126 @@ class _CheckinPageState extends State<CheckinPage> {
     }
   }
 
-  void _scanQRCode() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.qr_code_scanner, color: Colors.blue.shade700),
-            const SizedBox(width: 8),
-            const Text('Scan QR Code'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 200,
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.shade300, width: 2),
-              ),
-              child: Icon(
-                Icons.qr_code_scanner,
-                size: 100,
-                color: Colors.blue.shade300,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Simulate QR scanner here',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final randomNames = [
-                'John Doe',
-                'Jane Smith',
-                'Michael Johnson',
-                'Sarah Williams',
-                'David Brown'
-              ];
-              final randomGrade = _memberGrades[
-                  DateTime.now().millisecondsSinceEpoch % _memberGrades.length];
-              final randomName = randomNames[
-                  DateTime.now().millisecondsSinceEpoch % randomNames.length];
+  void _scanQRCode() async {
+    final scannedCode = await showMemberQRScannerDialog(context);
 
-              setState(() {
-                _qrCode = 'MBR${DateTime.now().millisecondsSinceEpoch % 100000}';
-                _memberName = randomName;
-                _memberGrade = randomGrade;
-              });
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade700,
-              foregroundColor: Colors.white,
+    if (scannedCode != null && scannedCode.isNotEmpty && mounted) {
+      debugPrint('🎫 Member QR Scanned: $scannedCode');
+
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Memuat data member...'),
+                ],
+              ),
             ),
-            child: const Text('Simulate Scan'),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+
+      try {
+        // Call API to get member data
+        final response = await ApiRequest().cekMember(scannedCode);
+
+        // Close loading dialog
+        if (mounted) Navigator.pop(context);
+
+        if (response.state == true && response.data != null) {
+          // Success - set member data
+          setState(() {
+            _qrCode = response.data!.memberCode ?? scannedCode;
+            _memberName = response.data!.fullName ?? '';
+            _memberGrade = response.data!.memberType ?? 'Blue';
+            _memberPoint = response.data!.point;
+            _memberPhoto = response.data!.photo;
+          });
+
+          debugPrint('✅ Member loaded: $_memberName ($_memberGrade) - Points: $_memberPoint');
+
+          // Show success message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text('Member ditemukan: $_memberName'),
+                    ),
+                  ],
+                ),
+                backgroundColor: Colors.green.shade700,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        } else {
+          // Error from API
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    const Icon(Icons.error_outline, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(response.message ?? 'Member tidak ditemukan'),
+                    ),
+                  ],
+                ),
+                backgroundColor: Colors.red.shade700,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 4),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        // Close loading dialog
+        if (mounted) Navigator.pop(context);
+
+        debugPrint('❌ Error cekMember: $e');
+
+        // Show error message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.white),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text('Gagal memuat data member: $e'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    }
   }
 
   void _submitCheckIn() {
-    
+    final selectedRoomType = ref.read(selectedRoomTypeProvider);
+    final selectedRoom = ref.read(selectedRoomProvider);
+
     if (_formKey.currentState!.validate()) {
       if (_isMember && _qrCode.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -180,7 +223,7 @@ class _CheckinPageState extends State<CheckinPage> {
         return;
       }
 
-      if (_selectedRoom == null) {
+      if (selectedRoom == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Please select a room'),
@@ -215,8 +258,8 @@ class _CheckinPageState extends State<CheckinPage> {
                 _buildSummaryRow('Name', _memberName),
                 _buildSummaryRow('Grade', _memberGrade),
               ],
-              _buildSummaryRow('Room Type', _selectedRoomType ?? '-'),
-              _buildSummaryRow('Room Number', _selectedRoom ?? '-'),
+              _buildSummaryRow('Room Type', selectedRoomType ?? '-'),
+              _buildSummaryRow('Room Number', selectedRoom),
               _buildSummaryRow(
                 'Duration',
                 _noDuration ? 'No Duration' : '$_duration ${_duration == 1 ? 'hour' : 'hours'}',
@@ -240,6 +283,19 @@ class _CheckinPageState extends State<CheckinPage> {
         ),
       );
     }
+    final userId = GlobalProviders.read(userProvider).userId;
+    CheckinBody checkinParams = CheckinBody(
+      chusr: userId,
+      hour: 1,
+      minute: 1,
+      pax: 10,
+      checkinRoom: CheckinRoom(),
+      checkinRoomType: CheckinRoomType(),
+      visitor: Visitor(
+        memberCode: '',
+        memberName: ''
+      ),
+    );
   }
 
   Widget _buildSummaryRow(String label, String value) {
@@ -270,10 +326,12 @@ class _CheckinPageState extends State<CheckinPage> {
       _qrCode = '';
       _memberName = '';
       _memberGrade = '';
-      _selectedRoomType = null;
-      _selectedRoom = null;
+      _memberPoint = null;
+      _memberPhoto = null;
       _noDuration = false;
     });
+    ref.read(selectedRoomTypeProvider.notifier).clear();
+    ref.read(selectedRoomProvider.notifier).clear();
   }
 
   @override
@@ -366,8 +424,20 @@ class _CheckinPageState extends State<CheckinPage> {
               const SizedBox(height: 20),
               _buildRoomTypeDropdown(),
               const SizedBox(height: 20),
-              if (_selectedRoomType != null) _buildRoomSelector(),
-              if (_selectedRoomType != null) const SizedBox(height: 20),
+              Consumer(
+                builder: (context, ref, child) {
+                  final selectedRoomType = ref.watch(selectedRoomTypeProvider);
+                  if (selectedRoomType != null) {
+                    return Column(
+                      children: [
+                        _buildRoomSelector(),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               _buildDurationSection(),
               const SizedBox(height: 20),
               _buildPaxField(),
@@ -622,6 +692,46 @@ class _CheckinPageState extends State<CheckinPage> {
                       letterSpacing: 2,
                     ),
                   ),
+                  if (_memberPoint != null) ...[
+                    const SizedBox(height: 16),
+                    Divider(
+                      color: (gradeStyle['textColor'] as Color).withValues(alpha: 0.2),
+                      height: 1,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'REWARD POINTS',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: (gradeStyle['textColor'] as Color).withValues(alpha: 0.7),
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.stars,
+                              size: 16,
+                              color: gradeStyle['textColor'] as Color,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '$_memberPoint',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: gradeStyle['textColor'] as Color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -684,8 +794,78 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Widget _buildRoomTypeDropdown() {
+    final roomTypeState = ref.watch(roomTypeProvider);
+    final selectedRoomType = ref.watch(selectedRoomTypeProvider);
+
+    // Handle loading state
+    if (roomTypeState.isLoading) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade50,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.blue.shade100),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              'Loading room types...',
+              style: TextStyle(
+                color: Colors.blue.shade700,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Handle error state
+    if (roomTypeState.state == false) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.red.shade200),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                roomTypeState.message ?? 'Failed to load room types',
+                style: TextStyle(
+                  color: Colors.red.shade700,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colors.red.shade700),
+              onPressed: () {
+                ref.read(roomTypeProvider.notifier).refresh();
+              },
+              tooltip: 'Retry',
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Build dropdown with room types from provider
     return DropdownButtonFormField<String>(
-      initialValue: _selectedRoomType,
+      initialValue: selectedRoomType,
       decoration: InputDecoration(
         labelText: 'Room Type',
         hintText: 'Select room type',
@@ -709,21 +889,40 @@ class _CheckinPageState extends State<CheckinPage> {
           borderSide: const BorderSide(color: Colors.red),
         ),
       ),
-      items: _roomTypes.map((String type) {
+      items: roomTypeState.data.map((roomTypeData) {
         return DropdownMenuItem<String>(
-          value: type,
-          child: Text(type),
+          value: roomTypeData.roomType,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(roomTypeData.roomType ?? ''),
+              Text(
+                '(${roomTypeData.roomAvailable ?? 0} available)',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
         );
       }).toList(),
       onChanged: (String? newValue) {
+        debugPrint('📝 RoomType Selected: $newValue');
+
+        // Update provider
+        ref.read(selectedRoomTypeProvider.notifier).selectRoomType(newValue);
+        ref.read(selectedRoomProvider.notifier).clear();
+
+        // Fetch rooms for the selected type
+        if (newValue != null) {
+          debugPrint('📝 Calling getRoom with roomType: $newValue');
+          ref.read(roomReadyProvider.notifier).getRoom(newValue);
+        }
+
+        // Reset noDuration saat ganti room type (akan di-set saat pilih room)
         setState(() {
-          _selectedRoomType = newValue;
-          _selectedRoom = null; // Reset room selection when type changes
-          if (newValue == 'Lobby') {
-            _noDuration = true;
-          } else {
-            _noDuration = false;
-          }
+          _noDuration = false;
         });
       },
       validator: (value) {
@@ -736,7 +935,24 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Widget _buildRoomSelector() {
-    final rooms = _roomsByType[_selectedRoomType] ?? [];
+    final roomState = ref.watch(roomReadyProvider);
+    final selectedRoom = ref.watch(selectedRoomProvider);
+    final selectedRoomType = ref.watch(selectedRoomTypeProvider);
+
+    // Debug: print room data
+    if (roomState.data.isNotEmpty) {
+      debugPrint('📋 BuildRoomSelector: Total rooms from API: ${roomState.data.length}');
+      for (var room in roomState.data) {
+        debugPrint('   - Room: ${room.roomName ?? room.roomCode}, isRoomCheckin: ${room.isRoomCheckin}');
+      }
+    }
+
+    // Tidak perlu filter lagi karena API sudah return room sesuai room type yang dipilih
+    // Room type "Lobby", "Table", "Bar" dll → semua punya isRoomCheckin = false
+    // Room type "Regular", "VIP", "Meeting Room" dll → semua punya isRoomCheckin = true
+    final filteredRooms = roomState.data;
+
+    debugPrint('📋 BuildRoomSelector: Displaying ${filteredRooms.length} rooms for $selectedRoomType');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -756,64 +972,179 @@ class _CheckinPageState extends State<CheckinPage> {
           ],
         ),
         const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: rooms.map((room) {
-            final isSelected = _selectedRoom == room;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedRoom = room),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.blue.shade700 : Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected ? Colors.blue.shade700 : Colors.blue.shade300,
-                    width: 2,
-                  ),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: Colors.blue.shade700.withValues(alpha: 0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.meeting_room,
-                      size: 18,
-                      color: isSelected ? Colors.white : Colors.blue.shade700,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      room,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? Colors.white : Colors.blue.shade900,
-                      ),
-                    ),
-                  ],
-                ),
+
+        // Handle loading state
+        if (roomState.isLoading)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          )
+        // Handle error state
+        else if (roomState.state == false)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.red.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    roomState.message ?? 'Failed to load rooms',
+                    style: TextStyle(
+                      color: Colors.red.shade700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        // Handle empty state (no rooms after filtering)
+        else if (filteredRooms.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.amber.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.amber.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.amber.shade700, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'No rooms available for this type',
+                    style: TextStyle(
+                      color: Colors.amber.shade900,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        // Display available rooms in 2 columns
+        else
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, // ✅ 3 kolom
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1.8, // Adjusted untuk 3 kolom
+            ),
+            itemCount: filteredRooms.length,
+            itemBuilder: (context, index) {
+              final room = filteredRooms[index];
+              final roomDisplay = room.roomCode ?? '';
+              final isSelected = selectedRoom == roomDisplay;
+              return GestureDetector(
+                onTap: () {
+                  ref.read(selectedRoomProvider.notifier).selectRoom(roomDisplay);
+
+                  // Set noDuration berdasarkan isRoomCheckin
+                  // isRoomCheckin = false → Lobby (no duration)
+                  // isRoomCheckin = true → Regular room (butuh duration)
+                  setState(() {
+                    _noDuration = room.isRoomCheckin == false;
+                  });
+
+                  debugPrint('📝 Room selected: $roomDisplay, isRoomCheckin: ${room.isRoomCheckin}, noDuration: $_noDuration');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.blue.shade700 : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected ? Colors.blue.shade700 : Colors.blue.shade300,
+                      width: 2,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: Colors.blue.shade700.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.meeting_room,
+                            size: 18,
+                            color: isSelected ? Colors.white : Colors.blue.shade700,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: AutoSizeText(
+                              roomDisplay,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? Colors.white : Colors.blue.shade900,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (room.roomCapacity != null) ...[
+                        const SizedBox(height: 4),
+                        Flexible(
+                          child: AutoSizeText(
+                            'Capacity: ${room.roomCapacity}',
+                            minFontSize: 4,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected
+                                  ? Colors.white.withValues(alpha: 0.8)
+                                  : Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }
 
   Widget _buildDurationSection() {
-    final isLobby = _selectedRoomType == 'Lobby';
+    final roomState = ref.watch(roomReadyProvider);
+    final selectedRoom = ref.watch(selectedRoomProvider);
+
+    // Cek apakah selected room adalah lobby (isRoomCheckin = false)
+    final selectedRoomData = roomState.data.firstWhere(
+      (room) => (room.roomCode ?? '') == selectedRoom,
+      orElse: () => RoomModel(),
+    );
+    final isLobbyRoom = selectedRoomData.isRoomCheckin == false;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -933,7 +1264,7 @@ class _CheckinPageState extends State<CheckinPage> {
             ],
           ),
         ),
-        if (isLobby) ...[
+        if (isLobbyRoom && selectedRoom != null) ...[
           const SizedBox(height: 12),
           Container(
             decoration: BoxDecoration(

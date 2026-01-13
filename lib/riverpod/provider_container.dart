@@ -25,4 +25,9 @@ class GlobalProviders {
   static T read<T>(ProviderListenable<T> provider) {
     return instance.read(provider);
   }
+
+  /// Helper method untuk invalidate provider (force refresh)
+  static void invalidate(ProviderOrFamily provider) {
+    instance.invalidate(provider);
+  }
 }

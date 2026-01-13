@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/network.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
 // Provider untuk BaseUrlModel (IP dan Port)
@@ -24,6 +25,14 @@ class ServerConfigNotifier extends StateNotifier<BaseUrlModel> {
     final newConfig = BaseUrlModel(ip: ip, port: port);
     await PreferencesData.setUrl(newConfig);
     state = newConfig;
+
+    // Invalidate serverUrlProvider agar di-refresh dengan nilai baru
+    try {
+      GlobalProviders.invalidate(serverUrlProvider);
+    } catch (e) {
+      // Jika dipanggil dari widget context, tidak perlu invalidate manual
+      // karena ref.watch sudah otomatis rebuild
+    }
   }
 
   void refresh() {
@@ -31,9 +40,10 @@ class ServerConfigNotifier extends StateNotifier<BaseUrlModel> {
   }
 }
 
-// Provider untuk full URL string
+// Provider untuk full URL string (reactive terhadap perubahan serverConfigProvider)
 final serverUrlProvider = Provider<String>((ref) {
-  return PreferencesData.getUrl();
+  final config = ref.watch(serverConfigProvider);
+  return 'http://${config.ip}:${config.port}';
 });
 
 // Provider untuk outlet code
