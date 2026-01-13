@@ -7,6 +7,7 @@ import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
+import 'package:front_office_2/page/dialog/room_type_selection_dialog.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/riverpod/room/room_provider.dart';
 
@@ -941,143 +942,114 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   }
 
   Widget _buildRoomTypeDropdown() {
-    final roomTypeState = ref.watch(roomTypeProvider);
     final selectedRoomType = ref.watch(selectedRoomTypeProvider);
 
-    // Handle loading state
-    if (roomTypeState.isLoading) {
-      return Container(
-        padding: const EdgeInsets.all(16),
+    return GestureDetector(
+      onTap: () async {
+        final selectedType = await showRoomTypeSelectionDialog(context);
+
+        if (selectedType != null) {
+          debugPrint('📝 RoomType Selected from dialog: $selectedType');
+
+          // Update provider
+          ref.read(selectedRoomTypeProvider.notifier).selectRoomType(selectedType);
+          ref.read(selectedRoomProvider.notifier).clear();
+
+          // Fetch rooms for the selected type
+          debugPrint('📝 Calling getRoom with roomType: $selectedType');
+          ref.read(roomReadyProvider.notifier).getRoom(selectedType);
+
+          // Reset noDuration saat ganti room type (akan di-set saat pilih room)
+          setState(() {
+            _noDuration = false;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.blue.shade50,
+          gradient: LinearGradient(
+            colors: selectedRoomType != null
+                ? [Colors.blue.shade700, Colors.blue.shade500]
+                : [Colors.blue.shade50, Colors.blue.shade50],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.blue.shade100),
+          border: Border.all(
+            color: selectedRoomType != null
+                ? Colors.blue.shade700
+                : Colors.blue.shade200,
+            width: 2,
+          ),
+          boxShadow: selectedRoomType != null
+              ? [
+                  BoxShadow(
+                    color: Colors.blue.shade700.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: selectedRoomType != null
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : Colors.blue.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.meeting_room_outlined,
+                size: 28,
+                color: selectedRoomType != null
+                    ? Colors.white
+                    : Colors.blue.shade700,
               ),
             ),
             const SizedBox(width: 16),
-            Text(
-              'Loading room types...',
-              style: TextStyle(
-                color: Colors.blue.shade700,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Handle error state
-    if (roomTypeState.state == false) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.red.shade50,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.red.shade200),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
-            const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                roomTypeState.message ?? 'Failed to load room types',
-                style: TextStyle(
-                  color: Colors.red.shade700,
-                  fontSize: 14,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tipe Kamar',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: selectedRoomType != null
+                          ? Colors.white.withValues(alpha: 0.8)
+                          : Colors.blue.shade700,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    selectedRoomType ?? 'Pilih tipe kamar',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: selectedRoomType != null
+                          ? Colors.white
+                          : Colors.blue.shade900,
+                    ),
+                  ),
+                ],
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.refresh, color: Colors.red.shade700),
-              onPressed: () {
-                ref.read(roomTypeProvider.notifier).refresh();
-              },
-              tooltip: 'Retry',
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 20,
+              color: selectedRoomType != null
+                  ? Colors.white
+                  : Colors.blue.shade700,
             ),
           ],
-        ),
-      );
-    }
-
-    // Build dropdown with room types from provider
-    return DropdownButtonFormField<String>(
-      initialValue: selectedRoomType,
-      decoration: InputDecoration(
-        labelText: 'Room Type',
-        hintText: 'Select room type',
-        prefixIcon: Icon(Icons.meeting_room, color: Colors.blue.shade700),
-        filled: true,
-        fillColor: Colors.blue.shade50,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.blue.shade100),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.red),
         ),
       ),
-      items: roomTypeState.data.map((roomTypeData) {
-        return DropdownMenuItem<String>(
-          value: roomTypeData.roomType,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(roomTypeData.roomType ?? ''),
-              Text(
-                '(${roomTypeData.roomAvailable ?? 0} available)',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        debugPrint('📝 RoomType Selected: $newValue');
-
-        // Update provider
-        ref.read(selectedRoomTypeProvider.notifier).selectRoomType(newValue);
-        ref.read(selectedRoomProvider.notifier).clear();
-
-        // Fetch rooms for the selected type
-        if (newValue != null) {
-          debugPrint('📝 Calling getRoom with roomType: $newValue');
-          ref.read(roomReadyProvider.notifier).getRoom(newValue);
-        }
-
-        // Reset noDuration saat ganti room type (akan di-set saat pilih room)
-        setState(() {
-          _noDuration = false;
-        });
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select a room type';
-        }
-        return null;
-      },
     );
   }
 
