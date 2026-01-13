@@ -966,51 +966,20 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: selectedRoomType != null
-                ? [Colors.blue.shade700, Colors.blue.shade500]
-                : [Colors.blue.shade50, Colors.blue.shade50],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selectedRoomType != null
-                ? Colors.blue.shade700
-                : Colors.blue.shade200,
-            width: 2,
-          ),
-          boxShadow: selectedRoomType != null
-              ? [
-                  BoxShadow(
-                    color: Colors.blue.shade700.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: selectedRoomType != null
-                    ? Colors.white.withValues(alpha: 0.2)
-                    : Colors.blue.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.meeting_room_outlined,
-                size: 28,
-                color: selectedRoomType != null
-                    ? Colors.white
-                    : Colors.blue.shade700,
-              ),
+            Icon(
+              Icons.meeting_room_outlined,
+              size: 24,
+              color: Colors.grey.shade700,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1019,33 +988,27 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                     'Tipe Kamar',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: selectedRoomType != null
-                          ? Colors.white.withValues(alpha: 0.8)
-                          : Colors.blue.shade700,
-                      letterSpacing: 1,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     selectedRoomType ?? 'Pilih tipe kamar',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                       color: selectedRoomType != null
-                          ? Colors.white
-                          : Colors.blue.shade900,
+                          ? Colors.grey.shade900
+                          : Colors.grey.shade400,
                     ),
                   ),
                 ],
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-              color: selectedRoomType != null
-                  ? Colors.white
-                  : Colors.blue.shade700,
+              Icons.chevron_right,
+              size: 24,
+              color: Colors.grey.shade400,
             ),
           ],
         ),

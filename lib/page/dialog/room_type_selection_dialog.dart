@@ -43,72 +43,37 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
     final roomTypeState = ref.watch(roomTypeProvider);
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      insetPadding: const EdgeInsets.all(24),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Header
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade700, Colors.blue.shade500],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 24, 16, 20),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.meeting_room_outlined,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
                   const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pilih Tipe Kamar',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Pilih salah satu tipe kamar',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'Pilih Tipe Kamar',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close),
+                    iconSize: 20,
                   ),
                 ],
               ),
             ),
+
+            const Divider(height: 1),
 
             // Content
             Flexible(
@@ -133,15 +98,8 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const CircularProgressIndicator(strokeWidth: 2),
+            const SizedBox(height: 16),
             Text(
               'Memuat tipe kamar...',
               style: TextStyle(
@@ -158,48 +116,31 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
   Widget _buildErrorState(BuildContext context, WidgetRef ref, String? message) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.error_outline,
-              size: 64,
-              color: Colors.red.shade300,
+              size: 48,
+              color: Colors.grey.shade400,
             ),
             const SizedBox(height: 16),
             Text(
-              'Gagal Memuat Data',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade800,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              message ?? 'Terjadi kesalahan',
+              message ?? 'Gagal memuat data',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade600,
               ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
+            const SizedBox(height: 20),
+            TextButton.icon(
               onPressed: () {
                 ref.read(roomTypeProvider.notifier).refresh();
               },
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh, size: 18),
               label: const Text('Coba Lagi'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade700,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
             ),
           ],
         ),
@@ -210,25 +151,16 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.inbox_outlined,
-              size: 64,
+              size: 48,
               color: Colors.grey.shade300,
             ),
             const SizedBox(height: 16),
-            Text(
-              'Tidak Ada Kamar',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade800,
-              ),
-            ),
-            const SizedBox(height: 8),
             Text(
               'Belum ada tipe kamar tersedia',
               textAlign: TextAlign.center,
@@ -265,7 +197,6 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
     final available = roomType.roomAvailable ?? 0;
     final icon = _getRoomTypeIcon(roomTypeName);
     final color = _getRoomTypeColor(roomTypeName);
-    final availabilityColor = _getAvailabilityColor(available);
     final isAvailable = available > 0;
 
     return Material(
@@ -276,53 +207,28 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                 Navigator.pop(context, roomTypeName);
               }
             : null,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isAvailable
-                  ? [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)]
-                  : [Colors.grey.shade200, Colors.grey.shade100],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
+            color: isAvailable ? Colors.white : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isAvailable ? color.withValues(alpha: 0.3) : Colors.grey.shade300,
-              width: 2,
+              color: isAvailable ? Colors.grey.shade300 : Colors.grey.shade200,
+              width: 1,
             ),
-            boxShadow: isAvailable
-                ? [
-                    BoxShadow(
-                      color: color.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
           ),
           child: Stack(
             children: [
-              // Main Content
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: isAvailable
-                            ? color.withValues(alpha: 0.2)
-                            : Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        icon,
-                        size: 32,
-                        color: isAvailable ? color : Colors.grey.shade500,
-                      ),
+                    Icon(
+                      icon,
+                      size: 36,
+                      color: isAvailable ? color : Colors.grey.shade400,
                     ),
                     const SizedBox(height: 12),
 
@@ -333,45 +239,19 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: isAvailable ? Colors.grey.shade900 : Colors.grey.shade500,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: isAvailable ? Colors.grey.shade900 : Colors.grey.shade400,
                       ),
                     ),
                     const SizedBox(height: 8),
 
                     // Availability
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: isAvailable
-                            ? availabilityColor.withValues(alpha: 0.15)
-                            : Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: isAvailable
-                              ? availabilityColor.withValues(alpha: 0.3)
-                              : Colors.grey.shade300,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            isAvailable ? Icons.check_circle : Icons.cancel,
-                            size: 14,
-                            color: isAvailable ? availabilityColor : Colors.grey.shade500,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            isAvailable ? '$available tersedia' : 'Penuh',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: isAvailable ? availabilityColor : Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
+                    Text(
+                      isAvailable ? '$available tersedia' : 'Penuh',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isAvailable ? Colors.grey.shade600 : Colors.grey.shade400,
                       ),
                     ),
                   ],
@@ -383,8 +263,8 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
