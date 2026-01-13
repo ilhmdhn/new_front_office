@@ -30,7 +30,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   String _memberName = '';
   String _memberGrade = '';
   num? _memberPoint;
-  String? _memberPhoto;
 
   @override
   void dispose() {
@@ -136,7 +135,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
             _memberName = response.data!.fullName ?? '';
             _memberGrade = response.data!.memberType ?? 'Blue';
             _memberPoint = response.data!.point;
-            _memberPhoto = response.data!.photo;
           });
 
           debugPrint('✅ Member loaded: $_memberName ($_memberGrade) - Points: $_memberPoint');
@@ -275,86 +273,175 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
       debugPrint('  - Duration: ${checkinParams.hour}h ${checkinParams.minute}m');
       debugPrint('  - Pax: ${checkinParams.pax}');
       debugPrint('  - Visitor: ${checkinParams.visitor?.memberName} (${checkinParams.visitor?.memberCode})');
+      debugPrint('  - isRoomCheckin: ${selectedRoomData.isRoomCheckin}');
 
-      BaseResponse response;
-      
-      if(selectedRoomData.isRoomCheckin == true){
-        response = await ApiRequest().doCheckin(checkinParams);
-      }else{
-        final params = {
-          'checkin_room_type': {
-            'kamar_untuk_checkin': selectedRoomData.isRoomCheckin ?? false
-          },
-          'checkin_room':{
-            'jenis_kamar': selectedRoomType ?? '',
-            'kamar': selectedRoom,
-          },
-          'visitor':{
-            'member': _isMember ? _qrCode : generatedCode,
-            'nama_lengkap': _isMember ? _memberName : _nameController.text,
-          },
-          'chusr': userId,
-          'durasi_jam': _noDuration ? 0 : _duration,
-          'durasi_menit': 0,
-          'pax': _pax,
-        };
-        response = await ApiRequest().doCheckinLobby(params);        
-      }
-      if(response.state == true){
-      
-        if(userId == 'TEST'){
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green.shade600),
-                  const SizedBox(width: 8),
-                  const Text('Check-In Success'),
-                ],
-              ),
-              content: Column(
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSummaryRow('Type', _isMember ? 'Member' : 'Non-Member'),
-                  if (_isMember)
-                    _buildSummaryRow('QR Code', _qrCode)
-                  else
-                    _buildSummaryRow('Name', _nameController.text),
-                  if (_isMember) ...[
-                    _buildSummaryRow('Name', _memberName),
-                    _buildSummaryRow('Grade', _memberGrade),
-                  ],
-                  _buildSummaryRow('Room Type', selectedRoomType ?? '-'),
-                  _buildSummaryRow('Room Number', selectedRoom),
-                  _buildSummaryRow(
-                    'Duration',
-                    _noDuration ? 'No Duration' : '$_duration ${_duration == 1 ? 'hour' : 'hours'}',
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
                   ),
-                  _buildSummaryRow('Pax', '$_pax'),
+                  const SizedBox(height: 16),
+                  const Text('Processing check-in...'),
                 ],
               ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _resetForm();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    foregroundColor: Colors.white,
+            ),
+          ),
+        ),
+      );
+
+      try {
+        BaseResponse response;
+
+        if(selectedRoomData.isRoomCheckin == true){
+          // Regular room check-in
+          debugPrint('🏨 Calling doCheckin for regular room...');
+          response = await ApiRequest().doCheckin(checkinParams);
+        } else {
+          // Lobby check-in
+          debugPrint('🛋️ Calling doCheckinLobby for lobby room...');
+          final params = {
+            'checkin_room_type': {
+              'kamar_untuk_checkin': selectedRoomData.isRoomCheckin ?? false
+            },
+            'checkin_room':{
+              'jenis_kamar': selectedRoomType ?? '',
+              'kamar': selectedRoom,
+            },
+            'visitor':{
+              'member': _isMember ? _qrCode : generatedCode,
+              'nama_lengkap': _isMember ? _memberName : _nameController.text,
+            },
+            'chusr': userId,
+            'durasi_jam': _noDuration ? 0 : _duration,
+            'durasi_menit': 0,
+            'pax': _pax,
+          };
+          response = await ApiRequest().doCheckinLobby(params);
+        }
+
+        if (!mounted) return;
+
+        // Close loading
+        Navigator.pop(context);
+
+        if(response.state == true){
+          debugPrint('✅ Check-in success!');
+
+          if(userId == 'TEST'){
+            // Show success dialog for TEST user
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                title: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green.shade600),
+                    const SizedBox(width: 8),
+                    const Text('Check-In Success'),
+                  ],
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSummaryRow('Type', _isMember ? 'Member' : 'Non-Member'),
+                    if (_isMember)
+                      _buildSummaryRow('QR Code', _qrCode)
+                    else
+                      _buildSummaryRow('Name', _nameController.text),
+                    if (_isMember) ...[
+                      _buildSummaryRow('Name', _memberName),
+                      _buildSummaryRow('Grade', _memberGrade),
+                    ],
+                    _buildSummaryRow('Room Type', selectedRoomType ?? '-'),
+                    _buildSummaryRow('Room Number', selectedRoom),
+                    _buildSummaryRow(
+                      'Duration',
+                      _noDuration ? 'No Duration' : '$_duration ${_duration == 1 ? 'hour' : 'hours'}',
+                    ),
+                    _buildSummaryRow('Pax', '$_pax'),
+                  ],
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _resetForm();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade700,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('OK'),
                   ),
-                  child: const Text('OK'),
+                ],
+              ),
+            );
+          } else {
+            // Navigate to edit checkin page for production
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              EditCheckinPage.nameRoute,
+              arguments: selectedRoom,
+              (route) => false
+            );
+          }
+        } else {
+          // API returned error
+          debugPrint('❌ Check-in failed: ${response.message}');
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.white),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(response.message ?? 'Check-in gagal'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      } catch (e, stackTrace) {
+        debugPrint('❌ Exception during check-in: $e');
+        debugPrint('Stack trace: $stackTrace');
+
+        if (!mounted) return;
+
+        // Close loading if still open
+        Navigator.pop(context);
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.white),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text('Terjadi kesalahan: $e'),
                 ),
               ],
             ),
-          );
-        }else{
-          Navigator.pushNamedAndRemoveUntil(context, EditCheckinPage.nameRoute, arguments:  selectedRoom,(route) => false);
-        }
-      
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -388,7 +475,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
       _memberName = '';
       _memberGrade = '';
       _memberPoint = null;
-      _memberPhoto = null;
       _noDuration = false;
     });
     ref.read(selectedRoomTypeProvider.notifier).clear();
