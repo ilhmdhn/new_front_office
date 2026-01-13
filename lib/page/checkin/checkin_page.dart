@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/riverpod/room/room_provider.dart';
@@ -207,7 +209,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
     }
   }
 
-  void _submitCheckIn() {
+  void _submitCheckIn() async{
     final selectedRoomType = ref.read(selectedRoomTypeProvider);
     final selectedRoom = ref.read(selectedRoomProvider);
 
@@ -234,68 +236,127 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         return;
       }
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green.shade600),
-              const SizedBox(width: 8),
-              const Text('Check-In Success'),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSummaryRow('Type', _isMember ? 'Member' : 'Non-Member'),
-              if (_isMember)
-                _buildSummaryRow('QR Code', _qrCode)
-              else
-                _buildSummaryRow('Name', _nameController.text),
-              if (_isMember) ...[
-                _buildSummaryRow('Name', _memberName),
-                _buildSummaryRow('Grade', _memberGrade),
-              ],
-              _buildSummaryRow('Room Type', selectedRoomType ?? '-'),
-              _buildSummaryRow('Room Number', selectedRoom),
-              _buildSummaryRow(
-                'Duration',
-                _noDuration ? 'No Duration' : '$_duration ${_duration == 1 ? 'hour' : 'hours'}',
-              ),
-              _buildSummaryRow('Pax', '$_pax'),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _resetForm();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade700,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('OK'),
-            ),
-          ],
+      // Prepare checkin data
+      final roomState = ref.read(roomReadyProvider);
+      final selectedRoomData = roomState.data.firstWhere(
+        (room) => (room.roomCode ?? '') == selectedRoom,
+        orElse: () => RoomModel(),
+      );
+
+      final userId = ref.read(userProvider).userId;
+      final name = _nameController.text;
+      final cleaned = name.replaceAll(' ', ''); // hapus spasi
+      final firstFive = cleaned.length > 5 ? cleaned.substring(0, 5) : cleaned; // ambil max 5 char
+      final generatedCode = '$firstFive-1';
+      
+      final CheckinBody checkinParams = CheckinBody(
+        chusr: userId,
+        hour: _noDuration ? 0 : _duration,
+        minute: 0,
+        pax: _pax,
+        checkinRoom: CheckinRoom(
+          room: selectedRoom,
+        ),
+        checkinRoomType: CheckinRoomType(
+          roomCapacity: selectedRoomData.roomCapacity ?? 0,
+          roomType: selectedRoomType ?? '',
+          isRoomCheckin: selectedRoomData.isRoomCheckin ?? false,
+        ),
+        visitor: Visitor(
+          memberCode: _isMember ? _qrCode : generatedCode,
+          memberName: _isMember ? _memberName : _nameController.text,
         ),
       );
+
+      debugPrint('📋 Checkin Params:');
+      debugPrint('  - User: $userId');
+      debugPrint('  - Room: ${checkinParams.checkinRoom?.room}');
+      debugPrint('  - Room Type: ${checkinParams.checkinRoomType?.roomType}');
+      debugPrint('  - Duration: ${checkinParams.hour}h ${checkinParams.minute}m');
+      debugPrint('  - Pax: ${checkinParams.pax}');
+      debugPrint('  - Visitor: ${checkinParams.visitor?.memberName} (${checkinParams.visitor?.memberCode})');
+
+      BaseResponse response;
+      
+      if(selectedRoomData.isRoomCheckin == true){
+        response = await ApiRequest().doCheckin(checkinParams);
+      }else{
+        final params = {
+          'checkin_room_type': {
+            'kamar_untuk_checkin': selectedRoomData.isRoomCheckin ?? false
+          },
+          'checkin_room':{
+            'jenis_kamar': selectedRoomType ?? '',
+            'kamar': selectedRoom,
+          },
+          'visitor':{
+            'member': _isMember ? _qrCode : generatedCode,
+            'nama_lengkap': _isMember ? _memberName : _nameController.text,
+          },
+          'chusr': userId,
+          'durasi_jam': _noDuration ? 0 : _duration,
+          'durasi_menit': 0,
+          'pax': _pax,
+        };
+        response = await ApiRequest().doCheckinLobby(params);        
+      }
+      if(response.state == true){
+      
+        if(userId == 'TEST'){
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green.shade600),
+                  const SizedBox(width: 8),
+                  const Text('Check-In Success'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSummaryRow('Type', _isMember ? 'Member' : 'Non-Member'),
+                  if (_isMember)
+                    _buildSummaryRow('QR Code', _qrCode)
+                  else
+                    _buildSummaryRow('Name', _nameController.text),
+                  if (_isMember) ...[
+                    _buildSummaryRow('Name', _memberName),
+                    _buildSummaryRow('Grade', _memberGrade),
+                  ],
+                  _buildSummaryRow('Room Type', selectedRoomType ?? '-'),
+                  _buildSummaryRow('Room Number', selectedRoom),
+                  _buildSummaryRow(
+                    'Duration',
+                    _noDuration ? 'No Duration' : '$_duration ${_duration == 1 ? 'hour' : 'hours'}',
+                  ),
+                  _buildSummaryRow('Pax', '$_pax'),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _resetForm();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade700,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }else{
+          Navigator.pushNamedAndRemoveUntil(context, EditCheckinPage.nameRoute, arguments:  selectedRoom,(route) => false);
+        }
+      
+      }
     }
-    final userId = GlobalProviders.read(userProvider).userId;
-    CheckinBody checkinParams = CheckinBody(
-      chusr: userId,
-      hour: 1,
-      minute: 1,
-      pax: 10,
-      checkinRoom: CheckinRoom(),
-      checkinRoomType: CheckinRoomType(),
-      visitor: Visitor(
-        memberCode: '',
-        memberName: ''
-      ),
-    );
   }
 
   Widget _buildSummaryRow(String label, String value) {
