@@ -24,8 +24,8 @@ class ButtonMenuWidget{
         buildGridMenu(
           'Operasional',
           2, 
-          [                  
-            checkin(),
+          [              
+            checkinPage(),
             editCheckin(),
             extend(),
             transfer(),
@@ -33,7 +33,7 @@ class ButtonMenuWidget{
             bill(),
             checkout(),
             clean(),
-            // checkinPage()
+            checkinOld(),
           ]
         ),
       ],
@@ -46,8 +46,8 @@ class ButtonMenuWidget{
         buildGridMenu(
           'Operasional',
           2, 
-          [                  
-            checkin(),
+          [  
+            checkinPage(),                
             editCheckin(),
             extend(),
             transfer(),
@@ -55,6 +55,7 @@ class ButtonMenuWidget{
             bill(),
             checkout(),
             clean(),
+            // checkinOld()
             checkinPage()
           ]
         ),
@@ -92,15 +93,16 @@ class ButtonMenuWidget{
         buildGridMenu(
           'Operasional',
           2, 
-          [       
-            checkin(),
+          [  
+            checkinPage(),     
             editCheckin(),
             extend(),
             transfer(),
             order(),
             bill(),
             checkout(),
-            clean()
+            clean(),
+            checkinOld()
           ]
         ),
         SizedBox(height: 12,),
@@ -115,9 +117,25 @@ class ButtonMenuWidget{
     );
   }
 
-  Widget checkin(){
+  Widget checkinOld(){
     return InkWell(
-      child: itemButton('assets/menu_icon/karaoke.png', 'Checkin'),
+        child: Container(
+          height: 50,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(20)
+          ),
+          child: Center(
+            child: AutoSizeText('Checkin Old', 
+            style: CustomTextStyle.whiteStandard(), 
+              minFontSize: 12, 
+              maxLines: 1, 
+              textAlign: TextAlign.center, ),
+          ),
+        ),
+        // child: itemButton('assets/menu_icon/karaoke.png', 'Checkin Old')),
             onTap: ()async{
               String? result = await showQRScannerDialog(context);
               if(isNotNullOrEmpty(result)){

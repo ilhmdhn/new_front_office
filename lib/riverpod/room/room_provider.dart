@@ -59,6 +59,10 @@ class RoomReadyNotifier extends StateNotifier<RoomListResponse> {
     _fetchRooms(roomType);
   }
 
+  void clear() {
+    state = _initialState();
+  }
+
   static RoomListResponse _initialState(){
     return RoomListResponse(isLoading: false, state: true, data: []);
   }

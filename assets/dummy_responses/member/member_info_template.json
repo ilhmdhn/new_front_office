@@ -3,13 +3,13 @@
   "message": "Member ditemukan",
   "data": {
     "member": "{MEMBER_CODE}",
-    "nama_lengkap": "Demo Member",
+    "nama_lengkap": "John Doe",
     "member_phone": "081234567890",
-    "jenis_member": "GOLD",
+    "jenis_member": "Black",
     "member_email": "demo@example.com",
     "member_point": 1000,
     "photo_url": "https://example.com/photo.jpg",
-    "member_level": "GOLD"
+    "member_level": "Black"
   }
 }
 

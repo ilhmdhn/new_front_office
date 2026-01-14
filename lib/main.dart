@@ -101,7 +101,7 @@ class FrontOffice extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       title: 'Happy Puppy POS',
       initialRoute: LoginPage.nameRoute,
       routes: {

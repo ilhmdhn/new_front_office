@@ -6,6 +6,7 @@ import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/room_type_selection_dialog.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -31,6 +32,26 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   String _memberName = '';
   String _memberGrade = '';
   num? _memberPoint;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Reset semua provider ketika masuk ke halaman checkin
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Reset selected room type dan room
+      ref.read(selectedRoomTypeProvider.notifier).clear();
+      ref.read(selectedRoomProvider.notifier).clear();
+
+      // Reset list rooms
+      ref.read(roomReadyProvider.notifier).clear();
+
+      // Refresh room type list untuk fetch data fresh
+      ref.read(roomTypeProvider.notifier).refresh();
+
+      debugPrint('🔄 CheckinPage: All providers reset');
+    });
+  }
 
   @override
   void dispose() {
@@ -209,6 +230,13 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   }
 
   void _submitCheckIn() async{
+
+    final confirmState = await ConfirmationDialog.confirmation(context, 'Checkin?');
+
+    if(!confirmState){
+      return;
+    }
+
     final selectedRoomType = ref.read(selectedRoomTypeProvider);
     final selectedRoom = ref.read(selectedRoomProvider);
 

@@ -155,7 +155,7 @@ class ApiRequest{
       }
       final convertedResult = json.decode(apiResponse.body);
       debugPrint('DEBUGGING checkin response: $convertedResult');
-      PrintExecutor.printInvoice(convertedResult['data']['checkin_room']['room_rcp']);
+      PrintExecutor.printSlip(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(err, stackTrace){
       showToastError('Gagal checkin $err\n${stackTrace.toString()}');
@@ -181,7 +181,8 @@ class ApiRequest{
       final convertedResult = json.decode(apiResponse.body);
       // DoPrint.checkin(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
-    }catch(err){
+    }catch(err, stackTrace){
+      debugPrint('Gagal checkin lobby $err\n$stackTrace');
       return BaseResponse(
         isLoading: false,
         state: false,
@@ -367,7 +368,8 @@ class ApiRequest{
       }
       final convertedResult = json.decode(apiResponse.body);
       return DetailCheckinResponse.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('DEBUGGING ERROR getDetailRoomCheckin ${e.toString()}\n$stackTrace');
       return DetailCheckinResponse(
         state: false,
         message: e.toString()

@@ -1,6 +1,8 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
+import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/riverpod/room/room_provider.dart';
 
 class RoomTypeSelectionDialog extends ConsumerWidget {
@@ -15,7 +17,7 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
     if (type.contains('table')) return Icons.table_restaurant;
     if (type.contains('bar')) return Icons.local_bar;
     if (type.contains('meeting')) return Icons.groups;
-    return Icons.room;
+    return Icons.meeting_room_sharp;
   }
 
   // Color mapping for room types
@@ -27,16 +29,18 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
     if (type.contains('table')) return const Color(0xFFFF9800); // Orange
     if (type.contains('bar')) return const Color(0xFF9C27B0); // Purple
     if (type.contains('meeting')) return const Color(0xFF607D8B); // Blue Grey
-    return const Color(0xFF757575); // Grey
+    return Colors.blue; // Grey
   }
 
   // Get badge color based on availability
+  /*
   Color _getAvailabilityColor(int available) {
     if (available == 0) return Colors.red;
     if (available <= 2) return Colors.orange;
     if (available <= 5) return Colors.amber;
     return Colors.green;
   }
+  */
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,6 +51,10 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
       insetPadding: const EdgeInsets.all(24),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        color: CustomColorStyle.background(),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -57,7 +65,7 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                 children: [
                   const Expanded(
                     child: Text(
-                      'Pilih Tipe Kamar',
+                      'Pilih Tipe Room',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -179,12 +187,13 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(20),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 1.1,
+        // childAspectRatio: 1.1,
       ),
       itemCount: roomTypes.length,
+      shrinkWrap: true,
       itemBuilder: (context, index) {
         final roomType = roomTypes[index];
         return _buildRoomTypeCard(context, roomType);
@@ -217,49 +226,53 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
               width: 1,
             ),
           ),
-          child: Stack(
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Icon
-                    Icon(
-                      icon,
-                      size: 36,
-                      color: isAvailable ? color : Colors.grey.shade400,
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Room Type Name
-                    Text(
-                      roomTypeName,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: isAvailable ? Colors.grey.shade900 : Colors.grey.shade400,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Icon
+                      Icon(
+                        icon,
+                        size: 32,
+                        color: isAvailable ? color : Colors.grey.shade400,
                       ),
-                    ),
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                    // Availability
-                    Text(
-                      isAvailable ? '$available tersedia' : 'Penuh',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isAvailable ? Colors.grey.shade600 : Colors.grey.shade400,
+                      // Room Type Name
+                      AutoSizeText(
+                        roomTypeName,
+                        textAlign: TextAlign.center,
+                        minFontSize: 10,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: isAvailable ? Colors.grey.shade900 : Colors.grey.shade400,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 4),
+                      // Availability
+                      AutoSizeText(
+                        isAvailable ? '$available tersedia' : 'Penuh',
+                        minFontSize: 8,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isAvailable ? Colors.grey.shade600 : Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
               // Disabled overlay
-              if (!isAvailable)
+              /*if (!isAvailable)
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -267,7 +280,7 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
+                ),*/
             ],
           ),
         ),
