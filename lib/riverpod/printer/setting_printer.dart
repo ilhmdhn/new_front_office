@@ -84,3 +84,59 @@ class PrintSlipDeliveryOrderNotifier extends StateNotifier<bool> {
     _loadState();
   }
 }
+
+// Provider untuk Print Bill
+final printBillProvider = StateNotifierProvider<PrintBillNotifier, bool>((ref) {
+  return PrintBillNotifier();
+});
+
+class PrintBillNotifier extends StateNotifier<bool> {
+  PrintBillNotifier() : super(_initialState()) {
+    _loadState();
+  }
+
+  static bool _initialState() {
+    return PreferencesData.getPrintBill();
+  }
+
+  void _loadState() {
+    state = PreferencesData.getPrintBill();
+  }
+
+  void setPrintBill(bool value) {
+    PreferencesData.setPrintBill(value);
+    state = value;
+  }
+
+  void refresh() {
+    _loadState();
+  }
+}
+
+// Provider untuk Print Invoice
+final printInvoiceProvider = StateNotifierProvider<PrintInvoiceNotifier, bool>((ref) {
+  return PrintInvoiceNotifier();
+});
+
+class PrintInvoiceNotifier extends StateNotifier<bool> {
+  PrintInvoiceNotifier() : super(_initialState()) {
+    _loadState();
+  }
+
+  static bool _initialState() {
+    return PreferencesData.getPrintInvoice();
+  }
+
+  void _loadState() {
+    state = PreferencesData.getPrintInvoice();
+  }
+
+  void setPrintInvoice(bool value) {
+    PreferencesData.setPrintInvoice(value);
+    state = value;
+  }
+
+  void refresh() {
+    _loadState();
+  }
+}

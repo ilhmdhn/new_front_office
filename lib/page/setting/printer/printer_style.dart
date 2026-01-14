@@ -175,6 +175,56 @@ class PrinterStylePage extends ConsumerWidget {
           const SizedBox(
             height: 12,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Cetak Bill',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: ref.watch(printBillProvider),
+                      onChanged: (value) {
+                        ref.read(printBillProvider.notifier).setPrintBill(value);
+                      },
+                    ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText(
+                'Cetak Invoice',
+                style: CustomTextStyle.blackMediumSize(16),
+              ),
+              SizedBox(
+                height: 12,
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                      activeTrackColor: CustomColorStyle.bluePrimary(),
+                      value: ref.watch(printInvoiceProvider),
+                      onChanged: (value) {
+                        ref.read(printInvoiceProvider.notifier).setPrintInvoice(value);
+                      },
+                    ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
           ],
         ),
       ),
