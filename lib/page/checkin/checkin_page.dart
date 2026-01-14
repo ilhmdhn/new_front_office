@@ -26,7 +26,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   final _durationController = TextEditingController(text: '1');
   final _paxController = TextEditingController(text: '1');
 
-  bool _isMember = true;
+  bool _isMember = false;
   bool _noDuration = false;
   String _qrCode = '';
   String _memberName = '';
@@ -637,36 +637,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _isMember = true),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  color: _isMember ? Colors.blue.shade700 : Colors.transparent,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.card_membership,
-                      color: _isMember ? Colors.white : Colors.blue.shade700,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Member',
-                      style: TextStyle(
-                        color: _isMember ? Colors.white : Colors.blue.shade700,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
               onTap: () => setState(() {
                 _isMember = false;
                 _qrCode = '';
@@ -689,6 +659,36 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                       'Non-Member',
                       style: TextStyle(
                         color: !_isMember ? Colors.white : Colors.blue.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _isMember = true),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: _isMember ? Colors.blue.shade700 : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.card_membership,
+                      color: _isMember ? Colors.white : Colors.blue.shade700,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Member',
+                      style: TextStyle(
+                        color: _isMember ? Colors.white : Colors.blue.shade700,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
