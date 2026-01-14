@@ -55,8 +55,7 @@ class ButtonMenuWidget{
             bill(),
             checkout(),
             clean(),
-            // checkinOld()
-            checkinPage()
+            checkinOld()
           ]
         ),
         SizedBox(height: 12,),

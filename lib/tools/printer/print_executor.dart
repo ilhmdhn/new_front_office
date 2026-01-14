@@ -28,7 +28,10 @@ class PrintExecutor {
 
   static Future<void> printInvoice(String rcp) async {
      try {
-      
+      final printInvoiceState = GlobalProviders.read(printInvoiceProvider);
+      if(printInvoiceState == false){
+        return;
+      }
       final apiResponse = await ApiRequest().getInvoice(rcp);
       
       if(!apiResponse.state){
@@ -51,6 +54,10 @@ class PrintExecutor {
 
   static Future<void> printBill(String roomCode)async{
     try {
+      final printBillState = GlobalProviders.read(printBillProvider);
+      if(printBillState == false){
+        return;
+      }
       final apiResponse = await ApiRequest().getBill(roomCode);
       if(!apiResponse.state){
         showToastError(apiResponse.message);
@@ -72,7 +79,6 @@ class PrintExecutor {
 
   static Future<void> printSlip(String rcp)async{
     try {
-
       final slipCheckinState = GlobalProviders.read(printSlipCheckinProvider);
       if(slipCheckinState == false){
         return;
@@ -102,6 +108,7 @@ class PrintExecutor {
       if(printSoState == false){
         return;
       }
+
       final apiResponse = await ApiRequest().getSol(sol);
       
       if(!apiResponse.state){
@@ -138,6 +145,11 @@ class PrintExecutor {
 
   static Future<void> printLastSo(String rcp, String roomCode, String guestName, int pax)async{
     try {
+      final printSoState = GlobalProviders.read(printSlipOrderProvider);
+      if(printSoState == false){
+        return;
+      }
+      
       final apiResponseSo = await ApiRequest().latestSo(rcp);
       if(apiResponseSo.state != true){
         showToastError('Gagal mendapatkan so STATUS FALSE\n${apiResponseSo.message}');
