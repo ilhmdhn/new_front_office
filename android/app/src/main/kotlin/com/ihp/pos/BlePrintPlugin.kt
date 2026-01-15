@@ -105,36 +105,55 @@ class BlePrintPlugin(
     ) {
         scope.launch {
             try {
+                android.util.Log.d("BlePrint", "=== sendData started ===")
+                android.util.Log.d("BlePrint", "Device ID: $deviceId")
+
                 // 1. Connect
                 val connected = connectDeviceSuspend(deviceId)
                 if (!connected) {
+                    android.util.Log.e("BlePrint", "Failed to connect")
                     result.error("CONNECTION_ERROR", "Failed to connect to device", null)
                     return@launch
                 }
+                android.util.Log.d("BlePrint", "Connected successfully")
 
                 // 2. Discover services
                 val discovered = discoverServicesSuspend()
                 if (!discovered) {
+                    android.util.Log.e("BlePrint", "Failed to discover services")
                     disconnectDevice(null)
                     result.error("DISCOVERY_ERROR", "Failed to discover services", null)
                     return@launch
                 }
+                android.util.Log.d("BlePrint", "Services discovered")
 
-                // 3. Find characteristic
-                val serviceUuid = UUID.fromString(serviceUuidStr)
-                val charUuid = UUID.fromString(writeCharUuidStr)
+                // 3. Find write characteristic (auto-discover like iOS)
+                writeCharacteristic = findWriteCharacteristic()
 
-                val service = bluetoothGatt?.getService(serviceUuid)
-                writeCharacteristic = service?.getCharacteristic(charUuid)
+                // Fallback: try specific UUID if auto-discover fails
+                if (writeCharacteristic == null) {
+                    android.util.Log.d("BlePrint", "Auto-discover failed, trying specific UUID...")
+                    try {
+                        val serviceUuid = UUID.fromString(serviceUuidStr)
+                        val charUuid = UUID.fromString(writeCharUuidStr)
+                        val service = bluetoothGatt?.getService(serviceUuid)
+                        writeCharacteristic = service?.getCharacteristic(charUuid)
+                    } catch (e: Exception) {
+                        android.util.Log.e("BlePrint", "UUID fallback failed: ${e.message}")
+                    }
+                }
 
                 if (writeCharacteristic == null) {
+                    android.util.Log.e("BlePrint", "No write characteristic found")
                     disconnectDevice(null)
                     result.error("CHAR_NOT_FOUND", "Write characteristic not found", null)
                     return@launch
                 }
+                android.util.Log.d("BlePrint", "Write characteristic found: ${writeCharacteristic?.uuid}")
 
                 // 4. Write data in chunks
                 val success = writeDataInChunks(data)
+                android.util.Log.d("BlePrint", "Write result: $success")
 
                 // 5. Disconnect
                 delay(500) // Wait for last write
@@ -142,36 +161,110 @@ class BlePrintPlugin(
 
                 result.success(success)
             } catch (e: Exception) {
+                android.util.Log.e("BlePrint", "sendData error: ${e.message}")
                 disconnectDevice(null)
                 result.error("SEND_ERROR", "Error sending data: ${e.message}", null)
             }
         }
     }
 
+    /**
+     * Auto-discover write characteristic from all services (like iOS implementation)
+     * This makes it compatible with different printer models that may have different UUIDs
+     */
+    private fun findWriteCharacteristic(): BluetoothGattCharacteristic? {
+        val gatt = bluetoothGatt ?: return null
+
+        android.util.Log.d("BlePrint", "=== Finding write characteristic ===")
+        android.util.Log.d("BlePrint", "Total services: ${gatt.services?.size ?: 0}")
+
+        // Loop through all services
+        gatt.services?.forEach { service ->
+            android.util.Log.d("BlePrint", "Service: ${service.uuid}")
+
+            // Loop through all characteristics
+            service.characteristics?.forEach { char ->
+                val properties = char.properties
+                val canWrite = (properties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0
+                val canWriteNoResponse = (properties and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0
+
+                android.util.Log.d("BlePrint", "  Char: ${char.uuid}, Write=$canWrite, WriteNoResp=$canWriteNoResponse")
+
+                // Return first characteristic that supports write
+                if (canWrite || canWriteNoResponse) {
+                    android.util.Log.d("BlePrint", "  → Selected this characteristic!")
+                    return char
+                }
+            }
+        }
+
+        android.util.Log.d("BlePrint", "No write characteristic found in any service")
+        return null
+    }
+
+    // Completion handlers for GATT operations
+    private var connectContinuation: CancellableContinuation<Boolean>? = null
+    private var discoverContinuation: CancellableContinuation<Boolean>? = null
+    private var writeContinuation: CancellableContinuation<Boolean>? = null
+
+    // Single unified GATT callback (more reliable than reflection swap)
+    private val gattCallback = object : BluetoothGattCallback() {
+        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            android.util.Log.d("BlePrint", "onConnectionStateChange: status=$status, newState=$newState")
+            when (newState) {
+                BluetoothProfile.STATE_CONNECTED -> {
+                    bluetoothGatt = gatt
+                    connectContinuation?.resume(true) {}
+                    connectContinuation = null
+                }
+                BluetoothProfile.STATE_DISCONNECTED -> {
+                    connectContinuation?.resume(false) {}
+                    connectContinuation = null
+                }
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            android.util.Log.d("BlePrint", "onServicesDiscovered: status=$status")
+            discoverContinuation?.resume(status == BluetoothGatt.GATT_SUCCESS) {}
+            discoverContinuation = null
+        }
+
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            status: Int
+        ) {
+            android.util.Log.d("BlePrint", "onCharacteristicWrite: status=$status")
+            writeContinuation?.resume(status == BluetoothGatt.GATT_SUCCESS) {}
+            writeContinuation = null
+        }
+    }
+
     private suspend fun connectDeviceSuspend(deviceId: String): Boolean =
         suspendCancellableCoroutine { continuation ->
             try {
+                android.util.Log.d("BlePrint", "Connecting to device: $deviceId")
                 val device = bluetoothAdapter?.getRemoteDevice(deviceId)
                 if (device == null) {
+                    android.util.Log.e("BlePrint", "Device not found: $deviceId")
                     continuation.resume(false) {}
                     return@suspendCancellableCoroutine
                 }
 
-                val gattCallback = object : BluetoothGattCallback() {
-                    override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-                        if (newState == BluetoothProfile.STATE_CONNECTED) {
-                            bluetoothGatt = gatt
-                            continuation.resume(true) {}
-                        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                            if (bluetoothGatt == null) {
-                                continuation.resume(false) {}
-                            }
-                        }
-                    }
-                }
-
+                connectContinuation = continuation
                 device.connectGatt(context, false, gattCallback)
+
+                // Timeout after 10 seconds
+                mainHandler.postDelayed({
+                    if (connectContinuation != null) {
+                        android.util.Log.e("BlePrint", "Connection timeout")
+                        connectContinuation?.resume(false) {}
+                        connectContinuation = null
+                    }
+                }, 10000)
             } catch (e: Exception) {
+                android.util.Log.e("BlePrint", "Connect error: ${e.message}")
                 continuation.resume(false) {}
             }
         }
@@ -180,22 +273,28 @@ class BlePrintPlugin(
         suspendCancellableCoroutine { continuation ->
             val gatt = bluetoothGatt
             if (gatt == null) {
+                android.util.Log.e("BlePrint", "GATT is null, cannot discover services")
                 continuation.resume(false) {}
                 return@suspendCancellableCoroutine
             }
 
-            val callback = object : BluetoothGattCallback() {
-                override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-                    continuation.resume(status == BluetoothGatt.GATT_SUCCESS) {}
-                }
-            }
-
-            gatt.setGattCallback(callback)
+            discoverContinuation = continuation
             val started = gatt.discoverServices()
+            android.util.Log.d("BlePrint", "discoverServices started: $started")
 
             if (!started) {
+                discoverContinuation = null
                 continuation.resume(false) {}
             }
+
+            // Timeout after 10 seconds
+            mainHandler.postDelayed({
+                if (discoverContinuation != null) {
+                    android.util.Log.e("BlePrint", "Service discovery timeout")
+                    discoverContinuation?.resume(false) {}
+                    discoverContinuation = null
+                }
+            }, 10000)
         }
 
     private suspend fun writeDataInChunks(data: ByteArray): Boolean {
@@ -225,24 +324,32 @@ class BlePrintPlugin(
         char: BluetoothGattCharacteristic,
         chunk: ByteArray
     ): Boolean = suspendCancellableCoroutine { continuation ->
-        val callback = object : BluetoothGattCallback() {
-            override fun onCharacteristicWrite(
-                gatt: BluetoothGatt,
-                characteristic: BluetoothGattCharacteristic,
-                status: Int
-            ) {
-                continuation.resume(status == BluetoothGatt.GATT_SUCCESS) {}
-            }
-        }
+        writeContinuation = continuation
 
-        gatt.setGattCallback(callback)
         char.value = chunk
-        char.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+        // Try WRITE_TYPE_DEFAULT first, fallback to NO_RESPONSE if needed
+        char.writeType = if ((char.properties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) {
+            BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+        } else {
+            BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+        }
 
         val written = gatt.writeCharacteristic(char)
+        android.util.Log.d("BlePrint", "writeCharacteristic: $written, chunk size: ${chunk.size}")
+
         if (!written) {
+            writeContinuation = null
             continuation.resume(false) {}
         }
+
+        // Timeout after 5 seconds
+        mainHandler.postDelayed({
+            if (writeContinuation != null) {
+                android.util.Log.e("BlePrint", "Write timeout")
+                writeContinuation?.resume(false) {}
+                writeContinuation = null
+            }
+        }, 5000)
     }
 
     private fun scanDevices(durationMs: Long, result: MethodChannel.Result) {
@@ -380,17 +487,6 @@ class BlePrintPlugin(
         bluetoothGatt = null
         writeCharacteristic = null
         result?.success(true)
-    }
-
-    private fun BluetoothGatt.setGattCallback(callback: BluetoothGattCallback) {
-        // Use reflection to set callback (workaround for multiple callbacks)
-        try {
-            val field = BluetoothGatt::class.java.getDeclaredField("mCallback")
-            field.isAccessible = true
-            field.set(this, callback)
-        } catch (e: Exception) {
-            // Fallback: just ignore
-        }
     }
 
     fun cleanup() {
