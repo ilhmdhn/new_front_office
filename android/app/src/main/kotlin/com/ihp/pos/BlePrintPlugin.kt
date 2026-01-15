@@ -37,6 +37,8 @@ class BlePrintPlugin(
     private val scanResults = mutableListOf<ScanResult>()
     private var isScanning = false
     private var currentScanCallback: ScanCallback? = null
+    private var scanTimeoutRunnable: Runnable? = null
+    private var pendingScanResult: MethodChannel.Result? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -355,10 +357,10 @@ class BlePrintPlugin(
     private fun scanDevices(durationMs: Long, result: MethodChannel.Result) {
         android.util.Log.d("BlePrint", "=== scanDevices called, duration=${durationMs}ms ===")
 
+        // Cancel any pending scan first
         if (isScanning) {
-            android.util.Log.w("BlePrint", "Scan already in progress")
-            result.error("ALREADY_SCANNING", "Scan already in progress", null)
-            return
+            android.util.Log.w("BlePrint", "Previous scan in progress, stopping it first...")
+            stopScan()
         }
 
         // Check permissions
@@ -387,6 +389,7 @@ class BlePrintPlugin(
 
         scanResults.clear()
         isScanning = true
+        pendingScanResult = result
 
         currentScanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, scanResult: ScanResult) {
@@ -399,6 +402,9 @@ class BlePrintPlugin(
             override fun onScanFailed(errorCode: Int) {
                 android.util.Log.e("BlePrint", "Scan failed with error code: $errorCode")
                 isScanning = false
+                scanTimeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+                scanTimeoutRunnable = null
+
                 val errorMsg = when (errorCode) {
                     ScanCallback.SCAN_FAILED_ALREADY_STARTED -> "Scan already started"
                     ScanCallback.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED -> "App registration failed"
@@ -406,7 +412,8 @@ class BlePrintPlugin(
                     ScanCallback.SCAN_FAILED_INTERNAL_ERROR -> "Internal error"
                     else -> "Scan failed with code: $errorCode"
                 }
-                result.error("SCAN_FAILED", errorMsg, null)
+                pendingScanResult?.error("SCAN_FAILED", errorMsg, null)
+                pendingScanResult = null
             }
         }
 
@@ -415,8 +422,16 @@ class BlePrintPlugin(
             android.util.Log.d("BlePrint", "BLE scan started for ${durationMs}ms")
 
             // Stop scan after duration
-            mainHandler.postDelayed({
-                stopScan()
+            scanTimeoutRunnable = Runnable {
+                android.util.Log.d("BlePrint", "Scan timeout runnable executing...")
+
+                // Only process if this is still the active scan
+                if (!isScanning) {
+                    android.util.Log.d("BlePrint", "Scan already stopped, ignoring timeout")
+                    return@Runnable
+                }
+
+                stopScanInternal()
 
                 val devices = scanResults.map { scanResult ->
                     mapOf(
@@ -426,14 +441,18 @@ class BlePrintPlugin(
                 }
 
                 android.util.Log.d("BlePrint", "Scan completed. Found ${devices.size} devices")
-                result.success(devices)
-            }, durationMs)
+                pendingScanResult?.success(devices)
+                pendingScanResult = null
+            }
+            mainHandler.postDelayed(scanTimeoutRunnable!!, durationMs)
         } catch (e: SecurityException) {
             isScanning = false
+            pendingScanResult = null
             android.util.Log.e("BlePrint", "Permission denied: ${e.message}")
             result.error("PERMISSION_DENIED", "Bluetooth permission denied. Please grant BLUETOOTH_SCAN permission.", null)
         } catch (e: Exception) {
             isScanning = false
+            pendingScanResult = null
             android.util.Log.e("BlePrint", "Scan error: ${e.message}")
             result.error("SCAN_ERROR", "Failed to start scan: ${e.message}", null)
         }
@@ -467,8 +486,25 @@ class BlePrintPlugin(
     }
 
     private fun stopScan() {
+        android.util.Log.d("BlePrint", "stopScan() called")
+
+        // Cancel timeout runnable
+        scanTimeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+        scanTimeoutRunnable = null
+
+        stopScanInternal()
+
+        // Clear pending result to prevent crash
+        pendingScanResult = null
+    }
+
+    private fun stopScanInternal() {
         if (isScanning) {
-            currentScanCallback?.let { bluetoothLeScanner?.stopScan(it) }
+            try {
+                currentScanCallback?.let { bluetoothLeScanner?.stopScan(it) }
+            } catch (e: Exception) {
+                android.util.Log.e("BlePrint", "Error stopping scan: ${e.message}")
+            }
             currentScanCallback = null
             isScanning = false
         }
