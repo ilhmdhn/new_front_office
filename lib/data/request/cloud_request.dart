@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front_office_2/data/dummy/dummy_response_helper.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
+import 'package:front_office_2/data/model/version_response.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:http/http.dart' as http;
@@ -284,6 +286,26 @@ class CloudRequest{
       return VoucherMemberResponse(
         state: false,
         message: e.toString()
+      );
+    }
+  }
+
+  static Future<VersionResponse> getVersion()async{
+    try{
+      final url = Uri.parse('$baseUrl/version/check');
+      
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return VersionResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('Error get version ${e.toString()} $stackTrace');
+      return VersionResponse(
+        state: false, 
+        message: e.toString(), 
+        option: 1, 
+        force: 1, 
+        url: '', 
+        desc: ''
       );
     }
   }

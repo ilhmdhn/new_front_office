@@ -1,10 +1,10 @@
-class AppUpdateResponse {
+class AppUpdateInfo {
   final bool isForceUpdate;
   final String version;
   final String releaseNotes;
   final String storeUrl;
 
-  AppUpdateResponse({
+  AppUpdateInfo({
     required this.isForceUpdate,
     required this.version,
     required this.releaseNotes,

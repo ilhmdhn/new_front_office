@@ -3,7 +3,7 @@ import 'package:front_office_2/data/model/app_update_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateDialog extends StatelessWidget {
-  final AppUpdateResponse updateInfo;
+  final AppUpdateInfo updateInfo;
 
   const UpdateDialog({super.key, required this.updateInfo});
 

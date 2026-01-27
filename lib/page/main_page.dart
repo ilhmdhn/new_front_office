@@ -1,5 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/app_update_response.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
+import 'package:front_office_2/page/dialog/update_dialog.dart';
 import 'package:front_office_2/page/operational/operational_page.dart';
 import 'package:front_office_2/page/profile/profile_page.dart';
 import 'package:front_office_2/page/report/report_page.dart';
@@ -42,12 +45,54 @@ class _MainPageState extends State<MainPage> {
   void _updateCheck()async{
     try{
       final currentVersion = await PackageInfo.fromPlatform();
-      
-    }catch(e){
+      final updateData = await CloudRequest.getVersion();
+      int updateLevel = 0;
+      bool isUpdateAvailable = false; 
+      debugPrint('update option ${updateData.option} update force ${updateData.force}');
+      if(updateData.state){
+        if(int.parse(currentVersion.buildNumber) < updateData.force){
+          isUpdateAvailable = true;
+          updateLevel = 2;
+          debugPrint('Update DUA');
+        } else if(num.parse(currentVersion.buildNumber) < updateData.option){
+          isUpdateAvailable = true;
+          updateLevel = 1;
+          debugPrint('Update SATU');
+        }
+      }
+
+    final updateDialogData = AppUpdateInfo(
+      // isForceUpdate: updateLevel>1? true: false,
+      isForceUpdate: updateLevel>1? true: false,
+      version: (updateLevel>1?updateData.force:updateData.option).toString(),
+      releaseNotes: updateData.desc,
+      storeUrl: updateData.url,
+    );
+
+    // Logic sederhana: Anggap selalu ada update untuk demo ini
+
+    if (isUpdateAvailable && mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: updateLevel>1? true: false, // Cegah tap di luar dialog
+        builder: (context) => UpdateDialog(updateInfo: updateDialogData),
+      );
+    }
+
+    }catch(e, stackTrace){
+      debugPrint('Error ${e.toString()} $stackTrace');
       showToastWarning('Gagal cek versi');
     }
   }
   
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateCheck();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     notifPermissionState();

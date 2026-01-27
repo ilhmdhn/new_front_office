@@ -75,8 +75,7 @@ class CommandHelper {
     PosTextSize height = PosTextSize.size1,
   }) {
     // For TMU-220 with double width/height, use custom ESC ! commands
-    if (printerModel == PrinterModelType.tmu220u &&
-        (width == PosTextSize.size2 || height == PosTextSize.size2)) {
+    if (printerModel == PrinterModelType.tmu220u && (width == PosTextSize.size2 || height == PosTextSize.size2)) {
       List<int> bytes = [];
 
       // ESC ! n - Set font style for dot matrix

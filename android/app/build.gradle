@@ -85,3 +85,13 @@ flutter {
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
+
+// --- TAMBAHKAN KODE DI BAWAH INI ---
+configurations.all {
+    resolutionStrategy {
+        // Memaksa library Android turun ke versi yang kompatibel dengan Gradle Anda
+        force 'androidx.browser:browser:1.8.0'
+        force 'androidx.core:core:1.13.1'
+        force 'androidx.core:core-ktx:1.13.1'
+    }
+}
