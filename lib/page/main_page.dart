@@ -7,6 +7,7 @@ import 'package:front_office_2/page/status/state_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/tools/permissions.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MainPage extends StatefulWidget {
   static const nameRoute = '/main';
@@ -15,6 +16,7 @@ class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
 }
+
 class _MainPageState extends State<MainPage> {
 
   int currentPageIndex = 0;
@@ -36,6 +38,16 @@ class _MainPageState extends State<MainPage> {
       Permissions().getNotificationPermission();
     }
   }
+  
+  void _updateCheck()async{
+    try{
+      final currentVersion = await PackageInfo.fromPlatform();
+      
+    }catch(e){
+      showToastWarning('Gagal cek versi');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     notifPermissionState();

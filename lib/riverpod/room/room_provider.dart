@@ -23,11 +23,7 @@ class RoomTypeNotifier extends StateNotifier<ListRoomTypeReadyResponse> {
 
   Future<void> _fetchRoomTypes() async {
     try {
-      debugPrint('🔵 RoomTypeProvider: Fetching room types...');
       final response = await ApiRequest().getListRoomTypeReady();
-
-      debugPrint('🟢 RoomTypeProvider: Got ${response.data.length} room types');
-      debugPrint('🟢 RoomTypeProvider: Response state: ${response.state}');
       if (response.state == false) {
         debugPrint('🔴 RoomTypeProvider: Error: ${response.message}');
       }

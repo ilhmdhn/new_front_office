@@ -62,7 +62,7 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                           showToastWarning('Permintaan dibatalkan');
                           return;
                         }
-                        showToastWarning(tfRcp.text);
+                        // showToastWarning(tfRcp.text);
                         PrintExecutor.printInvoice(tfRcp.text);
                         // DoPrint.printInvoice(tfRcp.text);
                       },

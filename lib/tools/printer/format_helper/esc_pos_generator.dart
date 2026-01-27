@@ -39,6 +39,61 @@ class EscPosGenerator {
     return bytes;
   }
 
+  static List<int> testChecker(CommandHelper helper){
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.feed(1);
+    bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text("STATION: CHECKER", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text("TABLE: T01", bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
+    bytes += helper.text("CUST: TEST PRINT", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.divider();
+    
+    bytes += helper.text("1 CARPACCIO DITTONO", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("Pedasss", align: PosAlign.left, bold: true);
+    bytes += helper.feed(1);
+    bytes += helper.text("5 NASI GORENG SETENGAH MATANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("1 PECEL LELE TERBANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("1 ES CINCAU", align: PosAlign.left, width: PosTextSize.size2, bold: true);  
+    bytes += helper.divider();
+    
+    bytes += helper.text("COVERS 1", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    
+    bytes += helper.textCenter("Test Complete", bold: true);
+    bytes += helper.feed(1);
+    bytes += helper.cut();
+
+    return bytes;
+  }
+
+  static List<int> testStation(CommandHelper helper){
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.feed(1);
+    bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text("STATION: PIZZA", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text("TABLE: T01", bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
+    bytes += helper.text("CUST: TEST PRINT", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.divider();
+    
+    bytes += helper.text("1 CARPACCIO DITTONO", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("Pedasss", align: PosAlign.left, bold: true);
+    bytes += helper.feed(1);
+    bytes += helper.text("5 NASI GORENG SETENGAH MATANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("1 PECEL LELE TERBANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
+    bytes += helper.text("1 ES CINCAU", align: PosAlign.left, width: PosTextSize.size2, bold: true);  
+    bytes += helper.divider();
+    
+    bytes += helper.text("COVERS 1", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    
+    bytes += helper.textCenter("Test Complete", bold: true);
+    bytes += helper.feed(1);
+    bytes += helper.cut();
+
+    return bytes;
+  }
+
+
   List<int> printSlipCheckin(CheckinSlipModel data, CommandHelper helper){
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
@@ -493,7 +548,6 @@ class EscPosGenerator {
     bytes += helper.cut();
     return bytes;
   }
-
 
   List<int> _printFnB(List<OrderFinalModel> orderFix, helper) {
     List<int> bytes = [];

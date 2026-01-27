@@ -237,10 +237,10 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                       // Icon
                       Icon(
                         icon,
-                        size: 32,
+                        size: 26,
                         color: isAvailable ? color : Colors.grey.shade400,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 2),
 
                       // Room Type Name
                       AutoSizeText(
@@ -250,12 +250,12 @@ class RoomTypeSelectionDialog extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: isAvailable ? Colors.grey.shade900 : Colors.grey.shade400,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      
                       // Availability
                       AutoSizeText(
                         isAvailable ? '$available tersedia' : 'Penuh',

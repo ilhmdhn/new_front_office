@@ -113,8 +113,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                                 }
                                 setState(() {
                                     isLoading = true;
-                                  });
-                                final doState = await ApiRequest().confirmDo(widget.roomCode, order);
+                                });
+                                final doState = await ApiRequest().confirmDo(widget.roomCode, [order]);
                                 if(doState.state != true){
                                   showToastError(doState.message??'Gagal DO');
                                   setState(() {

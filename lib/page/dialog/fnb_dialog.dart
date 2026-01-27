@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
+import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/riverpod/providers.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -273,15 +276,43 @@ class FnBDialog{
               final rcp = checkinDetail.data?.reception??'';
               final roomType = checkinDetail.data?.roomType??'';
               final checkinMinute = checkinDetail.data?.checkinMinute??0;
+              bool finalState = false;
+              
+              final PostSoResponse orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
+              if(!orderState.state){
+                showToastError('SO error ${orderState.message}');
+              }
+              finalState = orderState.state;
+              final user = GlobalProviders.read(userProvider);
 
-              final orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
-              PrintExecutor.printLastSo(rcp, roomCode, checkinDetail.data?.memberName??'Guest', checkinDetail.data?.pax??1);
+              //fix before compile
+              //hilangkan opsi hp
+              if (user.outlet.contains('CB') || user.outlet.contains('TB')) {
+                if(isNotNullOrEmpty(orderState.data)){
+                  final lastSoState = await ApiRequest().latestSo(rcp);
+                  
+                  if (lastSoState.state == true) {
+                    final soCode = lastSoState.data;
+                    final filteredData = (orderState.data ?? [])
+                        .where((dataSo) => dataSo.sol == soCode)
+                        .toList();
+                    final doState = await ApiRequest().confirmDo(roomCode, filteredData);
+                    finalState = doState.state ?? false;
+
+                    if (doState.state != true) {
+                      showToastError('DO error ${doState.message}');
+                    }
+                  }
+                }
+              }else{
+                PrintExecutor.printLastSo(rcp, roomCode, checkinDetail.data?.memberName??'Guest', checkinDetail.data?.pax??1);
+              }
+
               setState((){
                 isLoading = false;
               });
               
-              if(orderState.state != true){
-                showToastError(orderState.message.toString());
+              if(finalState != true){
                 if(ctx.mounted){
                  Navigator.pop(ctx, false);
                 }else{

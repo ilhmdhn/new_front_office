@@ -11,6 +11,7 @@ import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
+import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
@@ -210,6 +211,11 @@ class DummyResponseHelper {
   static Future<BaseResponse> getSignCheck() async {
     final json = await DummyJsonLoader.load('other/sign_check.json');
     return BaseResponse.fromJson(json);
+  }
+
+  static Future<PostSoResponse> postSoResponse() async {
+    final json = await DummyJsonLoader.load('other/pos_so.json');
+    return PostSoResponse.fromJson(json);
   }
 
   // ========== GENERIC RESPONSES ==========

@@ -17,7 +17,8 @@ class PrintExecutor {
   static Future<void> testPrint() async {
     try {
       final helper = await _getPrinter();
-      final posContent = EscPosGenerator.testPrint(helper);
+      // final posContent = EscPosGenerator.testPrint(helper);
+      final posContent = EscPosGenerator.testChecker(helper);
       await _execute(posContent);
       showToastSuccess('Test print berhasil');
     } catch (e) {

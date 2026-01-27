@@ -17,6 +17,7 @@ import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_response.dart';
+import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
@@ -54,7 +55,6 @@ class ApiRequest{
           message: 'Silakan atur konfigurasi server terlebih dahulu.'
         );
       }
-      debugPrint('DEBUGGING loginFO to server: $serverUrl $serverUrl');
       final url = Uri.parse('$serverUrl/user/login-fo-droid');
       final apiResponse = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
         'user_id': userId,
@@ -154,7 +154,6 @@ class ApiRequest{
           loginPage();
       }
       final convertedResult = json.decode(apiResponse.body);
-      debugPrint('DEBUGGING checkin response: $convertedResult');
       PrintExecutor.printSlip(convertedResult['data']['checkin_room']['room_rcp']);
       return BaseResponse.fromJson(convertedResult);
     }catch(err, stackTrace){
@@ -713,10 +712,10 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
+  Future<PostSoResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     try{
       if(userId == 'TEST'){
-        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        final data =  await DummyResponseHelper.postSoResponse();
         return data;
       }
       Uri url = Uri.parse('$serverUrl/order/single/room/sol/sod');
@@ -727,10 +726,10 @@ class ApiRequest{
       }
 
       final convertedResult = json.decode(apiResponse.body);
-      return BaseResponse.fromJson(convertedResult);
-    }catch(e){
-      return BaseResponse(
-        isLoading: false,
+      return PostSoResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('Error POST SO ${stackTrace.toString()}');
+      return PostSoResponse(
         state: false,
         message: e.toString()
       );
@@ -823,7 +822,7 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> confirmDo(String roomCode, OrderedModel fnb)async{
+  Future<BaseResponse> confirmDo(String roomCode, List<OrderedModel> fnb)async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
@@ -834,13 +833,12 @@ class ApiRequest{
       final bodyParams = {
         "room": roomCode,
         "chusr": GlobalProviders.read(userProvider).userId,
-        "order_inventory": [{
-          'inventory': fnb.invCode,
-          'nama': fnb.name,
-          'qty': fnb.qty,
-          'slip_order': fnb.sol,
-          }
-        ]
+        "order_inventory": fnb.map((item) => {
+          'inventory': item.invCode,
+          'nama': item.name,
+          'qty': item.qty,
+          'slip_order': item.sol,
+        }).toList(),
       };
       
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
@@ -850,7 +848,8 @@ class ApiRequest{
 
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('Error DO $e\n$stackTrace');
       return BaseResponse(
         isLoading: false,
         state: false,
@@ -1072,7 +1071,6 @@ class ApiRequest{
         },
       );
       final convertedResult = json.decode(apiResponse.body);
-      debugPrint('DEBUGGING tokenPost: ${convertedResult.toString()}');
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
@@ -1159,6 +1157,7 @@ class ApiRequest{
       );
     }
   }
+  
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

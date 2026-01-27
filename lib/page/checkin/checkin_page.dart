@@ -49,7 +49,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
       // Refresh room type list untuk fetch data fresh
       ref.read(roomTypeProvider.notifier).refresh();
 
-      debugPrint('🔄 CheckinPage: All providers reset');
+      
     });
   }
 
@@ -118,7 +118,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
     final scannedCode = await showMemberQRScannerDialog(context);
 
     if (scannedCode != null && scannedCode.isNotEmpty && mounted) {
-      debugPrint('🎫 Member QR Scanned: $scannedCode');
+      
 
       // Show loading
       showDialog(
@@ -159,7 +159,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
             _memberPoint = response.data!.point;
           });
 
-          debugPrint('✅ Member loaded: $_memberName ($_memberGrade) - Points: $_memberPoint');
+          
 
           // Show success message
           if (mounted) {
@@ -204,7 +204,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         // Close loading dialog
         if (mounted) Navigator.pop(context);
 
-        debugPrint('❌ Error cekMember: $e');
+        
 
         // Show error message
         if (mounted) {
@@ -295,14 +295,14 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         ),
       );
 
-      debugPrint('📋 Checkin Params:');
-      debugPrint('  - User: $userId');
-      debugPrint('  - Room: ${checkinParams.checkinRoom?.room}');
-      debugPrint('  - Room Type: ${checkinParams.checkinRoomType?.roomType}');
-      debugPrint('  - Duration: ${checkinParams.hour}h ${checkinParams.minute}m');
-      debugPrint('  - Pax: ${checkinParams.pax}');
-      debugPrint('  - Visitor: ${checkinParams.visitor?.memberName} (${checkinParams.visitor?.memberCode})');
-      debugPrint('  - isRoomCheckin: ${selectedRoomData.isRoomCheckin}');
+      
+      
+      
+      
+      
+      
+      
+      
 
       // Show loading
       showDialog(
@@ -332,11 +332,11 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
 
         if(selectedRoomData.isRoomCheckin == true){
           // Regular room check-in
-          debugPrint('🏨 Calling doCheckin for regular room...');
+          
           response = await ApiRequest().doCheckin(checkinParams);
         } else {
           // Lobby check-in
-          debugPrint('🛋️ Calling doCheckinLobby for lobby room...');
+          
           final params = {
             'checkin_room_type': {
               'kamar_untuk_checkin': selectedRoomData.isRoomCheckin ?? false
@@ -363,7 +363,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         Navigator.pop(context);
 
         if(response.state == true){
-          debugPrint('✅ Check-in success!');
+          
 
           if(userId == 'TEST'){
             // Show success dialog for TEST user
@@ -426,7 +426,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           }
         } else {
           // API returned error
-          debugPrint('❌ Check-in failed: ${response.message}');
+          
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -446,8 +446,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           );
         }
       } catch (e, stackTrace) {
-        debugPrint('❌ Exception during check-in: $e');
-        debugPrint('Stack trace: $stackTrace');
+        
+        
 
         if (!mounted) return;
 
@@ -977,14 +977,14 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         final selectedType = await showRoomTypeSelectionDialog(context);
 
         if (selectedType != null) {
-          debugPrint('📝 RoomType Selected from dialog: $selectedType');
+          
 
           // Update provider
           ref.read(selectedRoomTypeProvider.notifier).selectRoomType(selectedType);
           ref.read(selectedRoomProvider.notifier).clear();
 
           // Fetch rooms for the selected type
-          debugPrint('📝 Calling getRoom with roomType: $selectedType');
+          
           ref.read(roomReadyProvider.notifier).getRoom(selectedType);
 
           // Reset noDuration saat ganti room type (akan di-set saat pilih room)
@@ -1051,9 +1051,9 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
 
     // Debug: print room data
     if (roomState.data.isNotEmpty) {
-      debugPrint('📋 BuildRoomSelector: Total rooms from API: ${roomState.data.length}');
+      
       for (var room in roomState.data) {
-        debugPrint('   - Room: ${room.roomName ?? room.roomCode}, isRoomCheckin: ${room.isRoomCheckin}');
+        
       }
     }
 
@@ -1062,7 +1062,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
     // Room type "Regular", "VIP", "Meeting Room" dll → semua punya isRoomCheckin = true
     final filteredRooms = roomState.data;
 
-    debugPrint('📋 BuildRoomSelector: Displaying ${filteredRooms.length} rooms for $selectedRoomType');
+    
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1152,7 +1152,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
               crossAxisCount: 3, // ✅ 3 kolom
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              childAspectRatio: 1.8, // Adjusted untuk 3 kolom
+              childAspectRatio: 1.7, // Adjusted untuk 3 kolom
             ),
             itemCount: filteredRooms.length,
             itemBuilder: (context, index) {
@@ -1170,12 +1170,12 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                     _noDuration = room.isRoomCheckin == false;
                   });
 
-                  debugPrint('📝 Room selected: $roomDisplay, isRoomCheckin: ${room.isRoomCheckin}, noDuration: $_noDuration');
+                  
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 4,
-                    vertical: 12,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected ? Colors.blue.shade700 : Colors.white,
@@ -1203,7 +1203,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                         children: [
                           Icon(
                             Icons.meeting_room,
-                            size: 18,
+                            size: 16,
                             color: isSelected ? Colors.white : Colors.blue.shade700,
                           ),
                           const SizedBox(width: 8),
@@ -1211,7 +1211,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                             child: AutoSizeText(
                               roomDisplay,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: isSelected ? Colors.white : Colors.blue.shade900,
                               ),
@@ -1221,7 +1221,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                         ],
                       ),
                       if (room.roomCapacity != null) ...[
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 1),
                         Flexible(
                           child: AutoSizeText(
                             'Capacity: ${room.roomCapacity}',
