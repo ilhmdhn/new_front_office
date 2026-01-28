@@ -180,7 +180,7 @@ class PrintExecutor {
     }
   }
 
-  static Future<void> printDoResto(List<OrderedModel> data)async{
+  static Future<void> printDoResto(List<OrderedModel> data, String roomCode, String custName)async{
     try {
       final helper = await _getPrinter();
 
@@ -195,9 +195,12 @@ class PrintExecutor {
       // Loop setiap station dan cetak
       for (final entry in groupedOrders.entries) {
         final stationOrders = entry.value;
-        final command = EscPosGenerator.printStation(helper, stationOrders);
+        final command = EscPosGenerator.printStation(helper, stationOrders, roomCode, custName);
         await _execute(command);
       }
+      
+      final checkerCommand = EscPosGenerator.printStation(helper, data, roomCode, custName, isChecker: true);
+      await _execute(checkerCommand);
     } catch (e) {
       showToastError('Gagal cetak so: $e');
     }  

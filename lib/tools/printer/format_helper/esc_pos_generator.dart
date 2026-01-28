@@ -15,8 +15,6 @@ import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
 import 'package:intl/intl.dart';
 
 class EscPosGenerator {
-  
-
   static List<int> testPrint(CommandHelper helper){
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
@@ -39,27 +37,25 @@ class EscPosGenerator {
     return bytes;
   }
 
-  static List<int> printStation(CommandHelper helper, List<OrderedModel> data){
+  static List<int> printStation(CommandHelper helper, List<OrderedModel> data, String roomName, String custName, {bool isChecker = false, String checkerIp = '', String checkerPort = ''}){
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
     bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text("STATION: CHECKER", bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text("TABLE: T01", bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
-    bytes += helper.text("CUST: TEST PRINT", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('STATION: ${data[0].stationName}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('TABLE: $custName', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
+    bytes += helper.text("CUST: ${data[0].name}", bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.divider();
     
-    bytes += helper.text("1 CARPACCIO DITTONO", align: PosAlign.left, width: PosTextSize.size2, bold: true);
-    bytes += helper.text("Pedasss", align: PosAlign.left, bold: true);
-    bytes += helper.feed(1);
-    bytes += helper.text("5 NASI GORENG SETENGAH MATANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
-    bytes += helper.text("1 PECEL LELE TERBANG", align: PosAlign.left, width: PosTextSize.size2, bold: true);
-    bytes += helper.text("1 ES CINCAU", align: PosAlign.left, width: PosTextSize.size2, bold: true);  
+    for(final order in data){
+      bytes += helper.text('${order.qty} ${order.name}', align: PosAlign.left, width: PosTextSize.size2, bold: true);
+      if(isNotNullOrEmpty(order.notes)){
+        bytes += helper.text(order.notes??'', align: PosAlign.left, bold: true);
+        bytes += helper.feed(1);
+      }
+    }
     bytes += helper.divider();
-    
-    bytes += helper.text("COVERS 1", bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    
-    bytes += helper.textCenter("Test Complete", bold: true);
+      
     bytes += helper.feed(1);
     bytes += helper.cut();
 

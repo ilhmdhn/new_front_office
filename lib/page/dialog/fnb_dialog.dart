@@ -83,7 +83,7 @@ class FnBDialog{
       return completer.future;
   }
 
-  static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode)async{
+  static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode, String custName)async{
     Completer<bool?> completer = Completer<bool?>();
     bool isLoading = false;
     showDialog(
@@ -300,7 +300,7 @@ class FnBDialog{
                     if (doState.state != true) {
                       showToastError('DO error ${doState.message}');
                     }else{
-                      PrintExecutor.printDoResto(orderState.data);
+                      PrintExecutor.printDoResto(orderState.data!, roomCode, custName);
                     }
                   }
                 }

@@ -53,6 +53,7 @@
 
 		<key>NSBluetoothAlwaysUsageDescription</key>
 		<string>Aplikasi membutuhkan Bluetooth untuk terhubung ke perangkat seperti printer. / This app requires Bluetooth to connect to external devices such as printers.</string>
-		
+		<key>NSFaceIDUsageDescription</key>
+		<string>Aplikasi ini membutuhkan Face ID untuk autentikasi</string>
 	</dict>
 </plist>

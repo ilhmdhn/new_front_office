@@ -198,7 +198,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
       isNotNullOrEmpty(listOrder)?
       InkWell(
         onTap: ()async{
-          final nganu = await FnBDialog.order(context, listOrder, roomCode);
+          final nganu = await FnBDialog.order(context, listOrder, roomCode, widget.detailCheckin.memberName);
           if(nganu == true){
             setState(() {
               listOrder.clear();
