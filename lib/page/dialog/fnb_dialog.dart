@@ -287,20 +287,20 @@ class FnBDialog{
 
               //fix before compile
               //hilangkan opsi hp
-              if (user.outlet.contains('CB') || user.outlet.contains('TB')) {
+              if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('HP')) {
                 if(isNotNullOrEmpty(orderState.data)){
                   final lastSoState = await ApiRequest().latestSo(rcp);
                   
                   if (lastSoState.state == true) {
                     final soCode = lastSoState.data;
-                    final filteredData = (orderState.data ?? [])
-                        .where((dataSo) => dataSo.sol == soCode)
-                        .toList();
+                    final filteredData = (orderState.data ?? []).where((dataSo) => dataSo.sol == soCode).toList();
                     final doState = await ApiRequest().confirmDo(roomCode, filteredData);
                     finalState = doState.state ?? false;
 
                     if (doState.state != true) {
                       showToastError('DO error ${doState.message}');
+                    }else{
+                      PrintExecutor.printDoResto(orderState.data);
                     }
                   }
                 }

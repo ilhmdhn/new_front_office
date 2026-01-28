@@ -36,6 +36,9 @@ class OrderedModel{
   String? name;
   String? notes;
   num? price;
+  String? printerIP;
+  String? forwarderPORT;
+  String? stationName;
 
   OrderedModel({
     this.sol,
@@ -49,7 +52,10 @@ class OrderedModel{
     this.cancelQty,
     this.name,
     this.notes,
-    this.price
+    this.price,
+    this.printerIP,
+    this.forwarderPORT,
+    this.stationName
   });
 
   factory OrderedModel.fromJson(Map<String, dynamic>json){
@@ -65,7 +71,10 @@ class OrderedModel{
       location: json['order_location'],
       name: json['order_inventory_nama'],
       notes: json['order_notes'],
-      price: json['order_price']
+      price: json['order_price'],
+      printerIP: json['printer_ip_address'],
+      forwarderPORT: json['printer_port'],
+      stationName: json['station_name']
     );
   }
 }

@@ -21,7 +21,7 @@ class CallServiceHistoryResponse{
       state: true,
       message: json['message'],
       data: List<CallServiceHistory>.from(
-        (json['data'] as List).map((x) => CallServiceHistory.fromJson(x))
+        (json['data']??[]).map((x) => CallServiceHistory.fromJson(x))
       )
     );
   }

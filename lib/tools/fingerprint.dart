@@ -17,7 +17,7 @@ class FingerpintAuth{
       }
     
     try {
-      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Verifikasi Biometric Diperlukan',options: const AuthenticationOptions(biometricOnly: true));
+      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Verifikasi Biometric Diperlukan',options: const AuthenticationOptions(biometricOnly: false));
       return didAuthenticate;
     } catch (e) {
       showToastError(e.toString());

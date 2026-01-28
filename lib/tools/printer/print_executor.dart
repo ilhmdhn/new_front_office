@@ -18,7 +18,7 @@ class PrintExecutor {
     try {
       final helper = await _getPrinter();
       // final posContent = EscPosGenerator.testPrint(helper);
-      final posContent = EscPosGenerator.testChecker(helper);
+      final posContent = EscPosGenerator.testPrint(helper);
       await _execute(posContent);
       showToastSuccess('Test print berhasil');
     } catch (e) {
@@ -178,6 +178,29 @@ class PrintExecutor {
       showToastError('Gagal cetak so terakhir: $e');
       return;
     }
+  }
+
+  static Future<void> printDoResto(List<OrderedModel> data)async{
+    try {
+      final helper = await _getPrinter();
+
+      // Group order berdasarkan stationName
+      final Map<String, List<OrderedModel>> groupedOrders = {};
+
+      for (final orderan in data) {
+        groupedOrders.putIfAbsent(orderan.stationName??'', () => []);
+        groupedOrders[orderan.stationName]!.add(orderan);
+      }
+
+      // Loop setiap station dan cetak
+      for (final entry in groupedOrders.entries) {
+        final stationOrders = entry.value;
+        final command = EscPosGenerator.printStation(helper, stationOrders);
+        await _execute(command);
+      }
+    } catch (e) {
+      showToastError('Gagal cetak so: $e');
+    }  
   }
 
   static Future<CommandHelper> _getPrinter()async{

@@ -840,13 +840,14 @@ class ApiRequest{
           'slip_order': item.sol,
         }).toList(),
       };
-      
+      debugPrint(bodyParams.toString());
       final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
         loginPage();
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('DO Response $convertedResult');
       return BaseResponse.fromJson(convertedResult);
     }catch(e, stackTrace){
       debugPrint('Error DO $e\n$stackTrace');
@@ -1148,8 +1149,10 @@ class ApiRequest{
         },
       );
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('anu ${convertedResult.toString()}');
       return CallServiceHistoryResponse.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('Error getServiceHistory ${e.toString()} $stackTrace');
       return CallServiceHistoryResponse(
         state: false,
         message: e.toString(),
