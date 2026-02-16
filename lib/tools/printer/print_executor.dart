@@ -1,4 +1,5 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:flutter/rendering.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
@@ -22,7 +23,7 @@ class PrintExecutor {
       final posContent = EscPosGenerator.testPrint(helper);
       await _execute(posContent);
       showToastSuccess('Test print berhasil');
-    } catch (e) {
+    } catch (e, stackTraces) {
       showToastError('Error test print: $e');
       return;
     }
@@ -54,7 +55,7 @@ class PrintExecutor {
       }
       await _execute(posContent);
       ApiRequest().updatePrintState(rcp, '2');
-    } catch (e) {
+    } catch (e, stackTraces) {
       showToastError('Gagal cetak invoice: $e');
       return;
     }
@@ -85,7 +86,7 @@ class PrintExecutor {
       }
       await _execute(posContent);
       ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
-    }catch (e) {
+    }catch (e, stackTraces) {
       showToastError('Gagal cetak bill: $e');
       return;
     }
@@ -110,7 +111,7 @@ class PrintExecutor {
       final helper = await _getPrinter();
       final posContent = EscPosGenerator().printSlipCheckin(apiResponse.data!, helper);
       await _execute(posContent);
-    }catch (e) {
+    }catch (e, stackTraces) {
       showToastError('Gagal cetak slip: $e');
       return;
     }
@@ -136,7 +137,8 @@ class PrintExecutor {
       final helper = await _getPrinter();
       final posContent = EscPosGenerator().printSo(apiResponse.data!, roomCode, guestName, pax, helper);
       await _execute(posContent);
-    }catch (e) {
+    }catch (e, stackTraces) {
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
       showToastError('Gagal cetak so: $e');
       return;
     }
@@ -151,8 +153,9 @@ class PrintExecutor {
       final helper = await _getPrinter();
       final posContent = EscPosGenerator().printDo(order, roomCode, helper);
       await _execute(posContent);
-    }catch (e) {
+    }catch (e, stackTraces) {
       showToastError('Gagal cetak so: $e');
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
       return;
     }
   }
@@ -187,8 +190,9 @@ class PrintExecutor {
 
       final posContent = EscPosGenerator().printSo(apiResponse.data!, roomCode, guestName, pax, helper);
       await _execute(posContent);
-    }catch (e) {
+    }catch (e, stackTraces) {
       showToastError('Gagal cetak so terakhir: $e');
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
       return;
     }
   }
@@ -214,9 +218,11 @@ class PrintExecutor {
       
       final checkerCommand = EscPosGenerator.printStation(helper, soData.data??[], roomCode, custName, isChecker: true);
       await _executeLan(checkerCommand, soData.checkerIp??'');
-    } catch (e) {
+    } catch (e, stackTraces) {
       showToastError('Gagal cetak so: $e');
-    }  
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
+      return;
+    }
   }
 
   static Future<CommandHelper> _getPrinter()async{
@@ -242,7 +248,7 @@ class PrintExecutor {
         printerModel: printerConfig.printerModel,
       );
       return helper; 
-    }catch (e) {
+    }catch (e, stackTraces) {
       throw Exception('Error mendapatkan printer: $e');
     }
   }
@@ -264,13 +270,18 @@ class PrintExecutor {
           data: content,
         );
       } else if (printer.connectionType == PrinterConnectionType.lan) {
-        await LanPrintService.printOnce(
+        final lanPrint = LanPrintService(
           ip: printer.address,
           port: printer.port ?? 9100,
-          data: content,
         );
+
+        try {
+          await lanPrint.send(content);
+        } catch (e) {
+          throw Exception('Gagal terhubung ke printer LAN: $e');
+        }
       }
-    }catch (e) {
+    }catch (e, stackTraces) {
       throw 'Gagal terhubung ke printer: $e';
     }
   }
@@ -286,7 +297,7 @@ class PrintExecutor {
           port: 9100,
           data: content,
         );
-    }catch (e) {
+    }catch (e, stackTraces) {
       throw 'Gagal terhubung ke printer: $e';
     }
   }

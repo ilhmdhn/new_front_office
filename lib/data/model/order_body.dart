@@ -28,6 +28,7 @@ class GenerateOrderParams{
 
     return <String, dynamic>{
       'order_user_name': chusr,
+      'new_api': true,
       'order_room_code': roomCode,
       'order_room_type': roomType,
       'order_room_rcp': rcp,

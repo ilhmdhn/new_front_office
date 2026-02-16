@@ -42,9 +42,9 @@ class EscPosGenerator {
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
     bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text('STATION: ${data[0].stationName}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text('TABLE: $custName', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
-    bytes += helper.text("CUST: ${data[0].name}", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('STATION: ${isChecker?'CHECKER': data[0].stationName}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('TABLE: $roomName', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
+    bytes += helper.text("CUST: $custName", bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.divider();
     
     for(final order in data){
@@ -677,7 +677,6 @@ class EscPosGenerator {
       bytes += helper.cut();
       return bytes;
   }
-
 
   List<int> printSo(SolPrintModel data, String roomCode, String guestName, int pax,CommandHelper helper){
     List<int> bytes = [];
