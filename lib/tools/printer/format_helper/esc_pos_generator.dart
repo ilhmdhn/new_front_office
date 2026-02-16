@@ -242,6 +242,7 @@ class EscPosGenerator {
           bytes += _printTransfer(helper, element, data.footerStyle ?? 1);
         }
       }
+      bytes += helper.cut();
     return bytes;
   }
 
@@ -328,7 +329,7 @@ class EscPosGenerator {
     bytes += helper.textCenter('TAGIHAN', bold: true);
     bytes += helper.feed(1);
     //Checkin Info
-    bytes += helper.text('Meja : ${data.dataRoom.roomCode}');
+    bytes += helper.text('Meja    : ${data.dataRoom.roomCode}');
     bytes += helper.text('Nama    : ${data.dataRoom.nama}');
     bytes += helper.text('Tanggal : ${data.dataRoom.tanggal}');
     bytes += helper.feed(1);
@@ -377,6 +378,7 @@ class EscPosGenerator {
           bytes += _printTransfer(helper, element, data.footerStyle ?? 1);
         }
       }
+      bytes += helper.cut();
     return bytes;
   }
 
@@ -616,7 +618,7 @@ class EscPosGenerator {
       bytes += helper.textCenter('INVOICE', bold: true);
       bytes += helper.feed(1);
       //Checkin Info
-      bytes += helper.text('Meja : ${data.dataRoom.roomCode}');
+      bytes += helper.text('Meja    : ${data.dataRoom.roomCode}');
       bytes += helper.text('Nama    : ${data.dataRoom.nama}');
       bytes += helper.text('Tanggal : ${data.dataRoom.tanggal}');
       bytes += helper.feed(1);

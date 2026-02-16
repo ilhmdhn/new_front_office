@@ -285,8 +285,6 @@ class FnBDialog{
               finalState = orderState.state;
               final user = GlobalProviders.read(userProvider);
 
-              //fix before compile
-              //hilangkan opsi hp
               if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
                 if(isNotNullOrEmpty(orderState.data)){
                   final lastSoState = await ApiRequest().latestSo(rcp);

@@ -270,16 +270,11 @@ class PrintExecutor {
           data: content,
         );
       } else if (printer.connectionType == PrinterConnectionType.lan) {
-        final lanPrint = LanPrintService(
+        await LanPrintService.printOnce(
           ip: printer.address,
           port: printer.port ?? 9100,
+          data: content,
         );
-
-        try {
-          await lanPrint.send(content);
-        } catch (e) {
-          throw Exception('Gagal terhubung ke printer LAN: $e');
-        }
       }
     }catch (e, stackTraces) {
       throw 'Gagal terhubung ke printer: $e';
