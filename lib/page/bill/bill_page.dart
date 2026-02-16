@@ -256,11 +256,10 @@ class _BillPageState extends State<BillPage> {
                       InkWell(
                         onTap: ()async{
                           // DoPrint.printBill(roomCode); return;
-                          if(user.level != 'KASIR' && user.level != 'SERVER'){
+                          if(user.level != 'KASIR' && user.level != 'SERVER' && user.level != 'ACCOUNTING' ){
                             showToastWarning('User tidak memiliki akses');
                             return;
                           }else{
-              
                             if(result.data?.dataInvoice.statusPrint != '0'){
                               final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
                               if(reprintBillState!= true){

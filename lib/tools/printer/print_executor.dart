@@ -1,6 +1,7 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
+import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -30,6 +31,7 @@ class PrintExecutor {
   static Future<void> printInvoice(String rcp) async {
      try {
       final printInvoiceState = GlobalProviders.read(printInvoiceProvider);
+      final user = GlobalProviders.read(userProvider);
       if(printInvoiceState == false){
         return;
       }
@@ -44,7 +46,12 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      final posContent = EscPosGenerator().printInvoice(apiResponse.data!, helper);
+      List<int> posContent = [];
+      if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
+        posContent = EscPosGenerator().printInvoiceResto(apiResponse.data!, helper);
+      }else{
+        posContent = EscPosGenerator().printInvoice(apiResponse.data!, helper);
+      }
       await _execute(posContent);
       ApiRequest().updatePrintState(rcp, '2');
     } catch (e) {
@@ -56,6 +63,7 @@ class PrintExecutor {
   static Future<void> printBill(String roomCode)async{
     try {
       final printBillState = GlobalProviders.read(printBillProvider);
+      final user = GlobalProviders.read(userProvider);
       if(printBillState == false){
         return;
       }
@@ -69,7 +77,12 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      final posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
+      List<int> posContent = [];
+      if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
+        posContent = EscPosGenerator().printBillRestoGenerator(apiResponse.data!, helper);
+      }else{
+        posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
+      }
       await _execute(posContent);
       ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
     }catch (e) {
@@ -180,14 +193,14 @@ class PrintExecutor {
     }
   }
 
-  static Future<void> printDoResto(List<OrderedModel> data, String roomCode, String custName)async{
+  static Future<void> printDoResto(PostSoResponse soData, String roomCode, String custName)async{
     try {
       final helper = await _getPrinter();
 
       // Group order berdasarkan stationName
       final Map<String, List<OrderedModel>> groupedOrders = {};
 
-      for (final orderan in data) {
+      for (final orderan in soData.data??[]) {
         groupedOrders.putIfAbsent(orderan.stationName??'', () => []);
         groupedOrders[orderan.stationName]!.add(orderan);
       }
@@ -196,11 +209,11 @@ class PrintExecutor {
       for (final entry in groupedOrders.entries) {
         final stationOrders = entry.value;
         final command = EscPosGenerator.printStation(helper, stationOrders, roomCode, custName);
-        await _execute(command);
+        await _executeLan(command, entry.value[0].printerIP??'');
       }
       
-      final checkerCommand = EscPosGenerator.printStation(helper, data, roomCode, custName, isChecker: true);
-      await _execute(checkerCommand);
+      final checkerCommand = EscPosGenerator.printStation(helper, soData.data??[], roomCode, custName, isChecker: true);
+      await _executeLan(checkerCommand, soData.checkerIp??'');
     } catch (e) {
       showToastError('Gagal cetak so: $e');
     }  
@@ -257,6 +270,22 @@ class PrintExecutor {
           data: content,
         );
       }
+    }catch (e) {
+      throw 'Gagal terhubung ke printer: $e';
+    }
+  }
+
+  static Future<void> _executeLan(List<int> content, String ipAddress) async {
+    try {
+        if(isNullOrEmpty(ipAddress)){
+          showToastError('Printer IP: $ipAddress tidak ditemukan');
+          return;
+        }
+        await LanPrintService.printOnce(
+          ip: ipAddress,
+          port: 9100,
+          data: content,
+        );
     }catch (e) {
       throw 'Gagal terhubung ke printer: $e';
     }

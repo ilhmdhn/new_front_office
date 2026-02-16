@@ -287,7 +287,7 @@ class FnBDialog{
 
               //fix before compile
               //hilangkan opsi hp
-              if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('HP')) {
+              if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
                 if(isNotNullOrEmpty(orderState.data)){
                   final lastSoState = await ApiRequest().latestSo(rcp);
                   
@@ -300,7 +300,7 @@ class FnBDialog{
                     if (doState.state != true) {
                       showToastError('DO error ${doState.message}');
                     }else{
-                      PrintExecutor.printDoResto(orderState.data!, roomCode, custName);
+                      PrintExecutor.printDoResto(orderState, roomCode, custName);
                     }
                   }
                 }
@@ -518,4 +518,5 @@ class FnBDialog{
       }).then((value) => completer.complete(value));
       return completer.future;
   }
+  
 }
