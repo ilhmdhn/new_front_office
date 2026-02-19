@@ -187,7 +187,6 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-
       final posContent = EscPosGenerator().printSo(apiResponse.data!, roomCode, guestName, pax, helper);
       await _execute(posContent);
     }catch (e, stackTraces) {
@@ -200,6 +199,7 @@ class PrintExecutor {
   static Future<void> printDoResto(PostSoResponse soData, String roomCode, String custName)async{
     try {
       final helper = await _getPrinter();
+      final helperResto = await _getRestoPrinter();
 
       // Group order berdasarkan stationName
       final Map<String, List<OrderedModel>> groupedOrders = {};
@@ -212,12 +212,17 @@ class PrintExecutor {
       // Loop setiap station dan cetak
       for (final entry in groupedOrders.entries) {
         final stationOrders = entry.value;
-        final command = EscPosGenerator.printStation(helper, stationOrders, roomCode, custName);
+        final command = EscPosGenerator.printStation(helperResto, stationOrders, roomCode, custName);
         await _executeLan(command, entry.value[0].printerIP??'');
       }
       
-      final checkerCommand = EscPosGenerator.printStation(helper, soData.data??[], roomCode, custName, isChecker: true);
+      final checkerCommand = EscPosGenerator.printStation(helperResto, soData.data??[], roomCode, custName, isChecker: true);
+
       await _executeLan(checkerCommand, soData.checkerIp??'');
+
+
+      final posContent = EscPosGenerator.printStation(helper, soData.data??[], roomCode, custName);
+      await _execute(posContent);
     } catch (e, stackTraces) {
       showToastError('Gagal cetak so: $e');
       debugPrint('Error detail: $e\nStackTraces: $stackTraces');
@@ -238,8 +243,10 @@ class PrintExecutor {
         generator = Generator(PaperSize.mm80, profile);
       } else if (printer.printerModel == PrinterModelType.tmu220u) {
         generator = Generator(PaperSize.mm72, profile, spaceBetweenRows: 0);
-      } else {
+      } else if (printer.printerModel == PrinterModelType.bluetooth58mm) {
         generator = Generator(PaperSize.mm58, profile);
+      }else{
+        generator = Generator(PaperSize.mm80, profile);
       }
       
       final printerConfig = GlobalProviders.read(printerProvider);
@@ -251,6 +258,20 @@ class PrintExecutor {
     }catch (e, stackTraces) {
       throw Exception('Error mendapatkan printer: $e');
     }
+  }
+
+  static Future<CommandHelper> _getRestoPrinter() async {
+      try {
+        final profile = await CapabilityProfile.load();
+        final generator = Generator(PaperSize.mm80, profile);
+        final helper = CommandHelper(
+          generator,
+          printerModel: PrinterModelType.tm82x,
+        );
+        return Future.value(helper); 
+      }catch (e, stackTraces) {
+        throw Exception('Error mendapatkan printer resto: $e');
+      }
   }
 
   static Future<void> _execute(List<int> content) async {
@@ -270,30 +291,47 @@ class PrintExecutor {
           data: content,
         );
       } else if (printer.connectionType == PrinterConnectionType.lan) {
-        await LanPrintService.printOnce(
+        await _executeLan(content, printer.address, port: printer.port ?? 9100);
+        /*await LanPrintService.printOnce(
           ip: printer.address,
           port: printer.port ?? 9100,
           data: content,
-        );
+        );*/
       }
     }catch (e, stackTraces) {
       throw 'Gagal terhubung ke printer: $e';
     }
   }
 
-  static Future<void> _executeLan(List<int> content, String ipAddress) async {
-    try {
-        if(isNullOrEmpty(ipAddress)){
-          showToastError('Printer IP: $ipAddress tidak ditemukan');
-          return;
-        }
+  static Future<void> _executeLan(
+    List<int> content,
+    String ipAddress, {
+    int port = 9100,
+    int maxRetry = 3,
+  }) async {
+    if (isNullOrEmpty(ipAddress)) {
+      showToastError('Printer IP: $ipAddress tidak ditemukan');
+      return;
+    }
+
+    for (int attempt = 1; attempt <= maxRetry; attempt++) {
+      try {
         await LanPrintService.printOnce(
           ip: ipAddress,
-          port: 9100,
+          port: port,
           data: content,
         );
-    }catch (e, stackTraces) {
-      throw 'Gagal terhubung ke printer: $e';
+
+        return;
+      } catch (e) {
+        if (attempt == maxRetry) {
+          throw 'Gagal print setelah $maxRetry kali percobaan: $e';
+        }
+
+        final delaySeconds = attempt * 2; // 2s, 4s, 6s
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
     }
   }
+
 }

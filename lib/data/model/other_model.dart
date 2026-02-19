@@ -2,7 +2,8 @@
 enum PrinterModelType {
   tmu220u('TMU 220U'),
   tm82x('TM82x'),
-  bluetooth80mm('Bluetooth 80MM');
+  bluetooth80mm('Bluetooth 80MM'),
+  bluetooth58mm('Bluetooth 58MM');
 
   final String displayName;
   const PrinterModelType(this.displayName);
@@ -11,13 +12,14 @@ enum PrinterModelType {
   static PrinterModelType fromString(String value) {
     switch (value.toUpperCase()) {
       case 'TMU 220U':
-      case 'TMU220U':
-        return PrinterModelType.tmu220u;
-      case 'TM82X':
-        return PrinterModelType.tm82x;
+      case 'TMU220U': return PrinterModelType.tmu220u;
+      case 'TM82X': return PrinterModelType.tm82x;
       case 'BLUETOOTH 80MM':
       case 'BLUETOOTH80MM':
         return PrinterModelType.bluetooth80mm;
+      case 'BLUETOOTH 58MM':
+      case 'BLUETOOTH58MM':
+        return PrinterModelType.bluetooth58mm;
       default:
         return PrinterModelType.bluetooth80mm; // Default
     }

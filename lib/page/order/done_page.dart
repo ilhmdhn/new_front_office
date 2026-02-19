@@ -108,10 +108,14 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             InkWell(
                               onTap: ()async{
                                 final userLevel = GlobalProviders.read(userProvider).level;
-                                if(userLevel != 'KASIR' || userLevel != 'ACCOUNTING'){
-                                  showToastWarning('Hanya user kasir');
-                                  return;
+                                final outlet = GlobalProviders.read(userProvider).outlet;
+                                
+                                final isSpecialOutlet = outlet.contains('CB') || outlet.contains('RG') || outlet.contains('TB');
+                                if ((!isSpecialOutlet && userLevel != 'KASIR' && userLevel != 'ACCOUNTING') || (isSpecialOutlet && userLevel != 'KASIR' && userLevel != 'ACCOUNTING' && userLevel != 'SERVER')) {
+                                    showToastWarning('$userLevel Tidak memiliki akses');
+                                    return;
                                 }
+                                
                                 final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
                                 if(cancelQty > 0){
                                   setState(() {

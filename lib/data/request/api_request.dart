@@ -726,6 +726,7 @@ class ApiRequest{
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('Post SO Response: $convertedResult');
       return PostSoResponse.fromJson(convertedResult);
     }catch(e, stackTrace){
       debugPrint('Error POST SO ${stackTrace.toString()}');
@@ -1043,8 +1044,10 @@ class ApiRequest{
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('Checkin State: $convertedResult');
       return RoomCheckinState.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('Error checkinState: $e $stackTrace');
       return RoomCheckinState(state: false, message: e.toString());
     }
   }
