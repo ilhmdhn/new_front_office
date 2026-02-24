@@ -1,6 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:front_office_2/data/model/other_model.dart';
+import 'package:front_office_2/data/model/print_job.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 
 /// Service untuk print via BLE (Bluetooth Low Energy)
 /// Support Android & iOS
@@ -36,6 +40,59 @@ class BlePrintService {
   /// Returns:
   /// - `true` jika berhasil terkirim
   /// - `false` jika gagal
+  
+  static const int _maxRetry = 3;
+  static Future<bool> printWithRetry({
+    required String deviceId,
+    required String deviceName,
+    required List<int> data,
+  }) async {
+
+    if (data.isEmpty) {
+      debugPrint('[BLE] Data kosong');
+      return false;
+    }
+
+    String errorMessage = '';
+    for (int attempt = 1; attempt <= _maxRetry; attempt++) {
+      try {
+        debugPrint('[BLE] Attempt $attempt');
+        final success = await BlePrintService.printOnce(
+          deviceId: deviceId,
+          deviceName: deviceName,
+          data: data,
+        );
+
+        if (success) {
+          debugPrint('[BLE] Success');
+          return true;
+        }
+      } catch (e, stackTraces) {
+        debugPrint('[BLE] Error on attempt $attempt: $e');
+        errorMessage = '$e\n$stackTraces';
+      }
+
+      if (attempt < _maxRetry) {
+        final delayMs = 800 * attempt;
+        await Future.delayed(Duration(milliseconds: delayMs));
+      }
+    }
+
+    debugPrint('[BLE] All retry failed');
+    final printQueue = PrintJob(
+      title: 'Gagal print bluetooth: $deviceName', 
+      description: errorMessage,
+      data: data, 
+      printerType: PrinterConnectionType.bluetooth, 
+      target: deviceId,
+      printerName: deviceName,
+      createdAt: DateTime.now()
+    );
+    GlobalProviders.read(printJobProvider.notifier).addJob(printQueue);
+    return false;
+  }
+
+
   Future<bool> send(List<int> escPosData) async {
     if (escPosData.isEmpty) {
       throw ArgumentError('ESC/POS data tidak boleh kosong');

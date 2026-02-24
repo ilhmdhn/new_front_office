@@ -29,8 +29,7 @@ enum PrinterModelType {
 // Enum untuk Connection Type
 enum PrinterConnectionType {
   bluetooth('Bluetooth'),
-  lan('LAN'),
-  printerDriver('Printer Driver');
+  lan('LAN');
 
   final String displayName;
   const PrinterConnectionType(this.displayName);
@@ -43,8 +42,6 @@ enum PrinterConnectionType {
       case 'LAN':
         return PrinterConnectionType.lan;
       case 'PRINTER DRIVER':
-      case 'PRINTERDRIVER':
-        return PrinterConnectionType.printerDriver;
       default:
         return PrinterConnectionType.bluetooth; // Default
     }

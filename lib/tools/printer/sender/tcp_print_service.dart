@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/rendering.dart';
+import 'package:front_office_2/data/model/other_model.dart';
+import 'package:front_office_2/data/model/print_job.dart';
+import 'package:front_office_2/riverpod/printer/printer_job_provider.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
 
 /// Service untuk print via TCP/IP raw socket
 /// Compatible dengan Printer Forwarder (Windows) atau Network Printer
@@ -17,6 +21,56 @@ class TcpPrinterService {
     this.connectTimeout = const Duration(seconds: 5),
     this.responseTimeout = const Duration(seconds: 2),
   });
+
+  static Future<bool> printWithRetry({
+    required String ip,
+    required int port,
+    required List<int> data,
+    int maxRetry = 3,
+    Duration connectTimeout = const Duration(seconds: 5),
+    Duration responseTimeout = const Duration(seconds: 2),
+  }) async {
+    if (data.isEmpty) return false;
+    String errorMessage = '';
+    for (int attempt = 1; attempt <= maxRetry; attempt++) {
+      try {
+        debugPrint('[TcpPrinter] Attempt $attempt');
+
+        final success = await TcpPrinterService.printOnce(
+          ip: ip,
+          port: port,
+          data: data,
+          connectTimeout: connectTimeout,
+          responseTimeout: responseTimeout,
+        );
+
+        if (success) {
+          debugPrint('[TcpPrinter] Success on attempt $attempt');
+          return true;
+        }
+      } catch (e, stackTrace) {
+        debugPrint('[TcpPrinter] Error on attempt $attempt: $e');
+        errorMessage = '$e\n$stackTrace';
+      }
+
+      if (attempt < maxRetry) {
+        final delayMs = 700 * attempt; // 700ms, 1400ms
+        await Future.delayed(Duration(milliseconds: delayMs));
+      }
+    }
+
+    debugPrint('[TcpPrinter] All retry failed');
+    final printQueue = PrintJob(
+      title: 'Gagal print tcp', 
+      description: errorMessage,
+      data: data, 
+      printerType: PrinterConnectionType.lan, 
+      target: ip,
+      createdAt: DateTime.now()
+    );
+    GlobalProviders.read(printJobProvider.notifier).addJob(printQueue);
+    return false;
+  }
 
   /// Send ESC/POS data ke printer via TCP
   ///

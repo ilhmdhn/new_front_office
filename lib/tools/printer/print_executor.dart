@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
+import 'package:front_office_2/data/model/print_job.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -278,25 +279,21 @@ class PrintExecutor {
     try {
       final printer = GlobalProviders.read(printerProvider);
 
-      if (printer.connectionType == PrinterConnectionType.printerDriver) {
-        await TcpPrinterService.printOnce(
+      if (printer.connectionType == PrinterConnectionType.lan) {
+        await TcpPrinterService.printWithRetry(
           ip: printer.address,
           port: printer.port!,
           data: content,
         );
       } else if (printer.connectionType == PrinterConnectionType.bluetooth) {
-        await BlePrintService.printOnce(
+        await BlePrintService.printWithRetry(
           deviceId: printer.address,
           deviceName: printer.name,
           data: content,
         );
-      } else if (printer.connectionType == PrinterConnectionType.lan) {
+      // ignore: dead_code
+      } else if (false) {
         await _executeLan(content, printer.address, port: printer.port ?? 9100);
-        /*await LanPrintService.printOnce(
-          ip: printer.address,
-          port: printer.port ?? 9100,
-          data: content,
-        );*/
       }
     }catch (e, stackTraces) {
       throw 'Gagal terhubung ke printer: $e';
@@ -323,9 +320,19 @@ class PrintExecutor {
         );
 
         return;
-      } catch (e) {
+      } catch (e, stackTraces) {
         if (attempt == maxRetry) {
-          throw 'Gagal print setelah $maxRetry kali percobaan: $e';
+          final printQueue = PrintJob(
+            title: 'Gagal print LAN $ipAddress', 
+            description: 'Error: $e\nStackTraces: $stackTraces',
+            data: content, 
+            printerType: PrinterConnectionType.lan, 
+            target: ipAddress,
+            port: port, 
+            createdAt: DateTime.now()
+          );
+          GlobalProviders.read(printJobProvider.notifier).addJob(printQueue);
+          throw 'Gagal print ke printer LAN di $ipAddress';
         }
 
         final delaySeconds = attempt * 2; // 2s, 4s, 6s

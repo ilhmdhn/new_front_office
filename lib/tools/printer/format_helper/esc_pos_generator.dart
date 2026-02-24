@@ -55,7 +55,10 @@ class EscPosGenerator {
       }
     }
     bytes += helper.divider();
-      
+    bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    bytes += helper.row('', formattedDate);
     bytes += helper.feed(1);
     bytes += helper.cut();
 

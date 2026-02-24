@@ -446,14 +446,9 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           );
         }
       } catch (e, stackTrace) {
-        
-        
-
         if (!mounted) return;
-
         // Close loading if still open
         Navigator.pop(context);
-
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

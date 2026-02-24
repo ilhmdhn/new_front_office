@@ -639,7 +639,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
                 name: 'PC PRINTER',
                 port: port,
                 printerModel: selectedPcPrinterType,
-                connectionType: PrinterConnectionType.printerDriver,
+                connectionType: PrinterConnectionType.lan,
                 address: tfIpPc.text,
               ));
               showToastSuccess('PC Printer berhasil disimpan');

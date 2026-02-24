@@ -24,6 +24,7 @@ import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/room/list_room_page.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/setting/password/change_password_page.dart';
+import 'package:front_office_2/page/setting/printer/print_job_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/status/state_page.dart';
@@ -129,10 +130,9 @@ class FrontOffice extends StatelessWidget {
         PrinterStylePage.nameRoute: (context) => const PrinterStylePage(),
         CallServiceHistoryPage.nameRoute: (context) => const CallServiceHistoryPage(),
         ChangePasswordPage.routeName: (context) => const ChangePasswordPage(),
-        CheckinPage.nameRoute: (context) => const CheckinPage()
+        CheckinPage.nameRoute: (context) => const CheckinPage(),
+        PrintJobPage.routeName: (context) => const PrintJobPage()
       },
     );
   }
 }
-
-
