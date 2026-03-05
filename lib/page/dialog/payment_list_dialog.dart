@@ -1,131 +1,205 @@
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/list.dart';
-import 'package:front_office_2/data/model/edc_response.dart';
 
 class PaymentListDialog{
+
   static Future<String?> eMoneyList(BuildContext ctx, String? choosed) async {
-    return showDialog(
-      barrierDismissible: false,
-      context: ctx,
-      builder: (BuildContext ctxDialog){
-        return StatefulBuilder(
-          builder: (ctxStfl, setState){
-            return AlertDialog(
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-              titlePadding: const EdgeInsets.only(top: 12, bottom: 0),
-              backgroundColor: Colors.white,
-            title: Center(child: Text('Pilih E-Money', style: CustomTextStyle.titleAlertDialog(),)),
-            content: CustomRadioButton(
-              defaultSelected: choosed,
-              buttonLables: eMoneyValueList,
-              buttonValues: eMoneyValueList, 
-              autoWidth: true,
-              elevation: 0,
-              horizontal: true,
-              radioButtonValue: (value){
-                setState((){
-                  choosed = value;
-                });    
-              },
-              selectedBorderColor: Colors.transparent,
-              enableShape: true,
-              unSelectedBorderColor: CustomColorStyle.appBarBackground(),
-              unSelectedColor: Colors.white,
-              selectedColor: CustomColorStyle.appBarBackground()
+  // Simpan nilai pilihan di variabel lokal di dalam fungsi agar bisa diakses oleh Navigator.pop
+  String? tempSelected = choosed;
+
+  return showDialog(
+    barrierDismissible: false,
+    context: ctx,
+    builder: (BuildContext ctxDialog) {
+      return StatefulBuilder(
+        builder: (ctxStfl, setState) {
+          return AlertDialog(
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            title: Center(
+              child: Text(
+                'Pilih E-Money',
+                style: CustomTextStyle.titleAlertDialog(),
+              ),
+            ),
+            content: SizedBox(
+              width: double.maxFinite, // Penting agar GridView tahu lebar maksimal
+              child: GridView.builder(
+                shrinkWrap: true, // Penting: Menyesuaikan tinggi GridView dengan jumlah item
+                physics: const NeverScrollableScrollPhysics(), // Scroll diatur oleh dialog
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,       // 2 Kolom
+                  childAspectRatio: 2.5,   // Rasio lebar:tinggi. Semakin besar, tombol semakin tipis (minimalis)
+                  crossAxisSpacing: 10,    // Jarak horizontal
+                  mainAxisSpacing: 10,     // Jarak vertikal
+                ),
+                itemCount: eMoneyValueList.length,
+                itemBuilder: (context, index) {
+                  final item = eMoneyValueList[index];
+                  final bool isSelected = tempSelected == item;
+
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        tempSelected = item;
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isSelected ? CustomColorStyle.appBarBackground() : Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: CustomColorStyle.appBarBackground(),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        item,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
             actions: [
               InkWell(
-                onTap: (){
-                  Navigator.pop(ctxDialog);
-                },
+                onTap: () => Navigator.pop(ctxDialog),
                 child: Container(
                   decoration: CustomContainerStyle.cancelButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard(),),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
                 ),
               ),
               InkWell(
-                onTap: (){
-                  Navigator.pop(ctxDialog, choosed);
-                },
+                onTap: () => Navigator.pop(ctxDialog, tempSelected),
                 child: Container(
                   decoration: CustomContainerStyle.confirmButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard(),),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
                 ),
               ),
             ],
-            );
-          },
-        );
-      }
-    );
-  }
+          );
+        },
+      );
+    },
+  );
+}
 
   static Future<String?> piutangList(BuildContext ctx, String? choosed) async {
-    return showDialog(
-      barrierDismissible: false,
-      context: ctx,
-      builder: (BuildContext ctxDialog){
-        return StatefulBuilder(
-          builder: (ctxStfl, setState){
-            return AlertDialog(
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-              titlePadding: const EdgeInsets.only(top: 12, bottom: 0),
-              backgroundColor: Colors.white,
-            title: Center(child: Text('Piutang', style: CustomTextStyle.titleAlertDialog(),)),
-            content: CustomRadioButton(
-              defaultSelected: choosed,
-              buttonLables: piutangValueList,
-              buttonValues: piutangValueList, 
-              autoWidth: true,
-              elevation: 0,
-              horizontal: true,
-              radioButtonValue: (value){
-                setState((){
-                  choosed = value;
-                });    
-              },
-              selectedBorderColor: Colors.transparent,
-              enableShape: true,
-              unSelectedBorderColor: CustomColorStyle.appBarBackground(),
-              unSelectedColor: Colors.white,
-              selectedColor: CustomColorStyle.appBarBackground()
+  // Gunakan variabel lokal untuk menampung perubahan state di dalam StatefulBuilder
+  String? tempSelected = choosed;
+
+  return showDialog(
+    barrierDismissible: false,
+    context: ctx,
+    builder: (BuildContext ctxDialog) {
+      return StatefulBuilder(
+        builder: (ctxStfl, setState) {
+          return AlertDialog(
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            // Berikan padding sedikit agar grid tidak menempel ke pinggir dialog
+            contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            titlePadding: const EdgeInsets.only(top: 16, bottom: 0),
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            title: Center(
+              child: Text(
+                'Piutang',
+                style: CustomTextStyle.titleAlertDialog(),
+              ),
+            ),
+            content: SizedBox(
+              width: MediaQuery.of(ctx).size.width * 0.8, // Batasi lebar dialog
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: piutangValueList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 2.8, // Tombol tipis minimalis
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = piutangValueList[index];
+                    bool isSelected = tempSelected == item;
+                
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          tempSelected = item;
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSelected ? CustomColorStyle.appBarBackground() : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: CustomColorStyle.appBarBackground(),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          item,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
             actions: [
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(ctxDialog);
                 },
                 child: Container(
                   decoration: CustomContainerStyle.cancelButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard(),),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
                 ),
               ),
               InkWell(
-                onTap: (){
-                  Navigator.pop(ctxDialog, choosed);
+                onTap: () {
+                  Navigator.pop(ctxDialog, tempSelected);
                 },
                 child: Container(
                   decoration: CustomContainerStyle.confirmButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard(),),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
                 ),
               ),
             ],
-            );
-          },
-        );
-      }
-    );
-  }
+          );
+        },
+      );
+    },
+  );
+}
 
   static Future<EdcDataModel?> selectEdc(BuildContext ctx)async{
     return showDialog(

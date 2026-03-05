@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -75,21 +76,34 @@ class _ListFnbPageState extends State<ListFnbPage> {
           children: [
             SizedBox(
                 height: ScreenSize.getHeightPercent(context, 10),
-                child: SearchBar(
-                  hintText: 'Cari Room',
-                  backgroundColor: WidgetStateColor.resolveWith((states) => Colors.white),
-                  surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
-                  shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
-                  onChanged: ((value){
-                    if(_searchFnb != value){
-                      _searchFnb = value;
-                      _fnbPagingController.refresh();
-                    }
-                  }),
-                  trailing: Iterable.generate(
-                    1, (index) => const Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child:  Icon(Icons.search))),
+                width: ScreenSize.getSizePercent(context, 100),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Flexible(
+                      child: SearchBar(
+                        hintText: 'Cari FnB',
+                        backgroundColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                        surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                        shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                        onChanged: ((value){
+                          if(_searchFnb != value){
+                            _searchFnb = value;
+                            _fnbPagingController.refresh();
+                          }
+                        }),
+                        trailing: Iterable.generate(
+                          1, (index) => const Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child:  Icon(Icons.search)
+                          )
+                        ),
+                      ),
+                    ),
+                    IconButton(onPressed: (){
+                    
+                    }, icon: FaIcon(FontAwesomeIcons.filter))
+                  ],
                 ),
               ),
               const SizedBox(height: 6),

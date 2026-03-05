@@ -50,6 +50,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String dpNote = "";
   String edcCode = "";
   VoucherMemberModel? voucherDetail;
+  final posType = GlobalProviders.read(posTypeProvider);
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
@@ -115,6 +116,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
         title: Text('Room Checkin', style: CustomTextStyle.titleAppBar(),),
         backgroundColor: CustomColorStyle.appBarBackground(),
       ),
+      backgroundColor: CustomColorStyle.background(),
       body: isLoading == true?
       const Center(
         child: CircularProgressIndicator(),
@@ -137,7 +139,16 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Column(
+                      child: 
+                      
+                      pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+                      Column(
+                        children: [
+                          AutoSizeText('Cust', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                          AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                        ],
+                      ):                      
+                      Column(
                         children: [
                           AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                           AutoSizeText(dataCheckin!.memberCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
@@ -146,11 +157,19 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     ),
                     Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
                     Expanded(
-                      child: Column(
+                      child: 
+                      pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+                      Column(
+                        children: [
+                          AutoSizeText('Table', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                          AutoSizeText(dataCheckin!.roomCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                      ],):
+                      Column(
                         children: [
                           AutoSizeText(dataCheckin!.roomCode, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
                           AutoSizeText(remainingTime, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                      ],))
+                      ],)
+                    )
                   ],
                 ),
                 const SizedBox(height: 12,),
@@ -192,9 +211,11 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ),
                   ],
                 ),
+                pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased?
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Voucher Puppy Club', style: CustomTextStyle.blackMediumSize(17),)),
+                  child: Text('Voucher Puppy Club', style: CustomTextStyle.blackMediumSize(17),)): SizedBox(),
+                pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased?
                 SizedBox(
                   width: double.infinity,
                   child: Column(
@@ -202,7 +223,6 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     children: [
                       voucherFix == null? InkWell(
                         onTap: ()async{
-                          
                           // showToastWarning('Masih belum aktif, gunakan FO Desktop');
                           // return;
                           final qrCode = await showQRScannerDialog(context);
@@ -305,7 +325,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         const SizedBox(width: 6,), 
                     ],
                   ),
-                ),
+                ): SizedBox(),
                 const SizedBox(width: 6,),
 
                 promoRoom == null && (pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased)?

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/auth/approval_list_page.dart';
@@ -8,6 +9,7 @@ import 'package:front_office_2/page/checkin/list_room_checkin_page.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/room/list_type_room.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -18,29 +20,36 @@ class ButtonMenuWidget{
   ButtonMenuWidget({required this.context});
   final myGroup = AutoSizeGroup();
   
-  Widget kasirLayout(String approvalCount){
+  Widget kasirLayout(String approvalCount) {
+    final pos = GlobalProviders.read(posTypeProvider);
+    bool isRestoOnly = (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased);
+
+    // List menu dasar yang selalu ada
+    List<Widget> menuItems = [
+      checkinPage(),
+      editCheckin(),
+      if (!isRestoOnly) extend(),
+      transfer(),
+      order(),
+      bill(),
+      if (!isRestoOnly) ...[
+        checkout(),
+        clean(),
+        checkinOld(),
+      ],
+    ];
+
     return Column(
       children: [
-        buildGridMenu(
-          'Operasional',
-          2, 
-          [              
-            checkinPage(),
-            editCheckin(),
-            extend(),
-            transfer(),
-            order(),
-            bill(),
-            checkout(),
-            clean(),
-            checkinOld(),
-          ]
-        ),
+        buildGridMenu('Operasional', 2, menuItems),
       ],
     );
   }
 
   Widget accountingLayout(String approvalCount) {
+    final pos = GlobalProviders.read(posTypeProvider);
+    bool isRestoOnly = (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased);
+    
     return Column(
       children: [
         buildGridMenu(
@@ -49,20 +58,22 @@ class ButtonMenuWidget{
           [  
             checkinPage(),                
             editCheckin(),
-            extend(),
+            if (!isRestoOnly) extend(),
             transfer(),
             order(),
             bill(),
-            checkout(),
-            clean(),
-            checkinOld()
+            if (!isRestoOnly) ...[
+                checkout(),
+                clean(),
+                checkinOld(),
+            ],
           ]
         ),
         SizedBox(height: 12,),
         buildGridMenu(
           'Verification',
-          2, 
-          [                  
+          2,
+          [
             approval(approvalCount)
           ]
         ),
@@ -71,15 +82,18 @@ class ButtonMenuWidget{
   }
 
   Widget serverLayout(){
+    final pos = GlobalProviders.read(posTypeProvider);
+    bool isRestoOnly = (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased);
     return Column(
       children: [
         buildGridMenu(
           'Operasional',
           2, 
           [
+            if(isRestoOnly) checkinPage(),
             order(),
             bill(),
-            clean()
+            if(!isRestoOnly) clean()
           ]
         ),
       ]
@@ -87,28 +101,33 @@ class ButtonMenuWidget{
   }
 
   Widget spvLayout(String approvalCount){
+    final pos = GlobalProviders.read(posTypeProvider);
+    bool isRestoOnly = (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased);
+    
     return Column(
       children: [
         buildGridMenu(
           'Operasional',
           2, 
           [  
-            checkinPage(),     
+            checkinPage(),                
             editCheckin(),
-            extend(),
+            if (!isRestoOnly) extend(),
             transfer(),
             order(),
             bill(),
-            checkout(),
-            clean(),
-            checkinOld()
+            if (!isRestoOnly) ...[
+                checkout(),
+                clean(),
+                checkinOld(),
+            ],
           ]
         ),
         SizedBox(height: 12,),
         buildGridMenu(
           'Verification',
-          2, 
-          [                  
+          2,
+          [
             approval(approvalCount)
           ]
         ),
@@ -164,7 +183,6 @@ class ButtonMenuWidget{
             },
         );
   }
-
 
   Widget checkinReservation(){
     // final widthButton = ScreenSize.getSizePercent(context, 45);

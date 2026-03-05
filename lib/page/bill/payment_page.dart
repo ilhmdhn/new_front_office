@@ -1,12 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/payment_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/payment_list_dialog.dart';
-import 'package:front_office_2/page/dialog/card_payment_dialog.dart';
 import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
@@ -95,6 +94,7 @@ class _PaymentPageState extends State<PaymentPage> {
       getData();
     }
     return Scaffold(
+      backgroundColor: CustomColorStyle.background(),
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color:  Colors.white,
@@ -111,577 +111,622 @@ class _PaymentPageState extends State<PaymentPage> {
     
       billData?.state != true?
       Center(
-        child: AutoSizeText(billData?.message??'Errpr get data bill'),
+        child: AutoSizeText(billData?.message??'Error get data bill'),
       ):
       
-      Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 6,),
-                Center(child: Text('Total ${Formatter.formatRupiah(totalBill)}', style: CustomTextStyle.blackMediumSize(19))),
-                CustomRadioButton(
-                  defaultSelected: 'CASH',
-                  buttonLables: paymentMethodList,
-                  buttonValues: paymentMethodList,
-                  autoWidth: true,
-                  elevation: 0,
-                  radioButtonValue: (value){
-                    setState(() {
-                      paymentMethod = value;
-                    });
-                  },
-                  selectedBorderColor: Colors.transparent,
-                  unSelectedColor: Colors.white,
-                  enableShape: true,
-                  unSelectedBorderColor: CustomColorStyle.appBarBackground(),
-                  selectedColor: CustomColorStyle.appBarBackground()),
-                
-                TextField(
-                  decoration: CustomTextfieldStyle.normalHint('Nominal'),
-                    keyboardType: TextInputType.number,
-                    controller: _nominalController,
-                    inputFormatters: [RupiahInputFormatter()]
-                ),
-                const SizedBox(height: 12,),
+      SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Total ${Formatter.formatRupiah(totalBill)}', style: CustomTextStyle.blackMediumSize(19)),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Masukkan nominal pembayaran', style: CustomTextStyle.blackStandard(), textAlign: TextAlign.start,)),
+                  TextField(
+                    decoration: CustomTextfieldStyle.normalHint('Nominal'),
+                      keyboardType: TextInputType.number,
+                      controller: _nominalController,
+                      inputFormatters: [RupiahInputFormatter()]
+                  ),
+                  const SizedBox(height: 12,),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Pilih Metode Pembayaran', style: CustomTextStyle.blackStandard(), textAlign: TextAlign.start,)),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 5/1,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                    ),
+                    itemCount: paymentMethodList.length,
+                    itemBuilder: (context, index) {
+                      final method = paymentMethodList[index];
+                      bool isSelected = paymentMethod == method;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            paymentMethod = method;
+                          });
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: isSelected ? CustomColorStyle.appBarBackground() : Colors.white,
+                            border: Border.all(color: CustomColorStyle.appBarBackground()),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            method,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  paymentMethod == 'CASH'?
+                  const SizedBox.shrink():
+                  paymentMethod == 'CREDIT CARD'?
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
+                                  const SizedBox(width: 12,),
+                                  InkWell(
+                                    onTap: ()async{
+                                      final choosed = await CardPaymentDialog().edcMachine(context);
+                                      if(choosed != null){
+                                        setState(() {
+                                          edcChoosed = choosed;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: CustomContainerStyle.blueButton(),
+                                      child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12,),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
+                                  const SizedBox(width: 12,),
+                                  InkWell(
+                                    onTap: ()async{
+                                      final choosed = await CardPaymentDialog().cardType(context);
+                                      if(choosed != null){
+                                        setState(() {
+                                          cardChoosed = choosed;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: CustomContainerStyle.blueButton(),
+                                      child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                        ],),
+                        const SizedBox(height: 3),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nama'),
+                          controller: _nameCreditCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nomor'),
+                          keyboardType: TextInputType.number,
+                          controller: _numberCreditCardController,
+                        
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Kode Approval'),
+                          controller: _approvalCreditCardController,
+                          keyboardType: TextInputType.number
+                        ),
+                      ],
+                    ),
+                  ):
+                  paymentMethod == 'DEBET CARD'?
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
+                                  const SizedBox(width: 12,),
+                                  InkWell(
+                                    onTap: ()async{
+                                      final choosed = await CardPaymentDialog().edcMachine(context);
+                                      if(choosed != null){
+                                        setState(() {
+                                          edcChoosed = choosed;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: CustomContainerStyle.blueButton(),
+                                      child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12,),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
+                                  const SizedBox(width: 12,),
+                                  InkWell(
+                                    onTap: ()async{
+                                      final choosed = await CardPaymentDialog().cardType(context);
+                                      if(choosed != null){
+                                        setState(() {
+                                          cardChoosed = choosed;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: CustomContainerStyle.blueButton(),
+                                      child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                        ],),
+                        const SizedBox(height: 3),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nama'),
+                          controller: _nameDebetCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nomor'),
+                          keyboardType: TextInputType.number,
+                          controller: _numberDebetCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Kode Approval'),
+                          controller: _approvalDebetCardController,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                  ):
+                  paymentMethod == 'E-MONEY'?
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 6),
+                        InkWell(
+                          onTap: ()async{
+                            final choosedEmoney = await PaymentListDialog.eMoneyList(context, eMoneyChoosed);
+                            if(choosedEmoney != null){
+                              setState(() {
+                                eMoneyChoosed = choosedEmoney;
+                              });
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: CustomContainerStyle.blueButton(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(eMoneyChoosed, style: CustomTextStyle.whiteStandard()),
+                                const Icon(Icons.arrow_drop_down, color: Colors.white,)
+                            ],),
+                          ),
+                        ),
+                        const SizedBox(height: 3,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nama'),
+                          controller: _nameEmoneyCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nomor'),
+                          keyboardType: TextInputType.number,
+                          controller: _numberEmoneyCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Kode Referal'),
+                          controller: _referalEmoneyCardController,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                  ):
+                  paymentMethod == 'COMPLIMENTARY'?
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 6),
+                        Text('Memerlukan Verifikasi', style: CustomTextStyle.blackMediumSize(16),),
+                        const SizedBox(height: 3),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nama'),
+                          controller: _nameComplimentaryCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Instansi'),
+                          controller: _agencyComplimentaryCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Penanggung Jawab'),
+                          controller: _responsibleComplimentaryCardController,
+                        ),
+                      ],
+                    ),
+                  ):
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 6),
+                        Text('Memerlukan Verifikasi', style: CustomTextStyle.blackMediumSize(16),),
+                        const SizedBox(height: 3),
+                        InkWell(
+                          onTap: ()async{
+                            final choosedPiutang = await PaymentListDialog.piutangList(context, piutangChoosed);
+                            if(choosedPiutang != null){
+                              setState(() {
+                                piutangChoosed = choosedPiutang;
+                              });
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: CustomContainerStyle.blueButton(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(piutangChoosed, style: CustomTextStyle.whiteStandard()),
+                                const Icon(Icons.arrow_drop_down, color: Colors.white,)
+                            ],),
+                          ),
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('Nama'),
+                          controller: _nameReceivablesCardController,
+                        ),
+                        const SizedBox(height: 6,),
+                        TextField(
+                          decoration: CustomTextfieldStyle.normalHint('ID Member'),
+                          controller: _memberReceivablesCardController,
+                          keyboardType: TextInputType.number
+                        ),
+                      ],
+                    )
+                  ),
+                  const SizedBox(height: 6,),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: ()async{
+                        if(isNullOrEmpty(_nominalController.text)){
+                          return showToastError('Isi nominal');
+                        }
+                        final value = int.parse(_nominalController.text.replaceAll(RegExp(r'[^\d]'), ''));
+                        final isAdded = paymentList.where((element) => element.paymentType == paymentMethod).toList();
+                        if(isAdded.isNotEmpty){
+                          return showToastWarning('Metode pembayaran sudah ditambahkan');
+                        }
+                        switch(paymentMethod){
+            
+                          case 'CASH': {
+                            paymentList.add(
+                              PaymentDetail(
+                                nominal: value,
+                                paymentType: 'CASH'
+                              )
+                            );
+                          }
+                          break;
                           
-                paymentMethod == 'CASH'?
-                const SizedBox():
-                paymentMethod == 'CREDIT CARD'?
-                SizedBox(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
-                                const SizedBox(width: 12,),
-                                InkWell(
-                                  onTap: ()async{
-                                    final choosed = await CardPaymentDialog().edcMachine(context);
-                                    if(choosed != null){
-                                      setState(() {
-                                        edcChoosed = choosed;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: CustomContainerStyle.blueButton(),
-                                    child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12,),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
-                                const SizedBox(width: 12,),
-                                InkWell(
-                                  onTap: ()async{
-                                    final choosed = await CardPaymentDialog().cardType(context);
-                                    if(choosed != null){
-                                      setState(() {
-                                        cardChoosed = choosed;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: CustomContainerStyle.blueButton(),
-                                    child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                      ],),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nama'),
-                        controller: _nameCreditCardController,
+                          case 'CREDIT CARD':{
+            
+                            final approvalCode = _approvalCreditCardController.text;
+                            final cardCode = _numberCreditCardController.text;
+                            final cardName = _nameCreditCardController.text;
+            
+                            if(isNullOrEmpty(approvalCode) || isNullOrEmpty(cardCode) || isNullOrEmpty(cardName) || isNullOrEmpty(cardChoosed) || isNullOrEmpty(edcChoosed)){
+                              return showToastError('Lengkapi data');
+                            }
+            
+                            paymentList.add(
+                              PaymentDetail(
+                                nominal: value,
+                                approvalCodeCredit: approvalCode,
+                                cardCodeCredit: cardCode,
+                                cardCredit: cardChoosed,
+                                edcCredit: edcChoosed,
+                                namaUserCredit: cardName,
+                                paymentType: 'CREDIT CARD'
+                              )
+                            );
+                          }
+                          break;
+                          
+                          case 'DEBET CARD':{
+                            final approvalCode = _approvalDebetCardController.text;
+                            final cardCode = _numberDebetCardController.text;
+                            final cardName = _nameDebetCardController.text;
+            
+                            if(isNullOrEmpty(approvalCode) || isNullOrEmpty(cardCode) || isNullOrEmpty(cardName) || isNullOrEmpty(cardChoosed) || isNullOrEmpty(edcChoosed)){
+                              return showToastError('Lengkapi data');
+                            }
+            
+                            paymentList.add(
+                              PaymentDetail(
+                                approvalCodeDebet: _approvalDebetCardController.text,
+                                cardCodeDebet: _numberDebetCardController.text,
+                                cardDebet: cardChoosed,
+                                edcDebet: edcChoosed,
+                                namaUserDebet: _nameDebetCardController.text,
+                                nominal: value,
+                                paymentType: 'DEBET CARD'
+                              )
+                            );
+                          }
+                          break;
+                          
+                          case 'E-MONEY':{
+                            final accountCode = _numberEmoneyCardController.text;
+                            final accountName = _nameEmoneyCardController.text;
+                            final referalCode = _referalEmoneyCardController.text;
+            
+                            if(isNullOrEmpty(accountCode) || isNullOrEmpty(accountName) || isNullOrEmpty(referalCode)){
+                              // showToastWarning('KURANGGG');
+                              return showToastError('Lengkapi data');
+                            }
+                              
+                            paymentList.add(
+                              PaymentDetail(
+                                accountEmoney: accountCode,
+                                namaUserEmoney: accountName,
+                                nominal: value,
+                                paymentType: 'E-MONEY',
+                                refCodeEmoney: referalCode,
+                                typeEmoney: eMoneyChoosed
+                              )
+                            );
+                          }
+                          break;
+            
+                          case 'COMPLIMENTARY':{
+                            final agencyName = _agencyComplimentaryCardController.text;
+                            final responsibleName = _responsibleComplimentaryCardController.text;
+                            final nameComplimentary = _nameComplimentaryCardController.text;
+            
+                            if(isNullOrEmpty(agencyName) || isNullOrEmpty(responsibleName) || isNullOrEmpty(nameComplimentary)){
+                              return showToastError('Lengkapi data');
+                            }
+            
+                            final approvalState = await VerificationDialog.requestVerification(context, billData?.data?.dataInvoice.reception??'', billData?.data?.dataRoom.roomCode??'', 'Meminta persetujuan pembayaran COMPLIMENTARY sebesar $value');
+                              
+                            if(approvalState != true){
+                              return showToastWarning('Permintaan complimentary ditolak');
+                            }
+            
+                            paymentList.add(
+                              PaymentDetail(
+                                instansiCompliment: agencyName,
+                                instruksiCompliment: responsibleName,
+                                namaUserCompliment: nameComplimentary,
+                                nominal: value,
+                                paymentType: 'COMPLIMENTARY'
+                              )
+                            );
+                          }
+                          break;
+                          
+                          case 'PIUTANG':{
+                            final name = _nameReceivablesCardController.text;
+                            final memberCode = _memberReceivablesCardController.text;
+            
+                            if(isNullOrEmpty(name) || isNullOrEmpty(memberCode)){
+                              return showToastError('Lengkapi data');
+                            }
+            
+                            final approvalState = await VerificationDialog.requestVerification(context, 'RCP', 'ROOMNYA', 'Meminta persetujuan pembayaran PIUTANG sebesar $value');
+                              
+                            if(approvalState != true){
+                              return showToastWarning('Permintaan piutang ditolak');
+                            }
+            
+                            paymentList.add(
+                              PaymentDetail(
+                                idMemberPiutang: memberCode,
+                                namaUserPiutang: name,
+                                nominal: value,
+                                paymentType: 'PIUTANG',
+                                typePiutang: piutangChoosed
+                              )
+                            );
+                          }
+                        }
+            
+                        setState(() {
+                          paymentList;
+                          _setNominal();
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        decoration: CustomContainerStyle.blueButton(),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.add_outlined, color: Colors.white,),
+                            const SizedBox(width: 6,),
+                            Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nomor'),
-                        keyboardType: TextInputType.number,
-                        controller: _numberCreditCardController,
-                      
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Kode Approval'),
-                        controller: _approvalCreditCardController,
-                        keyboardType: TextInputType.number
-                      ),
-                    ],
+                    ),
                   ),
-                ):
-                paymentMethod == 'DEBET CARD'?
-                SizedBox(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ],
+              ),
+              Column(
+                children: [
+                  paymentList.isNotEmpty?
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: CustomColorStyle.appBarBackground(), width: 1)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Daftar Pembayaran:', style: CustomTextStyle.blackMediumSize(12),),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: paymentList.length,
+                          itemBuilder: (BuildContext ctxList, index){
+                            final payment = paymentList[index];
+                            return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          paymentList.removeAt(index);
+                                          _setNominal();
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: Colors.redAccent,),
+                                    ),
+                                    const SizedBox(width: 6,),
+                                    AutoSizeText(payment.paymentType, style: CustomTextStyle.blackStandard(),),
+                                    const SizedBox(height: 6,)
+                                  ],
+                                ),
+                                AutoSizeText(Formatter.formatRupiah(payment.nominal), style: CustomTextStyle.blackStandard())
+                              ],
+                            );
+                          }
+                        ),
+                      ],
+                    ),
+                  ) :SizedBox.shrink(),
+                  minusPay < 0?
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
-                                const SizedBox(width: 12,),
-                                InkWell(
-                                  onTap: ()async{
-                                    final choosed = await CardPaymentDialog().edcMachine(context);
-                                    if(choosed != null){
-                                      setState(() {
-                                        edcChoosed = choosed;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: CustomContainerStyle.blueButton(),
-                                    child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12,),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
-                                const SizedBox(width: 12,),
-                                InkWell(
-                                  onTap: ()async{
-                                    final choosed = await CardPaymentDialog().cardType(context);
-                                    if(choosed != null){
-                                      setState(() {
-                                        cardChoosed = choosed;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: CustomContainerStyle.blueButton(),
-                                    child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                      ],),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nama'),
-                        controller: _nameDebetCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nomor'),
-                        keyboardType: TextInputType.number,
-                        controller: _numberDebetCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Kode Approval'),
-                        controller: _approvalDebetCardController,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ],
+                          AutoSizeText('KEMBALI', style: CustomTextStyle.blackSemi(),),
+                          AutoSizeText(Formatter.formatRupiah(minusPay).replaceAll('-', ''), style: CustomTextStyle.blackSemi())
+                        ],
+                  ):Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText('KURANG', style: CustomTextStyle.blackSemi(),),
+                          AutoSizeText(Formatter.formatRupiah(minusPay), style: CustomTextStyle.blackSemi())
+                        ],
                   ),
-                ):
-                paymentMethod == 'E-MONEY'?
-                SizedBox(
-                  child: Column(
+                  Row(
                     children: [
+                      Checkbox(
+                        activeColor: CustomColorStyle.appBarBackground(),
+                        value: sendEmail,
+                        onChanged: (value){
+                          setState((){
+                            sendEmail = !sendEmail;
+                          });
+                      }),
+                      AutoSizeText('Email Invoice', style: CustomTextStyle.blackStandard(), minFontSize: 9, maxFontSize: 16,),
+                      const Expanded(child: SizedBox()),
                       InkWell(
                         onTap: ()async{
-                          final choosedEmoney = await PaymentListDialog.eMoneyList(context, eMoneyChoosed);
-                          if(choosedEmoney != null){
-                            setState(() {
-                              eMoneyChoosed = choosedEmoney;
-                            });
+                          if(minusPay > 0 ){
+                            showToastWarning('Pembayaran Kurang');
+                            return;
+                          }
+                          
+                          final confirmationState = await ConfirmationDialog.confirmation(context, 'Bayar Room $roomCode');
+                          if(confirmationState != true){
+                            return;
+                          }
+            
+                          final anu = GeneratePaymentParams.generatePaymentParams(sendEmail, roomCode, paymentList);
+                          final paymentResult = await ApiRequest().pay(anu);
+            
+                          if(paymentResult.state != true){
+                            showToastError(paymentResult.message.toString());
+                            return;
+                          }
+          
+                          PrintExecutor.printInvoice(billData?.data?.dataInvoice.reception??'');
+           
+                          if(context.mounted){
+                            final invoiceCode = billData?.data?.dataInvoice.invoice??'';
+                            final memberCode = billData?.data?.dataInvoice.memberCode??'';
+                            final memberName = billData?.data?.dataInvoice.memberName??'';
+                            
+                            Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
+                            RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: CustomContainerStyle.blueButton(),
+                          decoration: CustomContainerStyle.confirmButton(),
+                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 21),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(eMoneyChoosed, style: CustomTextStyle.whiteStandard()),
-                              const Icon(Icons.arrow_drop_down, color: Colors.white,)
-                          ],),
+                              Center(child: Text('BAYAR', style: CustomTextStyle.whiteSize(16),)),
+                              const SizedBox(width: 12,),
+                              const Icon(Icons.payments, color: Colors.white,),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nama'),
-                        controller: _nameEmoneyCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nomor'),
-                        keyboardType: TextInputType.number,
-                        controller: _numberEmoneyCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Kode Referal'),
-                        controller: _referalEmoneyCardController,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ],
-                  ),
-                ):
-                paymentMethod == 'COMPLIMENTARY'?
-                SizedBox(
-                  child: Column(
-                    children: [
-                      Text('Memerlukan Verifikasi', style: CustomTextStyle.blackStandard(),),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nama'),
-                        controller: _nameComplimentaryCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Instansi'),
-                        controller: _agencyComplimentaryCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Penanggung Jawab'),
-                        controller: _responsibleComplimentaryCardController,
-                      ),
-                    ],
-                  ),
-                ):
-                SizedBox(
-                  child: Column(
-                    children: [
-                      Text('Memerlukan Verifikasi', style: CustomTextStyle.blackStandard(),),
-                      const SizedBox(height: 6,),
-                      InkWell(
-                        onTap: ()async{
-                          final choosedPiutang = await PaymentListDialog.piutangList(context, piutangChoosed);
-                          if(choosedPiutang != null){
-                            setState(() {
-                              piutangChoosed = choosedPiutang;
-                            });
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: CustomContainerStyle.blueButton(),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(piutangChoosed, style: CustomTextStyle.whiteStandard()),
-                              const Icon(Icons.arrow_drop_down, color: Colors.white,)
-                          ],),
-                        ),
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('Nama'),
-                        controller: _nameReceivablesCardController,
-                      ),
-                      const SizedBox(height: 6,),
-                      TextField(
-                        decoration: CustomTextfieldStyle.normalHint('ID Member'),
-                        controller: _memberReceivablesCardController,
-                        keyboardType: TextInputType.number
                       ),
                     ],
                   )
-                ),
-                const SizedBox(height: 6,),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    onTap: ()async{
-                      if(isNullOrEmpty(_nominalController.text)){
-                        return showToastError('Isi nominal');
-                      }
-                      final value = int.parse(_nominalController.text.replaceAll(RegExp(r'[^\d]'), ''));
-                      final isAdded = paymentList.where((element) => element.paymentType == paymentMethod).toList();
-                      if(isAdded.isNotEmpty){
-                        return showToastWarning('Metode pembayaran sudah ditambahkan');
-                      }
-                      switch(paymentMethod){
-    
-                        case 'CASH': {
-                          paymentList.add(
-                            PaymentDetail(
-                              nominal: value,
-                              paymentType: 'CASH'
-                            )
-                          );
-                        }
-                        break;
-                        
-                        case 'CREDIT CARD':{
-    
-                          final approvalCode = _approvalCreditCardController.text;
-                          final cardCode = _numberCreditCardController.text;
-                          final cardName = _nameCreditCardController.text;
-    
-                          if(isNullOrEmpty(approvalCode) || isNullOrEmpty(cardCode) || isNullOrEmpty(cardName) || isNullOrEmpty(cardChoosed) || isNullOrEmpty(edcChoosed)){
-                            return showToastError('Lengkapi data');
-                          }
-    
-                          paymentList.add(
-                            PaymentDetail(
-                              nominal: value,
-                              approvalCodeCredit: approvalCode,
-                              cardCodeCredit: cardCode,
-                              cardCredit: cardChoosed,
-                              edcCredit: edcChoosed,
-                              namaUserCredit: cardName,
-                              paymentType: 'CREDIT CARD'
-                            )
-                          );
-                        }
-                        break;
-                        
-                        case 'DEBET CARD':{
-                          final approvalCode = _approvalDebetCardController.text;
-                          final cardCode = _numberDebetCardController.text;
-                          final cardName = _nameDebetCardController.text;
-    
-                          if(isNullOrEmpty(approvalCode) || isNullOrEmpty(cardCode) || isNullOrEmpty(cardName) || isNullOrEmpty(cardChoosed) || isNullOrEmpty(edcChoosed)){
-                            return showToastError('Lengkapi data');
-                          }
-    
-                          paymentList.add(
-                            PaymentDetail(
-                              approvalCodeDebet: _approvalDebetCardController.text,
-                              cardCodeDebet: _numberDebetCardController.text,
-                              cardDebet: cardChoosed,
-                              edcDebet: edcChoosed,
-                              namaUserDebet: _nameDebetCardController.text,
-                              nominal: value,
-                              paymentType: 'DEBET CARD'
-                            )
-                          );
-                        }
-                        break;
-                        
-                        case 'E-MONEY':{
-                          final accountCode = _numberEmoneyCardController.text;
-                          final accountName = _nameEmoneyCardController.text;
-                          final referalCode = _referalEmoneyCardController.text;
-    
-                          if(isNullOrEmpty(accountCode) || isNullOrEmpty(accountName) || isNullOrEmpty(referalCode)){
-                            // showToastWarning('KURANGGG');
-                            return showToastError('Lengkapi data');
-                          }
-                            
-                          paymentList.add(
-                            PaymentDetail(
-                              accountEmoney: accountCode,
-                              namaUserEmoney: accountName,
-                              nominal: value,
-                              paymentType: 'E-MONEY',
-                              refCodeEmoney: referalCode,
-                              typeEmoney: eMoneyChoosed
-                            )
-                          );
-                        }
-                        break;
-    
-                        case 'COMPLIMENTARY':{
-                          final agencyName = _agencyComplimentaryCardController.text;
-                          final responsibleName = _responsibleComplimentaryCardController.text;
-                          final nameComplimentary = _nameComplimentaryCardController.text;
-    
-                          if(isNullOrEmpty(agencyName) || isNullOrEmpty(responsibleName) || isNullOrEmpty(nameComplimentary)){
-                            return showToastError('Lengkapi data');
-                          }
-    
-                          final approvalState = await VerificationDialog.requestVerification(context, billData?.data?.dataInvoice.reception??'', billData?.data?.dataRoom.roomCode??'', 'Meminta persetujuan pembayaran COMPLIMENTARY sebesar $value');
-                            
-                          if(approvalState != true){
-                            return showToastWarning('Permintaan complimentary ditolak');
-                          }
-    
-                          paymentList.add(
-                            PaymentDetail(
-                              instansiCompliment: agencyName,
-                              instruksiCompliment: responsibleName,
-                              namaUserCompliment: nameComplimentary,
-                              nominal: value,
-                              paymentType: 'COMPLIMENTARY'
-                            )
-                          );
-                        }
-                        break;
-                        
-                        case 'PIUTANG':{
-                          final name = _nameReceivablesCardController.text;
-                          final memberCode = _memberReceivablesCardController.text;
-    
-                          if(isNullOrEmpty(name) || isNullOrEmpty(memberCode)){
-                            return showToastError('Lengkapi data');
-                          }
-    
-                          final approvalState = await VerificationDialog.requestVerification(context, 'RCP', 'ROOMNYA', 'Meminta persetujuan pembayaran PIUTANG sebesar $value');
-                            
-                          if(approvalState != true){
-                            return showToastWarning('Permintaan piutang ditolak');
-                          }
-    
-                          paymentList.add(
-                            PaymentDetail(
-                              idMemberPiutang: memberCode,
-                              namaUserPiutang: name,
-                              nominal: value,
-                              paymentType: 'PIUTANG',
-                              typePiutang: piutangChoosed
-                            )
-                          );
-                        }
-                      }
-    
-                      setState(() {
-                        paymentList;
-                        _setNominal();
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                      decoration: CustomContainerStyle.blueButton(),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add_outlined, color: Colors.white,),
-                          const SizedBox(width: 6,),
-                          Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: paymentList.length,
-                  itemBuilder: (BuildContext ctxList, index){
-                    final payment = paymentList[index];
-                    return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: (){
-                                setState(() {
-                                  paymentList.removeAt(index);
-                                  _setNominal();
-                                });
-                              },
-                              child: const Icon(Icons.remove_circle, color: Colors.redAccent,),
-                            ),
-                            const SizedBox(width: 6,),
-                            AutoSizeText(payment.paymentType, style: CustomTextStyle.blackStandard(),),
-                            const SizedBox(height: 6,)
-                          ],
-                        ),
-                        AutoSizeText(Formatter.formatRupiah(payment.nominal), style: CustomTextStyle.blackStandard())
-                      ],
-                    );
-                  }
-                ),
-    
-                minusPay < 0?
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('KEMBALI', style: CustomTextStyle.blackSemi(),),
-                        AutoSizeText(Formatter.formatRupiah(minusPay).replaceAll('-', ''), style: CustomTextStyle.blackSemi())
-                      ],
-                ):Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText('KURANG', style: CustomTextStyle.blackSemi(),),
-                        AutoSizeText(Formatter.formatRupiah(minusPay), style: CustomTextStyle.blackSemi())
-                      ],
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                      activeColor: CustomColorStyle.appBarBackground(),
-                      value: sendEmail,
-                      onChanged: (value){
-                        setState((){
-                          sendEmail = !sendEmail;
-                        });
-                    }),
-                    AutoSizeText('Email Invoice', style: CustomTextStyle.blackStandard(), minFontSize: 9, maxFontSize: 16,),
-                    const Expanded(child: SizedBox()),
-                    InkWell(
-                      onTap: ()async{
-                        if(minusPay > 0 ){
-                          showToastWarning('Pembayaran Kurang');
-                          return;
-                        }
-                        
-                        final confirmationState = await ConfirmationDialog.confirmation(context, 'Bayar Room $roomCode');
-                        if(confirmationState != true){
-                          return;
-                        }
-    
-                        final anu = GeneratePaymentParams.generatePaymentParams(sendEmail, roomCode, paymentList);
-                        final paymentResult = await ApiRequest().pay(anu);
-    
-                        if(paymentResult.state != true){
-                          showToastError(paymentResult.message.toString());
-                          return;
-                        }
-  
-                        PrintExecutor.printInvoice(billData?.data?.dataInvoice.reception??'');
-   
-                        if(context.mounted){
-                          final invoiceCode = billData?.data?.dataInvoice.invoice??'';
-                          final memberCode = billData?.data?.dataInvoice.memberCode??'';
-                          final memberName = billData?.data?.dataInvoice.memberName??'';
-                          
-                          Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                          RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
-                        }
-                      },
-                      child: Container(
-                        decoration: CustomContainerStyle.confirmButton(),
-                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 21),
-                        child: Row(
-                          children: [
-                            Center(child: Text('BAYAR', style: CustomTextStyle.whiteSize(16),)),
-                            const SizedBox(width: 12,),
-                            const Icon(Icons.payments, color: Colors.white,),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

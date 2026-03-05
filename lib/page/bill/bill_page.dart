@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
@@ -26,6 +27,7 @@ class _BillPageState extends State<BillPage> {
   String roomCode = '';
   bool isLoading = true;
   final user = GlobalProviders.read(userProvider);
+  final pos = GlobalProviders.read(posTypeProvider);
   PreviewBillResponse result = PreviewBillResponse(state: false, message: 'loading');
 
   void getData()async{
@@ -87,32 +89,39 @@ class _BillPageState extends State<BillPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+                      SizedBox.shrink():
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                          AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                          AutoSizeText('Sewa Ruangan', style: CustomTextStyle.blackMediumSize(19), minFontSize: 14, maxLines: 1),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AutoSizeText('${result.data!.dataRoom.checkin} - ${result.data!.dataRoom.checkout}', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                              AutoSizeText(Formatter.formatRupiah(roomPrice), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                            ],
+                          ),
+                          promoRoom>0?
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                              AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                            ],
+                          ):const SizedBox(),
+                          /*(result.data?.voucherValue?.roomPrice??0)>0?
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AutoSizeText('Voucher Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                              AutoSizeText('(${Formatter.formatRupiah((result.data?.voucherValue?.roomPrice ?? 0))})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                            ],
+                          )
+                          : const SizedBox(),*/
+                          const SizedBox(height: 6,),
                         ],
                       ),
-                      promoRoom>0?
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AutoSizeText('Promo Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                          AutoSizeText('(${Formatter.formatRupiah(promoRoom)})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        ],
-                      ):const SizedBox(),
-                      /*(result.data?.voucherValue?.roomPrice??0)>0?
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AutoSizeText('Voucher Room', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                          AutoSizeText('(${Formatter.formatRupiah((result.data?.voucherValue?.roomPrice ?? 0))})', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
-                        ],
-                      )
-                      : const SizedBox(),*/
-                      const SizedBox(height: 6,),
                       orderList.isNotEmpty?
                       Flexible(
                         child: Column(
@@ -189,7 +198,13 @@ class _BillPageState extends State<BillPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AutoSizeText('Ruangan + FnB', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
+                      AutoSizeText(
+                        pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+                        'Total Penjualan': 'Ruangan + FnB', 
+                        style: CustomTextStyle.blackMedium(), 
+                        minFontSize: 14, 
+                        maxLines: 1
+                      ),
                       AutoSizeText(Formatter.formatRupiah(roomTotal + fnbTotal), style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1),
                     ],
                   ),

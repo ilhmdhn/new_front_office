@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
@@ -29,6 +30,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
   final userLevel = GlobalProviders.read(userProvider).level;
   
   List<String> namePage = [];
+
+  final pos = GlobalProviders.read(posTypeProvider);
 
   int activePageIndex = 0;
   bool _isInitialized = false;
@@ -63,7 +66,10 @@ class _FnbMainPageState extends State<FnbMainPage> {
   Widget build(BuildContext context) {
   final roomCode = ModalRoute.of(context)!.settings.arguments as String;
 
-  if(userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'){
+  if(pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased){
+      namePage = ['INPUT ORDER', 'TERKIRIM', 'DIBATALKAN'];
+  }
+  else if(userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'){
     namePage = ['ORDER', 'SEND ORDER', 'CONFIRM', 'DONE', 'CANCEL'];
   }else{
     namePage = ['ORDER', 'SEND ORDER', 'DONE', 'CANCEL'];
@@ -86,8 +92,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
       Column(
         children: [
           Container(
-            color: Colors.white,
-            width: ScreenSize.getSizePercent(context, 100),
+            color: CustomColorStyle.background(),
+            width: double.infinity,
             height: ScreenSize.getHeightPercent(context, 10),
             child:
             Align(
@@ -118,9 +124,21 @@ class _FnbMainPageState extends State<FnbMainPage> {
           Flexible(
             fit: FlexFit.tight,
             child: 
-            
+            pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+            PageView(
+              controller: slideController,
+              onPageChanged: (index){
+                setState(() {
+                  activePageIndex = index;
+                });
+              },
+              children: [
+                ListFnbPage(detailCheckin: dataCheckin!.data!,),
+                DoneOrderPage(detailCheckin: dataCheckin!.data!),
+                CancelOrderPage(roomCode: roomCode)
+              ],
+            ):
             userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'?
-            
             PageView(
               controller: slideController,
               onPageChanged: (index){

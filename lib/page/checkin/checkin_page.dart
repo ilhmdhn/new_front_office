@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
@@ -295,15 +296,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         ),
       );
 
-      
-      
-      
-      
-      
-      
-      
-      
-
       // Show loading
       showDialog(
         context: context,
@@ -446,10 +438,9 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           );
         }
       } catch (e, stackTrace) {
+        debugPrint('Error during check-in: ${e.toString()} $stackTrace');
         if (!mounted) return;
-        // Close loading if still open
         Navigator.pop(context);
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -574,6 +565,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   }
 
   Widget _buildForm() {
+    final pos = GlobalProviders.read(posTypeProvider);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -609,7 +601,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                   return const SizedBox.shrink();
                 },
               ),
-              _buildDurationSection(),
+              pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased ?
+              _buildDurationSection(): SizedBox.shrink(),
               const SizedBox(height: 20),
               _buildPaxField(),
               const SizedBox(height: 32),
