@@ -1,32 +1,35 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 
-class ConfigurationDialog{
-
-  void setUrl(BuildContext ctx, WidgetRef ref)async{
+class ConfigurationDialog {
+  void setUrl(BuildContext ctx, WidgetRef ref) async {
     TextEditingController tfIp = TextEditingController();
     TextEditingController tfPort = TextEditingController();
+    
+    // 1. Ambil state saat ini dari provider
     BaseUrlModel serverUrl = ref.read(serverConfigProvider);
+    PosType tempSelectedPosType = ref.read(posTypeProvider); // Variabel draft untuk radio button
 
-    if(isNotNullOrEmpty(serverUrl.ip)){
+    if (isNotNullOrEmpty(serverUrl.ip)) {
       tfIp.text = serverUrl.ip!;
     }
 
-    if(isNotNullOrEmpty(serverUrl.port)){
+    if (isNotNullOrEmpty(serverUrl.port)) {
       tfPort.text = serverUrl.port!;
     }
 
     showDialog(
       context: ctx,
       barrierDismissible: false,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState){
+          builder: (context, setState) {
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -86,7 +89,7 @@ class ConfigurationDialog{
                               'Konfigurasi Server',
                               minFontSize: 9,
                               maxLines: 1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -102,6 +105,7 @@ class ConfigurationDialog{
                     Padding(
                       padding: const EdgeInsets.all(24),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Pastikan konten rata kiri
                         children: [
                           // IP Server Field
                           _buildInputField(
@@ -121,17 +125,41 @@ class ConfigurationDialog{
                             hint: 'Masukkan Port',
                             iconColor: Colors.green.shade700,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
+                          
+                          // Label Tipe POS
+                          Text(
+                            'Tipe POS:',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
 
-                          // Outlet Field
-                          // _buildInputField(
-                          //   icon: Icons.store_outlined,
-                          //   label: 'Outlet',
-                          //   controller: tfOutlet,
-                          //   hint: 'Masukkan Outlet',
-                          //   iconColor: Colors.orange.shade700,
-                          // ),
-                          // const SizedBox(height: 28),
+                          // 2. GridView 2 Kolom untuk Radio Group Enum
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 2.8, // Sesuaikan jika kotak kerendahan/ketinggian
+                            padding: EdgeInsets.zero,
+                            children: PosType.values.map((type) {
+                              return _buildCustomRadio(
+                                type: type,
+                                selectedType: tempSelectedPosType,
+                                onTap: () {
+                                  setState(() {
+                                    tempSelectedPosType = type; // Update nilai draft
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 28),
 
                           // Buttons
                           Row(
@@ -141,8 +169,8 @@ class ConfigurationDialog{
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  icon: const Icon(Icons.close, size: 20, color: Colors.red,),
-                                  label: const Text('BATAL', style: TextStyle(color: Colors.red),),
+                                  icon: const Icon(Icons.close, size: 20, color: Colors.red),
+                                  label: const Text('BATAL', style: TextStyle(color: Colors.red)),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.grey.shade700,
                                     side: BorderSide(color: Colors.red.shade300, width: 2),
@@ -159,11 +187,16 @@ class ConfigurationDialog{
                                   onPressed: () async {
                                     if (isNotNullOrEmpty(tfIp.text) &&
                                         isNotNullOrEmpty(tfPort.text)) {
-                                      // Update menggunakan Riverpod provider
+                                      
+                                      // 3. Simpan IP & Port
                                       await ref.read(serverConfigProvider.notifier).updateConfig(
                                         ip: tfIp.text,
                                         port: tfPort.text,
                                       );
+                                      
+                                      // 4. Update Tipe POS secara persisten menggunakan provider Anda
+                                      ref.read(posTypeProvider.notifier).updatePosType(tempSelectedPosType);
+
                                       if (context.mounted) {
                                         Navigator.pop(context);
                                       }
@@ -199,6 +232,7 @@ class ConfigurationDialog{
     );
   }
 
+  // Method input field tetap sama...
   Widget _buildInputField({
     required IconData icon,
     required String label,
@@ -267,4 +301,78 @@ class ConfigurationDialog{
     );
   }
 
+  // 5. Method _buildCustomRadio dimodifikasi untuk menerima parameter Enum dan fungsi OnTap
+  Widget _buildCustomRadio({
+    required PosType type,
+    required PosType selectedType,
+    required VoidCallback onTap,
+  }) {
+    bool isSelected = selectedType == type;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue.shade50 : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.blue.shade600 : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: [
+            if (!isSelected)
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 18,
+              height: 21,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? Colors.blue.shade600 : Colors.grey.shade400,
+                  width: 2,
+                ),
+              ),
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 9,
+                        height: 9,
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade600,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: AutoSizeText(
+                type.label,
+                minFontSize: 11,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  color: isSelected ? Colors.blue.shade900 : Colors.black87,
+                  height: 1.1,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

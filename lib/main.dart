@@ -36,7 +36,6 @@ import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
-
 import 'firebase_options.dart';
 
 void main() async {

@@ -1,5 +1,6 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/rendering.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
@@ -49,7 +50,8 @@ class PrintExecutor {
 
       final helper = await _getPrinter();
       List<int> posContent = [];
-      if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
+      final pos = GlobalProviders.read(posTypeProvider);
+      if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
         posContent = EscPosGenerator().printInvoiceResto(apiResponse.data!, helper);
       }else{
         posContent = EscPosGenerator().printInvoice(apiResponse.data!, helper);
@@ -80,7 +82,8 @@ class PrintExecutor {
 
       final helper = await _getPrinter();
       List<int> posContent = [];
-      if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
+      final pos = GlobalProviders.read(posTypeProvider);
+      if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
         posContent = EscPosGenerator().printBillRestoGenerator(apiResponse.data!, helper);
       }else{
         posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);

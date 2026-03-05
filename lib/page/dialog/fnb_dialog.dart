@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -283,9 +284,8 @@ class FnBDialog{
                 showToastError('SO error ${orderState.message}');
               }
               finalState = orderState.state;
-              final user = GlobalProviders.read(userProvider);
-
-              if (user.outlet.contains('CB') || user.outlet.contains('TB') || user.outlet.contains('RG')) {
+              final pos = GlobalProviders.read(posTypeProvider);
+              if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
                 if(isNotNullOrEmpty(orderState.data)){
                   final lastSoState = await ApiRequest().latestSo(rcp);
                   

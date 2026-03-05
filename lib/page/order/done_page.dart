@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -108,9 +109,9 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             InkWell(
                               onTap: ()async{
                                 final userLevel = GlobalProviders.read(userProvider).level;
-                                final outlet = GlobalProviders.read(userProvider).outlet;
-                                
-                                final isSpecialOutlet = outlet.contains('CB') || outlet.contains('RG') || outlet.contains('TB');
+                            
+                                final pos = GlobalProviders.read(posTypeProvider);
+                                final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
                                 if ((!isSpecialOutlet && userLevel != 'KASIR' && userLevel != 'ACCOUNTING') || (isSpecialOutlet && userLevel != 'KASIR' && userLevel != 'ACCOUNTING' && userLevel != 'SERVER')) {
                                     showToastWarning('$userLevel Tidak memiliki akses');
                                     return;

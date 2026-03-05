@@ -6,6 +6,7 @@ import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/print_job.dart';
 import 'package:front_office_2/riverpod/printer/printer_job_provider.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/tools/notf/print_notif.dart';
 
 /// Service untuk print via TCP/IP raw socket
 /// Compatible dengan Printer Forwarder (Windows) atau Network Printer
@@ -32,10 +33,10 @@ class TcpPrinterService {
   }) async {
     if (data.isEmpty) return false;
     String errorMessage = '';
+    PrintNotification.showPrinting();
     for (int attempt = 1; attempt <= maxRetry; attempt++) {
       try {
         debugPrint('[TcpPrinter] Attempt $attempt');
-
         final success = await TcpPrinterService.printOnce(
           ip: ip,
           port: port,
@@ -45,6 +46,7 @@ class TcpPrinterService {
         );
 
         if (success) {
+          PrintNotification.showSuccess();
           debugPrint('[TcpPrinter] Success on attempt $attempt');
           return true;
         }
@@ -60,6 +62,7 @@ class TcpPrinterService {
     }
 
     debugPrint('[TcpPrinter] All retry failed');
+    PrintNotification.showError();
     final printQueue = PrintJob(
       title: 'Gagal print tcp', 
       description: errorMessage,

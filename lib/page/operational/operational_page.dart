@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/page/bloc/notif_bloc.dart';
 import 'package:front_office_2/page/button_menu/button_menu_list.dart';
 import 'package:front_office_2/page/setting/printer/print_job_page.dart';
@@ -72,35 +73,43 @@ class _OperationalPageState extends State<OperationalPage> {
                       ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, PrintJobPage.routeName);
-                    },
-                    padding: EdgeInsets.zero,
-                    icon: Badge(
-                      label: Text(
-                        '1',
-                        style: CustomTextStyle.whiteSize(11),
-                      ),
-                      offset: Offset(4, -4),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: CustomColorStyle.bluePrimary().withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: CustomColorStyle.bluePrimary().withOpacity(0.5),
-                            width: 1.5,
+                  Consumer(
+                    builder: (context, ref, child) {
+                    final jobs = ref.watch(printJobProvider);
+                    if(jobs.isEmpty){
+                      return const SizedBox();
+                      }
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, PrintJobPage.routeName);
+                        },
+                        padding: EdgeInsets.zero,
+                        icon: Badge(
+                          label: Text(
+                            jobs.length.toString(),
+                            style: CustomTextStyle.whiteSize(11),
+                          ),
+                          offset: Offset(4, -4),
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: CustomColorStyle.bluePrimary().withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: CustomColorStyle.bluePrimary().withOpacity(0.5),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.print_disabled_outlined,
+                              color: CustomColorStyle.bluePrimary(),
+                              size: 22,
+                            ),
                           ),
                         ),
-                        child: Icon(
-                          Icons.print_disabled_outlined,
-                          color: CustomColorStyle.bluePrimary(),
-                          size: 22,
-                        ),
-                      ),
-                    ),
+                      );
+                    }
                   )
                   /*
                   IconButton(onPressed: (){}, icon: Badge(

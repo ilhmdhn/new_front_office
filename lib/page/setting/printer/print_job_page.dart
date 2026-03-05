@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/riverpod/printer/printer_job_provider.dart';
+import 'package:front_office_2/tools/printer/sender/ble_print_service.dart';
+import 'package:front_office_2/tools/printer/sender/tcp_print_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PrintJobPage extends ConsumerWidget {
@@ -127,6 +129,11 @@ class PrintJobPage extends ConsumerWidget {
                         ),
                         trailing: InkWell(
                           onTap: () {
+                            if(job.printerType == PrinterConnectionType.lan){
+                              TcpPrinterService.printWithRetry(ip: job.target, port: job.port, data: job.data);
+                            }else if(job.printerType == PrinterConnectionType.lan){
+                              BlePrintService.printWithRetry(deviceId: job.target, deviceName: job.printerName, data: job.data);
+                            }
                             ref.read(printJobProvider.notifier).removeJob(job);
                           },
                           child: Container(

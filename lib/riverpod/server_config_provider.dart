@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/tools/preferences.dart';
@@ -71,5 +72,32 @@ class OutletNotifier extends StateNotifier<String> {
 
   void refresh() {
     _loadOutlet();
+  }
+}
+
+final posTypeProvider = StateNotifierProvider<PosTypeNotifier, PosType>((ref) {
+  return PosTypeNotifier();
+});
+
+class PosTypeNotifier extends StateNotifier<PosType> {
+  PosTypeNotifier() : super(_initialPosType()) {
+    _loadPosType();
+  }
+
+  static PosType _initialPosType() {
+    return PreferencesData.getPosType();
+  }
+
+  void _loadPosType() {
+    state = PreferencesData.getPosType();
+  }
+
+  void updatePosType(PosType posType) {
+    PreferencesData.setPosType(posType);
+    state = posType;
+  }
+
+  void refresh() {
+    _loadPosType();
   }
 }

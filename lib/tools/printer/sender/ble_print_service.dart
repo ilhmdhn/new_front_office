@@ -82,7 +82,7 @@ class BlePrintService {
     final printQueue = PrintJob(
       title: 'Gagal print bluetooth: $deviceName', 
       description: errorMessage,
-      data: data, 
+      data: data,
       printerType: PrinterConnectionType.bluetooth, 
       target: deviceId,
       printerName: deviceName,

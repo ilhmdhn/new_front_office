@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/data/model/other_model.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -124,6 +126,19 @@ class PreferencesData {
       connectionType: PrinterConnectionType.bluetooth,
       address: '',
     );
+  }
+
+  static void setPosType(PosType posType){
+    _prefs?.setString('POS_TYPE', posType.label);
+  }
+
+  static PosType getPosType(){
+    final posTypeString = _prefs?.getString('POS_TYPE');
+    if(isNotNullOrEmpty(posTypeString)){
+      return PosType.fromString(posTypeString!);
+    }else{
+      return PosType.fromString('POS');
+    }
   }
 
   static void setShowRetur(bool state){

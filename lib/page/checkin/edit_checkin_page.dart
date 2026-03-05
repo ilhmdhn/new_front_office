@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
@@ -105,7 +106,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
     edcCode = detailRoom?.data?.edcMachine??'';
     dpNote = detailRoom?.data?.dpNote??'';
     cardTypeName = detailRoom?.data?.cardType??'';
-    
+    final pos = GlobalProviders.read(posTypeProvider);
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -305,8 +306,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 6,), 
-                promoRoom == null?
+                const SizedBox(width: 6,),
+
+                promoRoom == null && (pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased)?
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Column(
@@ -317,7 +319,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       const SizedBox(height: 2,),
                       InkWell(
                         onTap: ()async{
-                          final nganu = await PromoDialog().setPromoRoom(context, 'PR A');
+                          final nganu = await PromoDialog().setPromoRoom(context, detailRoom?.data?.roomType??'');
                           if(nganu != null){  
                             setState(() {
                               promoRoom = nganu;
@@ -333,7 +335,10 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       )
                     ],
                   ),
-                ):Padding(
+                ): SizedBox(),
+                
+                promoRoom != null && (pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased)?
+                Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Container(
                     padding: const EdgeInsets.all(5),
@@ -411,7 +416,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       ],
                     ),
                   ),
-                ),
+                ): SizedBox(),
                 promoFnb == null?
                 Align(
                   alignment: Alignment.centerLeft,
