@@ -101,7 +101,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
                       ),
                     ),
                     IconButton(onPressed: (){
-                    
+                      FnBDialog.getStationModel(context);
                     }, icon: FaIcon(FontAwesomeIcons.filter))
                   ],
                 ),

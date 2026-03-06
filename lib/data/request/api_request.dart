@@ -24,6 +24,7 @@ import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
+import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/model/status_room_checkin.dart';
 import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
@@ -93,7 +94,6 @@ class ApiRequest{
     );
   }
 }
-
 
   Future<ListRoomTypeReadyResponse> getListRoomTypeReady()async{
     try{
@@ -1164,6 +1164,30 @@ class ApiRequest{
     }
   }
   
+  Future<StationResponse> getStation()async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getStationResponse();
+        return data;
+      }
+      final url = Uri.parse('$serverUrl/order/printer-station');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return StationResponse.fromJson(convertedResult);
+    }catch(e){
+      return StationResponse(
+        state: false,
+        message: e.toString(),
+        data: []
+      );
+    }
+  }
+
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
   }

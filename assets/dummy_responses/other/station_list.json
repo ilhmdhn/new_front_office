@@ -1,0 +1,79 @@
+{
+"state": true,
+"length": 12,
+"message": "Success",
+"data": [
+{
+"id": 1,
+"name": "PIZZA",
+"ip_address": "192.168.1.222",
+"forwarder_port": "9100"
+},
+{
+"id": 2,
+"name": "KITCHEN",
+"ip_address": "192.168.1.222",
+"forwarder_port": "9100"
+},
+{
+"id": 3,
+"name": "CHECKER",
+"ip_address": "192.168.1.222",
+"forwarder_port": "9100"
+},
+{
+"id": 4,
+"name": "BAR",
+"ip_address": "192.168.1.222",
+"forwarder_port": "9100"
+},
+{
+"id": 8,
+"name": "KAMAR 101",
+"ip_address": "192.168.80.80",
+"forwarder_port": "9091"
+},
+{
+"id": 17,
+"name": "BAR",
+"ip_address": "192.168.7.6",
+"forwarder_port": ""
+},
+{
+"id": 18,
+"name": "CHECKER",
+"ip_address": "192.168.7.7",
+"forwarder_port": ""
+},
+{
+"id": 19,
+"name": "PASTA",
+"ip_address": "192.168.7.8",
+"forwarder_port": ""
+},
+{
+"id": 20,
+"name": "GRILL",
+"ip_address": "192.168.7.9",
+"forwarder_port": ""
+},
+{
+"id": 21,
+"name": "PIZZA",
+"ip_address": "192.168.7.10",
+"forwarder_port": ""
+},
+{
+"id": 22,
+"name": "BARISTA",
+"ip_address": "192.168.7.11",
+"forwarder_port": ""
+},
+{
+"id": 23,
+"name": "KITCHEN",
+"ip_address": "192.168.7.12",
+"forwarder_port": ""
+}
+]
+}

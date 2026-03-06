@@ -18,6 +18,7 @@ import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
+import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/model/status_room_checkin.dart';
 import 'package:front_office_2/data/model/string_response.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
@@ -225,6 +226,11 @@ class DummyResponseHelper {
     final json = await DummyJsonLoader.load('other/base_success.json');
     json['message'] = message;
     return BaseResponse.fromJson(json);
+  }
+
+  static Future<StationResponse> getStationResponse() async {
+    final json = await DummyJsonLoader.load('other/station_list.json');
+    return StationResponse.fromJson(json);
   }
 
   /// Base Response Error
