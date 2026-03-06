@@ -38,6 +38,7 @@ class EscPosGenerator {
   }
 
   static List<int> printStation(CommandHelper helper, List<OrderedModel> data, String roomName, String custName, {bool isChecker = false, String checkerIp = '', String checkerPort = ''}){
+    final user = GlobalProviders.read(userProvider).userId;
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
@@ -55,7 +56,7 @@ class EscPosGenerator {
       }
     }
     bytes += helper.divider();
-    bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('ORDER OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
     bytes += helper.row('', formattedDate);

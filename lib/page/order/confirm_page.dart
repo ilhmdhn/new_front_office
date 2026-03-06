@@ -4,6 +4,7 @@ import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -105,8 +106,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                             Flexible(
                               child: AutoSizeText('${order.qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
                             ),
-                            InkWell(
-                              onTap: ()async{
+                            ElevatedButton(
+                              onPressed: ()async{
                                 final confirmDo = await ConfirmationDialog.confirmation(context, 'DO ${order.name}?');
                                 if(confirmDo != true){
                                   return;
@@ -126,11 +127,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                                   getData();
                                 }
                               },
-                              child: Container(
-                                decoration: CustomContainerStyle.confirmButton(),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-                                child: Text('DO', style: CustomTextStyle.whiteSize(16),),
-                              ),
+                              style: CustomButtonStyle.confirm(),
+                              child: Text('DO', style: CustomTextStyle.whiteSize(16),),
                             )
                           ],
                         ),

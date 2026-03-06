@@ -10,8 +10,8 @@ import 'package:front_office_2/page/dialog/payment_list_dialog.dart';
 import 'package:front_office_2/page/dialog/rating_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
@@ -192,8 +192,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                 children: [
                                   Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
                                   const SizedBox(width: 12,),
-                                  InkWell(
-                                    onTap: ()async{
+                                  ElevatedButton(
+                                    onPressed: ()async{
                                       final choosed = await CardPaymentDialog().edcMachine(context);
                                       if(choosed != null){
                                         setState(() {
@@ -201,11 +201,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         });
                                       }
                                     },
-                                    child: Container(
-                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: CustomContainerStyle.blueButton(),
-                                      child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                    ),
+                                    style: CustomButtonStyle.bluePrimary(),
+                                    child: AutoSizeText(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                   )
                                 ],
                               ),
@@ -216,8 +213,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                 children: [
                                   Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
                                   const SizedBox(width: 12,),
-                                  InkWell(
-                                    onTap: ()async{
+                                  ElevatedButton(
+                                    onPressed: ()async{
                                       final choosed = await CardPaymentDialog().cardType(context);
                                       if(choosed != null){
                                         setState(() {
@@ -225,11 +222,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         });
                                       }
                                     },
-                                    child: Container(
-                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: CustomContainerStyle.blueButton(),
-                                      child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                    ),
+                                    style: CustomButtonStyle.bluePrimary(),
+                                    child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                   )
                                 ],
                               ),
@@ -269,8 +263,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                 children: [
                                   Text('EDC Mesin', style: CustomTextStyle.blackMedium()),
                                   const SizedBox(width: 12,),
-                                  InkWell(
-                                    onTap: ()async{
+                                  ElevatedButton(
+                                    onPressed: ()async{
                                       final choosed = await CardPaymentDialog().edcMachine(context);
                                       if(choosed != null){
                                         setState(() {
@@ -278,11 +272,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         });
                                       }
                                     },
-                                    child: Container(
-                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: CustomContainerStyle.blueButton(),
-                                      child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                    ),
+                                    style: CustomButtonStyle.bluePrimary(),
+                                    child: Text(edcChoosed != ''? edcChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                   )
                                 ],
                               ),
@@ -293,8 +284,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                 children: [
                                   Text('Tipe Kartu', style: CustomTextStyle.blackMedium()),
                                   const SizedBox(width: 12,),
-                                  InkWell(
-                                    onTap: ()async{
+                                  ElevatedButton(
+                                    onPressed: ()async{
                                       final choosed = await CardPaymentDialog().cardType(context);
                                       if(choosed != null){
                                         setState(() {
@@ -302,11 +293,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         });
                                       }
                                     },
-                                    child: Container(
-                                      padding: const  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: CustomContainerStyle.blueButton(),
-                                      child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
-                                    ),
+                                    style: CustomButtonStyle.bluePrimary(),
+                                    child: Text(cardChoosed != ''? cardChoosed: 'Pilih', style: CustomTextStyle.whiteStandard(),),
                                   )
                                 ],
                               ),
@@ -337,8 +325,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 6),
-                        InkWell(
-                          onTap: ()async{
+                        ElevatedButton(
+                          onPressed: ()async{
                             final choosedEmoney = await PaymentListDialog.eMoneyList(context, eMoneyChoosed);
                             if(choosedEmoney != null){
                               setState(() {
@@ -346,16 +334,13 @@ class _PaymentPageState extends State<PaymentPage> {
                               });
                             }
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: CustomContainerStyle.blueButton(),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(eMoneyChoosed, style: CustomTextStyle.whiteStandard()),
-                                const Icon(Icons.arrow_drop_down, color: Colors.white,)
-                            ],),
-                          ),
+                          style: CustomButtonStyle.bluePrimary(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(eMoneyChoosed, style: CustomTextStyle.whiteStandard()),
+                              const Icon(Icons.arrow_drop_down, color: Colors.white,)
+                          ],),
                         ),
                         const SizedBox(height: 3,),
                         TextField(
@@ -407,8 +392,8 @@ class _PaymentPageState extends State<PaymentPage> {
                         const SizedBox(height: 6),
                         Text('Memerlukan Verifikasi', style: CustomTextStyle.blackMediumSize(16),),
                         const SizedBox(height: 3),
-                        InkWell(
-                          onTap: ()async{
+                        ElevatedButton(
+                          onPressed: ()async{
                             final choosedPiutang = await PaymentListDialog.piutangList(context, piutangChoosed);
                             if(choosedPiutang != null){
                               setState(() {
@@ -416,16 +401,13 @@ class _PaymentPageState extends State<PaymentPage> {
                               });
                             }
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: CustomContainerStyle.blueButton(),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(piutangChoosed, style: CustomTextStyle.whiteStandard()),
-                                const Icon(Icons.arrow_drop_down, color: Colors.white,)
-                            ],),
-                          ),
+                          style: CustomButtonStyle.bluePrimary(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(piutangChoosed, style: CustomTextStyle.whiteStandard()),
+                              const Icon(Icons.arrow_drop_down, color: Colors.white,)
+                          ],),
                         ),
                         const SizedBox(height: 6,),
                         TextField(
@@ -444,8 +426,8 @@ class _PaymentPageState extends State<PaymentPage> {
                   const SizedBox(height: 6,),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: ()async{
+                    child: ElevatedButton(
+                      onPressed: ()async{
                         if(isNullOrEmpty(_nominalController.text)){
                           return showToastError('Isi nominal');
                         }
@@ -594,17 +576,14 @@ class _PaymentPageState extends State<PaymentPage> {
                           _setNominal();
                         });
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                        decoration: CustomContainerStyle.blueButton(),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.add_outlined, color: Colors.white,),
-                            const SizedBox(width: 6,),
-                            Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
-                          ],
-                        ),
+                      style: CustomButtonStyle.bluePrimary(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.add_outlined, color: Colors.white,),
+                          const SizedBox(width: 6,),
+                          Text('Tambahkan', style: CustomTextStyle.whiteStandard(),)
+                        ],
                       ),
                     ),
                   ),
@@ -641,6 +620,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                           _setNominal();
                                         });
                                       },
+                                      // style: CustomButtonStyle.cancel(),
                                       child: const Icon(Icons.remove_circle, color: Colors.redAccent,),
                                     ),
                                     const SizedBox(width: 6,),
@@ -682,8 +662,8 @@ class _PaymentPageState extends State<PaymentPage> {
                       }),
                       AutoSizeText('Email Invoice', style: CustomTextStyle.blackStandard(), minFontSize: 9, maxFontSize: 16,),
                       const Expanded(child: SizedBox()),
-                      InkWell(
-                        onTap: ()async{
+                      ElevatedButton(
+                        onPressed: ()async{
                           if(minusPay > 0 ){
                             showToastWarning('Pembayaran Kurang');
                             return;
@@ -717,16 +697,13 @@ class _PaymentPageState extends State<PaymentPage> {
                             RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
                           }
                         },
-                        child: Container(
-                          decoration: CustomContainerStyle.confirmButton(),
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 21),
-                          child: Row(
-                            children: [
-                              Center(child: Text('BAYAR', style: CustomTextStyle.whiteSize(16),)),
-                              const SizedBox(width: 12,),
-                              const Icon(Icons.payments, color: Colors.white,),
-                            ],
-                          ),
+                        style: CustomButtonStyle.confirm(),
+                        child: Row(
+                          children: [
+                            Center(child: Text('BAYAR', style: CustomTextStyle.whiteSize(16),)),
+                            const SizedBox(width: 12,),
+                            const Icon(Icons.payments, color: Colors.white,),
+                          ],
                         ),
                       ),
                     ],

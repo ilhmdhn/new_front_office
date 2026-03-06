@@ -6,6 +6,7 @@ import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -106,8 +107,8 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             Flexible(
                               child: AutoSizeText('${qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
                             ),
-                            InkWell(
-                              onTap: ()async{
+                            ElevatedButton(
+                              onPressed: ()async{
                                 final userLevel = GlobalProviders.read(userProvider).level;
                             
                                 final pos = GlobalProviders.read(posTypeProvider);
@@ -132,11 +133,8 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                                 }
                                 }
                               },
-                              child: Container(
-                                decoration: CustomContainerStyle.cancelButton(),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-                                child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
-                              ),
+                              style: CustomButtonStyle.cancel(),
+                              child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
                             )
                           ],
                         ),

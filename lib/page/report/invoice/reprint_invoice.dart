@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/printer/print_executor.dart';
@@ -53,8 +53,8 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                   ),
                   Flexible(
                     flex: 1,
-                    child: InkWell(
-                      onTap: () async {
+                    child: ElevatedButton(
+                      onPressed: () async {
                         final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
                         if (reprintBillState != true) {
                           showToastWarning('Permintaan dibatalkan');
@@ -64,17 +64,12 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                         PrintExecutor.printInvoice(tfRcp.text);
                         // DoPrint.printInvoice(tfRcp.text);
                       },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: CustomContainerStyle.blueButton(),
-                        child: Center(
-                            child: Text(
-                          'Print',
-                          style: CustomTextStyle.whiteSize(19),
-                        )),
-                      ),
+                      style: CustomButtonStyle.bluePrimary(),
+                      child: Center(
+                          child: Text(
+                        'Print',
+                        style: CustomTextStyle.whiteSize(19),
+                      )),
                     ),
                   )
                 ],

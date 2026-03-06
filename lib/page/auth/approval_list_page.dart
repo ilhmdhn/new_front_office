@@ -1,12 +1,14 @@
 import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
-import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/event_bus.dart';
+import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
 
 class ApprovalListPage extends StatefulWidget {
@@ -128,50 +130,29 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
                     const SizedBox(),
                     Row(
                       children: [
-                        InkWell(
-                          onTap: ()async{
+                        ElevatedButton(
+                          onPressed: ()async{
                             final bioResult = await FingerpintAuth().requestFingerprintAuth();
                             if(bioResult == true){
                               await CloudRequest.rejectApproval(approval?.idApproval??'');
                               getData();
                             }
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent.shade400,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                              child: Text('Tolak', style: CustomTextStyle.whiteSize(14),),
-                            ),
-                          ),
+                          style: CustomButtonStyle.cancel(),
+                          child: Text('Tolak', style: CustomTextStyle.whiteSize(14),),
                         ),
                         const SizedBox(width: 6,),
-                        InkWell(
-                          onTap: ()async{
+                        ElevatedButton(
+                          onPressed: ()async{
                             final bioResult = await FingerpintAuth().requestFingerprintAuth();
                             if(bioResult == true){
                               await CloudRequest.confirmApproval(approval?.idApproval??'');
                               getData();
                             }
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade700,
-                              borderRadius: BorderRadius.circular(10)
+                          style: CustomButtonStyle.confirm(),
+                          child: Text('Approve', style: CustomTextStyle.whiteSize(14),),
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                                  child: Text('Approve', style: CustomTextStyle.whiteSize(14),),
-                                ),
-                                const Icon(Icons.fingerprint, color: Colors.white,)
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ],

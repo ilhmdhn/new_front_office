@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 bool isNullOrEmpty(dynamic value) {
   if (value == null) return true;
 
-  if (value is String) return value.isEmpty;
+  if (value is String) return value.trim().isEmpty;
   if (value is Iterable || value is Map) return value.isEmpty;
 
   return false;

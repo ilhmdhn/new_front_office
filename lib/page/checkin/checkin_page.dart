@@ -1035,6 +1035,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   Widget _buildRoomSelector() {
     final roomState = ref.watch(roomReadyProvider);
     final selectedRoom = ref.watch(selectedRoomProvider);
+/*  
     final selectedRoomType = ref.watch(selectedRoomTypeProvider);
 
     // Debug: print room data
@@ -1044,7 +1045,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
         
       }
     }
-
+*/
     // Tidak perlu filter lagi karena API sudah return room sesuai room type yang dipilih
     // Room type "Lobby", "Table", "Bar" dll → semua punya isRoomCheckin = false
     // Room type "Regular", "VIP", "Meeting Room" dll → semua punya isRoomCheckin = true

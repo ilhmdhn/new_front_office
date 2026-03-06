@@ -51,29 +51,23 @@ class FnBDialog{
                   children: [
                     Flexible(
                       fit: FlexFit.tight,
-                      child: InkWell(
-                        onTap: (){
+                      child: ElevatedButton(
+                        onPressed: (){
                           Navigator.pop(ctx, null);
                         },
-                        child: Container(
-                          decoration: CustomContainerStyle.cancelButton(),
-                          padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                          child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
-                        ),
+                        style: CustomButtonStyle.cancel(),
+                        child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
                       ),
                     ),
                     const SizedBox(width: 19,),
                     Flexible(
                       fit: FlexFit.tight,
-                      child: InkWell(
-                        onTap: (){
+                      child: ElevatedButton(
+                        onPressed: (){
                           Navigator.pop(ctx, tfNoteController.text);
                         },
-                        child: Container(
-                          decoration: CustomContainerStyle.confirmButton(),
-                          padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                          child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
-                        ),
+                        style: CustomButtonStyle.confirm(),
+                        child: AutoSizeText('CONFIRM', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
                       ),
                     ),
                   ],

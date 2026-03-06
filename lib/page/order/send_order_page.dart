@@ -6,6 +6,7 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/fnb_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -227,8 +228,8 @@ class _SendOrderPageState extends State<SendOrderPage> {
                               AutoSizeText(order.notes??'', style: CustomTextStyle.blackStandard(), maxLines: 1,),
                             ],
                           ),
-                          InkWell(
-                            onTap: ()async{
+                          ElevatedButton(
+                            onPressed: ()async{
 
                               final confirmEdit = await ConfirmationDialog.confirmation(context, 'Simpan edit order?');
                               if(confirmEdit != true){
@@ -251,11 +252,8 @@ class _SendOrderPageState extends State<SendOrderPage> {
                               }
 
                             },
-                            child: Container(
-                              decoration: CustomContainerStyle.confirmButton(),
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              child: Text('SUBMIT', style: CustomTextStyle.whiteStandard(),),
-                            ),
+                            style: CustomButtonStyle.confirm(),
+                            child: Text('SUBMIT', style: CustomTextStyle.whiteStandard(),),
                           )
                         ],
                       )
@@ -289,11 +287,7 @@ class _SendOrderPageState extends State<SendOrderPage> {
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
-                            decoration: CustomContainerStyle.cancelButton(),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            child: Text('Dibatalkan', style: CustomTextStyle.whiteSize(16),),
-                          )
+                          Text('Dibatalkan', style: CustomTextStyle.whiteSize(16),)
                         ],
                       )
                     ],

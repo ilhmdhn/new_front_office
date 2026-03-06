@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/main_page.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/tools/di.dart';
@@ -168,15 +168,12 @@ class RatingDialog{
                         children: [
                           Expanded(
                             flex: 6,
-                            child: InkWell(
-                              onTap: (){
+                            child: ElevatedButton(
+                              onPressed: (){
                                 getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
                               },
-                              child: Container(
-                                decoration: CustomContainerStyle.cancelButton(),
-                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                                child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),
-                              ),
+                              style: CustomButtonStyle.cancel(),
+                              child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),
                             ),
                           ),
                           const Expanded(
@@ -185,18 +182,15 @@ class RatingDialog{
                           ),
                           Expanded(
                             flex: 6,
-                            child: InkWell(
-                              onTap: ()async{
+                            child: ElevatedButton(
+                              onPressed: ()async{
                                 await CloudRequest.insertRate(invoice, memberCode, rate, reasonController.text);
                                 setState((){
                                   isOk = true;
                                 });
                               },
-                              child: Container(
-                                decoration: CustomContainerStyle.confirmButton(),
-                                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                                child: Center(child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),)),
-                              ),
+                              style: CustomButtonStyle.confirm(),
+                              child: Center(child: Text('SUBMIT', style: CustomTextStyle.whiteSize(16),)),
                             ),
                           ),
                         ],

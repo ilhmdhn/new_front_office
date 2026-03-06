@@ -156,7 +156,7 @@ class CardPaymentDialog {
       children: [
         Expanded(
           child: ElevatedButton(
-            style: CustomButtonStyle.cancel(),
+            style: CustomButtonStyle.cancelSoft(),
             onPressed: () => Navigator.pop(context),
             child: Text('Batal', style: CustomTextStyle.whiteSize(16)),
           ),

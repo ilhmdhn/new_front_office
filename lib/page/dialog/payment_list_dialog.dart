@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/list.dart';
 
@@ -74,21 +74,15 @@ class PaymentListDialog{
               ),
             ),
             actions: [
-              InkWell(
-                onTap: () => Navigator.pop(ctxDialog),
-                child: Container(
-                  decoration: CustomContainerStyle.cancelButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
-                ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctxDialog),
+                style: CustomButtonStyle.cancel(),
+                child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
               ),
-              InkWell(
-                onTap: () => Navigator.pop(ctxDialog, tempSelected),
-                child: Container(
-                  decoration: CustomContainerStyle.confirmButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
-                ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctxDialog, tempSelected),
+                style: CustomButtonStyle.confirm(),
+                child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
               ),
             ],
           );
@@ -173,25 +167,19 @@ class PaymentListDialog{
               ),
             ),
             actions: [
-              InkWell(
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.pop(ctxDialog);
                 },
-                child: Container(
-                  decoration: CustomContainerStyle.cancelButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
-                ),
+                style: CustomButtonStyle.cancel(),
+                child: Text('CANCEL', style: CustomTextStyle.whiteStandard()),
               ),
-              InkWell(
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.pop(ctxDialog, tempSelected);
                 },
-                child: Container(
-                  decoration: CustomContainerStyle.confirmButton(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
-                ),
+                style: CustomButtonStyle.confirm(),
+                child: Text('CONFIRM', style: CustomTextStyle.whiteStandard()),
               ),
             ],
           );

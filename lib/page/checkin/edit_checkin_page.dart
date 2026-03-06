@@ -14,8 +14,8 @@ import 'package:front_office_2/page/dialog/promo_dialog.dart';
 import 'package:front_office_2/page/dialog/qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -221,8 +221,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      voucherFix == null? InkWell(
-                        onTap: ()async{
+                      voucherFix == null? ElevatedButton(
+                        onPressed: ()async{
                           // showToastWarning('Masih belum aktif, gunakan FO Desktop');
                           // return;
                           final qrCode = await showQRScannerDialog(context);
@@ -254,11 +254,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             });
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          decoration: CustomContainerStyle.blueButton(),
-                          alignment: Alignment.center,
-                          child: Text('Scan Voucher', style: CustomTextStyle.whiteStandard(),)),
+                        style: CustomButtonStyle.bluePrimary(),
+                        child: Text('Scan Voucher', style: CustomTextStyle.whiteStandard(),),
                           ): Padding(
                           padding: EdgeInsets.all(ScreenSize.getSizePercent(context, 1)),
                           child: Container(
@@ -337,8 +334,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       const SizedBox(height: 6,),
                       Text('Promo Room', style: CustomTextStyle.blackMediumSize(17),),
                       const SizedBox(height: 2,),
-                      InkWell(
-                        onTap: ()async{
+                      ElevatedButton(
+                        onPressed: ()async{
                           final nganu = await PromoDialog().setPromoRoom(context, detailRoom?.data?.roomType??'');
                           if(nganu != null){  
                             setState(() {
@@ -346,12 +343,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             });
                           }
                         },
-                        child: Container(
-                          width: 150,
-                          decoration: CustomContainerStyle.blueButton(),
-                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          child: AutoSizeText('Pilih Promo Room', style: CustomTextStyle.whiteStandard(), maxLines: 1,),
-                        ),
+                        style: CustomButtonStyle.bluePrimary(),
+                        child: AutoSizeText('Pilih Promo Room', style: CustomTextStyle.whiteStandard(), maxLines: 1,),
                       )
                     ],
                   ),
@@ -445,8 +438,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                     children: [
                       const SizedBox(height: 6,),
                       Text('Promo FnB', style: CustomTextStyle.blackMediumSize(19),),
-                      InkWell(
-                        onTap: ()async{
+                      ElevatedButton(
+                        onPressed: ()async{
                           final choosePromo = await PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
                           if(choosePromo != null){
                             setState(() {
@@ -454,13 +447,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             });
                           }
                         },
-                        child: Container(
-                          width: 150,
-                          decoration: CustomContainerStyle.blueButton(),
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          child: AutoSizeText('Pilih Promo FnB', style: CustomTextStyle.whiteStandard(), maxLines: 1,),
-                        ),),
+                        style: CustomButtonStyle.bluePrimary(),
+                        child: AutoSizeText('Pilih Promo FnB', style: CustomTextStyle.whiteStandard(), maxLines: 1,),),
                     ],
                   )):Padding(
                   padding: const EdgeInsets.all(3.0),
@@ -550,8 +538,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                 const SizedBox(height: 12,),
                 SizedBox(
                   width: double.infinity,
-                  child: InkWell(
-                    onTap: ()async{
+                  child: ElevatedButton(
+                    onPressed: ()async{
     
                       final isConfirmed = await ConfirmationDialog.confirmation(context, 'Simpan Edit Checkin?');
     
@@ -605,10 +593,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                       }
     
                     },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                      decoration: CustomContainerStyle.confirmButton(),
-                      child: Center(child: Text('SIMPAN', style: CustomTextStyle.whiteSize(18),))),
+                    style: CustomButtonStyle.bluePrimary(),
+                    child: Center(child: Text('SIMPAN', style: CustomTextStyle.whiteSize(18),)),
                     ),
                 )
               ],

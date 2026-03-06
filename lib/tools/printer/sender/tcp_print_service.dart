@@ -33,7 +33,7 @@ class TcpPrinterService {
   }) async {
     if (data.isEmpty) return false;
     String errorMessage = '';
-    PrintNotification.showPrinting();
+    
     for (int attempt = 1; attempt <= maxRetry; attempt++) {
       try {
         debugPrint('[TcpPrinter] Attempt $attempt');
@@ -46,7 +46,11 @@ class TcpPrinterService {
         );
 
         if (success) {
-          PrintNotification.showSuccess();
+          try {
+            PrintNotification.showSuccess();
+          }catch (e, stackTrace) {
+            debugPrint('[TcpPrinter] Failed to show printing notification: $e $stackTrace');
+          }
           debugPrint('[TcpPrinter] Success on attempt $attempt');
           return true;
         }
@@ -62,7 +66,11 @@ class TcpPrinterService {
     }
 
     debugPrint('[TcpPrinter] All retry failed');
-    PrintNotification.showError();
+    try {
+      PrintNotification.showError();
+    }catch (e, stackTrace) {
+      debugPrint('[TcpPrinter] Failed to show printing notification: $e $stackTrace');
+    }
     final printQueue = PrintJob(
       title: 'Gagal print tcp', 
       description: errorMessage,

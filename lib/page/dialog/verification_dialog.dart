@@ -8,6 +8,7 @@ import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/bloc/send_approval_bloc.dart';
 import 'package:front_office_2/page/dialog/textfield_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
@@ -122,27 +123,21 @@ class VerificationDialog{
                 }
               });
               Widget buttonCancel(){
-                return InkWell(
-                  onTap: (){
+                return ElevatedButton(
+                  onPressed: (){
                     setState(() {
                       CloudRequest.cancelApproval(uniqueTime);
                       Navigator.pop(ctx, false);
                     });
                   }, 
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent.shade400,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)
-                  )
+                  style: CustomButtonStyle.cancel(),
+                  child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)
                 );
               }
 
               Widget buttonPositive(){
-                return InkWell(
-                  onTap: ()async{
+                return ElevatedButton(
+                  onPressed: ()async{
                   if(isLoading == true){
                       final checkState = await CloudRequest.approvalState(uniqueTime);
                       if(loadingCheck == true){
@@ -174,14 +169,9 @@ class VerificationDialog{
                     CloudRequest.finishApproval(uniqueTime);
                     Navigator.pop(ctx, false);
                   }
-                  }, 
-                            child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade700,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)));
+                  },
+                  style: CustomButtonStyle.confirm(), 
+                  child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,));
               }
 
               return AlertDialog(

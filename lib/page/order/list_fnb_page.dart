@@ -8,8 +8,8 @@ import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/fnb_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/riverpod/server_config_provider.dart';
@@ -124,25 +124,22 @@ class _ListFnbPageState extends State<ListFnbPage> {
             choosedStation != null ?
             Column(
               children: [
-                InkWell(
-                  onTap: () {
+                ElevatedButton(
+                  onPressed: () {
                     setState(() {
                       choosedStation = null;
                       _fnbPagingController.refresh();
                     });
                   },
-                  child: Container(
-                    decoration: CustomContainerStyle.blueButton(),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.close, size: 19, color: Colors.white, fill: 1,),
-                        SizedBox(width: 6,),
-                        AutoSizeText(choosedStation?.name ?? '', style: CustomTextStyle.whiteSizeMedium(16),),
-                      ],
-                    ),
+                  style: CustomButtonStyle.bluePrimary(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(Icons.close, size: 19, color: Colors.white, fill: 1,),
+                      SizedBox(width: 6,),
+                      AutoSizeText(choosedStation?.name ?? '', style: CustomTextStyle.whiteSizeMedium(16),),
+                    ],
                   ),
                 ),
                 SizedBox(height: 6,)
@@ -215,8 +212,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
                                     ),
                                   ],
                                 ):
-                                InkWell(
-                                  onTap: (){
+                                ElevatedButton(
+                                  onPressed: (){
                                     setState(() {
                                     listOrder.add(
                                       SendOrderModel(
@@ -230,11 +227,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
                                     );
                                     });
                                   },
-                                  child: Container(
-                                    decoration: CustomContainerStyle.blueButton(),
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                                    child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
-                                  ),
+                                  style: CustomButtonStyle.confirm(),
+                                  child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
                                 )
                               ],
                             )
@@ -251,8 +245,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
       ),
       floatingActionButton: 
       isNotNullOrEmpty(listOrder)?
-      InkWell(
-        onTap: ()async{
+      ElevatedButton(
+        onPressed: ()async{
           final nganu = await FnBDialog.order(context, listOrder, roomCode, widget.detailCheckin.memberName);
           if(nganu == true){
             setState(() {
@@ -260,22 +254,17 @@ class _ListFnbPageState extends State<ListFnbPage> {
             });
           }
         },
+        style: CustomButtonStyle.confirm(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            height: ScreenSize.getHeightPercent(context, 12),
-            width: double.infinity,
-            decoration: CustomContainerStyle.confirmButton(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AutoSizeText('Order $totalItems items', style: CustomTextStyle.whiteStandard(),),
-                const RotatedBox(
-                  quarterTurns: 90,
-                  child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
-              ],
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AutoSizeText('Order $totalItems items', style: CustomTextStyle.whiteStandard(),),
+              const RotatedBox(
+                quarterTurns: 90,
+                child: Icon(Icons.expand_circle_down_rounded, color: Colors.white,))
+            ],
           ),
         ),
       ): const SizedBox(),

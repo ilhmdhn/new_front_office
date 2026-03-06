@@ -6,8 +6,8 @@ import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/bill/payment_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
@@ -268,8 +268,8 @@ class _BillPageState extends State<BillPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: ()async{
+                      ElevatedButton(
+                        onPressed: ()async{
                           // DoPrint.printBill(roomCode); return;
                           if(user.level != 'KASIR' && user.level != 'SERVER' && user.level != 'ACCOUNTING' ){
                             showToastWarning('User tidak memiliki akses');
@@ -290,28 +290,23 @@ class _BillPageState extends State<BillPage> {
                             }
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: CustomContainerStyle.blueButton(),
-                          child: const Icon(Icons.print, color: Colors.white, size: 32,)),
+                        style: CustomButtonStyle.bluePrimary(),
+                        child: const Icon(Icons.print, color: Colors.white, size: 32,),
                       ),
                       const SizedBox(width: 5,),
                       Expanded(
-                        child: InkWell(
-                          onTap: (){
+                        child: ElevatedButton(
+                          onPressed: (){
                             if(user.level != 'KASIR' && user.level != 'ACCOUNTING'){
                               showToastWarning('User tidak memiliki akses');
                               return;
                             }
                             Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: roomCode);
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 11),
-                            decoration: CustomContainerStyle.confirmButton(),
-                            child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
+                          style: CustomButtonStyle.confirm(),
+                          child: Center(child: Text('PEMBAYARAN', style: CustomTextStyle.whiteSize(16),)),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   ],

@@ -26,7 +26,7 @@ class PrintExecutor {
       await _execute(posContent);
       showToastSuccess('Test print berhasil');
     } catch (e, stackTraces) {
-      showToastError('Error test print: $e');
+      showToastError('Error test print: $e $stackTraces');
       return;
     }
   }
@@ -34,7 +34,6 @@ class PrintExecutor {
   static Future<void> printInvoice(String rcp) async {
      try {
       final printInvoiceState = GlobalProviders.read(printInvoiceProvider);
-      final user = GlobalProviders.read(userProvider);
       if(printInvoiceState == false){
         return;
       }
@@ -59,7 +58,7 @@ class PrintExecutor {
       await _execute(posContent);
       ApiRequest().updatePrintState(rcp, '2');
     } catch (e, stackTraces) {
-      showToastError('Gagal cetak invoice: $e');
+      showToastError('Gagal cetak invoice: $e $stackTraces');
       return;
     }
   }
@@ -67,7 +66,6 @@ class PrintExecutor {
   static Future<void> printBill(String roomCode)async{
     try {
       final printBillState = GlobalProviders.read(printBillProvider);
-      final user = GlobalProviders.read(userProvider);
       if(printBillState == false){
         return;
       }
@@ -91,7 +89,7 @@ class PrintExecutor {
       await _execute(posContent);
       ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
     }catch (e, stackTraces) {
-      showToastError('Gagal cetak bill: $e');
+      showToastError('Gagal cetak bill: $e $stackTraces');
       return;
     }
   }
@@ -116,7 +114,7 @@ class PrintExecutor {
       final posContent = EscPosGenerator().printSlipCheckin(apiResponse.data!, helper);
       await _execute(posContent);
     }catch (e, stackTraces) {
-      showToastError('Gagal cetak slip: $e');
+      showToastError('Gagal cetak slip: $e $stackTraces');
       return;
     }
   }
@@ -200,20 +198,100 @@ class PrintExecutor {
     }
   }
 
-  static Future<void> printDoResto(PostSoResponse soData, String roomCode, String custName)async{
+  static Future<void> printDoResto(
+    PostSoResponse soData,
+    String roomCode,
+    String custName,
+  ) async {
     try {
       final helper = await _getPrinter();
       final helperResto = await _getRestoPrinter();
 
-      // Group order berdasarkan stationName
       final Map<String, List<OrderedModel>> groupedOrders = {};
 
-      for (final orderan in soData.data??[]) {
-        groupedOrders.putIfAbsent(orderan.stationName??'', () => []);
-        groupedOrders[orderan.stationName]!.add(orderan);
+      if (isNullOrEmpty(soData.data)) {
+        showToastError('Data order kosong, tidak ada yang dicetak');
+        return;
       }
 
-      // Loop setiap station dan cetak
+      for (final orderan in soData.data!) {
+        final printer = orderan.printerIP;
+
+        if (isNullOrEmpty(orderan.stationName) || isNullOrEmpty(printer)) {
+          debugPrint(
+            'Station atau printerIP kosong untuk order ${orderan.idGlobal}, skip'
+          );
+          continue;
+        }
+
+        groupedOrders.putIfAbsent(printer!, () => []);
+        groupedOrders[printer]!.add(orderan);
+      }
+
+      for (final entry in groupedOrders.entries) {
+        final printerIP = entry.key;
+        final orders = entry.value;
+
+        final command = EscPosGenerator.printStation(
+          helperResto,
+          orders,
+          roomCode,
+          custName,
+        );
+
+        await _executeLan(command, printerIP);
+      }
+
+      if (isNotNullOrEmpty(soData.checkerIp)) {
+        final checkerCommand = EscPosGenerator.printStation(
+          helperResto,
+          soData.data ?? [],
+          roomCode,
+          custName,
+          isChecker: true,
+        );
+
+        await _executeLan(checkerCommand, soData.checkerIp!);
+      }
+
+      final posContent = EscPosGenerator.printStation(
+        helper,
+        soData.data ?? [],
+        roomCode,
+        custName,
+      );
+
+      await _execute(posContent);
+    } catch (e, stackTraces) {
+      showToastError('Gagal cetak so: $e');
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
+    }
+  }
+
+/*  static Future<void> printDoResto(PostSoResponse soData, String roomCode, String custName)async{
+    try {
+      final helper = await _getPrinter();
+      final helperResto = await _getRestoPrinter();
+
+      final Map<String, List<OrderedModel>> groupedOrders = {};
+
+      if(isNullOrEmpty(soData.data)){
+        showToastError('Data order kosong, tidak ada yang dicetak');
+        return;
+      }
+
+      for (final orderan in soData.data!) {
+        final station = orderan.stationName;
+
+        if (isNullOrEmpty(orderan.stationName) || isNullOrEmpty(orderan.printerIP)) {
+           debugPrint('Station name kosong untuk order ${orderan.idGlobal}, skip pencetakan untuk order ini');
+          continue; // skip kalau kosong
+        }
+
+        groupedOrders.putIfAbsent(station!, () => []);
+        groupedOrders[station]!.add(orderan);
+      }
+
       for (final entry in groupedOrders.entries) {
         final stationOrders = entry.value;
         final command = EscPosGenerator.printStation(helperResto, stationOrders, roomCode, custName);
@@ -233,7 +311,7 @@ class PrintExecutor {
       return;
     }
   }
-
+*/
   static Future<CommandHelper> _getPrinter()async{
     try {
       final printer = GlobalProviders.read(printerProvider);
@@ -260,21 +338,21 @@ class PrintExecutor {
       );
       return helper; 
     }catch (e, stackTraces) {
-      throw Exception('Error mendapatkan printer: $e');
+      throw Exception('Error mendapatkan printer: $e $stackTraces');
     }
   }
 
   static Future<CommandHelper> _getRestoPrinter() async {
       try {
         final profile = await CapabilityProfile.load();
-        final generator = Generator(PaperSize.mm80, profile);
+        final generator = Generator(PaperSize.mm72, profile);
         final helper = CommandHelper(
           generator,
-          printerModel: PrinterModelType.tm82x,
+          printerModel: PrinterModelType.tmu220u,
         );
         return Future.value(helper); 
       }catch (e, stackTraces) {
-        throw Exception('Error mendapatkan printer resto: $e');
+        throw Exception('Error mendapatkan printer resto: $e $stackTraces');
       }
   }
 
@@ -283,6 +361,7 @@ class PrintExecutor {
       final printer = GlobalProviders.read(printerProvider);
 
       if (printer.connectionType == PrinterConnectionType.lan) {
+        debugPrint('Mengirim print ke printer LAN ${printer.address}:${printer.port}');
         await TcpPrinterService.printWithRetry(
           ip: printer.address,
           port: printer.port!,
@@ -299,7 +378,7 @@ class PrintExecutor {
         await _executeLan(content, printer.address, port: printer.port ?? 9100);
       }
     }catch (e, stackTraces) {
-      throw 'Gagal terhubung ke printer: $e';
+      throw 'Gagal terhubung ke printer: $e $stackTraces';
     }
   }
 

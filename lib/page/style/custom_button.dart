@@ -16,15 +16,7 @@ class CustomButtonStyle{
   }
 
   static ButtonStyle cancel(){
-    return ElevatedButton.styleFrom(
-        backgroundColor: Colors.redAccent.shade400,
-        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          textStyle: GoogleFonts.poppins(
-          fontSize: 14,
-        ),
-        foregroundColor: Colors.white
-    );
+    return cancelSoft();
   }
 
   static ButtonStyle cancelSoft(){

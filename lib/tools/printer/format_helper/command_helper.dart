@@ -25,7 +25,7 @@ class CommandHelper {
   }
 
   /// Manual alignment for printers that don't support ESC a commands
-  String _alignText(String text, PosAlign align) {
+  /*String _alignText(String text, PosAlign align) {
     if (text.length >= maxCharsPerLine) {
       return text.substring(0, maxCharsPerLine);
     }
@@ -38,6 +38,21 @@ class CommandHelper {
         final padding = maxCharsPerLine - text.length;
         return '${' ' * padding}$text';
       case PosAlign.left:
+        return text;
+    }
+  }*/
+
+  String _alignText(String text, PosAlign align, {int? maxChars}) {
+    final width = maxChars ?? maxCharsPerLine;
+    if (text.length >= width) return text;
+
+    switch (align) {
+      case PosAlign.center:
+        final padding = (width - text.length) ~/ 2;
+        return ' ' * padding + text;
+      case PosAlign.right:
+        return text.padLeft(width);
+      default:
         return text;
     }
   }
@@ -75,7 +90,7 @@ class CommandHelper {
     PosTextSize height = PosTextSize.size1,
   }) {
     // For TMU-220 with double width/height, use custom ESC ! commands
-    if (printerModel == PrinterModelType.tmu220u && (width == PosTextSize.size2 || height == PosTextSize.size2)) {
+    /*if (printerModel == PrinterModelType.tmu220u && (width == PosTextSize.size2 || height == PosTextSize.size2)) {
       List<int> bytes = [];
 
       // ESC ! n - Set font style for dot matrix
@@ -98,6 +113,36 @@ class CommandHelper {
 
       // Reset printer to default state after double size
       bytes += [0x1B, 0x40]; // ESC @ - Initialize printer
+
+      return bytes;
+    }*/
+
+    if (printerModel == PrinterModelType.tmu220u && 
+        (width == PosTextSize.size2 || height == PosTextSize.size2)) {
+      List<int> bytes = [];
+
+      final fontFlag = _getTmu220FontFlag(bold, width, height);
+
+      // Adjust max chars for double width
+      int effectiveMaxChars = maxCharsPerLine;
+      if (width == PosTextSize.size2) effectiveMaxChars = maxCharsPerLine ~/ 2;
+
+      // ✅ Wrap teks dulu sebelum alignment
+      final wrappedLines = _wrapText(value, effectiveMaxChars);
+
+      for (final line in wrappedLines) {
+        // Set font style per baris
+        bytes += [0x1B, 0x21, fontFlag];
+
+        // Manual alignment per baris
+        final alignedLine = _alignText(line, align, maxChars: effectiveMaxChars);
+
+        bytes += alignedLine.codeUnits;
+        bytes += [0x0A]; // Line feed
+      }
+
+      // Reset printer setelah semua baris selesai
+      bytes += [0x1B, 0x40];
 
       return bytes;
     }
@@ -586,4 +631,41 @@ class CommandHelper {
   List<int> qr(String data) => generator.qrcode(data);
 
   List<int> cut() => generator.cut();
+
+  List<String> _wrapText(String text, int maxChars) {
+    final words = text.split(' ');
+    final lines = <String>[];
+    var currentLine = '';
+
+    for (final word in words) {
+      // Kalau kata sendiri sudah melebihi maxChars, potong paksa
+      if (word.length > maxChars) {
+        if (currentLine.isNotEmpty) {
+          lines.add(currentLine);
+          currentLine = '';
+        }
+        // Potong kata panjang per maxChars karakter
+        var remaining = word;
+        while (remaining.length > maxChars) {
+          lines.add(remaining.substring(0, maxChars));
+          remaining = remaining.substring(maxChars);
+        }
+        currentLine = remaining;
+        continue;
+      }
+
+      final testLine = currentLine.isEmpty ? word : '$currentLine $word';
+
+      if (testLine.length <= maxChars) {
+        currentLine = testLine;
+      } else {
+        if (currentLine.isNotEmpty) lines.add(currentLine);
+        currentLine = word;
+      }
+    }
+
+    if (currentLine.isNotEmpty) lines.add(currentLine);
+
+    return lines;
+  }
 }
