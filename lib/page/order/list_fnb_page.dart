@@ -1,14 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
+import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/fnb_dialog.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/server_config_provider.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/screen_size.dart';
@@ -28,6 +32,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
   final PagingController<int, FnBModel> _fnbPagingController = PagingController(firstPageKey: 1);
   String category = '';
   String _searchFnb = '';
+  StationModel? choosedStation;
 
   @override
   void initState() {
@@ -39,6 +44,9 @@ class _ListFnbPageState extends State<ListFnbPage> {
 
   Future<void> _fetchPage(int pageKey)async{
     try{
+      if(choosedStation != null){
+        category = choosedStation?.id.toString() ?? '';
+      }
       final getFnb = await ApiRequest().fnbPage(pageKey, category, _searchFnb);
       if(getFnb.state != true){
         throw getFnb.message.toString();
@@ -62,6 +70,7 @@ class _ListFnbPageState extends State<ListFnbPage> {
   Widget build(BuildContext context) {
     int totalItems = 0;
     String roomCode = widget.detailCheckin.roomCode;
+    final posType = GlobalProviders.read(posTypeProvider);
 
     for (var element in listOrder) {
       totalItems += element.qty;
@@ -100,13 +109,45 @@ class _ListFnbPageState extends State<ListFnbPage> {
                         ),
                       ),
                     ),
-                    IconButton(onPressed: (){
-                      FnBDialog.getStationModel(context);
-                    }, icon: FaIcon(FontAwesomeIcons.filter))
+                    posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased?
+                    IconButton(onPressed: ()async{
+                      final currentStation = choosedStation;
+                      choosedStation = await FnBDialog.getStationModel(context, choosedStation);
+                      if(currentStation?.id != choosedStation?.id){
+                        _fnbPagingController.refresh();
+                      }
+                    }, icon: FaIcon(FontAwesomeIcons.filter, color: CustomColorStyle.bluePrimary())): SizedBox.shrink()
                   ],
                 ),
               ),
-              const SizedBox(height: 6),
+            const SizedBox(height: 6),
+            choosedStation != null ?
+            Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      choosedStation = null;
+                      _fnbPagingController.refresh();
+                    });
+                  },
+                  child: Container(
+                    decoration: CustomContainerStyle.blueButton(),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.close, size: 19, color: Colors.white, fill: 1,),
+                        SizedBox(width: 6,),
+                        AutoSizeText(choosedStation?.name ?? '', style: CustomTextStyle.whiteSizeMedium(16),),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 6,)
+              ],
+            ): SizedBox.shrink(),
             Flexible(
               child: PagedListView<int, FnBModel>(
                 shrinkWrap: true,

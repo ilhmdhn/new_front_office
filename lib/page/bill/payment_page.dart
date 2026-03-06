@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/payment_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -13,6 +14,8 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/riverpod/provider_container.dart';
+import 'package:front_office_2/riverpod/server_config_provider.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/list.dart';
@@ -38,6 +41,7 @@ class _PaymentPageState extends State<PaymentPage> {
   String edcChoosed = '';
   String cardChoosed = '';
   bool sendEmail = true;
+  final posType = GlobalProviders.read(posTypeProvider);
 
   final TextEditingController _nominalController = TextEditingController();
   
@@ -704,7 +708,11 @@ class _PaymentPageState extends State<PaymentPage> {
                             final invoiceCode = billData?.data?.dataInvoice.invoice??'';
                             final memberCode = billData?.data?.dataInvoice.memberCode??'';
                             final memberName = billData?.data?.dataInvoice.memberName??'';
-                            
+
+                            if(posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased){
+                              await ApiRequest().checkout(roomCode);
+                              await ApiRequest().clean(roomCode);
+                            }
                             Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                             RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
                           }

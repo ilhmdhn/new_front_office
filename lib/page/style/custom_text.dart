@@ -22,6 +22,10 @@ class CustomTextStyle{
     return GoogleFonts.poppins(fontSize: size, color: Colors.white, fontWeight: FontWeight.w500);
   }
 
+  static TextStyle whiteSizeMedium(double size){
+    return GoogleFonts.poppins(fontSize: size, color: Colors.white, fontWeight: FontWeight.w600);
+  }
+
   static TextStyle blackStandard(){
     return GoogleFonts.poppins(fontSize: 16, color: Colors.black);
   }

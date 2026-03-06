@@ -8,6 +8,7 @@ import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -221,22 +222,19 @@ class FnBDialog{
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: InkWell(
-            onTap: (){
+          child: ElevatedButton(
+            onPressed: (){
               Navigator.pop(ctx, false);
             },
-            child: Container(
-              decoration: CustomContainerStyle.cancelButton(),
-              padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center,),
-            ),
+            style: CustomButtonStyle.cancelSoft(),
+            child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSizeMedium(16), maxLines: 1, textAlign: TextAlign.center,),
           ),
         ),
         const SizedBox(width: 9,),
         Flexible(
           fit: FlexFit.tight,
-          child: InkWell(
-            onTap: ()async{
+          child: ElevatedButton(
+            onPressed: ()async{
               setState((){
                 isLoading = true;
               });
@@ -305,11 +303,8 @@ class FnBDialog{
                 showToastWarning('Gagal berpindah halaman');
               }
             },
-            child: Container(
-              decoration: CustomContainerStyle.confirmButton(),
-              padding: const  EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: AutoSizeText('SEND SO', style: CustomTextStyle.whiteSize(16), maxLines: 1, textAlign: TextAlign.center),
-            ),
+            style: CustomButtonStyle.confirm(),
+            child: AutoSizeText('SEND SO', style: CustomTextStyle.whiteSizeMedium(16), maxLines: 1, textAlign: TextAlign.center),
           ),
         ),
       ],
@@ -326,59 +321,143 @@ class FnBDialog{
       }).then((value) => completer.complete(value));
       return completer.future;
   }
-  
+
   static Future<StationModel?> getStationModel(BuildContext ctx, StationModel? choosed) async {
-    showDialog(
+    // Tambahkan 'await' dan simpan hasilnya di dalam variabel
+    choosed = await showDialog<StationModel>(
       context: ctx,
       barrierDismissible: true,
-      builder: (BuildContext ctxDialog){
-        debugPrint('masuk dialog');
+      builder: (BuildContext ctxDialog) {
         return Dialog(
           backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), // Opsional: Memperhalus sudut dialog
           child: Container(
             width: ScreenSize.getSizePercent(ctxDialog, 80),
             padding: const EdgeInsets.all(16),
-            child: FutureBuilder<List<StationModel>>(
-              future: ApiRequest().getStation().then((response) => response.data ?? []),
-              builder: (ctxFuture, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return SizedBox(
-                    height: ScreenSize.getHeightPercent(ctx, 30),
-                    child: Center(child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),));
-                }else if(snapshot.hasError){
-                  return SizedBox(
-                    height: ScreenSize.getHeightPercent(ctx, 30),
-                    child: Center(child: AutoSizeText('Gagal memuat data station', style: CustomTextStyle.blackStandard(), maxLines: 2, textAlign: TextAlign.center,),));
-                }else if(snapshot.hasData){
-                  final stationList = snapshot.data ?? [];
-                  return ListView.builder(
-                    itemCount: stationList.length,
-                    shrinkWrap: true,
-                    itemBuilder: (ctxList, index){
-                      final station = stationList[index];
-                      return InkWell(
-                        onTap: (){
-                          Navigator.pop(ctx, station);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: CustomContainerStyle.whiteList(),
-                          child: AutoSizeText(station.name, style: CustomTextStyle.blackStandard(), maxLines: 1,),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AutoSizeText('Pilih Kategori', style: CustomTextStyle.blackMediumSize(17), maxLines: 2, textAlign: TextAlign.center),
+                const SizedBox(height: 6),
+                FutureBuilder<List<StationModel>>(
+                  future: ApiRequest().getStation().then((response) => response.data ?? []),
+                  builder: (ctxFuture, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: ScreenSize.getHeightPercent(ctx, 30),
+                        child: Center(
+                          child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground()),
                         ),
                       );
-                    },
-                  );
-                }else{
-                  return SizedBox(
-                    height: ScreenSize.getHeightPercent(ctx, 30),
-                    child: Center(child: AutoSizeText('Tidak ada data station', style: CustomTextStyle.blackStandard(), maxLines: 2, textAlign: TextAlign.center,),));
-                }
-              },
+                    } else if (snapshot.hasError) {
+                      return SizedBox(
+                        height: ScreenSize.getHeightPercent(ctx, 30),
+                        child: Center(
+                          child: AutoSizeText(
+                            'Gagal memuat data station',
+                            style: CustomTextStyle.blackStandard(),
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      final stationList = snapshot.data ?? [];
+                      
+                      // Menggunakan GridView.builder untuk 2 kolom
+                      return StatefulBuilder(
+                        builder: (context, setState) {
+                          return GridView.builder(
+                            itemCount: stationList.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(), // Animasi scroll yang lebih halus
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,      // Jumlah kolom
+                              crossAxisSpacing: 10,   // Jarak horizontal antar kotak
+                              mainAxisSpacing: 10,    // Jarak vertikal antar kotak
+                              childAspectRatio: 2.8,  // Rasio ukuran kotak (Lebar vs Tinggi). Ubah angka ini jika kotak terlalu tinggi/ceper
+                            ),
+                            itemBuilder: (ctxList, index) {
+                              final station = stationList[index];
+                              // Opsional: Cek apakah item ini adalah yang sedang dipilih
+                              // bool isSelected = choosed?.id == station.id; 
+                              
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                  choosed = station;
+                                  });
+                                },
+                                child: Container(
+                                  // Margin vertikal dihapus karena sudah diatur oleh mainAxisSpacing di GridView
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: station.id == choosed?.id ? CustomColorStyle.appBarBackground() : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: CustomColorStyle.appBarBackground(),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  alignment: Alignment.center, // Pusatkan teks di dalam kotak grid
+                                  child: AutoSizeText(
+                                    station.name, 
+                                    style: station.id == choosed?.id ? CustomTextStyle.whiteStandard() : CustomTextStyle.blackStandard(), 
+                                    maxLines: 2, // Dibuat 2 baris untuk jaga-jaga teks panjang karena lebar terbagi 2
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      );
+                    } else {
+                      return SizedBox(
+                        height: ScreenSize.getHeightPercent(ctx, 30),
+                        child: Center(
+                          child: AutoSizeText(
+                            'Tidak ada data station',
+                            style: CustomTextStyle.blackStandard(),
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                SizedBox(height: 12),
+                  _buildActionButtons(ctxDialog, () => choosed),
+              ],
             ),
           ),
         );
-  }).then(  (value) => value);
-    return null;
+      },
+    );
+    return choosed; 
+  }
+
+    static Widget _buildActionButtons(BuildContext context, ValueGetter<StationModel?> getValue) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            style: CustomButtonStyle.cancelSoft(),
+            onPressed: () => Navigator.pop(context),
+            child: Text('Batal', style: CustomTextStyle.whiteSize(17)),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton(
+            style: CustomButtonStyle.bluePrimary(),
+            onPressed: () => Navigator.pop(context, getValue()),
+            child: Text('Ganti', style: CustomTextStyle.whiteSize(17)),
+          ),
+        ),
+      ],
+    );
   }
 }

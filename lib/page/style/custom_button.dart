@@ -27,6 +27,18 @@ class CustomButtonStyle{
     );
   }
 
+  static ButtonStyle cancelSoft(){
+    return ElevatedButton.styleFrom(
+        backgroundColor: CustomColorStyle().hexToColor('#6C757D'),
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          textStyle: GoogleFonts.poppins(
+          fontSize: 14,
+        ),
+        foregroundColor: Colors.white
+    );
+  }
+
 
   static ButtonStyle cancelNoPadding(){
     return ElevatedButton.styleFrom(
