@@ -41,8 +41,9 @@ class CloudRequest{
         'device': device
       }));
 
+      debugPrint('Insert Login Response: $fcmToken');
       final convertedResult = json.decode(apiResponse.body);
-
+      debugPrint('Insert Login Response: $convertedResult');
       return BaseResponse.fromJson(convertedResult);
     }catch(e){
       return BaseResponse(
@@ -59,12 +60,12 @@ class CloudRequest{
       final userId = GlobalProviders.read(userProvider).userId;
 
       final body = {
-      "outlet": outlet,
-      "id": idApproval,
-      "user": userId,
-      "reception": rcp,
-      "room": room,
-      "note": notes
+        "outlet": outlet,
+        "id": idApproval,
+        "user": userId,
+        "reception": rcp,
+        "room": room,
+        "note": notes
       };
 
       final url = Uri.parse('$baseUrl/approval/request');

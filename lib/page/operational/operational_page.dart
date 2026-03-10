@@ -94,10 +94,10 @@ class _OperationalPageState extends State<OperationalPage> {
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
-                              color: CustomColorStyle.bluePrimary().withOpacity(0.12),
+                              color: CustomColorStyle.bluePrimary().withAlpha(12),
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: CustomColorStyle.bluePrimary().withOpacity(0.5),
+                                color: CustomColorStyle.bluePrimary().withAlpha(5),
                                 width: 1.5,
                               ),
                             ),

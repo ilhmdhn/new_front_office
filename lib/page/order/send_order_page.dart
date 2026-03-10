@@ -8,7 +8,6 @@ import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/fnb_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/print_executor.dart';
@@ -287,7 +286,7 @@ class _SendOrderPageState extends State<SendOrderPage> {
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text('Dibatalkan', style: CustomTextStyle.whiteSize(16),)
+                          Text('Dibatalkan', style: CustomTextStyle.cancelOrder(),)
                         ],
                       )
                     ],

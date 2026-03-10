@@ -3,40 +3,57 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/tools/preferences.dart';
 
 
-// Provider untuk FCM Token (di-load saat app start)
+// Provider untuk FCM Token saat berhasil login
 final fcmTokenProvider = StateNotifierProvider<FcmTokenNotifier, String>((ref) {
   return FcmTokenNotifier();
 });
 
 class FcmTokenNotifier extends StateNotifier<String> {
-  FcmTokenNotifier() : super('') {
-    _loadToken();
-    _listenTokenRefresh();
-  }
 
-  Future<void> _loadToken() async {
-    final token = await FirebaseMessaging.instance.getToken();
+  FcmTokenNotifier() : super('');
+  bool _isListening = false;
+  
+  Future<void> refresh() async {
+    String? token = await _waitToken();
     if (token != null) {
       state = token;
+      listenRefresh();
     }
   }
 
-  void _listenTokenRefresh() {
+
+  Future<String?> _waitToken() async {
+    for (int i = 0; i < 10; i++) {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token != null && token.isNotEmpty) {
+        return token;
+      }
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+
+    return null;
+  }
+
+  void listenRefresh() {
+
+    if (_isListening) return;
+    _isListening = true;
+
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       state = newToken;
+      ApiRequest().tokenPost();
+      CloudRequest.insertLogin();
     });
   }
 
   Future<void> deleteToken() async {
     await FirebaseMessaging.instance.deleteToken();
     state = '';
-  }
-
-  void refresh() {
-    _loadToken();
   }
 }
 

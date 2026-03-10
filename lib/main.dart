@@ -78,12 +78,10 @@ void main() async {
   await PreferencesData.initialize();
   setupLocator();
 
-  // Inisialisasi Global ProviderContainer
   final container = ProviderContainer();
   GlobalProviders.initialize(container);
 
   // Pre-load providers saat app start (agar fetch data di awal)
-  container.read(fcmTokenProvider);        // Load FCM token
   container.read(deviceModelProvider);     // Load device model
   // FirebaseTools.initToken();
 

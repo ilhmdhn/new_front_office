@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/data/model/base_response.dart';
@@ -66,7 +65,7 @@ class VerificationDialog{
               mainAxisSize: MainAxisSize.min,
               children: [
                 isPotrait == true?
-                AutoSizeText('Batal otomatis', style: CustomTextStyle.blackStandard(), maxLines: 2, minFontSize: 5, textAlign: TextAlign.center,):
+                Text('Batal otomatis', style: CustomTextStyle.blackStandard(), maxLines: 2, textAlign: TextAlign.center,):
                 Text('Batal otomatis', style: CustomTextStyle.blackStandard(), maxLines: 2, textAlign: TextAlign.center,),
 
                 SlideCountdown(
@@ -95,7 +94,7 @@ class VerificationDialog{
     }
     showDialog(
       context: ctx, 
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext ctxDialog){
         String reason = '';
 
@@ -131,7 +130,7 @@ class VerificationDialog{
                     });
                   }, 
                   style: CustomButtonStyle.cancel(),
-                  child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,)
+                  child: Text('CANCEL', style: CustomTextStyle.whiteStandard(), maxLines: 1,)
                 );
               }
 
@@ -171,12 +170,13 @@ class VerificationDialog{
                   }
                   },
                   style: CustomButtonStyle.confirm(), 
-                  child: AutoSizeText( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), minFontSize: 9, maxLines: 1,));
+                  child: Text( isLoading == true? 'CHECK': isConfirmed==true? 'CONFIRM':'KEMBALI', style: CustomTextStyle.whiteStandard(), maxLines: 1,));
               }
 
               return AlertDialog(
                 actionsPadding: const EdgeInsets.all(0),
                 contentPadding: const EdgeInsets.all(0),
+                backgroundColor: CustomColorStyle.background(),
                 titlePadding: const EdgeInsets.only(left: 12, right: 12, top: 6),
                 buttonPadding: const EdgeInsets.all(0),
                 // insetPadding: const EdgeInsets.all(0),
@@ -184,18 +184,18 @@ class VerificationDialog{
                 isLoading == true?
                 Center(
                   child: isPotrait == true?
-                  AutoSizeText('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,):
+                  Text('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(16),maxLines: 1,):
                   Text('Menunggu Verifikasi Kapten/ Spv', style: CustomTextStyle.titleAlertDialogSize(16), maxLines: 1,)                
                 ):
                 isConfirmed == true?
                 Center(
                   child: isPotrait == true? 
-                    AutoSizeText('Confirmed', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,):
+                    Text('Confirmed', style: CustomTextStyle.titleAlertDialogSize(16),maxLines: 1,):
                     Text('Confirmed', style: CustomTextStyle.titleAlertDialogSize(16),maxLines: 1,)
                 ):
                 Center(
                   child: isPotrait == true? 
-                    AutoSizeText('Ditolak', style: CustomTextStyle.titleAlertDialogSize(16), minFontSize: 9,maxLines: 1,):
+                    Text('Ditolak', style: CustomTextStyle.titleAlertDialogSize(16),maxLines: 1,):
                     Text('Ditolak', style: CustomTextStyle.titleAlertDialogSize(16) ,maxLines: 1,)
                   ),
                 content: BlocBuilder<ApprovalCubit, BaseResponse>(
@@ -226,7 +226,7 @@ class VerificationDialog{
                       countdown(),
                       const SizedBox(height: 20,),
                       InkWell(
-                        child: Row( mainAxisAlignment: MainAxisAlignment.center, children: [AutoSizeText(isNullOrEmpty(reason)?'isi catatan': reason, style: CustomTextStyle.blackStandard(), minFontSize: 12), const SizedBox(width: 12,),Image.asset('assets/icon/pencil.png', width: 16, height: 16,)],),
+                        child: Row( mainAxisAlignment: MainAxisAlignment.center, children: [Text(isNullOrEmpty(reason)?'isi catatan': reason, style: CustomTextStyle.blackStandard(),), const SizedBox(width: 12,),Image.asset('assets/icon/pencil.png', width: 16, height: 16,)],),
                         onTap: ()async{
                           final note = await TextFieldDialog().inputText(ctx);
                           setState(() {

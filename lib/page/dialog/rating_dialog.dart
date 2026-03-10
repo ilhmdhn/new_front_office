@@ -170,7 +170,7 @@ class RatingDialog{
                             flex: 6,
                             child: ElevatedButton(
                               onPressed: (){
-                                getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
+                                getIt<NavigationService>().goBack();
                               },
                               style: CustomButtonStyle.cancel(),
                               child: Center(child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),)),

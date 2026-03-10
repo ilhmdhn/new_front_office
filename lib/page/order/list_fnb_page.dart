@@ -46,6 +46,8 @@ class _ListFnbPageState extends State<ListFnbPage> {
     try{
       if(choosedStation != null){
         category = choosedStation?.id.toString() ?? '';
+      }else {
+        category = '';
       }
       final getFnb = await ApiRequest().fnbPage(pageKey, category, _searchFnb);
       if(getFnb.state != true){

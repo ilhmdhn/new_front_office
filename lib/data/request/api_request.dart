@@ -1170,7 +1170,7 @@ class ApiRequest{
         final data =  await DummyResponseHelper.getStationResponse();
         return data;
       }
-      final url = Uri.parse('$serverUrl/order/printer-station');
+      final url = Uri.parse('$serverUrl/order/category');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
       
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){

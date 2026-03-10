@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/request/api_request.dart';
-import 'package:front_office_2/data/request/cloud_request.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -48,8 +47,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       await ref.read(userProvider.notifier).setUser(loginResult.data!);
       ref.read(loginStateProvider.notifier).setLoginState(true);
       ref.read(outletProvider.notifier).updateOutlet(loginResult.data?.outlet??'');
-      CloudRequest.insertLogin();
-      ApiRequest().tokenPost();
       
       BuildContext ctx = context;
       if(ctx.mounted){
@@ -73,8 +70,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final loginState = ref.read(loginStateProvider);
 
     if(apiResponse.state == true && isNotNullOrEmpty(user.userId) && isNotNullOrEmpty(user.level) && isNotNullOrEmpty(user.token) && loginState == true){
-      CloudRequest.insertLogin();
-      ApiRequest().tokenPost();
       getIt<NavigationService>().pushNamedAndRemoveUntil(MainPage.nameRoute);
     }else{
       setState((){

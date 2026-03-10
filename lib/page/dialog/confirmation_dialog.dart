@@ -1,17 +1,14 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
-import 'package:front_office_2/page/bloc/int_bloc.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ConfirmationDialog{
-    static Future<bool> confirmation(BuildContext ctx, String title) async {
+  static Future<bool> confirmation(BuildContext ctx, String title) async {
   if (!ctx.mounted) return false;
 
   try {
@@ -81,7 +78,7 @@ class ConfirmationDialog{
   }
 }
 
-    static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel, DetailCheckinModel dataCheckin)async{
+    /*static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel, DetailCheckinModel dataCheckin)async{
       Completer<int> completer = Completer<int>();
       NumberCubit cancelValueBloc = NumberCubit();
       int cancelQty = 1;
@@ -95,6 +92,7 @@ class ConfirmationDialog{
                 backgroundColor: Colors.white,
                 title: Center(child: Text('Batalkan pesanan\n$itemName?', style: CustomTextStyle.blackMediumSize(16), textAlign: TextAlign.center)),
                 content: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
@@ -177,4 +175,141 @@ class ConfirmationDialog{
       return completer.future;
   }
 
+    */
+
+  static Future<int> confirmationCancelDo(
+    BuildContext ctx,
+    String itemName,
+    int maxCancel,
+    DetailCheckinModel dataCheckin,
+  ) async {
+
+    int cancelQty = 1;
+
+    final result = await showDialog<int>(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (BuildContext ctxDialog) {
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Center(
+                child: Text(
+                  'Batalkan pesanan\n$itemName?',
+                  style: CustomTextStyle.blackMediumSize(16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  /// minus
+                  SizedBox(
+                    height: 36,
+                    width: 36,
+                    child: InkWell(
+                      onTap: () {
+                        if (cancelQty > 1) {
+                          setState(() {
+                            cancelQty--;
+                          });
+                        }
+                      },
+                      child: Image.asset('assets/icon/minus.png'),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Text(
+                    cancelQty.toString(),
+                    style: CustomTextStyle.blackMediumSize(21),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  /// plus
+                  SizedBox(
+                    height: 36,
+                    width: 36,
+                    child: InkWell(
+                      onTap: () {
+                        if (cancelQty < maxCancel) {
+                          setState(() {
+                            cancelQty++;
+                          });
+                        }
+                      },
+                      child: Image.asset('assets/icon/plus.png'),
+                    ),
+                  ),
+                ],
+              ),
+
+              actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+
+              actions: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (ctxDialog.mounted) {
+                            Navigator.pop(ctxDialog, 0);
+                          }
+                        },
+                        style: CustomButtonStyle.cancel(),
+                        child: Text(
+                          'Batal',
+                          maxLines: 1,
+                          style: CustomTextStyle.whiteStandard(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final confirmationState = await VerificationDialog.requestVerification(
+                            ctx,
+                            dataCheckin.reception,
+                            dataCheckin.roomCode,
+                            'Cancel order $itemName',
+                          );
+
+                          if (confirmationState != true) {
+                            showToastWarning('Cancel order dibatalkan');
+                            return;
+                          }
+
+                          if (ctx.mounted) {
+                            Navigator.pop(ctx, cancelQty);
+                          }
+                        },
+                        style: CustomButtonStyle.confirm(),
+                        child: Text(
+                          'Konfirmasi',
+                          maxLines: 1,
+                          style: CustomTextStyle.whiteStandard(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    return result ?? 0;
+  }
 }
