@@ -37,13 +37,13 @@ class EscPosGenerator {
     return bytes;
   }
 
-  static List<int> printStation(CommandHelper helper, List<OrderedModel> data, String roomName, String custName, {bool isChecker = false, String checkerIp = '', String checkerPort = ''}){
+  static List<int> printStation(CommandHelper helper, List<OrderedModel> data, String roomName, String custName, {bool isChecker = false, String checkerIp = '', String checkerPort = '', bool isUser = false}){
     final user = GlobalProviders.read(userProvider).userId;
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
     bytes += helper.text("DINE IN", bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text('STATION: ${isChecker?'CHECKER': data[0].stationName}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('STATION: ${isChecker?'CHECKER': isUser? user: data[0].stationName}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.text('TABLE: $roomName', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
     bytes += helper.text("CUST: $custName", bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.divider();
@@ -370,6 +370,7 @@ class EscPosGenerator {
       bytes += helper.feed(1);
       bytes += helper.text(Formatter.formatRupiah(data.dataInvoice.jumlahBersih),
         bold: true,
+        align: PosAlign.center,
         height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
         width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
       );
@@ -668,7 +669,8 @@ class EscPosGenerator {
       bytes += helper.row('', '----------------');
       bytes += helper.row('', Formatter.formatRupiah(data.payment.payValue));
       bytes += helper.feed(1);
-      bytes += helper.text('Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', bold: true, align: PosAlign.center, 
+      bytes += helper.text('Kembali: ${Formatter.formatRupiah(data.payment.payChange)}', 
+        bold: true,
         height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
         width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
       );

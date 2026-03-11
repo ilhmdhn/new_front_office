@@ -31,6 +31,7 @@ class _MainPageState extends ConsumerState<MainPage> {
   @override
   void initState() {
     super.initState();
+    CloudRequest.insertLogin();
     _notifPermissionState();
     _updateCheck();
   }

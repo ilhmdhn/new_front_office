@@ -231,6 +231,19 @@ class PrintExecutor {
       for (final entry in groupedOrders.entries) {
         final printerIP = entry.key;
         final orders = entry.value;
+        int port = 9100;
+
+        try{
+          final portString = orders[0].forwarderPORT;
+          if (!isNullOrEmpty(portString)) {
+            port = int.tryParse(portString!) ?? 9100;
+          } else {
+            debugPrint('Port kosong untuk printer $printerIP, gunakan default 9100');
+          }
+
+        }catch(e){
+          debugPrint('Error parsing port untuk printer $printerIP: $e, gunakan default 9100');
+        }
 
         final command = EscPosGenerator.printStation(
           helperResto,
@@ -239,7 +252,7 @@ class PrintExecutor {
           custName,
         );
 
-        await _executeLan(command, printerIP);
+        await _executeLan(command, printerIP, port: port);
       }
 
       if (isNotNullOrEmpty(soData.checkerIp)) {
@@ -251,7 +264,19 @@ class PrintExecutor {
           isChecker: true,
         );
 
-        await _executeLan(checkerCommand, soData.checkerIp!);
+          int port = 9100;
+        try{
+          final portString = soData.checkerPort;
+          if (!isNullOrEmpty(portString)) {
+            port = int.tryParse(portString!) ?? 9100;
+          } else {
+            debugPrint('Port kosong untuk printer ${soData.checkerIp}, gunakan default 9100');
+          }
+        }catch(e){
+          debugPrint('Error parsing port untuk printer checker ${soData.checkerIp}: $e, gunakan default 9100');
+        }
+
+        await _executeLan(checkerCommand, soData.checkerIp!, port: port);
       }
 
       final posContent = EscPosGenerator.printStation(
@@ -259,6 +284,7 @@ class PrintExecutor {
         soData.data ?? [],
         roomCode,
         custName,
+        isUser: true
       );
 
       await _execute(posContent);
@@ -321,7 +347,7 @@ class PrintExecutor {
 
       final profile = await CapabilityProfile.load();
       Generator generator;
-     if (printer.printerModel == PrinterModelType.bluetooth80mm ||printer.printerModel == PrinterModelType.tm82x) {
+     if (printer.printerModel == PrinterModelType.bluetooth80mm || printer.printerModel == PrinterModelType.tm82x) {
         generator = Generator(PaperSize.mm80, profile);
       } else if (printer.printerModel == PrinterModelType.tmu220u) {
         generator = Generator(PaperSize.mm72, profile, spaceBetweenRows: 0);
@@ -392,7 +418,7 @@ class PrintExecutor {
       showToastError('Printer IP: $ipAddress tidak ditemukan');
       return;
     }
-
+    debugPrint('Mengirim print ke printer LAN $ipAddress:$port');
     for (int attempt = 1; attempt <= maxRetry; attempt++) {
       try {
         await LanPrintService.printOnce(

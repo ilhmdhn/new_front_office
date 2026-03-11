@@ -253,9 +253,11 @@ class FnBDialog{
               bool finalState = false;
               
               final PostSoResponse orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
+              
               if(!orderState.state){
                 showToastError('SO error ${orderState.message}');
               }
+              
               finalState = orderState.state;
               final pos = GlobalProviders.read(posTypeProvider);
               if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
@@ -282,19 +284,19 @@ class FnBDialog{
               setState((){
                 isLoading = false;
               });
-              
+              debugPrint('DEBUGGING final state: $finalState');
               if(finalState != true){
                 if(ctx.mounted){
                  Navigator.pop(ctx, false);
                 }else{
                   showToastWarning('Gagal berpindah halaman');
                 }
-              }
-
-              if(ctx.mounted){
-                Navigator.pop(ctx, true);
               }else{
-                showToastWarning('Gagal berpindah halaman');
+                if(ctx.mounted){
+                  Navigator.pop(ctx, true);
+                }else{
+                  showToastWarning('Gagal berpindah halaman');
+                }
               }
             },
             style: CustomButtonStyle.confirm(),
