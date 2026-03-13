@@ -69,35 +69,150 @@ class _CancelOrderPageState extends State<CancelOrderPage> {
             final order = listOrder[index];
             return Column(
               children: [
-                Container(
-                  decoration: CustomContainerStyle.cancelList(),
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: AutoSizeText(order.sol??'sol null', style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
+                InkWell(
+                  onTap: (){
+                    showDialog(
+                      context: context,
+                      builder: (ctxDialog) {
+                        // Fungsi helper lokal agar baris informasi terlihat rapi
+                        Widget buildDetailRow(String label, String value) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: AutoSizeText(
+                                    label,
+                                    style: CustomTextStyle.blackStandard().copyWith(
+                                      color: Colors.blueGrey.shade700,
+                                    ),
+                                    maxLines: 1,
+                                    minFontSize: 12,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: AutoSizeText(
+                                    value,
+                                    textAlign: TextAlign.right,
+                                    style: CustomTextStyle.blackStandard(),
+                                    maxLines: 2,
+                                    minFontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: AutoSizeText(Formatter.formatRupiah((order.price??0) * (order.cancelQty??0)), style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
+                          backgroundColor: CustomColorStyle.background(), // Nuansa light blue utama
+                          elevation: 4,
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.blue.shade200, width: 1.5),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Bagian Header
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.receipt_long_rounded, color: Colors.blue.shade700),
+                                        const SizedBox(width: 8),
+                                        AutoSizeText(
+                                          'Detail Order',
+                                          style: CustomTextStyle.blackMedium(),
+                                          maxLines: 1,
+                                          minFontSize: 14,
+                                        ),
+                                      ],
+                                    ),
+                                    // Tombol Close (X)
+                                    GestureDetector(
+                                      onTap: () => Navigator.of(ctxDialog).pop(),
+                                      child: Icon(Icons.close_rounded, color: Colors.blue.shade400, size: 22),
+                                    ),
+                                  ],
+                                ),
+                                
+                                const SizedBox(height: 12),
+                                Divider(color: Colors.blue.shade200, thickness: 1),
+                                const SizedBox(height: 16),
+
+                                // Bagian Konten
+                                buildDetailRow('Terkirim', order.deliveredAt != null ? Formatter.formatDateTime(order.deliveredAt!) : '-'),
+                                buildDetailRow('User', order.user ?? '-'),
+                                buildDetailRow('Room', order.roomCode ?? '-'),
+                                buildDetailRow('SO', order.sol ?? '-'),
+                                
+                                const SizedBox(height: 12),
+                                
+                                // Tombol Tutup (Opsional, bisa dihapus jika cukup pakai (X) di atas)
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue.shade600,
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    onPressed: () => Navigator.of(ctxDialog).pop(),
+                                    child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: AutoSizeText('${order.cancelQty}x ${order.name}', style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
-                          ),
-                        ],
-                      ),
-                    ],
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    decoration: CustomContainerStyle.cancelList(),
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: AutoSizeText(order.sol??'sol null', style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: AutoSizeText(Formatter.formatRupiah((order.price??0) * (order.cancelQty??0)), style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: AutoSizeText('${order.cancelQty}x ${order.name}', style: CustomTextStyle.whiteStandard(), maxLines: 1, minFontSize: 9,)
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 6,)

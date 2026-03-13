@@ -691,11 +691,13 @@ class ApiRequest{
 
   Future<OrderResponse> getOrder(String roomCode)async{
     try{
+      debugPrint('DEBUGGING getOrder with roomCode: $roomCode');
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getOrderList('SUCCESS');
         return data;
       }
       Uri url = Uri.parse('$serverUrl/room/$roomCode/order');
+      debugPrint('DEBUGGING URL: $url');
       final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
 
       if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
@@ -703,6 +705,7 @@ class ApiRequest{
       }
 
       final convertedResult = json.decode(apiResponse.body);
+      debugPrint('Get Order Response: $convertedResult');
       return OrderResponse.fromJson(convertedResult);
     }catch(e){
       return OrderResponse(

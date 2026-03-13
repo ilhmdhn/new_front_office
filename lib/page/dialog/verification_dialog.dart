@@ -18,6 +18,7 @@ import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
@@ -36,6 +37,7 @@ class VerificationDialog{
     ApprovalCubit approvalCubit = ApprovalCubit();
     StreamSubscription? eventSubscription;
     StateSetter? dialogSetState;
+    bool onEditText = false;
 
     if(!['ACCOUNTING', 'KAPTEN', 'SUPERVISOR'].contains(user.level)){
       approvalCubit.sendApproval(uniqueTime, reception, room, note);
@@ -70,16 +72,19 @@ class VerificationDialog{
 
                 SlideCountdown(
                 duration: const Duration(minutes: 2),
+                replacement: Text('Waktu Habis, ulangi proses verifikasi', style: GoogleFonts.poppins(color: Colors.deepOrange.shade900, fontSize: 14),),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   color: CustomColorStyle.appBarBackground(),
                 ),
                 onDone: ()async{
-                  final timeOutState = await  CloudRequest.timeoutApproval(uniqueTime);
-                  if(timeOutState.state == true && ctx.mounted){
+                  final timeOutState = await CloudRequest.timeoutApproval(uniqueTime);
+                  if(timeOutState.state == true && ctx.mounted && !onEditText){
                     CloudRequest.cancelApproval(uniqueTime);
                     showToastWarning('Permintaan Dibatalkan');
-                    Navigator.pop(ctx, false);
+                    if(ctx.mounted){
+                      Navigator.pop(ctx, false);
+                    }
                   }
                 },
                 ),
@@ -224,14 +229,21 @@ class VerificationDialog{
                       animation(),
                       const SizedBox(height: 20,),
                       countdown(),
-                      const SizedBox(height: 20,),
                       InkWell(
-                        child: Row( mainAxisAlignment: MainAxisAlignment.center, children: [Text(isNullOrEmpty(reason)?'isi catatan': reason, style: CustomTextStyle.blackStandard(),), const SizedBox(width: 12,),Image.asset('assets/icon/pencil.png', width: 16, height: 16,)],),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center, 
+                          children: [
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: Text(isNullOrEmpty(reason)?'isi catatan': reason, style: CustomTextStyle.blackStandard(), maxLines: 3,)), 
+                            const SizedBox(width: 12,),
+                            Image.asset('assets/icon/pencil.png', width: 16, height: 16,)
+                          ],
+                        ),
                         onTap: ()async{
-                          final note = await TextFieldDialog().inputText(ctx);
-                          setState(() {
-                            reason = 'loading';
-                          });
+                          onEditText = true;
+                          final note = await TextFieldDialog().inputText(ctx, reason);
+                          onEditText = false;
                           if(note!=null){
                             final state = await CloudRequest.approvalReason(uniqueTime, note);
                             if(state.state == true){
@@ -264,7 +276,7 @@ class VerificationDialog{
                   ):
                   Container(
                     width: ScreenSize.getSizePercent(ctx, 55),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,

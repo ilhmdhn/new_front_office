@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -13,10 +14,12 @@ import 'package:front_office_2/page/order/fnb_main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/transfer/reason_transfer_page.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/orientation.dart';
 import 'package:front_office_2/tools/screen_size.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class RoomCheckinListPage extends StatefulWidget {
@@ -37,6 +40,10 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
   int destination = 0; 
   List<ListRoomCheckinModel> listRoomCheckin = [];
   bool isLoaded = false;
+  bool isRestoOutlet = false;
+  final pos = GlobalProviders.read(posTypeProvider);
+
+
 
   void getRoomCheckin(String search)async{
     if(destination >0 && destination < 6){
@@ -56,7 +63,11 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
       listRoomCheckin = roomCheckinResponse?.data??[];
       if(destination == 1 || destination == 2 || destination == 3 || destination == 4){
         appBarTitle = 'List Room Checkin';
-        listRoomCheckin = listRoomCheckin.where((item) => item.printState == '0' && item.summaryCode == '').toList();
+        if(isRestoOutlet){
+          listRoomCheckin = listRoomCheckin.where((item) => item.summaryCode == '').toList();
+        }else{
+          listRoomCheckin = listRoomCheckin.where((item) => item.printState == '0' && item.summaryCode == '').toList();
+        }
       }else if(destination == 5){
         appBarTitle = 'Payment Room';
         listRoomCheckin = listRoomCheckin.where((item) => isNullOrEmpty(item.summaryCode)).toList();
@@ -70,6 +81,14 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     });
 
     isLoaded = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased){
+      isRestoOutlet = true;
+    }
   }
 
   @override
@@ -195,6 +214,15 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                   alignment: Alignment.topLeft,
                                   child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
                                 ),
+                                isRestoOutlet && roomData.printState != '0'?
+                                Expanded(
+                                  child: Center(
+                                    child: Transform.rotate(
+                                      angle: -0.2,
+                                      child: AutoSizeText('Print Bill', style: GoogleFonts.poppins(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.w500), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis,)
+                                    ), 
+                                  ),
+                                ): SizedBox.shrink(),
                                 Align(
                                   alignment: Alignment.bottomRight,
                                   child: Column(
@@ -202,7 +230,8 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       AutoSizeText(roomData.memberName, style: CustomTextStyle.blackMediumSize(14),  maxLines: 1, minFontSize: 9,),
-                                      AutoSizeText(remaining, style: CustomTextStyle.blackMediumSize(14),  maxLines: 2, minFontSize: 9,),
+                                      isRestoOutlet?SizedBox.shrink():
+                                      AutoSizeText(remaining, style: CustomTextStyle.blackMediumSize(14),  maxLines: 2, minFontSize: 9,),   
                                     ],
                                   ),
                                 )

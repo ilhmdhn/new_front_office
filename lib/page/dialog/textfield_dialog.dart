@@ -5,7 +5,10 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
 
 class TextFieldDialog{
-  Future<String?> inputText(BuildContext ctx){
+  Future<String?> inputText(BuildContext ctx, String currentText){
+    debugPrint('DEBUGGING $currentText');
+    TextEditingController controllerET = TextEditingController();
+    controllerET.text = currentText;
     String reason = '';
     return(showDialog(
       context: ctx, 
@@ -14,14 +17,21 @@ class TextFieldDialog{
           title: Center(
             child: Text('Alasan otorisasi', style: CustomTextStyle.blackStandard(),),
           ),
+          insetPadding: EdgeInsets.all(0),
+          titlePadding: EdgeInsets.symmetric(vertical: 12),
+          buttonPadding: EdgeInsets.all(0),
+          actionsPadding: EdgeInsets.all(0),
+          contentPadding: EdgeInsets.symmetric(vertical: 12),
           backgroundColor: CustomColorStyle.white(),
           content: Container(
-            height: 100,
             margin: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
+                  minLines: 3,
+                  maxLines: 5,
+                  controller: controllerET,
                   decoration: CustomTextfieldStyle.normalHint('isi alasan'),
                   onChanged: (value) {
                     reason = value;

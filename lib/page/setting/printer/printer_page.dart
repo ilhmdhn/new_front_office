@@ -574,7 +574,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
         const SizedBox(height: 12),
         TextField(
           inputFormatters: [IPAddressInputFormatter()],
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
           controller: tfIpPc,
           decoration: InputDecoration(
             hintText: 'Enter IP Address',

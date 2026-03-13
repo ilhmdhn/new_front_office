@@ -91,7 +91,6 @@ void main() async {
   ));
 }
 
-
 class FrontOffice extends StatelessWidget {
   const FrontOffice({super.key});
 

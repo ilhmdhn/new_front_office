@@ -202,9 +202,9 @@ class PrintExecutor {
     PostSoResponse soData,
     String roomCode,
     String custName,
+    int pax
   ) async {
     try {
-      final helper = await _getPrinter();
       final helperResto = await _getRestoPrinter();
 
       final Map<String, List<OrderedModel>> groupedOrders = {};
@@ -250,6 +250,7 @@ class PrintExecutor {
           orders,
           roomCode,
           custName,
+          pax
         );
 
         await _executeLan(command, printerIP, port: port);
@@ -261,6 +262,7 @@ class PrintExecutor {
           soData.data ?? [],
           roomCode,
           custName,
+          pax,
           isChecker: true,
         );
 
@@ -278,12 +280,14 @@ class PrintExecutor {
 
         await _executeLan(checkerCommand, soData.checkerIp!, port: port);
       }
-
+      
+      final helper = await _getPrinter();
       final posContent = EscPosGenerator.printStation(
         helper,
         soData.data ?? [],
         roomCode,
         custName,
+        pax,
         isUser: true
       );
 

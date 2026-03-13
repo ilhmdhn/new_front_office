@@ -39,6 +39,9 @@ class OrderedModel{
   String? printerIP;
   String? forwarderPORT;
   String? stationName;
+  String? user;
+  DateTime? deliveredAt;
+  String? roomCode;
 
   OrderedModel({
     this.sol,
@@ -55,7 +58,10 @@ class OrderedModel{
     this.price,
     this.printerIP,
     this.forwarderPORT,
-    this.stationName
+    this.stationName,
+    this.user,
+    this.deliveredAt,
+    this.roomCode
   });
 
   factory OrderedModel.fromJson(Map<String, dynamic>json){
@@ -74,7 +80,10 @@ class OrderedModel{
       price: json['order_price'],
       printerIP: json['printer_ip_address'],
       forwarderPORT: json['printer_port'],
-      stationName: json['station_name']
+      stationName: json['station_name'],
+      user: json['order_user'],
+      deliveredAt: json['order_date_terkirim'] != null ? DateTime.parse(json['order_date_terkirim']) : null,
+      roomCode: json['order_room_rcp']
     );
   }
 }

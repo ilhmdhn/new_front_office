@@ -93,68 +93,105 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
                 Text(approval?.note??'note', style: CustomTextStyle.blackStandard()),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    isNotNullOrEmpty(apiResponse?.data[index].reason)?
+                    Expanded(
+                      child: isNotNullOrEmpty(apiResponse?.data[index].reason)?
                     InkWell(
                       onTap: (){
                         showDialog(
                           context: context,
+                          // fullscreenDialog: false, // Catatan: showDialog bawaan Flutter biasanya tidak memiliki properti ini. Jika error, baris ini bisa dihapus.
                           builder: (BuildContext ctx) {
                             return AlertDialog(
-                              surfaceTintColor: Colors.white,
-                              backgroundColor:CustomColorStyle.white(),
+                              backgroundColor: Colors.white,
+                              // Mencegah warna header menutupi lengkungan (border radius) dialog
+                              clipBehavior: Clip.antiAlias, 
+                              // Menghilangkan padding bawaan agar header membentang penuh
+                              titlePadding: EdgeInsets.zero, 
+                              contentPadding: EdgeInsets.zero, 
+                              
+                              // --- BAGIAN HEADER BARU ---
+                              title: Container(
+                                color: CustomColorStyle.appBarBackground(), // Latar belakang nuansa biru soft
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Informasi", // Silakan ubah judul ini sesuai kebutuhan
+                                      style: CustomTextStyle.whiteStandard(),
+                                    ),
+                                    InkWell(
+                                      onTap: () => Navigator.of(context).pop(), // Fungsi tombol close
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.shade100, // Warna tombol close
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 18,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              
                               content: Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth:300,
-                                  maxHeight:150,
-                                ),
                                 padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: CustomColorStyle.white(),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    apiResponse?.data[index].reason ??'',
-                                    style: CustomTextStyle.blackStandard(),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                        apiResponse?.data[index].reason ??'',
+                                        style: CustomTextStyle.blackMedium(),
+                                        textAlign: TextAlign.start
+                                      ),
+                                  ],
+                                )
                               ),
                             );
                           },
                         );
                       },
-                    child: AutoSizeText('note: ${(apiResponse?.data[index].reason??'')}', style: CustomTextStyle.blackStandard(), minFontSize: 12,),
+                    child: 
+                      AutoSizeText('note: ${(apiResponse?.data[index].reason??'')}', style: CustomTextStyle.blackStandard(), minFontSize: 12, maxLines: 2,),
                     ):
-                    const SizedBox(),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: ()async{
-                            final bioResult = await FingerpintAuth().requestFingerprintAuth();
-                            if(bioResult == true){
-                              await CloudRequest.rejectApproval(approval?.idApproval??'');
-                              getData();
-                            }
-                          },
-                          style: CustomButtonStyle.cancel(),
-                          child: Text('Tolak', style: CustomTextStyle.whiteSize(14),),
-                        ),
-                        const SizedBox(width: 6,),
-                        ElevatedButton(
-                          onPressed: ()async{
-                            final bioResult = await FingerpintAuth().requestFingerprintAuth();
-                            if(bioResult == true){
-                              await CloudRequest.confirmApproval(approval?.idApproval??'');
-                              getData();
-                            }
-                          },
-                          style: CustomButtonStyle.confirm(),
-                          child: Text('Approve', style: CustomTextStyle.whiteSize(14),),
-                            ),
-                      ],
+                    const SizedBox.shrink(),
                     ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: ()async{
+                              final bioResult = await FingerpintAuth().requestFingerprintAuth();
+                              if(bioResult == true){
+                                await CloudRequest.rejectApproval(approval?.idApproval??'');
+                                getData();
+                              }
+                            },
+                            style: CustomButtonStyle.cancel(),
+                            child: Text('Tolak', style: CustomTextStyle.whiteSize(14),),
+                          ),
+                          const SizedBox(width: 6,),
+                          ElevatedButton(
+                            onPressed: ()async{
+                              final bioResult = await FingerpintAuth().requestFingerprintAuth();
+                              if(bioResult == true){
+                                await CloudRequest.confirmApproval(approval?.idApproval??'');
+                                getData();
+                              }
+                            },
+                            style: CustomButtonStyle.confirm(),
+                            child: Text('Approve', style: CustomTextStyle.whiteSize(14),),
+                              ),
+                        ],
+                      ),
                   ],
                 )
               ],
