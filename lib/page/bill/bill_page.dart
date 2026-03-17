@@ -270,11 +270,12 @@ class _BillPageState extends State<BillPage> {
                     children: [
                       ElevatedButton(
                         onPressed: ()async{
-                          // DoPrint.printBill(roomCode); return;
-                          if(user.level != 'KASIR' && user.level != 'SERVER' && user.level != 'ACCOUNTING' ){
-                            showToastWarning('User tidak memiliki akses');
-                            return;
-                          }else{
+                          final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+                          final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                            if (!isSpecialOutlet && !allowedRoles.contains(user.level)) {
+                              showToastWarning('${user.level} Tidak memiliki akses');
+                              return;
+                            }else{
                             if(result.data?.dataInvoice.statusPrint != '0'){
                               final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
                               if(reprintBillState!= true){
@@ -297,7 +298,7 @@ class _BillPageState extends State<BillPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: (){
-                            if(user.level != 'KASIR' && user.level != 'ACCOUNTING'){
+                            if(user.level != 'KASIR' && user.level != 'ACCOUNTING' && user.level != 'KAPTEN' && user.level != 'IT' && user.level != 'SUPERVISOR'){
                               showToastWarning('User tidak memiliki akses');
                               return;
                             }
