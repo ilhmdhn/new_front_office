@@ -483,10 +483,13 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                                 child: const Icon(Icons.notes),
                                               ),
                                               const SizedBox(width: 4),
-                                              AutoSizeText(
-                                                order.note,
-                                                style: CustomTextStyle.blackStandard(),
-                                                maxLines: 3,
+                                              Flexible(
+                                                fit: FlexFit.loose,
+                                                child: AutoSizeText(
+                                                  order.note,
+                                                  style: CustomTextStyle.blackStandard(),
+                                                  maxLines: 3,
+                                                ),
                                               ),
                                             ],
                                           ),

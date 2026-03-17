@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -574,7 +575,7 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
         const SizedBox(height: 12),
         TextField(
           inputFormatters: [IPAddressInputFormatter()],
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
+          keyboardType: TextInputType.numberWithOptions(signed: true),
           controller: tfIpPc,
           decoration: InputDecoration(
             hintText: 'Enter IP Address',

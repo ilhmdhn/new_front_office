@@ -51,7 +51,7 @@ class EscPosGenerator {
     for(final order in data){
       bytes += helper.text('${order.qty} ${order.name}', align: PosAlign.left, width: PosTextSize.size2, bold: true);
       if(isNotNullOrEmpty(order.notes)){
-        bytes += helper.text(order.notes??'', align: PosAlign.left, bold: true);
+        bytes += helper.text('++${order.notes}', align: PosAlign.left, bold: true, width: PosTextSize.size2);
         bytes += helper.feed(1);
       }
     }
