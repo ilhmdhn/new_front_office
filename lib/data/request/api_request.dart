@@ -7,6 +7,7 @@ import 'package:front_office_2/data/dummy/dummy_response_helper.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/call_service_history.dart';
+import 'package:front_office_2/data/model/cancel_order_response.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
@@ -16,6 +17,7 @@ import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/order_body.dart';
+import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
@@ -715,6 +717,59 @@ class ApiRequest{
     }
   }
 
+  Future<OrderOldRoomResponse> getOldOrder(String ivc)async{
+    try{
+      debugPrint('DEBUGGING getOrder with roomCode: $ivc');
+      if(userId == 'TEST'){
+        final data =  OrderOldRoomResponse(state: true, message: "success", data: []);
+        return data;
+      }
+
+      Uri url = Uri.parse('$serverUrl/order/old-room?ivc=$ivc');
+      debugPrint('DEBUGGING URL: $url');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      debugPrint('Get Order Response: $convertedResult');
+      return OrderOldRoomResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('DEBUGGING OLD ORDER $e\n $stackTrace');
+      return OrderOldRoomResponse(
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<CancelOrderResponse> getCancelOrder(String ivc)async{
+    try{
+      debugPrint('DEBUGGING getOrder with roomCode: $ivc');
+      if(userId == 'TEST'){
+        final data =  CancelOrderResponse(state: true, message: "success", data: []);
+        return data;
+      }
+
+      Uri url = Uri.parse('$serverUrl/order/old-room-cancel?ivc=$ivc');
+      debugPrint('DEBUGGING URL: $url');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      debugPrint('Get Order Response: $convertedResult');
+      return CancelOrderResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('getCancelOrder $e $stackTrace');
+      return CancelOrderResponse(state: false, message: 'Ada error', data: []);
+    }
+  }
+
   Future<PostSoResponse> sendOrder(String roomCode, String rcp, String roomType, int checkinDuration, List<SendOrderModel> orderData)async{
     try{
       if(userId == 'TEST'){
@@ -880,6 +935,44 @@ class ApiRequest{
           'qty': qty,
           'order_penjualan': fnb.okl,
           'slip_order': fnb.sol,
+          }
+        ]
+      };
+      
+      final apiResponse = await http.post(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+
+    }catch(e){
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<BaseResponse> cancelDoOld(String roomCode, OldRoomOrderDataModel fnb, int qty)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      Uri url = Uri.parse('$serverUrl/cancelorder/add/old');
+      
+      final bodyParams = {
+        "rcp": fnb.rcpCode,
+        "chusr": GlobalProviders.read(userProvider).userId,
+        "order_inventory": [{
+          'inventory': fnb.inventoryCode,
+          'nama': fnb.name,
+          'qty': qty,
+          'order_penjualan': fnb.orderCode,
+          'slip_order': fnb.slipOrder,
           }
         ]
       };

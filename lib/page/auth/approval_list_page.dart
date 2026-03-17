@@ -120,7 +120,7 @@ class _ApprovalListPageState extends State<ApprovalListPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "Informasi", // Silakan ubah judul ini sesuai kebutuhan
+                                      "Reason", // Silakan ubah judul ini sesuai kebutuhan
                                       style: CustomTextStyle.whiteStandard(),
                                     ),
                                     InkWell(

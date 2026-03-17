@@ -715,7 +715,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
             style: CustomButtonStyle.cancelSoft(),
             onPressed: (){
               if (context.mounted && Navigator.canPop(context)) {
-                Navigator.pop(context, false);
+                Navigator.pop(context, null);
               }
             },  
             child: Text('Batal', style: CustomTextStyle.whiteSize(17)),

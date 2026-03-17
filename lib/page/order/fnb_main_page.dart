@@ -135,7 +135,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
               children: [
                 ListFnbPage(detailCheckin: dataCheckin!.data!,),
                 DoneOrderPage(detailCheckin: dataCheckin!.data!),
-                CancelOrderPage(roomCode: roomCode)
+                CancelOrderPage(invoiceCode: dataCheckin!.data!.invoice)
               ],
             ):
             userLevel == 'KASIR' || userLevel == 'ACCOUNTING' || userLevel == 'SUPERVISOR' || userLevel == 'KAPTEN'?
@@ -151,7 +151,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
                 SendOrderPage(detailCheckin: dataCheckin!.data!),
                 ConfirmOrderPage(roomCode: roomCode),
                 DoneOrderPage(detailCheckin: dataCheckin!.data!),
-                CancelOrderPage(roomCode: roomCode)
+                CancelOrderPage(invoiceCode: dataCheckin!.data!.invoice)
               ],
             ):PageView(
               controller: slideController,
@@ -164,7 +164,7 @@ class _FnbMainPageState extends State<FnbMainPage> {
                 ListFnbPage(detailCheckin: dataCheckin!.data!,),
                 SendOrderPage(detailCheckin: dataCheckin!.data!),
                 DoneOrderPage(detailCheckin: dataCheckin!.data!),
-                CancelOrderPage(roomCode: roomCode)
+                CancelOrderPage(invoiceCode: dataCheckin!.data!.invoice)
               ],
             )
           ),
