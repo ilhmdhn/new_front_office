@@ -103,19 +103,22 @@ class _MainPageState extends ConsumerState<MainPage> {
       backgroundColor: CustomColorStyle.background(),
       bottomNavigationBar: NavigationBar(
         height: 55,
+        // labelPadding: EdgeInsets.all(0),
         backgroundColor: CustomColorStyle().hexToColor('#FEFEFE'),
         selectedIndex: currentPageIndex,
-        indicatorColor: null,
+        indicatorColor: Colors.lightBlue.shade100,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
+        // surfaceTintColor: Colors.black,
+        // shadowColor: Colors.black,
+        // overlayColor: WidgetStateColor.resolveWith((states) => Colors.black),
         destinations: [
           NavigationDestination(
             icon: Image.asset('assets/icon/reception_grey.png', width: 36),
-            selectedIcon:
-                Image.asset('assets/icon/reception_blue.png', width: 36),
+            selectedIcon: Image.asset('assets/icon/reception_blue.png', width: 36),
             label: 'Reception',
           ),
           NavigationDestination(

@@ -918,7 +918,7 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb, int qty)async{
+  Future<BaseResponse> cancelDo(String roomCode, OrderedModel fnb, int qty, {String reason = ''})async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
@@ -935,6 +935,7 @@ class ApiRequest{
           'qty': qty,
           'order_penjualan': fnb.okl,
           'slip_order': fnb.sol,
+          'reason': reason
           }
         ]
       };
@@ -956,7 +957,7 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> cancelDoOld(String roomCode, OldRoomOrderDataModel fnb, int qty)async{
+  Future<BaseResponse> cancelDoOld(String roomCode, OldRoomOrderDataModel fnb, int qty, {String reason = ''})async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
@@ -973,6 +974,7 @@ class ApiRequest{
           'qty': qty,
           'order_penjualan': fnb.orderCode,
           'slip_order': fnb.slipOrder,
+          'reason': reason
           }
         ]
       };

@@ -54,6 +54,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
               TextField(
                 decoration: CustomTextfieldStyle.characterNormal(),
                 minLines: 3,
+                maxLength: 100,
                 maxLines: 8,
                 controller: tfNoteController,
               ),

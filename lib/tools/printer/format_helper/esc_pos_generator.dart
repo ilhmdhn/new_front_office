@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
@@ -49,9 +50,33 @@ class EscPosGenerator {
     bytes += helper.divider();
     
     for(final order in data){
-      bytes += helper.text('${order.qty} ${order.name}', align: PosAlign.left, width: PosTextSize.size2, bold: true);
-      if(isNotNullOrEmpty(order.notes)){
-        bytes += helper.text('++${order.notes}', align: PosAlign.left, bold: true, width: PosTextSize.size2);
+      final qty = helper.formatQty(order.qty??0);
+      debugPrint('DEBUGGING QTYNYA $qty');
+      bytes += helper.tableWithMaxChars(qty, order.name??'', '', leftAlign: PosAlign.left, centerAlign: PosAlign.left, maxLeftChars: 5, maxRightChars: 0, leftBold: true, centerBold: true, textWidth: PosTextSize.size2,);
+      // bytes += helper.text('${order.qty} ${order.name}', align: PosAlign.left, width: PosTextSize.size2, bold: true);
+      // if(isNotNullOrEmpty(order.notes)){
+      //   bytes += helper.text(helper.generateNoteResto(order.notes??''), width: PosTextSize.size2, align: PosAlign.left);
+      //   bytes += helper.feed(1);
+      // }
+      if (isNotNullOrEmpty(order.notes)) {
+        final lines = order.notes!
+            .split('\n')
+            .map((e) => e.trim());
+
+        for (final line in lines) {
+          // String indent = '\u00A0\u00A0\u00A0\u00A0'; 
+          bytes += helper.tableWithMaxChars(
+            '    ',
+            '++$line',
+            '',
+            textWidth: PosTextSize.size2,
+            maxLeftChars: 4,
+            maxCenterChars: 36,
+            maxRightChars: 0,
+            centerAlign: PosAlign.left
+          );
+        }
+
         bytes += helper.feed(1);
       }
     }
@@ -707,12 +732,12 @@ class EscPosGenerator {
     bytes += helper.feed(1);
 
     bytes += helper.tableWithMaxChars('Ruangan  : ', roomCode, '',
-      centerTextWidth: PosTextSize.size2,
+      textWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
     bytes += helper.tableWithMaxChars('Jam      : ',  formattedDate,'',
-      centerTextWidth: PosTextSize.size2,
+      textWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
@@ -765,12 +790,12 @@ class EscPosGenerator {
     bytes += helper.feed(1);
 
     bytes += helper.tableWithMaxChars('Ruangan  : ', roomCode, '',
-      centerTextWidth: PosTextSize.size2,
+      textWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );
     bytes += helper.tableWithMaxChars('Jam      : ',  formattedDate,'',
-      centerTextWidth: PosTextSize.size2,
+      textWidth: PosTextSize.size2,
       centerAlign: PosAlign.left,
       maxLeftChars: 13
     );

@@ -32,6 +32,7 @@ class CancelOrderModel{
   DateTime date;
   String user;
   String room;
+  String? reason;
 
   CancelOrderModel({
     required this.cancelCode,
@@ -44,7 +45,8 @@ class CancelOrderModel{
     required this.slipCode,
     required this.date,
     required this.user,
-    required this.room
+    required this.room,
+    this.reason
   });
 
   factory CancelOrderModel.fromJson(Map<String, dynamic>json){
@@ -59,7 +61,8 @@ class CancelOrderModel{
       slipCode: json['slip_code'], 
       date: json['date'] != null? DateTime.parse(json['date']): DateTime.now(),
       user: json['user'], 
-      room: json['room']
+      room: json['room'],
+      reason: json['reason']??''
     );
   }
 }

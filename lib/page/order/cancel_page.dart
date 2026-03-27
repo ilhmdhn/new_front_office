@@ -36,10 +36,11 @@ class _CancelOrderPageState extends State<CancelOrderPage> {
         return a.name.compareTo(b.name);
       });
     }
-
-    setState(() {
-      apiResult;
-    });
+    if(mounted){
+      setState(() {
+        apiResult;
+      });
+    }
   }
 
   @override
@@ -170,6 +171,8 @@ class _CancelOrderPageState extends State<CancelOrderPage> {
             _buildDetailRow('User', order.user),
             _buildDetailRow('Room', order.room),
             _buildDetailRow('SO', order.slipCode),
+            isNotNullOrEmpty(order.reason)?
+            _buildDetailRow('Alasan', order.reason??''): SizedBox.shrink(),
 
             const SizedBox(height: 12),
 

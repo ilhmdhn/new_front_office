@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -78,115 +79,16 @@ class ConfirmationDialog{
   }
 }
 
-    /*static Future<int> confirmationCancelDo(BuildContext ctx, String itemName, int maxCancel, DetailCheckinModel dataCheckin)async{
-      Completer<int> completer = Completer<int>();
-      NumberCubit cancelValueBloc = NumberCubit();
-      int cancelQty = 1;
-      cancelValueBloc.setValue(1);
-      showDialog(
-        context: ctx, 
-        builder: (BuildContext ctxDialog){
-          return StatefulBuilder(
-            builder: (ctxStfl, setState){
-              return AlertDialog(
-                backgroundColor: Colors.white,
-                title: Center(child: Text('Batalkan pesanan\n$itemName?', style: CustomTextStyle.blackMediumSize(16), textAlign: TextAlign.center)),
-                content: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: InkWell(
-                        child: Image.asset(
-                          'assets/icon/minus.png'),
-                        onTap: (){
-                          if(cancelQty>1){
-                            --cancelQty;
-                            cancelValueBloc.setValue(cancelQty);
-                          }
-                      },
-                      ),
-                      ),
-                      const SizedBox(width: 12,),
-                      BlocBuilder(
-                        bloc: cancelValueBloc,
-                        builder: (ctxBloc, value){
-                          return Text(value.toString(), style: CustomTextStyle.blackMediumSize(21),);
-                        }),
-                      const SizedBox(width: 12,),
-                      SizedBox(
-                        height: 36,
-                        width: 36,
-                        child: InkWell(
-                          child: Image.asset('assets/icon/plus.png'),
-                        onTap: (){
-                          if(cancelQty < maxCancel){
-                              ++cancelQty;
-                              cancelValueBloc.setValue(cancelQty);
-                          }
-                      },
-                      ),
-                      ),
-                  ],
-                ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: (){
-                        Navigator.pop(ctx, 0);
-                      },
-                      style: CustomButtonStyle.cancel(),
-                      child: AutoSizeText('Cancel', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center,),
-                    ),
-                  ),
-                  const SizedBox(width: 6,),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: ()async{
-                        final confirmationState = await VerificationDialog.requestVerification(ctx, dataCheckin.reception, dataCheckin.roomCode, 'Cancel order $itemName');
-                        
-                        if(confirmationState != true){
-                          showToastWarning('Cancel order dibatalkan');
-                          return;
-                        }
-                        if(ctx.mounted){
-                          Navigator.pop(ctx, cancelQty);
-                        }
-                      },
-                      style: CustomButtonStyle.confirm(),
-                      child: AutoSizeText('Konfirmasi', maxLines: 1, minFontSize: 9, style: CustomTextStyle.whiteStandard(), textAlign: TextAlign.center),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-            }
-        );
-      }).then((value){
-        value ??= 0;
-        completer.complete(value);
-      });
-      return completer.future;
-  }
-
-    */
-
-  static Future<int> confirmationCancelDo(
+  static Future<CancelModel> confirmationCancelDo(
     BuildContext ctx,
     String itemName,
     int maxCancel,
     DetailCheckinModel dataCheckin,
   ) async {
-
+    // CancelModel result = CancelModel(qty: 0);
     int cancelQty = 1;
-
-    final result = await showDialog<int>(
+    TextEditingController tfreason = TextEditingController();
+    final result = await showDialog<CancelModel>(
       context: ctx,
       barrierDismissible: false,
       builder: (BuildContext ctxDialog) {
@@ -198,56 +100,99 @@ class ConfirmationDialog{
               backgroundColor: Colors.white,
               title: Center(
                 child: Text(
-                  'Batalkan pesanan\n$itemName?',
+                  'Batalkan Pesanan\n$itemName?',
                   style: CustomTextStyle.blackMediumSize(16),
                   textAlign: TextAlign.center,
                 ),
               ),
 
-              content: Row(
+              content: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-
-                  /// minus
-                  SizedBox(
-                    height: 36,
-                    width: 36,
-                    child: InkWell(
-                      onTap: () {
-                        if (cancelQty > 1) {
-                          setState(() {
-                            cancelQty--;
-                          });
-                        }
-                      },
-                      child: Image.asset('assets/icon/minus.png'),
+                  Align(
+                    alignment: AlignmentGeometry.centerLeft,
+                    child: Text('Jumlah dibatalkan:', style: CustomTextStyle.blackSize(14),),
+                  ),
+                  SizedBox(height: 4,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      /// minus
+                      SizedBox(
+                        height: 36,
+                        width: 36,
+                        child: InkWell(
+                          onTap: () {
+                            if (cancelQty > 1) {
+                              setState(() {
+                                cancelQty--;
+                              });
+                            }
+                          },
+                          child: Image.asset('assets/icon/minus.png'),
+                        ),
+                      ),
+                  
+                      const SizedBox(width: 12),
+                  
+                      Text(
+                        cancelQty.toString(),
+                        style: CustomTextStyle.blackMediumSize(21),
+                      ),
+                  
+                      const SizedBox(width: 12),
+                  
+                      /// plus
+                      SizedBox(
+                        height: 36,
+                        width: 36,
+                        child: InkWell(
+                          onTap: () {
+                            if (cancelQty < maxCancel) {
+                              setState(() {
+                                cancelQty++;
+                              });
+                            }
+                          },
+                          child: Image.asset('assets/icon/plus.png'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12,),
+                  TextField(
+                    minLines: 3,
+                    maxLines: 5,
+                    // cursorHeight: 10,
+                    decoration: InputDecoration(
+                      hintText: 'Alasan void...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(3),
                     ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Text(
-                    cancelQty.toString(),
-                    style: CustomTextStyle.blackMediumSize(21),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  /// plus
-                  SizedBox(
-                    height: 36,
-                    width: 36,
-                    child: InkWell(
-                      onTap: () {
-                        if (cancelQty < maxCancel) {
-                          setState(() {
-                            cancelQty++;
-                          });
-                        }
-                      },
-                      child: Image.asset('assets/icon/plus.png'),
-                    ),
-                  ),
+                    controller: tfreason,
+                  )
                 ],
               ),
 
@@ -260,7 +205,7 @@ class ConfirmationDialog{
                       child: ElevatedButton(
                         onPressed: () {
                           if (ctxDialog.mounted) {
-                            Navigator.pop(ctxDialog, 0);
+                            Navigator.pop(ctxDialog, CancelModel(qty: 0));
                           }
                         },
                         style: CustomButtonStyle.cancel(),
@@ -289,7 +234,7 @@ class ConfirmationDialog{
                           }
 
                           if (ctx.mounted) {
-                            Navigator.pop(ctx, cancelQty);
+                            Navigator.pop(ctx, CancelModel(qty: cancelQty, reason: tfreason.text));
                           }
                         },
                         style: CustomButtonStyle.confirm(),
@@ -310,6 +255,6 @@ class ConfirmationDialog{
       },
     );
 
-    return result ?? 0;
+    return result ?? CancelModel(qty: 0);
   }
 }

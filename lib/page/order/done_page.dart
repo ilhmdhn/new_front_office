@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
+import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
@@ -51,18 +52,17 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
         return a.name!.compareTo(b.name!);
       });
     }
-    debugPrint(
-      'DEBUGGING old Result: ${oldResult?.state.toString()}\n data length ${oldResult?.data?.length}\nmessage: ${oldResult?.message}'
-    );
     if(isNotNullOrEmpty(oldResult?.data)){
       oldRoomList  =  oldResult!.data!.expand((order) => order.data).toList();
     }
 
-    setState(() {
-      isLoading = false;
-      apiResult;
-      oldRoomList;
-    });
+    if(mounted){
+      setState(() {
+        isLoading = false;
+        apiResult;
+        oldRoomList;
+      });
+    }
     debugPrint('DEBUGGING $oldRoomList');
   }
 
@@ -81,11 +81,11 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body: 
-        apiResult == null ?
+        apiResult == null || oldResult == null?
           AddOnWidget.loading():
         apiResult?.state != true?
           AddOnWidget.error(apiResult?.message):
-        isNullOrEmpty(listOrder)?
+        isNullOrEmpty(combinedList)?
           AddOnWidget.empty():
         Padding(
           padding: const EdgeInsets.all(8),
@@ -150,12 +150,12 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                       return;
                     }
                     
-                    final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
-                    if(cancelQty > 0){
+                    final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
+                    if(cancelResult.qty > 0){
                       setState(() {
                         isLoading = true;
                       });
-                      final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelQty);
+                      final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
                       if(cancelState.state !=true){
                         setState(() {
                           isLoading = false;
@@ -173,7 +173,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
             isNotNullOrEmpty(order.notes)?
             Row(
               children: [
-                AutoSizeText('note: ${order.notes??''}', style: CustomTextStyle.blackStandard(), maxLines: 3,),
+                Flexible(child: AutoSizeText('note: ${order.notes??''}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
               ],
             ): const SizedBox(),
           ],
@@ -225,13 +225,12 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                       return;
                     }
                     
-                    final cancelQty = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
-                    if(cancelQty > 0){
-
+                    final cancelResult = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
+                    if(cancelResult.qty > 0){
                       setState(() {
                         isLoading = true;
                       });
-                      final cancelState = await ApiRequest().cancelDoOld(fnbNya.rcpCode, fnbNya, cancelQty);
+                      final cancelState = await ApiRequest().cancelDoOld(fnbNya.rcpCode, fnbNya, cancelResult.qty, reason: cancelResult.reason);
                       if(cancelState.state !=true){
                         setState(() {
                           isLoading = false;
@@ -249,7 +248,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
             isNotNullOrEmpty(fnbNya.note)?
             Row(
               children: [
-                AutoSizeText('note: ${fnbNya.note}', style: CustomTextStyle.blackStandard(), maxLines: 3,),
+                Flexible(child: AutoSizeText('note: ${fnbNya.note}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
               ],
             ): const SizedBox()
           ],
@@ -311,7 +310,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                 _buildDetailRow('Room', order.roomCode ?? '-'),
                 _buildDetailRow('SO', order.sol ?? '-'),
                 isNotNullOrEmpty(order.notes)?
-                _buildDetailRow('note', order.notes ?? '-'):SizedBox.shrink(),
+                _buildDetailRow('note:', order.notes ?? '-'):SizedBox.shrink(),
                 const SizedBox(height: 12),
                 
                 SizedBox(
@@ -390,7 +389,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                 _buildDetailRow('Room', order.roomCode),
                 _buildDetailRow('SO', order.slipOrder),
                 isNotNullOrEmpty(order.note)?
-                _buildDetailRow('note', order.note):SizedBox.shrink(),
+                _buildDetailRow('note:', order.note):SizedBox.shrink(),
                 const SizedBox(height: 12),
                 
                 SizedBox(
@@ -419,25 +418,27 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: AutoSizeText(label, style: CustomTextStyle.blackStandard().copyWith( color: Colors.blueGrey.shade700,), maxLines: 1, minFontSize: 12,),
-          ),
-          Expanded(
-            flex: 3,
-            child: AutoSizeText(
-              value,
-              textAlign: TextAlign.right,
-              style: CustomTextStyle.blackStandard(),
-              maxLines: 2,
-              minFontSize: 12,
+      child: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: AutoSizeText(label, style: CustomTextStyle.blackStandard().copyWith( color: Colors.blueGrey.shade700,), maxLines: 1, minFontSize: 12,),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 3,
+              child: AutoSizeText(
+                value,
+                textAlign: TextAlign.right,
+                style: CustomTextStyle.blackStandard(),
+                // maxLines: 2,
+                minFontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   } 

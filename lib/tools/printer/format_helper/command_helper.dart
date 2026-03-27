@@ -452,6 +452,106 @@ class CommandHelper {
   ///   maxRightChars: 20,  // Kanan maksimal 20 karakter
   /// );
   /// ```
+
+List<int> tableWithMaxChars(
+  String leftText,
+  String centerText,
+  String rightText, {
+  int maxLeftChars = 10,
+  int maxCenterChars = 18,
+  int maxRightChars = 20,
+  PosAlign leftAlign = PosAlign.left,
+  PosAlign centerAlign = PosAlign.center,
+  PosAlign rightAlign = PosAlign.right,
+  bool? leftBold,
+  bool? centerBold,
+  bool? rightBold,
+  PosTextSize? textWidth, // 🔥 SATU SIZE UNTUK SEMUA
+  PosTextSize? textHeight,
+}) {
+  if (printerModel == PrinterModelType.tmu220u) {
+    int leftChars = maxLeftChars;
+    int centerChars = maxCenterChars;
+    int rightChars = maxRightChars;
+
+    // Adjust kalau double width
+    if (textWidth == PosTextSize.size2) {
+      leftChars = leftChars ~/ 2;
+      centerChars = centerChars ~/ 2;
+      rightChars = rightChars ~/ 2;
+    }
+
+    String alignInColumn(String text, int width, PosAlign align) {
+      if (text.length > width) text = text.substring(0, width);
+
+      switch (align) {
+        case PosAlign.center:
+          final padding = (width - text.length) ~/ 2;
+          return '${' ' * padding}$text${' ' * (width - text.length - padding)}';
+        case PosAlign.right:
+          return text.padLeft(width);
+        case PosAlign.left:
+          return text.padRight(width);
+      }
+    }
+
+    final leftLines = _wrapText(leftText, leftChars);
+    final centerLines = _wrapText(centerText, centerChars);
+    final rightLines = _wrapText(rightText, rightChars);
+
+    int maxLines = [leftLines.length, centerLines.length, rightLines.length]
+        .reduce((a, b) => a > b ? a : b);
+
+    List<int> bytes = [];
+
+    final width = textWidth ?? PosTextSize.size1;
+    final height = textHeight ?? PosTextSize.size1;
+
+    for (int i = 0; i < maxLines; i++) {
+      final left = i < leftLines.length
+          ? alignInColumn(leftLines[i], leftChars, leftAlign)
+          : ' ' * leftChars;
+
+      final center = i < centerLines.length
+          ? alignInColumn(centerLines[i], centerChars, centerAlign)
+          : ' ' * centerChars;
+
+      final right = i < rightLines.length
+          ? alignInColumn(rightLines[i], rightChars, rightAlign)
+          : ' ' * rightChars;
+
+      // 🔥 PRINT PER BAGIAN (biar bold beda)
+      
+      // LEFT
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(leftBold ?? false, width, height)];
+      bytes += left.codeUnits;
+
+      // CENTER
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(centerBold ?? false, width, height)];
+      bytes += center.codeUnits;
+
+      // RIGHT
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(rightBold ?? false, width, height)];
+      bytes += right.codeUnits;
+
+      bytes += [0x0A]; // ENTER
+    }
+
+    // reset printer
+    bytes += [0x1B, 0x40];
+
+    return bytes;
+  }
+
+  // thermal fallback (biarin aja)
+  return generator.row([
+    PosColumn(text: leftText, width: 4),
+    PosColumn(text: centerText, width: 4),
+    PosColumn(text: rightText, width: 4),
+  ]);
+}
+
+/*
   List<int> tableWithMaxChars(
     String leftText,
     String centerText,
@@ -624,7 +724,7 @@ class CommandHelper {
       ),
     ]);
   }
-
+*/
   List<int> barcode(String data) => generator.barcode(Barcode.upcA(data as List),
       );
 
@@ -667,5 +767,25 @@ class CommandHelper {
     if (currentLine.isNotEmpty) lines.add(currentLine);
 
     return lines;
+  }
+
+  String generateOrderResto(int qty, String item) {
+    int digit = qty.toString().length;
+
+    int spaceCount = 3 - digit;
+    String spaces = ' ' * (spaceCount > 0 ? spaceCount : 0);
+
+    return '$spaces$qty $item';
+  }
+
+  String formatQty(int qty) {
+    return '${qty.toString().padLeft(3, ' ')} ';
+  }
+
+  String generateNoteResto(String notes) {
+    return notes
+      .split('\n')
+      .map((line) => '    ++${line.trim()}')
+      .join('\n');
   }
 }
