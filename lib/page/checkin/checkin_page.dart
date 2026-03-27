@@ -12,6 +12,7 @@ import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/room_type_selection_dialog.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/riverpod/room/room_provider.dart';
+import 'package:front_office_2/tools/toast.dart';
 
 class CheckinPage extends ConsumerStatefulWidget {
   static const nameRoute = '/checkin-page';
@@ -958,6 +959,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
+          showToastWarning('Isi nama customer');
           return 'Please enter your name';
         }
         return null;
