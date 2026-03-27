@@ -2,7 +2,6 @@
 
 import 'package:collection/collection.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
@@ -40,6 +39,7 @@ class EscPosGenerator {
 
   static List<int> printStation(CommandHelper helper, List<OrderedModel> data, String roomName, String custName, int pax,{bool isChecker = false, String checkerIp = '', String checkerPort = '', bool isUser = false}){
     final user = GlobalProviders.read(userProvider).userId;
+
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
     bytes += helper.feed(1);
@@ -51,8 +51,7 @@ class EscPosGenerator {
     
     for(final order in data){
       final qty = helper.formatQty(order.qty??0);
-      debugPrint('DEBUGGING QTYNYA $qty');
-      bytes += helper.tableWithMaxChars(qty, order.name??'', '', leftAlign: PosAlign.left, centerAlign: PosAlign.left, maxLeftChars: 5, maxRightChars: 0, leftBold: true, centerBold: true, textWidth: PosTextSize.size2,);
+      bytes += helper.tableWithMaxChars(qty, order.name??'', '', leftAlign: PosAlign.left, centerAlign: PosAlign.left, maxLeftChars: 5, maxCenterChars: helper.maxCharsPerLine-4, maxRightChars: 0, leftBold: true, centerBold: true, textWidth: PosTextSize.size2,);
       // bytes += helper.text('${order.qty} ${order.name}', align: PosAlign.left, width: PosTextSize.size2, bold: true);
       // if(isNotNullOrEmpty(order.notes)){
       //   bytes += helper.text(helper.generateNoteResto(order.notes??''), width: PosTextSize.size2, align: PosAlign.left);
@@ -71,7 +70,7 @@ class EscPosGenerator {
             '',
             textWidth: PosTextSize.size2,
             maxLeftChars: 4,
-            maxCenterChars: 36,
+            maxCenterChars: helper.maxCharsPerLine - 4,
             maxRightChars: 0,
             centerAlign: PosAlign.left
           );
@@ -85,6 +84,50 @@ class EscPosGenerator {
     bytes += helper.text('COVERS: $pax', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    bytes += helper.row('', formattedDate);
+    bytes += helper.feed(2);
+    bytes += helper.cut();
+
+    return bytes;
+  }
+
+  static List<int> printVoidResto(CommandHelper helper, bool isChecker, String tableCode, int qty, String fnbName, int pax, String sol, String reason){
+    final user = GlobalProviders.read(userProvider).userId;
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.feed(1);
+    bytes += helper.text("VOID", bold: true, align: PosAlign.center, width: PosTextSize.size2);
+    bytes += helper.feed(1);
+    bytes += helper.text('STATION: ${isChecker?'CHECKER': user}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('TABLE: $tableCode', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);
+    bytes += helper.divider();
+    
+    bytes += helper.tableWithMaxChars(qty.toString(), '[V]$fnbName', '', leftAlign: PosAlign.left, centerAlign: PosAlign.left, maxLeftChars: 5, maxCenterChars: helper.maxCharsPerLine - 4, maxRightChars: 0, leftBold: true, centerBold: true, textWidth: PosTextSize.size2, );
+
+    if (isNotNullOrEmpty(reason)) {
+        final lines = reason.split('\n').map((e) => e.trim());
+        for (final line in lines) {
+          // String indent = '\u00A0\u00A0\u00A0\u00A0'; 
+          bytes += helper.tableWithMaxChars(
+            '%',
+            line,
+            '',
+            maxLeftChars: 4,
+            maxCenterChars: helper.maxCharsPerLine - 4,
+            maxRightChars: 0,
+            centerAlign: PosAlign.left
+          );
+        }
+
+        bytes += helper.feed(1);
+    }
+
+    bytes += helper.divider();
+    bytes += helper.text('COVERS: $pax', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('ORDER1 OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    bytes += helper.text(sol, bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.row('', formattedDate);
     bytes += helper.feed(2);
     bytes += helper.cut();

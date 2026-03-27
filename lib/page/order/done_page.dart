@@ -15,6 +15,7 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class DoneOrderPage extends StatefulWidget {
@@ -63,7 +64,6 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
         oldRoomList;
       });
     }
-    debugPrint('DEBUGGING $oldRoomList');
   }
 
   @override
@@ -161,6 +161,11 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                           isLoading = false;
                         });
                       }else{
+                        if(isSpecialOutlet){
+                          Future.microtask(() {
+                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason);
+                          });
+                        }
                         getData();
                       }
                     }
@@ -225,7 +230,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                       return;
                     }
                     
-                    final cancelResult = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
+                    final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
                     if(cancelResult.qty > 0){
                       setState(() {
                         isLoading = true;
@@ -236,6 +241,11 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                           isLoading = false;
                         });
                       }else{
+                        if(isSpecialOutlet){
+                          Future.microtask(() {
+                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, fnbNya.slipOrder, cancelResult.qty, fnbNya.name, cancelResult.reason);
+                          });
+                        }
                         getData();
                       }
                     }

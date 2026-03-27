@@ -6,7 +6,6 @@ import 'package:front_office_2/page/style/custom_textfield.dart';
 
 class TextFieldDialog{
   Future<String?> inputText(BuildContext ctx, String currentText){
-    debugPrint('DEBUGGING $currentText');
     TextEditingController controllerET = TextEditingController();
     controllerET.text = currentText;
     String reason = '';

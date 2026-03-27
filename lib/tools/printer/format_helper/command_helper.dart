@@ -466,6 +466,106 @@ List<int> tableWithMaxChars(
   bool? leftBold,
   bool? centerBold,
   bool? rightBold,
+  PosTextSize? textWidth,
+  PosTextSize? textHeight,
+}) {
+  int leftChars = maxLeftChars;
+  int centerChars = maxCenterChars;
+  int rightChars = maxRightChars;
+
+  // 🔥 handle double width (semua printer)
+  if (textWidth == PosTextSize.size2) {
+    leftChars = leftChars ~/ 2;
+    centerChars = centerChars ~/ 2;
+    rightChars = rightChars ~/ 2;
+  }
+
+  String alignInColumn(String text, int width, PosAlign align) {
+    if (text.length > width) text = text.substring(0, width);
+
+    switch (align) {
+      case PosAlign.center:
+        final padding = (width - text.length) ~/ 2;
+        return '${' ' * padding}$text${' ' * (width - text.length - padding)}';
+      case PosAlign.right:
+        return text.padLeft(width);
+      case PosAlign.left:
+        return text.padRight(width);
+    }
+  }
+
+  final leftLines = _wrapText(leftText, leftChars);
+  final centerLines = _wrapText(centerText, centerChars);
+  final rightLines = _wrapText(rightText, rightChars);
+
+  int maxLines = [leftLines.length, centerLines.length, rightLines.length]
+      .reduce((a, b) => a > b ? a : b);
+
+  List<int> bytes = [];
+
+  final width = textWidth ?? PosTextSize.size1;
+  final height = textHeight ?? PosTextSize.size1;
+
+  for (int i = 0; i < maxLines; i++) {
+    final left = i < leftLines.length
+        ? alignInColumn(leftLines[i], leftChars, leftAlign)
+        : ' ' * leftChars;
+
+    final center = i < centerLines.length
+        ? alignInColumn(centerLines[i], centerChars, centerAlign)
+        : ' ' * centerChars;
+
+    final right = i < rightLines.length
+        ? alignInColumn(rightLines[i], rightChars, rightAlign)
+        : ' ' * rightChars;
+
+    if (printerModel == PrinterModelType.tmu220u) {
+      // 🔥 MODE LAMA (tetap)
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(leftBold ?? false, width, height)];
+      bytes += left.codeUnits;
+
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(centerBold ?? false, width, height)];
+      bytes += center.codeUnits;
+
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(rightBold ?? false, width, height)];
+      bytes += right.codeUnits;
+
+      bytes += [0x0A];
+    } else {
+      // 🔥 MODE THERMAL (NEW - sekarang pakai max chars juga)
+      bytes += generator.text(
+        left + center + right,
+        styles: PosStyles(
+          bold: (leftBold ?? false) || (centerBold ?? false) || (rightBold ?? false),
+          width: width,
+          height: height,
+        ),
+      );
+    }
+  }
+
+  if (printerModel == PrinterModelType.tmu220u) {
+    bytes += [0x1B, 0x40];
+  }
+
+  return bytes;
+}
+
+
+/*
+List<int> tableWithMaxChars(
+  String leftText,
+  String centerText,
+  String rightText, {
+  int maxLeftChars = 10,
+  int maxCenterChars = 18,
+  int maxRightChars = 20,
+  PosAlign leftAlign = PosAlign.left,
+  PosAlign centerAlign = PosAlign.center,
+  PosAlign rightAlign = PosAlign.right,
+  bool? leftBold,
+  bool? centerBold,
+  bool? rightBold,
   PosTextSize? textWidth, // 🔥 SATU SIZE UNTUK SEMUA
   PosTextSize? textHeight,
 }) {
@@ -551,7 +651,7 @@ List<int> tableWithMaxChars(
   ]);
 }
 
-/*
+
   List<int> tableWithMaxChars(
     String leftText,
     String centerText,

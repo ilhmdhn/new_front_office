@@ -20,6 +20,7 @@ import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
+import 'package:front_office_2/data/model/printer_station_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
@@ -1283,6 +1284,28 @@ class ApiRequest{
         message: e.toString(),
         data: []
       );
+    }
+  }
+
+  Future<PrinterStationResponse> getPrinter()async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getPrinterStationResponse();
+        return data;
+      }
+
+      final url = Uri.parse('$serverUrl/printer-station/list');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return PrinterStationResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('Error getPrinter $e $stackTrace');
+      return PrinterStationResponse(state: false, message: e.toString(), data: []);
     }
   }
 

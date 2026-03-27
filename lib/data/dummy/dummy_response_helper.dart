@@ -12,6 +12,7 @@ import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
+import 'package:front_office_2/data/model/printer_station_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
@@ -231,6 +232,11 @@ class DummyResponseHelper {
   static Future<StationResponse> getStationResponse() async {
     final json = await DummyJsonLoader.load('other/station_list.json');
     return StationResponse.fromJson(json);
+  }
+
+  static Future<PrinterStationResponse> getPrinterStationResponse() async {
+    final json = await DummyJsonLoader.load('other/printer_station.json');
+    return PrinterStationResponse.fromJson(json);
   }
 
   /// Base Response Error

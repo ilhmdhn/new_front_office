@@ -1,0 +1,61 @@
+{
+"state": true,
+"length": 9,
+"message": "SUCCESS",
+"data": [
+{
+"id": 1,
+"name": "BAR",
+"ip_address": "192.168.7.6",
+"forwarder_port": ""
+},
+{
+"id": 2,
+"name": "CHECKER",
+"ip_address": "192.168.1.101",
+"forwarder_port": "9104"
+},
+{
+"id": 3,
+"name": "PASTA",
+"ip_address": "192.168.7.8",
+"forwarder_port": ""
+},
+{
+"id": 4,
+"name": "GRILL",
+"ip_address": "192.168.7.9",
+"forwarder_port": ""
+},
+{
+"id": 5,
+"name": "PIZZA",
+"ip_address": "192.168.7.10",
+"forwarder_port": ""
+},
+{
+"id": 6,
+"name": "BARISTA",
+"ip_address": "192.168.7.11",
+"forwarder_port": ""
+},
+{
+"id": 7,
+"name": "KITCHEN",
+"ip_address": "192.168.7.12",
+"forwarder_port": ""
+},
+{
+"id": 8,
+"name": "EPSON",
+"ip_address": "192.168.1.222",
+"forwarder_port": "9100"
+},
+{
+"id": 9,
+"name": "IWARE",
+"ip_address": "192.168.1.101",
+"forwarder_port": "9103"
+}
+]
+}

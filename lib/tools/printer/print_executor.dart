@@ -5,6 +5,7 @@ import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/print_job.dart';
+import 'package:front_office_2/data/model/printer_station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 import 'package:front_office_2/riverpod/providers.dart';
@@ -295,6 +296,32 @@ class PrintExecutor {
     } catch (e, stackTraces) {
       showToastError('Gagal cetak so: $e');
       debugPrint('Error detail: $e\nStackTraces: $stackTraces');
+    }
+  }
+
+  static Future<void> printVoidResto(String table, int pax, String sol, int qty, String itemName, String reason)async{
+    try{
+      
+      final helperResto = await _getRestoPrinter();
+      final dataPrintChecker = EscPosGenerator.printVoidResto(helperResto, true, table, qty, itemName, pax, sol, reason);
+
+      final printerStation = await ApiRequest().getPrinter();
+      if(printerStation.state){
+
+        List<PrinterStationModel> dataPrinter = (printerStation.data??[]).where((element) => element.name.contains('CHECKER')).toList();
+
+        for(final printer in dataPrinter){
+          await _executeLan(dataPrintChecker, printer.ipAddress, port: int.parse(printer.port));
+        }
+      }
+
+      final helper = await _getPrinter();
+      final dataPrintUser = EscPosGenerator.printVoidResto(helper, false, table, qty, itemName, pax, sol, reason);
+      await _execute(dataPrintUser);
+    }catch(e, stackTraces){
+      showToastError('Gagal cetak void $e');
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
+      return;
     }
   }
 
