@@ -1,6 +1,7 @@
 // Enum untuk Printer Model
 enum PrinterModelType {
   tmu220u('TMU 220U'),
+  bixolonThermal80mm('Bixolon Thermal 80MM'),
   tm82x('TM82x'),
   bluetooth80mm('Bluetooth 80MM'),
   bluetooth58mm('Bluetooth 58MM');
@@ -14,12 +15,9 @@ enum PrinterModelType {
       case 'TMU 220U':
       case 'TMU220U': return PrinterModelType.tmu220u;
       case 'TM82X': return PrinterModelType.tm82x;
-      case 'BLUETOOTH 80MM':
-      case 'BLUETOOTH80MM':
-        return PrinterModelType.bluetooth80mm;
-      case 'BLUETOOTH 58MM':
-      case 'BLUETOOTH58MM':
-        return PrinterModelType.bluetooth58mm;
+      case 'BLUETOOTH 80MM': case 'BLUETOOTH80MM': return PrinterModelType.bluetooth80mm;
+      case 'BLUETOOTH 58MM': case 'BLUETOOTH58MM': return PrinterModelType.bluetooth58mm;
+      case 'Bixolon Thermal 80MM': case 'BixolonThermal80MM': return PrinterModelType.bixolonThermal80mm;
       default:
         return PrinterModelType.bluetooth80mm; // Default
     }

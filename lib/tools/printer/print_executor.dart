@@ -83,12 +83,24 @@ class PrintExecutor {
       List<int> posContent = [];
       final pos = GlobalProviders.read(posTypeProvider);
       if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
-        posContent = EscPosGenerator().printBillRestoGenerator(apiResponse.data!, helper);
+        posContent = EscPosGenerator().printBillRestoGenerator('', helper);
       }else{
         posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
       }
       await _execute(posContent);
       ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
+    }catch (e, stackTraces) {
+      showToastError('Gagal cetak bill: $e $stackTraces');
+      return;
+    }
+  }
+
+  static Future<void> printBillResto()async{
+    try {
+      final helper = await _getPrinter();
+      final List<int> posContent = EscPosGenerator().printBillRestoGenerator('', helper);
+      await _execute(posContent);
+      // ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
     }catch (e, stackTraces) {
       showToastError('Gagal cetak bill: $e $stackTraces');
       return;

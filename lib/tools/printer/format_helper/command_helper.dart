@@ -12,6 +12,8 @@ class CommandHelper {
   int get maxCharsPerLine {
     if (printerModel == PrinterModelType.tmu220u) {
       return 40; // TMU-220 dot matrix: 72mm = 40 chars
+    } else if(printerModel == PrinterModelType.bixolonThermal80mm){
+      return 47;
     }
     return 48; // Default for thermal printers (80mm)
   }
@@ -81,7 +83,7 @@ class CommandHelper {
 
     return flag;
   }
-
+/*
   List<int> text(
     String value, {
     bool bold = false,
@@ -203,14 +205,67 @@ class CommandHelper {
       ),
     );
   }
+*/
+
+List<int> text(
+  String value, {
+  bool bold = false,
+  PosAlign align = PosAlign.left,
+  PosTextSize width = PosTextSize.size1,
+  PosTextSize height = PosTextSize.size1,
+}) {
+  List<int> bytes = [];
+
+  // 🔥 hitung max chars berdasarkan size
+  int effectiveMaxChars = maxCharsPerLine;
+  if (width == PosTextSize.size2) {
+    effectiveMaxChars = effectiveMaxChars ~/ 2;
+  }
+
+  final lines = _wrapText(value, effectiveMaxChars);
+
+  for (final line in lines) {
+    final aligned = _alignText(
+      line,
+      align,
+      maxChars: effectiveMaxChars,
+    );
+
+    if (printerModel == PrinterModelType.tmu220u) {
+      // 🔥 dot matrix pakai ESC !
+      bytes += [0x1B, 0x21, _getTmu220FontFlag(bold, width, height)];
+      bytes += aligned.codeUnits;
+      bytes += [0x0A];
+    } else {
+      // 🔥 thermal tetap pakai generator tapi TANPA row
+      bytes += generator.text(
+        aligned,
+        styles: PosStyles(
+          bold: bold,
+          align: PosAlign.left, // alignment sudah manual
+          width: width,
+          height: height,
+        ),
+      );
+    }
+  }
+
+  // reset TMU
+  if (printerModel == PrinterModelType.tmu220u) {
+    bytes += [0x1B, 0x40];
+  }
+
+  return bytes;
+}
 
   List<int> divider() {
-    // For TMU-220, use library generator with exact char count
-    if (printerModel == PrinterModelType.tmu220u) {
-      final dividerLine = '-' * maxCharsPerLine;
-      return generator.text(dividerLine);
-    }
-    return generator.hr();
+    final dividerLine = '-' * maxCharsPerLine;
+    return generator.text(dividerLine);
+  }
+
+  List<int> equalsDivider() {
+    final dividerLine = '=' * maxCharsPerLine;
+    return generator.text(dividerLine);
   }
 
   List<int> feed([int lines = 1]) => generator.feed(lines);

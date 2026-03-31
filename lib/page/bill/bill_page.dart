@@ -270,6 +270,9 @@ class _BillPageState extends State<BillPage> {
                     children: [
                       ElevatedButton(
                         onPressed: ()async{
+                          //fix before compile
+                          PrintExecutor.printBillResto();
+                          return;
                           final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
                           final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
                             if (!isSpecialOutlet && !allowedRoles.contains(user.level)) {

@@ -319,140 +319,144 @@ class EscPosGenerator {
     return bytes;
   }
 
-  List<int> printBillRestoGenerator(PreviewBillModel data, CommandHelper helper){
+  List<int> printBillRestoGenerator(String data, CommandHelper helper){
     final user = GlobalProviders.read(userProvider).userId;
-    final printer = GlobalProviders.read(printerProvider);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    List<DummyFnbResto> dataFnb = DummyFnbResto.getDataList();
 
-    List<OrderFinalModel> orderFix = List.empty(growable: true);
-
-    if (isNotNullOrEmpty(data.dataOrder)) {
-      for (var order in data.dataOrder) {
-        String orderCode = order.orderCode;
-        String inventoryCode = order.inventoryCode;
-        String namaItem = order.namaItem;
-        String promoName = '';
-        int jumlah = order.jumlah;
-        num hargaSatuan = order.harga;
-        num totalSemua = order.total;
-
-        num hargaPromo = 0;
-        int jumlahCancel = 0;
-        num hargaCancel = 0;
-        num hargaPromoCancel = 0;
-
-        List<PromoOrderModel>? promo;
-        List<CancelOrderModel>? cancel;
-        List<PromoCancelOrderModel>? promoCancel;
-
-        if (isNotNullOrEmpty(data.dataPromoOrder)) {
-          promo = data.dataPromoOrder.where((element) =>
-            element.orderCode == orderCode &&
-            element.inventoryCode == inventoryCode).toList();
-          if (isNotNullOrEmpty(promo)) {
-            promoName = promo[0].promoName;
-            hargaPromo += promo[0].promoPrice;
-          }
-        }
-
-        if (isNotNullOrEmpty(data.dataCancelOrder)) {
-          cancel = data.dataCancelOrder.where((element) => element.orderCode == orderCode &&
-            element.inventoryCode == inventoryCode).toList();
-          if (isNotNullOrEmpty(cancel)) {
-            jumlahCancel = cancel[0].jumlah;
-            hargaCancel = cancel[0].harga;
-            jumlah -= cancel[0].jumlah;
-            totalSemua -= cancel[0].total;
-
-            if (isNotNullOrEmpty(data.dataPromoCancelOrder)) {
-              promoCancel = data.dataPromoCancelOrder.where((element) =>
-                element.orderCode == orderCode &&
-                element.inventoryCode == inventoryCode &&
-                element.orderCancelCode == cancel![0].cancelOrderCode).toList();
-              if (isNotNullOrEmpty(promoCancel)) {
-                hargaPromo -= promoCancel[0].promoPrice;
-              }
-            }
-          }
-        }
-        orderFix.add(OrderFinalModel(
-          orderCode: orderCode,
-          inventoryCode: inventoryCode,
-          namaItem: namaItem,
-          jumlah: jumlah,
-          hargaSatuan: hargaSatuan,
-          hargaPromo: hargaPromo,
-          promoName: promoName,
-          jumlahCancel: jumlahCancel,
-          hargaCancel: hargaCancel,
-          hargaPromoCancel: hargaPromoCancel,
-          totalSemua: totalSemua,
-        ));
-      }
-    }
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
-    bytes += helper.feed(2);
-    bytes += helper.textCenter(data.dataOutlet.namaOutlet);
-    bytes += helper.textCenter(data.dataOutlet.alamatOutlet);
-    bytes += helper.textCenter(data.dataOutlet.kota);
-    bytes += helper.textCenter(data.dataOutlet.telepon);
+    bytes += helper.text('TUTTO BONO', align: PosAlign.center, bold: true, width: PosTextSize.size2);
+    bytes += helper.text('RISTORANTE, LOUNGE & BAR', align: PosAlign.center, bold: false);
     bytes += helper.feed(1);
-    bytes += helper.textCenter('TAGIHAN', bold: true);
-    bytes += helper.feed(1);
-    //Checkin Info
-    bytes += helper.text('Meja    : ${data.dataRoom.roomCode}');
-    bytes += helper.text('Nama    : ${data.dataRoom.nama}');
-    bytes += helper.text('Tanggal : ${data.dataRoom.tanggal}');
-    bytes += helper.feed(1);
-    if (isNotNullOrEmpty(orderFix)) {
-        bytes += _printFnB(orderFix, helper);
-        if (data.voucherValue != null && (data.voucherValue?.fnbPrice ?? 0) > 0) {
-          bytes += helper.table('Voucher FnB', '', '(${Formatter.formatRupiah((data.voucherValue?.fnbPrice ?? 0))})', rightAlign: PosAlign.right);
-        }
-        num totalPromo = 0;
-        for (var element in orderFix) {
-          totalPromo += element.hargaPromo;
-        }
-      if ((GlobalProviders.read(showTotalItemPromoProvider) || GlobalProviders.read(showPromoBelowItemProvider) == false) == true && totalPromo > 0) {
-          bytes += helper.feed(1);
-          bytes += helper.row('Total Promo Item', Formatter.formatRupiah(totalPromo));
-        }
-      }
-      bytes += helper.divider();
-      bytes += helper.row('Jumlah Penjualan', Formatter.formatRupiah(data.dataInvoice.jumlahPenjualan));
-      bytes += helper.divider();
-      bytes += _printFooter(helper, data.dataInvoice, data.dataServiceTaxPercent, (data.footerStyle??1));
-      if (data.voucherValue != null && (data.voucherValue?.price ?? 0) > 0) {
-        bytes += helper.table('Voucher', '', '(${Formatter.formatRupiah((data.voucherValue?.price ?? 0))})', rightAlign: PosAlign.right);
-      }
-      if (isNotNullOrEmpty(data.transferList)) {
-        bytes += helper.feed(1);
-        bytes += helper.row('','Transfer Meja');
-        for (var teep in data.transferList) {
-          bytes += helper.tableWithMaxChars('', teep.room, Formatter.formatRupiah(teep.transferTotal), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
-        }
-        bytes += helper.feed(1);
-      }
-      bytes += helper.tableWithMaxChars('', 'Jumlah Bersih', Formatter.formatRupiah(data.dataInvoice.jumlahBersih), centerAlign: PosAlign.right, rightAlign: PosAlign.right, maxRightChars: 15);
-      bytes += helper.feed(1);
-      bytes += helper.text(Formatter.formatRupiah(data.dataInvoice.jumlahBersih),
-        bold: true,
-        align: PosAlign.center,
-        height: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size2: PosTextSize.size1, 
-        width: printer.printerModel == PrinterModelType.tmu220u? PosTextSize.size1: PosTextSize.size2
+    bytes += helper.text('TABLE: 101', align: PosAlign.center, bold: true);
+    bytes += helper.tableWithMaxChars('Pax: 100', 'OP: Roscetta', user, 
+      maxLeftChars: (helper.maxCharsPerLine/3).round(), 
+      maxCenterChars: (helper.maxCharsPerLine/3).round(), 
+      maxRightChars: (helper.maxCharsPerLine/3).round(),
+      leftAlign: PosAlign.left,
+      centerAlign: PosAlign.center,
+      rightAlign: PosAlign.right,
+    );
+    bytes += helper.tableWithMaxChars(
+      'Rcpt#: RCP-2603310001', 
+      '', 
+      formattedDate, 
+      maxLeftChars: (helper.maxCharsPerLine/2).round(), 
+      maxCenterChars: 0, 
+      maxRightChars: (helper.maxCharsPerLine/2).round(),
+      leftAlign: PosAlign.left,
+      centerAlign: PosAlign.center,
+      rightAlign: PosAlign.right,
+    );
+    bytes += helper.divider();
+    for(final fnb in dataFnb){
+      final qty = helper.formatQty(fnb.qty);
+      bytes += helper.tableWithMaxChars(
+        qty,
+        fnb.name, 
+        Formatter.formatRupiah(fnb.price), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left, 
+        maxLeftChars: 5, 
+        maxCenterChars: helper.maxCharsPerLine-16, 
+        maxRightChars: 11,
       );
-      bytes += helper.feed(1);
-      bytes += helper.row('', '$formattedDate $user');
-      
-      bytes += helper.feed(3);
-      if(isNotNullOrEmpty(data.transferData)){
-        for (var element in data.transferData) {
-          bytes += _printTransfer(helper, element, data.footerStyle ?? 1);
-        }
+    }
+    bytes += helper.divider();
+    bytes += helper.tableWithMaxChars(
+        '    ',
+        'SUBTOTAL', 
+        Formatter.formatRupiah(2260000), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left, 
+        maxLeftChars: 5, 
+        maxCenterChars: helper.maxCharsPerLine-16, 
+        maxRightChars: 11,
+      );
+      bytes += helper.tableWithMaxChars(
+        '    ',
+        'SC 8%', 
+        Formatter.formatRupiah(180800), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left, 
+        maxLeftChars: 5, 
+        maxCenterChars: helper.maxCharsPerLine-16, 
+        maxRightChars: 11,
+      );
+      bytes += helper.tableWithMaxChars(
+        '    ',
+        'PB1 10%', 
+        Formatter.formatRupiah(244080), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left, 
+        maxLeftChars: 5, 
+        maxCenterChars: helper.maxCharsPerLine-16, 
+        maxRightChars: 11,
+      );
+    bytes += helper.divider();
+    final mergedType = groupBy<DummyFnbResto, String>(
+      dataFnb,
+      (fnbNya) => fnbNya.fnbType
+    );
+
+    for(final category in mergedType.entries){
+      int totalCategoryPrice = 0;
+      for(final fnb in category.value){
+        totalCategoryPrice += fnb.price.round();
       }
-      bytes += helper.cut();
+      bytes += helper.tableWithMaxChars(
+        '    ',
+        'Subtotal ${category.key}',
+        Formatter.formatRupiah(totalCategoryPrice), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left, 
+        maxLeftChars: 5, 
+        maxCenterChars: helper.maxCharsPerLine-16, 
+        maxRightChars: 11,
+      );
+    }
+    bytes += helper.feed(1);
+    bytes += helper.tableWithMaxChars(
+        '     ',
+        'TOTAL',
+        Formatter.formatRupiah(2684880), 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left,
+        rightAlign: PosAlign.right, 
+        maxLeftChars: 5,
+        maxCenterChars: 10, 
+        maxRightChars: (helper.maxCharsPerLine-14).round(), 
+        leftBold: true,
+        textWidth: PosTextSize.size2
+    );
+    bytes += helper.tableWithMaxChars(
+        '     ',
+        'Total item: 100',
+        'Total Qty: 1000', 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left,
+        rightAlign: PosAlign.right, 
+        maxLeftChars: 5,
+        maxCenterChars: ((helper.maxCharsPerLine-5.5)/2).round(), 
+        maxRightChars: ((helper.maxCharsPerLine-5.5)/2).round()
+    );
+    bytes += helper.feed(1);
+    bytes += helper.tableWithMaxChars(
+        '     ',
+        'Remarks: MR GATOT',
+        '', 
+        leftAlign: PosAlign.center, 
+        centerAlign: PosAlign.left,
+        rightAlign: PosAlign.right, 
+        maxLeftChars: 5,
+        maxCenterChars: helper.maxCharsPerLine-6,
+        maxRightChars: 0
+    );
+    bytes += helper.equalsDivider();
+    bytes += helper.feed(2);
+    bytes += helper.cut();
     return bytes;
   }
 
@@ -1097,7 +1101,8 @@ class EscPosGenerator {
     var groupedOrders = groupBy<OrderFinalModel, String>(
         orderList,
         (order) =>
-            '${order.inventoryCode}-${order.namaItem}-${order.hargaSatuan}');
+            '${order.inventoryCode}-${order.namaItem}-${order.hargaSatuan}'
+        );
 
     List<OrderFinalModel> mergedList = [];
 
@@ -1127,5 +1132,65 @@ class EscPosGenerator {
     }
 
     return mergedList;
+  }
+}
+
+
+class DummyFnbResto{
+  int qty;
+  String name;
+  int price;
+  String fnbType;
+  
+  DummyFnbResto({
+    required this.qty,
+    required this.name,
+    required this.price,
+    this.fnbType =''
+  }); 
+
+  static List<DummyFnbResto> getDataList(){
+    List<DummyFnbResto> data = [];
+    data.add(
+      DummyFnbResto(
+        qty: 1, 
+        name: 'STILL 750ML', 
+        price: 95000,
+        fnbType: 'BEVERAGE'
+      )
+    );
+    data.add(
+      DummyFnbResto(
+        qty: 4, 
+        name: 'GUINESS', 
+        price: 65000,
+        fnbType: 'ALCOHOL'
+      )
+    );
+    data.add(
+      DummyFnbResto(
+        qty: 2, 
+        name: 'ANTIGAL ADVENTUS MAL MAKANAN APA INI XIXIXI', 
+        price: 800000,
+        fnbType: 'ALCOHOL'
+      )
+    );
+    data.add(
+      DummyFnbResto(
+        qty: 1, 
+        name: 'CARPRESE', 
+        price: 125000,
+        fnbType: 'FOOD'
+      )
+    );
+    data.add(
+      DummyFnbResto(
+        qty: 1, 
+        name: 'GALETTO', 
+        price: 220000,
+        fnbType: 'FOOD'
+      )
+    );
+    return data;
   }
 }
