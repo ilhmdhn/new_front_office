@@ -80,13 +80,7 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      List<int> posContent = [];
-      final pos = GlobalProviders.read(posTypeProvider);
-      if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
-        posContent = EscPosGenerator().printBillRestoGenerator('', helper);
-      }else{
-        posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
-      }
+      List<int>posContent = EscPosGenerator().printBillGenerator(apiResponse.data!, helper);
       await _execute(posContent);
       ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
     }catch (e, stackTraces) {
@@ -95,12 +89,24 @@ class PrintExecutor {
     }
   }
 
-  static Future<void> printBillResto()async{
+  static Future<void> printBillResto(String roomCode, String rcp)async{
     try {
       final helper = await _getPrinter();
-      final List<int> posContent = EscPosGenerator().printBillRestoGenerator('', helper);
+      final data = await ApiRequest().getBillResto(roomCode);
+
+      if(!data.state){
+        showToastError('Gagal print bill ${data.message}');
+        return;
+      }else if(data.data == null){
+        showToastError('Bill tidak ditemukan ${data.message}');
+        return;
+      }
+
+      final List<int> posContent = EscPosGenerator().printBillRestoGenerator(data.data!, helper);
       await _execute(posContent);
-      // ApiRequest().updatePrintState(apiResponse.data?.dataInvoice.reception??'', '1');
+      final List<int> posContentCopy = EscPosGenerator().printBillRestoGenerator(data.data!, helper, isCopy: true);
+      await _execute(posContentCopy);
+      ApiRequest().updatePrintState(rcp, '1');
     }catch (e, stackTraces) {
       showToastError('Gagal cetak bill: $e $stackTraces');
       return;

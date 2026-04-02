@@ -969,7 +969,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
 
   Widget _buildRoomTypeDropdown() {
     final selectedRoomType = ref.watch(selectedRoomTypeProvider);
-
+    final pos = GlobalProviders.read(posTypeProvider);
+    
     return GestureDetector(
       onTap: () async {
         final selectedType = await showRoomTypeSelectionDialog(context);
@@ -1011,7 +1012,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Tipe Kamar',
+                    pos == PosType.restoOnlyOld? 'Pilih Area': 'Tipe Kamar',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -1019,7 +1020,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    selectedRoomType ?? 'Pilih tipe kamar',
+                    selectedRoomType ??
+                    (pos == PosType.restoOnlyOld? 'Pilih Area': 'Tipe Kamar'),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

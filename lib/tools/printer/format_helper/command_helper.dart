@@ -13,7 +13,7 @@ class CommandHelper {
     if (printerModel == PrinterModelType.tmu220u) {
       return 40; // TMU-220 dot matrix: 72mm = 40 chars
     } else if(printerModel == PrinterModelType.bixolonThermal80mm){
-      return 47;
+      return 42;
     }
     return 48; // Default for thermal printers (80mm)
   }

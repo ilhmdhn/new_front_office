@@ -1,0 +1,58 @@
+{
+"state": true,
+"message": "succes",
+"data": {
+"outlet": {
+"nama_outlet": "Tutto Bono",
+"alamat_outlet": "Lenmarc ",
+"telepon": "021",
+"kota": "Surabaya"
+},
+"order": [
+{
+"inventory": "MKTB-AD-104",
+"name": "MEATLESS SUBTITUTE",
+"qty": 1,
+"price": 25000,
+"promo": 2500,
+"promo_name": "DISC 10% F&B",
+"type_fnb": "FOOD"
+},
+{
+"inventory": "11111111111",
+"name": "TES IWARE",
+"qty": 5,
+"price": 1000,
+"promo": 0,
+"promo_name": null,
+"type_fnb": "FOOD"
+},
+{
+"inventory": "111111111",
+"name": "TES EPSON",
+"qty": 1,
+"price": 1000,
+"promo": 100,
+"promo_name": "DISC 10% F&B",
+"type_fnb": "FOOD"
+}
+],
+"invoice": {
+"service": 1170,
+"tax": 6143,
+"service_percent": 5,
+"tax_percent": 25,
+"total_all": 30713,
+"status_print": "0"
+},
+"reception": {
+"invoice": "IVC-2603270004",
+"reception": "RCP-2603270004",
+"user": "ILHAM",
+"room": "506",
+"pax": 3,
+"cust_name": "TRANSFER KEDUA",
+"date": "27/03/2026 14:55"
+}
+}
+}

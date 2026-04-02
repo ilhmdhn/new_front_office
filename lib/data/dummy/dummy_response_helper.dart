@@ -1,6 +1,7 @@
 import 'package:front_office_2/data/dummy/json_loader.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/bill_resto_response.dart';
 import 'package:front_office_2/data/model/call_service_history.dart';
 import 'package:front_office_2/data/model/cek_member_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
@@ -237,6 +238,11 @@ class DummyResponseHelper {
   static Future<PrinterStationResponse> getPrinterStationResponse() async {
     final json = await DummyJsonLoader.load('other/printer_station.json');
     return PrinterStationResponse.fromJson(json);
+  }
+
+  static Future<BillRestoResponse> getBillRestoResponse() async {
+    final json = await DummyJsonLoader.load('other/bill_resto.json');
+    return BillRestoResponse.fromJson(json);
   }
 
   /// Base Response Error

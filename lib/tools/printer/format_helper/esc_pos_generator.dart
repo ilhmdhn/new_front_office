@@ -1,14 +1,14 @@
-
-
 import 'package:collection/collection.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
+import 'package:front_office_2/data/model/bill_resto_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
 import 'package:front_office_2/riverpod/providers.dart';
+import 'package:front_office_2/tools/calculate.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
@@ -319,19 +319,19 @@ class EscPosGenerator {
     return bytes;
   }
 
-  List<int> printBillRestoGenerator(String data, CommandHelper helper){
+  List<int> printBillRestoGenerator(BillRestoModel data, CommandHelper helper, {bool isCopy = false}){
     final user = GlobalProviders.read(userProvider).userId;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
-    List<DummyFnbResto> dataFnb = DummyFnbResto.getDataList();
+
 
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
-    bytes += helper.text('TUTTO BONO', align: PosAlign.center, bold: true, width: PosTextSize.size2);
+    bytes += helper.text(data.outlet.namaOutlet, align: PosAlign.center, bold: true, width: PosTextSize.size2);
     bytes += helper.text('RISTORANTE, LOUNGE & BAR', align: PosAlign.center, bold: false);
     bytes += helper.feed(1);
-    bytes += helper.text('TABLE: 101', align: PosAlign.center, bold: true);
-    bytes += helper.tableWithMaxChars('Pax: 100', 'OP: Roscetta', user, 
+    bytes += helper.text('TABLE: ${data.rcp.room}', align: PosAlign.center, bold: true);
+    bytes += helper.tableWithMaxChars('Pax: ${data.rcp.pax}', 'OP: ${data.rcp.user}', user, 
       maxLeftChars: (helper.maxCharsPerLine/3).round(), 
       maxCenterChars: (helper.maxCharsPerLine/3).round(), 
       maxRightChars: (helper.maxCharsPerLine/3).round(),
@@ -340,9 +340,9 @@ class EscPosGenerator {
       rightAlign: PosAlign.right,
     );
     bytes += helper.tableWithMaxChars(
-      'Rcpt#: RCP-2603310001', 
+      'Rcpt#: ${data.rcp.reception}', 
       '', 
-      formattedDate, 
+      data.rcp.date, 
       maxLeftChars: (helper.maxCharsPerLine/2).round(), 
       maxCenterChars: 0, 
       maxRightChars: (helper.maxCharsPerLine/2).round(),
@@ -351,12 +351,13 @@ class EscPosGenerator {
       rightAlign: PosAlign.right,
     );
     bytes += helper.divider();
-    for(final fnb in dataFnb){
+    final groupedFnb = Calculate.groupingOrderResto(data.order);
+    for(final fnb in groupedFnb){
       final qty = helper.formatQty(fnb.qty);
       bytes += helper.tableWithMaxChars(
         qty,
         fnb.name, 
-        Formatter.formatRupiah(fnb.price), 
+        Formatter.formatRupiah(fnb.price * fnb.qty), 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left, 
         maxLeftChars: 5, 
@@ -364,11 +365,56 @@ class EscPosGenerator {
         maxRightChars: 11,
       );
     }
+
+    final promoList = Calculate.groupingPromo(data.order);
+    if(isNotNullOrEmpty(promoList)){
+      int totalPromo = 0;
+      for(final data in promoList){
+        totalPromo += data.value;
+      }
+
+      if(totalPromo > 0){
+        bytes += helper.divider();
+        bytes += helper.tableWithMaxChars(
+          '    ',
+          'ITEMS TOTAL', 
+          Formatter.formatRupiah(Calculate.calculateFnbTotalRestoNoPromo(data.order)), 
+          leftAlign: PosAlign.center, 
+          centerAlign: PosAlign.left, 
+          maxLeftChars: 5, 
+          maxCenterChars: helper.maxCharsPerLine-16, 
+          maxRightChars: 11,
+        );
+        for(final thisPromo in promoList){
+            bytes += helper.tableWithMaxChars(
+            '    ',
+            thisPromo.promoName, 
+            '(${Formatter.formatRupiah(thisPromo.value)})', 
+            leftAlign: PosAlign.center, 
+            centerAlign: PosAlign.left, 
+            maxLeftChars: 5, 
+            maxCenterChars: helper.maxCharsPerLine-16, 
+            maxRightChars: 11,
+          );
+        }
+      }
+    }
+
     bytes += helper.divider();
     bytes += helper.tableWithMaxChars(
+      '    ',
+      'SUBTOTAL', 
+      Formatter.formatRupiah(Calculate.calculateFnbTotalResto(data.order)), 
+      leftAlign: PosAlign.center, 
+      centerAlign: PosAlign.left, 
+      maxLeftChars: 5, 
+      maxCenterChars: helper.maxCharsPerLine-16, 
+      maxRightChars: 11,
+    );
+      bytes += helper.tableWithMaxChars(
         '    ',
-        'SUBTOTAL', 
-        Formatter.formatRupiah(2260000), 
+        'SC ${data.invoice.servicePercent}%', 
+        Formatter.formatRupiah(data.invoice.service), 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left, 
         maxLeftChars: 5, 
@@ -377,18 +423,8 @@ class EscPosGenerator {
       );
       bytes += helper.tableWithMaxChars(
         '    ',
-        'SC 8%', 
-        Formatter.formatRupiah(180800), 
-        leftAlign: PosAlign.center, 
-        centerAlign: PosAlign.left, 
-        maxLeftChars: 5, 
-        maxCenterChars: helper.maxCharsPerLine-16, 
-        maxRightChars: 11,
-      );
-      bytes += helper.tableWithMaxChars(
-        '    ',
-        'PB1 10%', 
-        Formatter.formatRupiah(244080), 
+        'PB1 ${data.invoice.taxPercent}%', 
+        Formatter.formatRupiah(data.invoice.tax), 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left, 
         maxLeftChars: 5, 
@@ -396,15 +432,15 @@ class EscPosGenerator {
         maxRightChars: 11,
       );
     bytes += helper.divider();
-    final mergedType = groupBy<DummyFnbResto, String>(
-      dataFnb,
-      (fnbNya) => fnbNya.fnbType
+    final mergedType = groupBy<OrderRestoModel, String>(
+      data.order,
+      (fnbNya) => fnbNya.typeFnb
     );
 
     for(final category in mergedType.entries){
       int totalCategoryPrice = 0;
       for(final fnb in category.value){
-        totalCategoryPrice += fnb.price.round();
+        totalCategoryPrice += ((fnb.price*fnb.qty) - (fnb.promo??0) ).round();
       }
       bytes += helper.tableWithMaxChars(
         '    ',
@@ -421,7 +457,7 @@ class EscPosGenerator {
     bytes += helper.tableWithMaxChars(
         '     ',
         'TOTAL',
-        Formatter.formatRupiah(2684880), 
+        Formatter.formatRupiah(data.invoice.total), 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left,
         rightAlign: PosAlign.right, 
@@ -433,8 +469,8 @@ class EscPosGenerator {
     );
     bytes += helper.tableWithMaxChars(
         '     ',
-        'Total item: 100',
-        'Total Qty: 1000', 
+        'Total item: ${data.order.length}',
+        'Total Qty: ${Calculate.totalQtyResto(data.order)}', 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left,
         rightAlign: PosAlign.right, 
@@ -445,7 +481,7 @@ class EscPosGenerator {
     bytes += helper.feed(1);
     bytes += helper.tableWithMaxChars(
         '     ',
-        'Remarks: MR GATOT',
+        'Remarks: ${data.rcp.custName}',
         '', 
         leftAlign: PosAlign.center, 
         centerAlign: PosAlign.left,
@@ -456,6 +492,8 @@ class EscPosGenerator {
     );
     bytes += helper.equalsDivider();
     bytes += helper.feed(2);
+    bytes += helper.text(isCopy? 'preSettlement Bill Copy': 'preSettlement Bill', align: PosAlign.center);
+    bytes += helper.text(formattedDate, align: PosAlign.center);
     bytes += helper.cut();
     return bytes;
   }
@@ -1132,65 +1170,5 @@ class EscPosGenerator {
     }
 
     return mergedList;
-  }
-}
-
-
-class DummyFnbResto{
-  int qty;
-  String name;
-  int price;
-  String fnbType;
-  
-  DummyFnbResto({
-    required this.qty,
-    required this.name,
-    required this.price,
-    this.fnbType =''
-  }); 
-
-  static List<DummyFnbResto> getDataList(){
-    List<DummyFnbResto> data = [];
-    data.add(
-      DummyFnbResto(
-        qty: 1, 
-        name: 'STILL 750ML', 
-        price: 95000,
-        fnbType: 'BEVERAGE'
-      )
-    );
-    data.add(
-      DummyFnbResto(
-        qty: 4, 
-        name: 'GUINESS', 
-        price: 65000,
-        fnbType: 'ALCOHOL'
-      )
-    );
-    data.add(
-      DummyFnbResto(
-        qty: 2, 
-        name: 'ANTIGAL ADVENTUS MAL MAKANAN APA INI XIXIXI', 
-        price: 800000,
-        fnbType: 'ALCOHOL'
-      )
-    );
-    data.add(
-      DummyFnbResto(
-        qty: 1, 
-        name: 'CARPRESE', 
-        price: 125000,
-        fnbType: 'FOOD'
-      )
-    );
-    data.add(
-      DummyFnbResto(
-        qty: 1, 
-        name: 'GALETTO', 
-        price: 220000,
-        fnbType: 'FOOD'
-      )
-    );
-    return data;
   }
 }
