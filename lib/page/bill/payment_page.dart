@@ -540,7 +540,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             
                               final approvalState = await VerificationDialog.requestVerification(context, billData?.data?.dataInvoice.reception??'', billData?.data?.dataRoom.roomCode??'', 'Meminta persetujuan pembayaran COMPLIMENTARY sebesar $value');
                                 
-                              if(approvalState != true){
+                              if(approvalState.state != true){
                                 return showToastWarning('Permintaan complimentary ditolak');
                               }
                             
@@ -566,7 +566,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             
                               final approvalState = await VerificationDialog.requestVerification(context, 'RCP', 'ROOMNYA', 'Meminta persetujuan pembayaran PIUTANG sebesar $value');
                                 
-                              if(approvalState != true){
+                              if(approvalState.state != true){
                                 return showToastWarning('Permintaan piutang ditolak');
                               }
                             

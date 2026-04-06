@@ -5,6 +5,7 @@ import 'package:front_office_2/data/model/checkin_body.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
+import 'package:front_office_2/data/model/verification_result_model.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/data/request/cloud_request.dart';
@@ -49,11 +50,13 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
   String cardTypeName = "";
   String dpNote = "";
   String edcCode = "";
+  bool showEditName = false;
   VoucherMemberModel? voucherDetail;
   final posType = GlobalProviders.read(posTypeProvider);
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController eventController = TextEditingController();
+  TextEditingController custNameController = TextEditingController();
   VoucherDetail? voucherFix;
 
   void getData()async{
@@ -140,12 +143,102 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                   children: [
                     Expanded(
                       child: 
-                      
                       pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
                       Column(
                         children: [
-                          AutoSizeText('Cust', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
-                          AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                          AutoSizeText('Cust:', style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                              SizedBox(width: 4,),
+                              InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    showEditName = !showEditName;
+                                  });
+                                },
+                                child: Icon(Icons.edit_square, size: 16, color: Colors.grey.shade600,),
+                              )
+                            ],
+                          ),
+                          showEditName?
+                          Column(
+                            children: [
+                              SizedBox(height: 3,),
+                              Badge(
+                                backgroundColor: Colors.red,
+                                label: InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      showEditName = !showEditName;
+                                    });
+                                  },
+                                  child: Text('X', style: CustomTextStyle.whiteSize(11)), 
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        controller: custNameController,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(0),
+                                          hintStyle: CustomTextStyle.blackStandard().copyWith(fontSize: 11),
+                                          hintText: 'Ubah Nama Customer...',
+                                          labelText: 'Ubah nama customer',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                            borderSide: BorderSide(color: CustomColorStyle.bluePrimary(), width: 1),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                            // borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                          ),
+                                          fillColor: Colors.white,
+                                          filled: true
+                                        ),
+                                      ),
+                                      SizedBox(height: 4,),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              if(isNotNullOrEmpty(custNameController.text)){
+                                                if(custNameController.text.length > 25){
+                                                  showToastWarning('Maksimal 25 karakter untuk nama customer');
+                                                  return;
+                                                }
+                                                dataCheckin!.memberName = custNameController.text;
+                                              }else{
+                                                showToastWarning('Nama customer tidak boleh kosong');
+                                                return;
+                                              }
+                                              showEditName = false;
+                                            });
+                                          }, 
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: CustomColorStyle.appBarBackground(),
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text('Simpan', style: CustomTextStyle.whiteSize(12)),
+                                          )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ): SizedBox.shrink()
                         ],
                       ):                      
                       Column(
@@ -155,7 +248,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         ],
                       ),
                     ),
-                    Container(width: 1, height: 39,color: CustomColorStyle.bluePrimary()),
+                    Container(width: 1, height: showEditName? 59: 39,color: CustomColorStyle.bluePrimary()),
                     Expanded(
                       child: 
                       pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
@@ -292,8 +385,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                         });
                                       }else{
                                         if(context.mounted){
-                                          final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher ${voucherFix?.code??''}')??false;
-                                          if(removeVoucherState != true){
+                                          final removeVoucherState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Voucher ${voucherFix?.code??''}');
+                                          if(removeVoucherState.state != true){
                                             showToastWarning('Batal');
                                             return;
                                           }
@@ -400,7 +493,9 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                 });
                               }else{
                                 if(context.mounted){
-                                  approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room')??false;
+                                  // approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room')??false;
+                                  final VerificationResultModel approvalResult = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo Room');
+                                  approvalPromoRoomState = approvalResult.state;
                                   if(approvalPromoRoomState == true){
                                     final state = await ApiRequest().removePromoRoom(dataCheckin?.reception??'');
                                     if(state.state != true){
@@ -499,7 +594,8 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                               });
                             }else{
                               if(context.mounted){
-                                approvalPromoRoomState = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown'), roomCode,'Hapus Promo FnB')??false;
+                                final VerificationResultModel approvalResult = await VerificationDialog.requestVerification(context, (detailRoom?.data?.reception??'unknown') , roomCode, 'Hapus Promo FnB');
+                                approvalPromoRoomState = approvalResult.state;
                                 if(approvalPromoRoomState == true){
                                   final removeState = await ApiRequest().removePromoFood(dataCheckin?.reception??'');
                                   if(removeState.state != true){

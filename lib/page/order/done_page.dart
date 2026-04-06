@@ -163,7 +163,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                       }else{
                         if(isSpecialOutlet){
                           Future.microtask(() {
-                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason);
+                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason, cancelResult.approver);
                           });
                         }
                         getData();
@@ -243,7 +243,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                       }else{
                         if(isSpecialOutlet){
                           Future.microtask(() {
-                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, fnbNya.slipOrder, cancelResult.qty, fnbNya.name, cancelResult.reason);
+                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, fnbNya.slipOrder, cancelResult.qty, fnbNya.name, cancelResult.reason, cancelResult.approver);
                           });
                         }
                         getData();

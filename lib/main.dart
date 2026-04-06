@@ -36,6 +36,7 @@ import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/event_bus.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/preferences.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -57,6 +58,7 @@ void main() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String? signalType = message.data['type'];
     String? signalCode = message.data['code'];
+    String signalApprover = message.data['approver'] ?? '';
     bool state = false;
 
     if (message.data['state'] == 'true') {
@@ -64,7 +66,7 @@ void main() async {
     }
 
     if (signalType == '1') {
-      eventBus.fire(ConfirmationSignalModel(code: signalCode ?? '', state: state));
+      eventBus.fire(ConfirmationSignalModel(code: signalCode ?? '', state: state, approver: signalApprover));
     } else if (signalType == '2') {
       SendNotification.notif(message);
       eventBus.fire(RefreshApprovalCount());

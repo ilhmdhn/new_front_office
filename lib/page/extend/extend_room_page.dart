@@ -249,7 +249,7 @@ class _ExtendRoomPageState extends State<ExtendRoomPage> {
                           }
                           
                           final biometricResult = await VerificationDialog.requestVerification(context, rcp, roomCode, 'Reduce Checkin Duration');
-                          if(biometricResult == true){
+                          if(biometricResult.state == true){
                               final reduceState = await ApiRequest().reduceRoom(rcp, reduceTime.toString());
                           if(reduceState.state == true){
                             if(context.mounted){

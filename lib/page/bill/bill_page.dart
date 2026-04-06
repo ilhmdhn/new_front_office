@@ -291,7 +291,7 @@ class _BillPageState extends State<BillPage> {
                             }else{
                             if(result.data?.dataInvoice.statusPrint != '0'){
                               final reprintBillState = await VerificationDialog.requestVerification(context, (result.data?.dataInvoice.reception??''), (result.data?.dataRoom.ruangan??''), 'Cetak Ulang Tagihan');
-                              if(reprintBillState!= true){
+                              if(reprintBillState.state!= true){
                                 showToastWarning('Permintaan dibatalkan');
                                 return;
                               }
@@ -468,7 +468,7 @@ class _BillPageState extends State<BillPage> {
                         onPressed: ()async{
                             if(roomInfo?.invoice.statusPrint != '0'){
                               final reprintBillState = await VerificationDialog.requestVerification(ctx, (roomInfo?.rcp.reception??''), (roomInfo?.rcp.room??''), 'Cetak Ulang Tagihan');
-                              if(reprintBillState!= true){
+                              if(reprintBillState.state!= true){
                                 showToastWarning('Permintaan dibatalkan');
                                 return;
                               }

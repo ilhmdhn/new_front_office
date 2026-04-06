@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front_office_2/data/dummy/dummy_response_helper.dart';
 import 'package:front_office_2/data/model/base_response.dart';
+import 'package:front_office_2/data/model/cloud_model/approval_state_response.dart';
 import 'package:front_office_2/data/model/list_approval_request.dart';
 import 'package:front_office_2/data/model/version_response.dart';
 import 'package:front_office_2/data/model/voucher_member_response.dart';
@@ -236,17 +237,18 @@ class CloudRequest{
       }
   }
 
-  static Future<BaseResponse> approvalState(String idApproval)async{
+  static Future<ApprovalStateResponse> approvalState(String idApproval)async{
     try{
         final outlet = GlobalProviders.read(outletProvider);
-        final url = Uri.parse('$baseUrl/approval/state?outlet=$outlet&id_approval=$idApproval');
+        final url = Uri.parse('$baseUrl/approval/new-state?outlet=$outlet&id_approval=$idApproval');
         final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json','authorization': token});
         final convertedResult = json.decode(apiResponse.body);
-        return BaseResponse.fromJson(convertedResult);
+        return ApprovalStateResponse.fromJson(convertedResult);
     }catch(e){
-      return BaseResponse(
+      return ApprovalStateResponse(
         state: false,
-        message: e.toString()
+        message: e.toString(),
+        data: null
       );
     }
   }

@@ -6,6 +6,7 @@ class TransferParams{
   String? oldRoom;
   String? invoice;
   String? transferReason;
+  int? pax;
 
   TransferParams({
     this.roomDestination,
@@ -14,6 +15,7 @@ class TransferParams{
     this.oldRoom,
     this.invoice,
     this.capacity,
-    this.transferReason
+    this.transferReason,
+    this.pax
   });
 }

@@ -85,7 +85,6 @@ class ConfirmationDialog{
     int maxCancel,
     DetailCheckinModel dataCheckin,
   ) async {
-    // CancelModel result = CancelModel(qty: 0);
     int cancelQty = 1;
     TextEditingController tfreason = TextEditingController();
     final result = await showDialog<CancelModel>(
@@ -228,13 +227,13 @@ class ConfirmationDialog{
                             'Cancel order $itemName',
                           );
 
-                          if (confirmationState != true) {
+                          if (confirmationState.state != true) {
                             showToastWarning('Cancel order dibatalkan');
                             return;
                           }
 
                           if (ctx.mounted) {
-                            Navigator.pop(ctx, CancelModel(qty: cancelQty, reason: tfreason.text));
+                            Navigator.pop(ctx, CancelModel(qty: cancelQty, reason: tfreason.text, approver: confirmationState.approver));
                           }
                         },
                         style: CustomButtonStyle.confirm(),

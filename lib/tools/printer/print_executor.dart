@@ -104,8 +104,6 @@ class PrintExecutor {
 
       final List<int> posContent = EscPosGenerator().printBillRestoGenerator(data.data!, helper);
       await _execute(posContent);
-      final List<int> posContentCopy = EscPosGenerator().printBillRestoGenerator(data.data!, helper, isCopy: true);
-      await _execute(posContentCopy);
       ApiRequest().updatePrintState(rcp, '1');
     }catch (e, stackTraces) {
       showToastError('Gagal cetak bill: $e $stackTraces');
@@ -317,11 +315,11 @@ class PrintExecutor {
     }
   }
 
-  static Future<void> printVoidResto(String table, int pax, String sol, int qty, String itemName, String reason)async{
+  static Future<void> printVoidResto(String table, int pax, String sol, int qty, String itemName, String reason, String approver)async{
     try{
       
       final helperResto = await _getRestoPrinter();
-      final dataPrintChecker = EscPosGenerator.printVoidResto(helperResto, true, table, qty, itemName, pax, sol, reason);
+      final dataPrintChecker = EscPosGenerator.printVoidResto(helperResto, true, table, qty, itemName, pax, sol, reason, approver);
 
       final printerStation = await ApiRequest().getPrinter();
       if(printerStation.state){
@@ -334,7 +332,33 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      final dataPrintUser = EscPosGenerator.printVoidResto(helper, false, table, qty, itemName, pax, sol, reason);
+      final dataPrintUser = EscPosGenerator.printVoidResto(helper, false, table, qty, itemName, pax, sol, reason, approver);
+      await _execute(dataPrintUser);
+    }catch(e, stackTraces){
+      showToastError('Gagal cetak void $e');
+      debugPrint('Error detail: $e\nStackTraces: $stackTraces');
+      return;
+    }
+  }
+
+    static Future<void> printTransferResto(String table, String destination, String approver, int pax)async{
+    try{
+      
+      final helperResto = await _getRestoPrinter();
+      final dataPrintChecker = EscPosGenerator.printTransferResto(helperResto, true, table, destination, approver, pax);
+
+      final printerStation = await ApiRequest().getPrinter();
+      if(printerStation.state){
+        
+        List<PrinterStationModel> dataPrinter = (printerStation.data??[]).where((element) => element.name.contains('CHECKER')).toList();
+        
+        for(final printer in dataPrinter){
+          await _executeLan(dataPrintChecker, printer.ipAddress, port: int.parse(printer.port));
+        }
+      }
+
+      final helper = await _getPrinter();
+      final dataPrintUser = EscPosGenerator.printTransferResto(helper, false, table, destination, approver, pax);
       await _execute(dataPrintUser);
     }catch(e, stackTraces){
       showToastError('Gagal cetak void $e');

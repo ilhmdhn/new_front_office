@@ -56,7 +56,7 @@ class _ReprintInvoicePageState extends State<ReprintInvoicePage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         final reprintBillState = await VerificationDialog.requestVerification(context,(tfRcp.text), 'No Room', 'Cetak ulang invoice ${tfRcp.text}');
-                        if (reprintBillState != true) {
+                        if (reprintBillState.state != true) {
                           showToastWarning('Permintaan dibatalkan');
                           return;
                         }

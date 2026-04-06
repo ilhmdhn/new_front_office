@@ -5,7 +5,8 @@ EventBus eventBus = EventBus();
 class ConfirmationSignalModel{
   String code;
   bool state;
-  ConfirmationSignalModel({required this.code, required this.state});
+  String approver;
+  ConfirmationSignalModel({required this.code, required this.state, required this.approver});
 }
 
 class RefreshApprovalCount{}

@@ -91,7 +91,7 @@ class EscPosGenerator {
     return bytes;
   }
 
-  static List<int> printVoidResto(CommandHelper helper, bool isChecker, String tableCode, int qty, String fnbName, int pax, String sol, String reason){
+  static List<int> printVoidResto(CommandHelper helper, bool isChecker, String tableCode, int qty, String fnbName, int pax, String sol, String reason, String approver){
     final user = GlobalProviders.read(userProvider).userId;
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
@@ -124,7 +124,8 @@ class EscPosGenerator {
 
     bytes += helper.divider();
     bytes += helper.text('COVERS: $pax', bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text('ORDER1 OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('APPROVER: $approver', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
     bytes += helper.text(sol, bold: true, align: PosAlign.left, width: PosTextSize.size2);
@@ -134,6 +135,29 @@ class EscPosGenerator {
 
     return bytes;
   }
+
+  static List<int> printTransferResto(CommandHelper helper, bool isChecker, String tableCode, String destination, String approver, int pax){
+    final user = GlobalProviders.read(userProvider).userId;
+    List<int> bytes = [];
+    bytes += [0x1B, 0x40];
+    bytes += helper.feed(1);
+    bytes += helper.text("TRANSFER TABLE", bold: true, align: PosAlign.center, width: PosTextSize.size2);
+    bytes += helper.feed(1);
+    bytes += helper.text('STATION: ${isChecker?'CHECKER': user}', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.divider();
+    bytes += helper.text('TABLE $tableCode TO $destination', bold: true, align: PosAlign.left, height: PosTextSize.size2, width: PosTextSize.size2);    
+    bytes += helper.divider();
+    bytes += helper.text('COVERS: $pax', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    bytes += helper.text('APPROVER: $approver', bold: true, align: PosAlign.left, width: PosTextSize.size2);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    bytes += helper.row('', formattedDate);
+    bytes += helper.feed(2);
+    bytes += helper.cut();
+    return bytes;
+  }
+
 
   List<int> printSlipCheckin(CheckinSlipModel data, CommandHelper helper){
     List<int> bytes = [];

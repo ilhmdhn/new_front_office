@@ -10,6 +10,7 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/filter.dart';
 import 'package:front_office_2/tools/helper.dart';
+import 'package:front_office_2/tools/printer/print_executor.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ListRoomTransferPage extends StatefulWidget {
@@ -77,7 +78,7 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                     
                     final transferApprovalState = await VerificationDialog.requestVerification(context, transferParams.invoice??'invoice unavailable' , transferParams.oldRoom.toString(), 'transfer room dari ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}');
     
-                    if(transferApprovalState != true){
+                    if(transferApprovalState.state != true){
                       showToastWarning('Permintaan ditolak');
                       return;
                     }else{
@@ -86,6 +87,9 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                       if(transferState.state != true){
                         showToastError(transferState.message??'Error Transfer room to room');
                       }else{
+                        Future.microtask(() {
+                          PrintExecutor.printTransferResto(transferParams.oldRoom!, transferParams.roomDestination!, transferApprovalState.approver, transferParams.pax??0);
+                        });
                         if(context.mounted){
                           Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                         }

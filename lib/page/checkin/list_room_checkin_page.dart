@@ -259,7 +259,8 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
 
     if(code == 3 && isNotNullOrEmpty(roomCode)){
       TransferParams transferParams = TransferParams(
-        oldRoom: roomCode
+        oldRoom: roomCode,
+        pax: listRoomCheckin.firstWhere((element) => element.room == roomCode).pax
       );
       Navigator.pushNamed(context, TransferReasonPage.nameRoute, arguments: transferParams);
     }

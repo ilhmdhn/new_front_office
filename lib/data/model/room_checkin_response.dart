@@ -34,6 +34,7 @@ class ListRoomCheckinModel{
   String memberName;
   String printState;
   String summaryCode;
+  int pax;
 
   ListRoomCheckinModel({
     this.room = '',
@@ -42,7 +43,8 @@ class ListRoomCheckinModel{
     this.remainMinute = 0,
     this.memberName = '',
     this.summaryCode = '',
-    this.printState = '0'
+    this.printState = '0',
+    this.pax = 0
   });
 
   factory ListRoomCheckinModel.fromJson(Map<String, dynamic>json){
@@ -54,6 +56,7 @@ class ListRoomCheckinModel{
       memberName: json['nama_member'],
       printState: json['status_print'],
       summaryCode: json['summary'],
+      pax: json['pax']??0
     );
   }
 }
