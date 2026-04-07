@@ -171,6 +171,11 @@ class _ListFnbPageState extends State<ListFnbPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(Formatter.formatRupiah(fnb.price??0), style: CustomTextStyle.blackStandard(),),
+                                fnb.soldOut == true ?
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  child:  Image.asset('assets/icon/sold_out.png', width: 64,),
+                                ):
                                 indexAdded != -1 ?
                                  Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

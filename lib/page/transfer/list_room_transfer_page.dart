@@ -1,13 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
+import 'package:front_office_2/data/model/verification_result_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/filter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/print_executor.dart';
@@ -27,6 +31,8 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
   TransferParams transferParams = TransferParams();
   bool isLoading = false;
   bool gettedData = false;
+
+  final PosType posType = GlobalProviders.read(posTypeProvider);
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +81,18 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                   onTap:()async{
                     transferParams.roomDestination = listRoomItem[index].roomCode;
                     transferParams.capacity = listRoomItem[index].roomCapacity;
-                    
-                    final transferApprovalState = await VerificationDialog.requestVerification(context, transferParams.invoice??'invoice unavailable' , transferParams.oldRoom.toString(), 'transfer room dari ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}');
+                    late VerificationResultModel transferApprovalState;
+
+                    if(posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased){
+                      final confirm = await ConfirmationDialog.confirmation(context, 'Konfirmasi Transfer ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}?',);
+                      transferApprovalState = VerificationResultModel(
+                        state: confirm,
+                        approver: 'Self Approval',
+                        message: 'transfer'
+                      );
+                    }else{
+                     transferApprovalState = await VerificationDialog.requestVerification(context, transferParams.invoice??'invoice unavailable' , transferParams.oldRoom.toString(), 'transfer room dari ${transferParams.oldRoom.toString()} ke ${transferParams.roomDestination.toString()}');
+                    }
     
                     if(transferApprovalState.state != true){
                       showToastWarning('Permintaan ditolak');
@@ -87,9 +103,11 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
                       if(transferState.state != true){
                         showToastError(transferState.message??'Error Transfer room to room');
                       }else{
-                        Future.microtask(() {
-                          PrintExecutor.printTransferResto(transferParams.oldRoom!, transferParams.roomDestination!, transferApprovalState.approver, transferParams.pax??0);
-                        });
+                        if(posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased){
+                          Future.microtask(() {
+                            PrintExecutor.printTransferResto(transferParams.oldRoom??'', transferParams.roomDestination??'', transferParams.pax??0);
+                          });
+                        }
                         if(context.mounted){
                           Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
                         }

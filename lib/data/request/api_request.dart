@@ -1252,7 +1252,6 @@ class ApiRequest{
         },
       );
       final convertedResult = json.decode(apiResponse.body);
-      debugPrint('anu ${convertedResult.toString()}');
       return CallServiceHistoryResponse.fromJson(convertedResult);
     }catch(e, stackTrace){
       debugPrint('Error getServiceHistory ${e.toString()} $stackTrace');
@@ -1331,6 +1330,64 @@ class ApiRequest{
       return BillRestoResponse(state: false, message: 'Error $e $stackTrace', data:null );
     }
   }
+
+  Future<BaseResponse> editName(String rcp, String name)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      final url = Uri.parse('$serverUrl/edit-checkin/name');
+
+      final checkinBody = {
+        'reception': rcp,
+        'name': name
+      };
+
+      final apiResponse = await http.put(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      debugPrint('editName response: $convertedResult');
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('Error editName $e $stackTrace');
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<FnBResultModel> fnbSoldOutPage(int page, String category, String search)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getFnbList();
+        return data;
+      }
+      Uri url = Uri.parse('$serverUrl/inventory/soldout-paging?page=$page&size=10&category=$category&search=$search');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return FnBResultModel.fromJson(convertedResult);
+    }catch(e){
+      return FnBResultModel(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);

@@ -341,11 +341,11 @@ class PrintExecutor {
     }
   }
 
-    static Future<void> printTransferResto(String table, String destination, String approver, int pax)async{
+    static Future<void> printTransferResto(String table, String destination, int pax)async{
     try{
       
       final helperResto = await _getRestoPrinter();
-      final dataPrintChecker = EscPosGenerator.printTransferResto(helperResto, true, table, destination, approver, pax);
+      final dataPrintChecker = EscPosGenerator.printTransferResto(helperResto, true, table, destination, pax);
 
       final printerStation = await ApiRequest().getPrinter();
       if(printerStation.state){
@@ -358,7 +358,7 @@ class PrintExecutor {
       }
 
       final helper = await _getPrinter();
-      final dataPrintUser = EscPosGenerator.printTransferResto(helper, false, table, destination, approver, pax);
+      final dataPrintUser = EscPosGenerator.printTransferResto(helper, false, table, destination, pax);
       await _execute(dataPrintUser);
     }catch(e, stackTraces){
       showToastError('Gagal cetak void $e');

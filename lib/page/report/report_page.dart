@@ -3,6 +3,7 @@ import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
+import 'package:front_office_2/page/report/sold_out/sold_out_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
@@ -42,6 +43,8 @@ class _ReportPageState extends State<ReportPage> {
             AddOnWidget.listButtonNavigation(context, ReprintInvoicePage.nameRoute, 'assets/icon/invoice.png', 'Cetak Invoice'): const SizedBox(),
             const SizedBox(height: 9,),
             AddOnWidget.listButtonNavigation(context, CallServiceHistoryPage.nameRoute, 'assets/icon/call_service.png', 'Call Service'),
+            const SizedBox(height: 9,),
+            AddOnWidget.listButtonNavigation(context, SoldOutPage.nameRoute, 'assets/icon/sold_out.png', 'Sold Out Item'),
             /*SizedBox(
               width: double.infinity,
               child: ElevatedButton(

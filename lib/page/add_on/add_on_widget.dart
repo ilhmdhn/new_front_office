@@ -29,7 +29,6 @@ class AddOnWidget{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           LottieBuilder.asset('assets/animation/empty.json', height: 226, width: 226,),
-          const SizedBox(height: 12,),
           Text('Empty', style: CustomTextStyle.blackMedium(),),
         ],
       ),
@@ -80,6 +79,52 @@ class AddOnWidget{
               );
   }
 
+    static Widget listButtonNavigationImageWidget(BuildContext ctx, String destination, Widget image, String name){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal:  8.0),
+      child: InkWell(
+        onTap: ()async{
+          Navigator.pushNamed(ctx, destination);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+          decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha:  0.2),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Transform.scale(
+                scale: 0.5,
+                child: SizedBox(
+                    // child: image
+                  ),
+              ),
+              Expanded(
+                // width: widthTextButton,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                  child: AutoSizeText(name, style: CustomTextStyle.blackMediumSize(19),  minFontSize: 14, wrapWords: false,maxLines: 2),
+                )),
+              const SizedBox(
+                width: 26,
+                child: Icon(Icons.arrow_forward_ios, color: Colors.green,)),
+            ],
+          ),
+        ), 
+      ),
+    );
+  }
+
   static Widget vcrItem(BuildContext ctx, String title, String value){
     return Row(
       children: [
@@ -92,6 +137,30 @@ class AddOnWidget{
           child: AutoSizeText(value, style: CustomTextStyle.blackStandard(), maxLines: 1,),
         )
       ],
+    );
+  }
+
+  static Widget soldOutWidget(){
+    return Transform.rotate(
+        angle: 4, // Kemiringan bingkai (diagonal)
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue, width: 3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const RotatedBox(
+            quarterTurns: 1, // Memutar teks 90 derajat agar vertikal
+            child: Text(
+              "SOLD OUT",
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+        ),
     );
   }
 }

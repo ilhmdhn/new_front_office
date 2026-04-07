@@ -26,6 +26,7 @@ class FnBModel{
   num? price;
   int? location;
   String? globalId;
+  bool? soldOut;
 
   FnBModel({
     this.invCode = '',
@@ -33,6 +34,7 @@ class FnBModel{
     this.price = 0,
     this.location = 0,
     this.globalId = '',
+    this.soldOut = false,
   });
 
   factory FnBModel.fromJson(Map<String, dynamic>json){
@@ -41,7 +43,8 @@ class FnBModel{
       name: json['name'],
       price: json['price'],
       location: json['location'],
-      globalId: json['inventory_global_id']
+      globalId: json['inventory_global_id'],
+      soldOut: json['Sold_Out']??false,
     );
   }
 }

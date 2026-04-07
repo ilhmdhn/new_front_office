@@ -152,7 +152,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 9, maxLines: 1,),
+                              Flexible(child: AutoSizeText(dataCheckin!.memberName, style: CustomTextStyle.blackMedium(), minFontSize: 14, overflow: TextOverflow.ellipsis, maxLines: 1,)),
                               SizedBox(width: 4,),
                               InkWell(
                                 onTap: (){
@@ -208,20 +208,27 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                                       Align(
                                         alignment: Alignment.centerRight,
                                         child: InkWell(
-                                          onTap: (){
-                                            setState(() {
-                                              if(isNotNullOrEmpty(custNameController.text)){
-                                                if(custNameController.text.length > 25){
-                                                  showToastWarning('Maksimal 25 karakter untuk nama customer');
-                                                  return;
-                                                }
-                                                dataCheckin!.memberName = custNameController.text;
-                                              }else{
-                                                showToastWarning('Nama customer tidak boleh kosong');
+                                          onTap: ()async{
+                                            if(isNotNullOrEmpty(custNameController.text)){
+                                              if(custNameController.text.length > 25){
+                                                showToastWarning('Maksimal 25 karakter untuk nama customer');
                                                 return;
                                               }
-                                              showEditName = false;
-                                            });
+                                              // dataCheckin!.memberName = custNameController.text;
+                                              final state = await ConfirmationDialog.confirmation(context, 'Ubah nama customer menjadi ${custNameController.text}?');
+                                              if(!state){
+                                                return;
+                                              }
+                                              setState(() {
+                                                showEditName = false;
+                                                isLoading = true;
+                                              });
+                                              await ApiRequest().editName(dataCheckin!.reception, custNameController.text);
+                                              getData();
+                                            }else{
+                                              showToastWarning('Nama customer tidak boleh kosong');
+                                              return;
+                                            }
                                           }, 
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

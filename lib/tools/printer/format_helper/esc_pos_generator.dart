@@ -136,7 +136,7 @@ class EscPosGenerator {
     return bytes;
   }
 
-  static List<int> printTransferResto(CommandHelper helper, bool isChecker, String tableCode, String destination, String approver, int pax){
+  static List<int> printTransferResto(CommandHelper helper, bool isChecker, String tableCode, String destination, int pax){
     final user = GlobalProviders.read(userProvider).userId;
     List<int> bytes = [];
     bytes += [0x1B, 0x40];
@@ -149,7 +149,6 @@ class EscPosGenerator {
     bytes += helper.divider();
     bytes += helper.text('COVERS: $pax', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     bytes += helper.text('OP: $user', bold: true, align: PosAlign.left, width: PosTextSize.size2);
-    bytes += helper.text('APPROVER: $approver', bold: true, align: PosAlign.left, width: PosTextSize.size2);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
     bytes += helper.row('', formattedDate);
