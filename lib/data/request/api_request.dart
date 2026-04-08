@@ -1387,7 +1387,57 @@ class ApiRequest{
     }
   }
 
+    Future<FnBResultModel> setSoldOut(String inventory, bool state)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getFnbList();
+        return data;
+      }
+      Uri url = Uri.parse('$serverUrl/inventory/soldout');
+      final apiResponse = await http.put(url, body: json.encode({'inventory': inventory, 'state': state}), headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
 
+      final convertedResult = json.decode(apiResponse.body);
+      return FnBResultModel.fromJson(convertedResult);
+    }catch(e){
+      return FnBResultModel(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
+  Future<FnBResultModel> setSoldOutList(List<FnBModel> list)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getFnbList();
+        return data;
+      }
+      Uri url = Uri.parse('$serverUrl/inventory/set-soldout');
+
+      Map<String, dynamic> bodyParams = {
+        'inventories': list.map((item) => item.invCode).toList(),
+      };
+
+      final apiResponse = await http.put(url, body: json.encode(bodyParams), headers: {'Content-Type': 'application/json', 'authorization': token});
+          
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+      final convertedResult = json.decode(apiResponse.body);
+      return FnBResultModel.fromJson(convertedResult);
+    }catch(e){
+      return FnBResultModel(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);

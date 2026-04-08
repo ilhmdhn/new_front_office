@@ -107,162 +107,95 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
   Widget _newListItem(OrderedModel order){
     num price = (order.price??0) * ((order.qty??0) - (order.cancelQty??0));
     int qty = (order.qty??0) - (order.cancelQty??0);
-    return InkWell(
-      onTap: (){
-        _showDialogNew(order);
-      },
-      child: Container(
-        decoration: CustomContainerStyle.whiteList(),
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-        margin: const EdgeInsets.only(bottom: 8),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: AutoSizeText(order.sol??'sol null', style: CustomTextStyle .blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-                Flexible(
-                  flex: 1,
-                  child: AutoSizeText(Formatter.formatRupiah(price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-              ],
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: AutoSizeText('${qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-                ElevatedButton(
-                  onPressed: ()async{
-                    final userLevel = GlobalProviders.read(userProvider).level;
-                
-                    final pos = GlobalProviders.read(posTypeProvider);
-                    final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
-                    
-                    final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
-                    if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
-                      showToastWarning('$userLevel Tidak memiliki akses');
-                      return;
-                    }
-                    
-                    final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), qty, widget.detailCheckin);
-                    if(cancelResult.qty > 0){
-                      setState(() {
-                        isLoading = true;
-                      });
-                      final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
-                      if(cancelState.state !=true){
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }else{
-                        if(isSpecialOutlet){
-                          Future.microtask(() {
-                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason, cancelResult.approver);
-                          });
-                        }
-                        getData();
-                      }
-                    }
-                  },
-                  style: CustomButtonStyle.cancel(),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
-                )
-              ],
-            ),
-            isNotNullOrEmpty(order.notes)?
-            Row(
-              children: [
-                Flexible(child: AutoSizeText('note: ${order.notes??''}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
-              ],
-            ): const SizedBox(),
-          ],
-        ),
+    return Container(
+      decoration: CustomContainerStyle.whiteList(),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 1,
+                child: AutoSizeText(order.sol??'sol null', style: CustomTextStyle .blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+              Flexible(
+                flex: 1,
+                child: AutoSizeText(Formatter.formatRupiah(price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: AutoSizeText('${qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+              ElevatedButton(
+                onPressed: ()async{
+                  _showDialogNew(order);
+                },
+                style: CustomButtonStyle.cancel(),
+                child: Text('Detail', style: CustomTextStyle.whiteSize(16),),
+              )
+            ],
+          ),
+          isNotNullOrEmpty(order.notes)?
+          Row(
+            children: [
+              Flexible(child: AutoSizeText('note: ${order.notes??''}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
+            ],
+          ): const SizedBox(),
+        ],
       ),
     );      
   }
   
   Widget _oldListItem(OldRoomOrderDataModel fnbNya){
-    return InkWell(
-      onTap: (){
-        _showDialogOld(fnbNya);
-      },
-      child: Container(
-        decoration: CustomContainerStyle.whiteList(),
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-        margin: const EdgeInsets.only(bottom: 8),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: AutoSizeText(fnbNya.slipOrder, style: CustomTextStyle .blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-                Flexible(
-                  flex: 1,
-                  child: AutoSizeText(Formatter.formatRupiah(fnbNya.price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-              ],
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: AutoSizeText('${fnbNya.qty}x ${fnbNya.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-                ),
-                ElevatedButton(
-                  onPressed: ()async{
-                    final userLevel = GlobalProviders.read(userProvider).level;
-                    final pos = GlobalProviders.read(posTypeProvider);
-                    final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
-      
-                    final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
-                    if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
-                      showToastWarning('$userLevel Tidak memiliki akses');
-                      return;
-                    }
-                    
-                    final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
-                    if(cancelResult.qty > 0){
-                      setState(() {
-                        isLoading = true;
-                      });
-                      final cancelState = await ApiRequest().cancelDoOld(fnbNya.rcpCode, fnbNya, cancelResult.qty, reason: cancelResult.reason);
-                      if(cancelState.state !=true){
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }else{
-                        if(isSpecialOutlet){
-                          Future.microtask(() {
-                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, fnbNya.slipOrder, cancelResult.qty, fnbNya.name, cancelResult.reason, cancelResult.approver);
-                          });
-                        }
-                        getData();
-                      }
-                    }
-                  },
-                  style: CustomButtonStyle.cancel(),
-                  child: Text('CANCEL', style: CustomTextStyle.whiteSize(16),),
-                )
-              ],
-            ),
-            isNotNullOrEmpty(fnbNya.note)?
-            Row(
-              children: [
-                Flexible(child: AutoSizeText('note: ${fnbNya.note}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
-              ],
-            ): const SizedBox()
-          ],
-        ),
+    return Container(
+      decoration: CustomContainerStyle.whiteList(),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 1,
+                child: AutoSizeText(fnbNya.slipOrder, style: CustomTextStyle .blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+              Flexible(
+                flex: 1,
+                child: AutoSizeText(Formatter.formatRupiah(fnbNya.price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: AutoSizeText('${fnbNya.qty}x ${fnbNya.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
+              ),
+              ElevatedButton(
+                onPressed: ()async{
+                  _showDialogOld(fnbNya);
+                },
+                style: CustomButtonStyle.cancel(),
+                child: Text('Detail', style: CustomTextStyle.whiteSize(16),),
+              )
+            ],
+          ),
+          isNotNullOrEmpty(fnbNya.note)?
+          Row(
+            children: [
+              Flexible(child: AutoSizeText('note: ${fnbNya.note}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
+            ],
+          ): const SizedBox()
+        ],
       ),
     );
   }
@@ -322,22 +255,86 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                 isNotNullOrEmpty(order.notes)?
                 _buildDetailRow('note:', order.notes ?? '-'):SizedBox.shrink(),
                 const SizedBox(height: 12),
-                
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade600,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                Row(children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: CustomButtonStyle.cancel(),
+                      onPressed: () => Navigator.pop(context),
+                      child: Row(
+                        children: [
+                          Icon(Icons.move_up_rounded),
+                          SizedBox(width: 4,),
+                          AutoSizeText('Pindahkan', style: CustomTextStyle.whiteStandard()),
+                        ],
                       ),
                     ),
-                    onPressed: () => Navigator.of(ctxDialog).pop(),
-                    child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                )
+                  SizedBox(width: 4,),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: CustomButtonStyle.cancel(),
+                      onPressed: ()async{
+                        final userLevel = GlobalProviders.read(userProvider).level;
+
+                        final pos = GlobalProviders.read(posTypeProvider);
+                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+                        
+                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                        
+                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
+                          showToastWarning('$userLevel Tidak memiliki akses');
+                          return;
+                        }
+                        Navigator.pop(ctxDialog);
+                        final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), order.qty??0, widget.detailCheckin);
+                        if(cancelResult.qty > 0){
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
+                          
+                          if(cancelState.state !=true){
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }else{
+                            if(isSpecialOutlet){
+                              PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason, cancelResult.approver);
+                            }
+                            if(ctxDialog.mounted){
+                              Navigator.pop(ctxDialog);
+                            }
+                            getData();
+                          }
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.cancel_outlined),
+                          SizedBox(width: 4,),
+                          AutoSizeText('Cancel', style: CustomTextStyle.whiteStandard()),
+                        ],
+                      ),
+                   ),
+                 )
+                ],)
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Colors.blue.shade600,
+                //       foregroundColor: Colors.white,
+                //       elevation: 0,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(8),
+                //       ),
+                //     ),
+                //     onPressed: () => Navigator.of(ctxDialog).pop(),
+                //     child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
+                //   ),
+                // )
               ],
             ),
           ),
@@ -401,8 +398,105 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                 isNotNullOrEmpty(order.note)?
                 _buildDetailRow('note:', order.note):SizedBox.shrink(),
                 const SizedBox(height: 12),
+                Row(children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: CustomButtonStyle.cancel(),
+                      onPressed: () => Navigator.pop(context),
+                      child: Row(
+                        children: [
+                          Icon(Icons.move_up_rounded),
+                          SizedBox(width: 4,),
+                          AutoSizeText('Pindahkan', style: CustomTextStyle.whiteStandard()),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 4,),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: CustomButtonStyle.cancel(),
+                      onPressed: ()async{
+                        final userLevel = GlobalProviders.read(userProvider).level;
+
+                        final pos = GlobalProviders.read(posTypeProvider);
+                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+                        
+                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                        
+                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
+                          showToastWarning('$userLevel Tidak memiliki akses');
+                          return;
+                        }
+                        Navigator.pop(ctxDialog);
+                        final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), order.qty, widget.detailCheckin);
+                        if(cancelResult.qty > 0){
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          final cancelState = await ApiRequest().cancelDoOld(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
+                          
+                          if(cancelState.state !=true){
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }else{
+                            if(isSpecialOutlet){
+                              PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.slipOrder, cancelResult.qty, order.name, cancelResult.reason, cancelResult.approver);
+                            }
+                            if(ctxDialog.mounted){
+                              Navigator.pop(ctxDialog);
+                            }
+                            getData();
+                          }
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.cancel_outlined),
+                          SizedBox(width: 4,),
+                          AutoSizeText('Cancel', style: CustomTextStyle.whiteStandard()),
+                        ],
+                      ),
+                   ),
+                 )
+                ],)
+                /*
                 
-                SizedBox(
+                    final userLevel = GlobalProviders.read(userProvider).level;
+                    final pos = GlobalProviders.read(posTypeProvider);
+                    final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+      
+                    final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                    if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
+                      showToastWarning('$userLevel Tidak memiliki akses');
+                      return;
+                    }
+                    
+                    final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, fnbNya.name.toString(), fnbNya.qty, widget.detailCheckin);
+                    if(cancelResult.qty > 0){
+                      setState(() {
+                        isLoading = true;
+                      });
+                      final cancelState = await ApiRequest().cancelDoOld(fnbNya.rcpCode, fnbNya, cancelResult.qty, reason: cancelResult.reason);
+                      if(cancelState.state !=true){
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }else{
+                        if(isSpecialOutlet){
+                          Future.microtask(() {
+                            PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, fnbNya.slipOrder, cancelResult.qty, fnbNya.name, cancelResult.reason, cancelResult.approver);
+                          });
+                        }
+                        getData();
+                      }
+                    }
+                
+                 */
+/*                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -416,7 +510,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                     onPressed: () => Navigator.of(ctxDialog).pop(),
                     child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                )
+                )*/
               ],
             ),
           ),

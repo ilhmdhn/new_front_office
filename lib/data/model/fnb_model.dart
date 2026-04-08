@@ -44,7 +44,7 @@ class FnBModel{
       price: json['price'],
       location: json['location'],
       globalId: json['inventory_global_id'],
-      soldOut: json['Sold_Out']??false,
+      soldOut: json['Sold_Out'] == 1 ? true : false,
     );
   }
 }

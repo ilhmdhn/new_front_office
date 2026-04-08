@@ -36,6 +36,7 @@ class OrderedModel{
   String? name;
   String? notes;
   num? price;
+  num? realPrice;
   String? printerIP;
   String? forwarderPORT;
   String? stationName;
@@ -56,6 +57,7 @@ class OrderedModel{
     this.name,
     this.notes,
     this.price,
+    this.realPrice,
     this.printerIP,
     this.forwarderPORT,
     this.stationName,
@@ -82,6 +84,7 @@ class OrderedModel{
       forwarderPORT: json['printer_port'],
       stationName: json['station_name'],
       user: json['order_user'],
+      realPrice: json['real_price']??0,
       deliveredAt: json['order_date_terkirim'] != null ? DateTime.parse(json['order_date_terkirim']) : null,
       roomCode: json['order_room_rcp']
     );

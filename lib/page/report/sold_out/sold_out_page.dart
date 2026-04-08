@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
+import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/report/sold_out/sold_out_dialog.dart';
+import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
+import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -64,8 +68,15 @@ class _SoldOutPageState extends State<SoldOutPage> {
       ),
       backgroundColor: CustomColorStyle.background(),
       floatingActionButton: InkWell(
-        onTap: () {
-          // Implementasi aksi untuk tombol tambah
+        onTap: () async{
+          final soldOutItems = await SoldOutDialog.showSoldOutSelector(context);
+          if(isNotNullOrEmpty(soldOutItems)){
+            final soldOutState = await ApiRequest().setSoldOutList(soldOutItems);
+            if(soldOutState.state != true){
+              showToastError('Gagal menyimpan data sold out ${soldOutState.message}');
+            }
+          }
+          _fnbPagingController.refresh();
         },
         child: Container(
           width: 46,
@@ -84,19 +95,45 @@ class _SoldOutPageState extends State<SoldOutPage> {
           firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()),
           noItemsFoundIndicatorBuilder: (context) => AddOnWidget.empty(),
           itemBuilder: (ctxPaging, item, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText(item.name??'', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                  ],
-                ),
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9),
+                color: Colors.white
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset('assets/icon/sold_out.png', height: 36, fit: BoxFit.cover,),
+                      SizedBox(width: 12,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(item.name??'', style: CustomTextStyle.blackMedium(), minFontSize: 14, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                          AutoSizeText(item.invCode??'', style: CustomTextStyle.blackStandard(), minFontSize: 14, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                        ],
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    style: CustomButtonStyle.cancelSoft(),
+                    onPressed: ()async{
+                      final confirmed = await ConfirmationDialog.confirmation(context, 'Stok ${item.name} tersedia?');
+                      if(confirmed == true){
+                        final result = await ApiRequest().setSoldOut(item.invCode??'', false);
+                        if(result.state == true){
+                          _fnbPagingController.refresh();
+                        }else{
+                          showToastError('Gagal mengubah status stok ${item.name} ${result.message}');
+                        }
+                      }
+                    }, 
+                    child: Text('Hapus', style: CustomTextStyle.whiteSize(14),)
+                  )
+                ],
               ),
             );
           },
