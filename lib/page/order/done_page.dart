@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
+import 'package:front_office_2/data/model/model_helper/move_item_model.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/order/move_item/move_item_destination_page.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
@@ -138,7 +140,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                   _showDialogNew(order);
                 },
                 style: CustomButtonStyle.cancel(),
-                child: Text('Detail', style: CustomTextStyle.whiteSize(16),),
+                child: Text('Manage', style: CustomTextStyle.whiteSize(16),),
               )
             ],
           ),
@@ -185,7 +187,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                   _showDialogOld(fnbNya);
                 },
                 style: CustomButtonStyle.cancel(),
-                child: Text('Detail', style: CustomTextStyle.whiteSize(16),),
+                child: Text('Manage', style: CustomTextStyle.whiteSize(16),),
               )
             ],
           ),
@@ -259,7 +261,21 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                   Expanded(
                     child: ElevatedButton(
                       style: CustomButtonStyle.cancel(),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context, 
+                          DestinationItemPage.nameRoute, 
+                          arguments: MoveItemModel(
+                            slipOrderCode: order.sol??'', 
+                            inventoryCode: order.invCode??'', 
+                            itemName: order.name??'', 
+                            qty: order.qty??0, 
+                            roomSource: widget.detailCheckin.roomCode,
+                            rcpSource: widget.detailCheckin.reception
+                          )
+                        );
+                      },
                       child: Row(
                         children: [
                           Icon(Icons.move_up_rounded),
@@ -402,7 +418,21 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                   Expanded(
                     child: ElevatedButton(
                       style: CustomButtonStyle.cancel(),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context, 
+                          DestinationItemPage.nameRoute,
+                          arguments: MoveItemModel(
+                            slipOrderCode: order.slipOrder, 
+                            inventoryCode: order.inventoryCode, 
+                            itemName: order.name, 
+                            qty: order.qty, 
+                            roomSource: widget.detailCheckin.roomCode,
+                            rcpSource: widget.detailCheckin.reception
+                          )
+                        );
+                      },
                       child: Row(
                         children: [
                           Icon(Icons.move_up_rounded),

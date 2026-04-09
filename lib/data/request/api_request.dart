@@ -17,6 +17,7 @@ import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/login_response.dart';
+import 'package:front_office_2/data/model/model_helper/move_item_model.dart';
 import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
@@ -1387,7 +1388,7 @@ class ApiRequest{
     }
   }
 
-    Future<FnBResultModel> setSoldOut(String inventory, bool state)async{
+  Future<FnBResultModel> setSoldOut(String inventory, bool state)async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getFnbList();
@@ -1438,6 +1439,41 @@ class ApiRequest{
       );
     }
   }
+
+  Future<BaseResponse> moveItem(MoveItemModel data, String roomDestionation)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      final url = Uri.parse('$serverUrl/edit-checkin/move-order');
+
+      final checkinBody = {
+        'slip_order': data.slipOrderCode,
+        'inventory_code': data.inventoryCode,
+        'room_source': data.roomSource,
+        'room_destination': roomDestionation,
+      };
+
+      final apiResponse = await http.put(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
+
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      debugPrint('editName response: $convertedResult');
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('Error editName $e $stackTrace');
+      return BaseResponse(
+        isLoading: false,
+        state: false,
+        message: e.toString()
+      );
+    }
+  }
+
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);
