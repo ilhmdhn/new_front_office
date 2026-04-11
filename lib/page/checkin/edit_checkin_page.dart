@@ -544,9 +544,15 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                         onPressed: ()async{
                           final choosePromo = await PromoDialog().setPromoFnb(context, 'PR A', 'PR A');
                           if(choosePromo != null){
-                            setState(() {
-                              promoFnb = choosePromo;
-                            });
+                            final addPromoFnb = await ApiRequest().addPromo(detailRoom?.data?.invoice?? '', choosePromo.promoName??'');
+                            if(addPromoFnb.state != true){
+                              promoFnb = null;
+                              return;
+                            }else{
+                              setState(() {
+                                promoFnb = choosePromo;
+                              });
+                            }
                           }
                         },
                         style: CustomButtonStyle.bluePrimary(),
@@ -596,6 +602,7 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                           child: InkWell(
                             onTap: ()async{
                             if(dataCheckin?.promoFnb == null){
+                              await ApiRequest().removePromoFood(dataCheckin?.reception??'');
                               setState(() {
                                 promoFnb = null;
                               });

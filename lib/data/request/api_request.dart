@@ -1451,7 +1451,6 @@ class ApiRequest{
       final checkinBody = {
         'slip_order': data.slipOrderCode,
         'inventory_code': data.inventoryCode,
-        'room_source': data.roomSource,
         'room_destination': roomDestionation,
       };
 
@@ -1474,6 +1473,34 @@ class ApiRequest{
     }
   }
 
+  Future<BaseResponse> addPromo(String ivc, String promoName)async{
+    try{
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');
+        return data;
+      }
+      final url = Uri.parse('$serverUrl/edit-checkin/promo');
+
+      final checkinBody = {
+        'ivc_code': ivc,
+        'promo_name': promoName
+      };
+
+      final apiResponse = await http.post(url , body: json.encode(checkinBody), headers: {'Content-Type': 'application/json', 'authorization': token});
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('addPromo error $e\n$stackTrace');
+      return BaseResponse(
+        state: false,
+        message: '$e\n$stackTrace'
+      );
+    }
+  }
 
   void loginPage(){
     getIt<NavigationService>().pushNamedAndRemoveUntil(LoginPage.nameRoute);

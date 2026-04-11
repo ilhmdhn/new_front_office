@@ -513,7 +513,8 @@ class PrintExecutor {
             createdAt: DateTime.now()
           );
           GlobalProviders.read(printJobProvider.notifier).addJob(printQueue);
-          throw 'Gagal print ke printer LAN di $ipAddress';
+          showToastError('Gagal print ke printer LAN di $ipAddress');
+          return;
         }
 
         final delaySeconds = attempt * 2; // 2s, 4s, 6s

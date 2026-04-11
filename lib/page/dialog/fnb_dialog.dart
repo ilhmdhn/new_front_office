@@ -563,6 +563,8 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                               final doState = await ApiRequest().confirmDo(roomCode, filteredData);
                                               if (doState.state == true) {
                                                 await PrintExecutor.printDoResto(orderState,roomCode, custName, checkinDetail.data?.pax??0);
+                                              }else{
+                                                showToastError('Ada error ${doState.message}');
                                               }
                                             }
                                           }

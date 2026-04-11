@@ -262,6 +262,17 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                     child: ElevatedButton(
                       style: CustomButtonStyle.cancel(),
                       onPressed: () {
+                        final userLevel = GlobalProviders.read(userProvider).level;
+
+                        final pos = GlobalProviders.read(posTypeProvider);
+                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+                        
+                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                        
+                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
+                          showToastWarning('$userLevel Tidak memiliki akses');
+                          return;
+                        }
                         Navigator.pop(context);
                         Navigator.pushNamed(
                           context, 
@@ -330,7 +341,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                         children: [
                           Icon(Icons.cancel_outlined),
                           SizedBox(width: 4,),
-                          AutoSizeText('Cancel', style: CustomTextStyle.whiteStandard()),
+                          AutoSizeText('Void', style: CustomTextStyle.whiteStandard()),
                         ],
                       ),
                    ),
@@ -419,6 +430,17 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                     child: ElevatedButton(
                       style: CustomButtonStyle.cancel(),
                       onPressed: () {
+                        final userLevel = GlobalProviders.read(userProvider).level;
+
+                        final pos = GlobalProviders.read(posTypeProvider);
+                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
+                        
+                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                        
+                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
+                          showToastWarning('$userLevel Tidak memiliki akses');
+                          return;
+                        }
                         Navigator.pop(context);
                         Navigator.pushNamed(
                           context, 
@@ -487,7 +509,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                         children: [
                           Icon(Icons.cancel_outlined),
                           SizedBox(width: 4,),
-                          AutoSizeText('Cancel', style: CustomTextStyle.whiteStandard()),
+                          AutoSizeText('Void', style: CustomTextStyle.whiteStandard()),
                         ],
                       ),
                    ),
