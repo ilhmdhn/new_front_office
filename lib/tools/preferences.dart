@@ -202,7 +202,7 @@ class PreferencesData {
   }
 
   static bool getPrintInvoice() {
-    return _prefs?.getBool('PRINT_INVOICE') ?? false;
+    return _prefs?.getBool('PRINT_INVOICE') ?? true;
   }
 
   static void setPrintLogo(bool state) {
