@@ -35,25 +35,36 @@ class PrintExecutor {
   static Future<void> printInvoice(String rcp) async {
      try {
       final printInvoiceState = GlobalProviders.read(printInvoiceProvider);
+
       if(printInvoiceState == false){
         return;
       }
-      final apiResponse = await ApiRequest().getInvoice(rcp);
       
-      if(!apiResponse.state){
-        showToastError(apiResponse.message);
-        return;
-      } else if(apiResponse.data == null){
-        showToastError('data invoice null ${apiResponse.message}');
-        return;
-      }
-
       final helper = await _getPrinter();
       List<int> posContent = [];
+
       final pos = GlobalProviders.read(posTypeProvider);
       if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
-        posContent = EscPosGenerator().printInvoiceResto(apiResponse.data!, helper);
+        final apiResponse = await ApiRequest().getInvoiceResto(rcp);
+        if(!apiResponse.state){
+          showToastError(apiResponse.message);
+          return;
+        } else if(apiResponse.data == null){
+          showToastError('data invoice null ${apiResponse.message}');
+          return;
+        }
+        posContent = await EscPosGenerator().printInvoiceRestoGenerator(apiResponse.data!, helper, isCopy: false);
       }else{
+        final apiResponse = await ApiRequest().getInvoice(rcp);
+        
+        if(!apiResponse.state){
+          showToastError(apiResponse.message);
+          return;
+        } else if(apiResponse.data == null){
+          showToastError('data invoice null ${apiResponse.message}');
+          return;
+        }
+
         posContent = EscPosGenerator().printInvoice(apiResponse.data!, helper);
       }
       await _execute(posContent);
@@ -110,6 +121,29 @@ class PrintExecutor {
       return;
     }
   }
+/*
+  static Future<void> printInvoiceResto(String rcp)async{
+    try {
+      final helper = await _getPrinter();
+      final data = await ApiRequest().getInvoiceResto(rcp);
+
+      if(!data.state){
+        showToastError('Gagal print bill ${data.message}');
+        return;
+      }else if(data.data == null){
+        showToastError('Bill tidak ditemukan ${data.message}');
+        return;
+      }
+
+      final List<int> posContent = await EscPosGenerator().printInvoiceRestoGenerator(data.data!, helper);
+      await _execute(posContent);
+      ApiRequest().updatePrintState(rcp, '1');
+    }catch (e, stackTraces) {
+      showToastError('Gagal cetak bill: $e $stackTraces');
+      return;
+    }
+  }*/
+
 
   static Future<void> printSlip(String rcp)async{
     try {

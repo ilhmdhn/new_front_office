@@ -228,8 +228,10 @@ class CloudRequest{
         };
         final apiResponse = await http.post(url,body: json.encode(bodyParams) ,headers:{'Content-Type': 'application/json','authorization': token});
         final convertedResult = json.decode(apiResponse.body);
+        debugPrint('debugging rating response $convertedResult');
         return BaseResponse.fromJson(convertedResult);
-      }catch(e){
+      }catch(e, stackTrace){
+        debugPrint('Error insert rating $e $stackTrace');
         return BaseResponse(
           state: false,
           message: e.toString()

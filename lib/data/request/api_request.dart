@@ -22,6 +22,7 @@ import 'package:front_office_2/data/model/order_body.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
+import 'package:front_office_2/data/model/print_invoice_resto_response.dart';
 import 'package:front_office_2/data/model/printer_station_response.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
@@ -1329,6 +1330,29 @@ class ApiRequest{
     }catch(e, stackTrace){
       debugPrint('getBillResto $e, $stackTrace');
       return BillRestoResponse(state: false, message: 'Error $e $stackTrace', data:null );
+    }
+  }
+
+  Future<InvoiceRestoResponse>getInvoiceResto(String rcpCode)async{
+    try{
+/*
+      if(userId == 'TEST'){
+        final data =  await DummyResponseHelper.getInvoiceRestoResponse();
+        return data;
+      }
+*/
+      final url = Uri.parse('$serverUrl/mobile-print/invoice-resto?rcp=$rcpCode');
+      final apiResponse = await http.get(url, headers: {'Content-Type': 'application/json', 'authorization': token});
+      
+      if(apiResponse.statusCode == 401 || apiResponse.statusCode == 403){
+        loginPage();
+      }
+
+      final convertedResult = json.decode(apiResponse.body);
+      return InvoiceRestoResponse.fromJson(convertedResult);
+    }catch(e, stackTrace){
+      debugPrint('getBillResto $e, $stackTrace');
+      return InvoiceRestoResponse(state: false, message: 'Error $e $stackTrace', data:null );
     }
   }
 
