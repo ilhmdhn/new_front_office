@@ -1,9 +1,9 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/promo_fnb_response.dart';
 import 'package:front_office_2/data/model/promo_room_response.dart';
-import 'dart:async';
-
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -238,10 +238,10 @@ Future<PromoFnbModel?> setPromoFnb(
                                     : const SizedBox()
                                   ],
                                 ),
-                                Text(
+                                /*Text(
                                   'Masa berlaku ${promoData.timeStart} - ${promoData.timeFinish}',
                                   style: CustomTextStyle.blackMediumSize(14),
-                                )
+                                )*/
                               ],
                             ),
                           ),

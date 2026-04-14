@@ -960,7 +960,7 @@ class ApiRequest{
     }
   }
 
-  Future<BaseResponse> cancelDoOld(String roomCode, OldRoomOrderDataModel fnb, int qty, {String reason = ''})async{
+  Future<BaseResponse> cancelDoOld(OldRoomOrderDataModel fnb, int qty, {String reason = ''})async{
     try{
       if(userId == 'TEST'){
         final data =  await DummyResponseHelper.getBaseResponseSuccess('SUCCESS');

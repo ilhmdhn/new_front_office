@@ -590,13 +590,13 @@ class _EditCheckinPageState extends State<EditCheckinPage> {
                             Expanded(child: AutoSizeText('${(promoFnb?.promoPercent??0) > 0? '${promoFnb?.promoPercent}%' : ''} ${(promoFnb?.promoIdr??0) > 0? Formatter.formatRupiah((promoFnb?.promoIdr??0).toInt()) : ''}', style: CustomTextStyle.blackStandard(), minFontSize: 7, maxLines: 1,))
                           ],
                         ),
-                        Row(
+                        /*Row(
                           children: [
                             Text('MASA BERLAKU :', style: CustomTextStyle.blackStandard()),
                             const SizedBox(width: 5,),
                             AutoSizeText('${promoFnb?.timeStart} - ${promoFnb?.timeFinish}', style: CustomTextStyle.blackStandard(), minFontSize: 9,)
                           ],
-                        ),
+                        ),*/
                         Align(
                           alignment: Alignment.centerRight,
                           child: InkWell(

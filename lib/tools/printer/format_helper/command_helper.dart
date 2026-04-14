@@ -1,6 +1,7 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:front_office_2/data/model/other_model.dart';
+import 'package:image/image.dart' as img; 
 
 class CommandHelper {
   final Generator generator;
@@ -14,6 +15,8 @@ class CommandHelper {
       return 40; // TMU-220 dot matrix: 72mm = 40 chars
     } else if(printerModel == PrinterModelType.bixolonThermal80mm){
       return 42;
+    }else if(printerModel == PrinterModelType.bluetooth58mm){
+      return 38;
     }
     return 48; // Default for thermal printers (80mm)
   }
@@ -884,6 +887,10 @@ List<int> tableWithMaxChars(
       );
 
   List<int> qr(String data) => generator.qrcode(data);
+
+  List<int> image(img.Image imageFile){
+    return generator.image(imageFile, isDoubleDensity: false);
+  }
 
   List<int> cut() => generator.cut();
 

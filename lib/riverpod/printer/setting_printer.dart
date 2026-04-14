@@ -140,3 +140,30 @@ class PrintInvoiceNotifier extends StateNotifier<bool> {
     _loadState();
   }
 }
+
+final printLogoProvider = StateNotifierProvider<PrintLogoNotifier, bool>((ref) {
+  return PrintLogoNotifier();
+});
+
+class PrintLogoNotifier extends StateNotifier<bool> {
+  PrintLogoNotifier() : super(_initialState()) {
+    _loadState();
+  }
+
+  static bool _initialState() {
+    return PreferencesData.getPrintLogo();
+  }
+
+  void _loadState() {
+    state = PreferencesData.getPrintLogo();
+  }
+
+  void setPrintLogo(bool value) {
+    PreferencesData.setPrintLogo(value);
+    state = value;
+  }
+
+  void refresh() {
+    _loadState();
+  }
+}

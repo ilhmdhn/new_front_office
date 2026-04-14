@@ -215,13 +215,11 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
                                   child: AutoSizeText(roomData.room, style: CustomTextStyle.blackMediumSize(isPotrait? 19: 29),  maxLines: 1, minFontSize: 11,),
                                 ),
                                 isRestoOutlet && roomData.printState != '0'?
-                                Expanded(
-                                  child: Center(
-                                    child: Transform.rotate(
-                                      angle: -0.2,
-                                      child: AutoSizeText('Print Bill', style: GoogleFonts.poppins(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.w500), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis,)
-                                    ), 
-                                  ),
+                                Center(
+                                  child: Transform.rotate(
+                                    angle: -0.2,
+                                    child: AutoSizeText('Print Bill', style: GoogleFonts.poppins(color: Colors.deepOrange, fontSize: 16, fontWeight: FontWeight.w500), minFontSize: 9, maxLines: 1, overflow: TextOverflow.ellipsis,)
+                                  ), 
                                 ): SizedBox.shrink(),
                                 Align(
                                   alignment: Alignment.bottomRight,

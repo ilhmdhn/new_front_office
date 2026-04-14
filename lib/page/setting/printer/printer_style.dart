@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -23,209 +22,179 @@ class PrinterStylePage extends ConsumerWidget {
       ),
       backgroundColor: CustomColorStyle.appBarBackground(),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: CustomColorStyle.background()
-        ),
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: CustomColorStyle.background(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                AutoSizeText('Tampilkan Retur Item', style:  CustomTextStyle.blackMediumSize(16),),
-                SizedBox(
-                  height: 12,
-                  child: Transform.scale(
-                    scale: 0.75,
-                    child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(showReturProvider),
-                      onChanged: (value) {
-                        ref.read(showReturProvider.notifier).setShowRetur(value);
-                      },
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9)
+                  ),
+                  child: CheckboxListTile(
+                    activeColor: const Color(0xFF1976D2),
+                    checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    title: Text('Retur' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                     ),
+                    subtitle: Text('Tampilkan retur pada hasil cetak?', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                    value: ref.watch(showReturProvider),
+                    onChanged: (bool? value) async{
+                      ref.read(showReturProvider.notifier).setShowRetur(value??false);
+                    },
+                  ),
+                ),              
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9)
+                  ),
+                  child: CheckboxListTile(
+                    activeColor: const Color(0xFF1976D2),
+                    checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    title: Text('Total promo' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                    ),
+                    subtitle: Text('Tampilkan totap promo item pada cetakan?', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                    value: ref.watch(showTotalItemPromoProvider),
+                    onChanged: (bool? value) async{
+                      ref.read(showTotalItemPromoProvider.notifier).setShowTotalItemPromo(value??false);
+                    },
                   ),
                 ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Promo disetiap item' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Tampilkan promo dibawah nama item?', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(showPromoBelowItemProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(showPromoBelowItemProvider.notifier).setShowPromoBelowItem(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Slip Checklin' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Slip Checkin', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printSlipCheckinProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printSlipCheckinProvider.notifier).setPrintSlipCheckin(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Slip Order' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Slip Checkin', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printSlipOrderProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printSlipOrderProvider.notifier).setPrintSlipOrder(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Delivery Order' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Slip Checkin', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printSlipDeliveryOrderProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printSlipDeliveryOrderProvider.notifier).setPrintSlipDeliveryOrder(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Bill' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Cetak Bill', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printBillProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printBillProvider.notifier).setPrintBill(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Invoice' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Slip Invoice', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printInvoiceProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printInvoiceProvider.notifier).setPrintInvoice(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Logo' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Cetak logo pada invoice', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printLogoProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printLogoProvider.notifier).setPrintLogo(value??false);
+                  },
+                ),
+              ),
               ],
             ),
-            const SizedBox(height: 16,),
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Tampilkan Total Promo Item',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(showTotalItemPromoProvider),
-                      onChanged: (value) {
-                        ref.read(showTotalItemPromoProvider.notifier).setShowTotalItemPromo(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
           ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Tampilan promo dibawah item',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(showPromoBelowItemProvider),
-                      onChanged: (value) {
-                        ref.read(showPromoBelowItemProvider.notifier).setShowPromoBelowItem(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Cetak Slip Checkin',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(printSlipCheckinProvider),
-                      onChanged: (value) {
-                        ref.read(printSlipCheckinProvider.notifier).setPrintSlipCheckin(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Cetak Slip Order',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(printSlipOrderProvider),
-                      onChanged: (value) {
-                        ref.read(printSlipOrderProvider.notifier).setPrintSlipOrder(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Cetak Delivery Order',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(printSlipDeliveryOrderProvider),
-                      onChanged: (value) {
-                        ref.read(printSlipDeliveryOrderProvider.notifier).setPrintSlipDeliveryOrder(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Cetak Bill',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(printBillProvider),
-                      onChanged: (value) {
-                        ref.read(printBillProvider.notifier).setPrintBill(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AutoSizeText(
-                'Cetak Invoice',
-                style: CustomTextStyle.blackMediumSize(16),
-              ),
-              SizedBox(
-                height: 12,
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Switch(
-                      activeTrackColor: CustomColorStyle.bluePrimary(),
-                      value: ref.watch(printInvoiceProvider),
-                      onChanged: (value) {
-                        ref.read(printInvoiceProvider.notifier).setPrintInvoice(value);
-                      },
-                    ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          ],
         ),
       ),
     );

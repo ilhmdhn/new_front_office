@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:front_office_2/data/model/bill_response.dart';
 import 'package:front_office_2/data/model/bill_resto_response.dart';
 import 'package:front_office_2/data/model/checkin_slip_response.dart';
@@ -7,12 +8,16 @@ import 'package:front_office_2/data/model/invoice_response.dart';
 import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/model/other_model.dart';
 import 'package:front_office_2/data/model/sol_response.dart';
+import 'package:front_office_2/riverpod/printer/setting_printer.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/calculate.dart';
 import 'package:front_office_2/tools/formatter.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/printer/format_helper/command_helper.dart';
+import 'package:front_office_2/tools/toast.dart';
+import 'package:image/image.dart';
 import 'package:intl/intl.dart';
+
 
 class EscPosGenerator {
   static List<int> testPrint(CommandHelper helper){
@@ -342,13 +347,34 @@ class EscPosGenerator {
     return bytes;
   }
 
-  List<int> printBillRestoGenerator(BillRestoModel data, CommandHelper helper, {bool isCopy = false}){
+  Future<List<int>> printBillRestoGenerator(BillRestoModel data, CommandHelper helper, {bool isCopy = false})async{
     final user = GlobalProviders.read(userProvider).userId;
+    final logoState = GlobalProviders.read(printLogoProvider);
+    final outlet = GlobalProviders.read(outletProvider);
+
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+    
+    Image? img;
+
+    if (logoState) {
+      try {
+        if (outlet == 'RG001') {
+          final ByteData data =await rootBundle.load('assets/logo_print/RG001.png');
+          final Uint8List bytes = data.buffer.asUint8List();
+          img = decodeImage(bytes);
+        }
+      } catch (e) {
+        showToastError('Gambar tidak ada / gagal diproses');
+      }
+    }
 
 
     List<int> bytes = [];
+    if(img != null){
+      bytes += [0x1B, 0x40];
+      bytes += helper.image(img);
+    }
     bytes += [0x1B, 0x40];
     bytes += helper.text(data.outlet.namaOutlet, align: PosAlign.center, bold: true, width: PosTextSize.size2);
     bytes += helper.text('RISTORANTE, LOUNGE & BAR', align: PosAlign.center, bold: false);

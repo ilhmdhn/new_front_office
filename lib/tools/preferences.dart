@@ -194,7 +194,7 @@ class PreferencesData {
   }
 
   static bool getPrintBill() {
-    return _prefs?.getBool('PRINT_BILL') ?? false;
+    return _prefs?.getBool('PRINT_BILL') ?? true;
   }
 
   static void setPrintInvoice(bool state) {
@@ -203,5 +203,21 @@ class PreferencesData {
 
   static bool getPrintInvoice() {
     return _prefs?.getBool('PRINT_INVOICE') ?? false;
+  }
+
+  static void setPrintLogo(bool state) {
+    _prefs?.setBool('PRINT_LOGO', state);
+  }
+
+  static bool getPrintLogo() {
+    return _prefs?.getBool('PRINT_LOGO') ?? false;
+  }
+
+  static void setRatingFeature(bool state) {
+    _prefs?.setBool('RATING_FEATURE', state);
+  }
+
+  static bool getRatingFeature() {
+    return _prefs?.getBool('RATING_FEATURE') ?? false;
   }
 }

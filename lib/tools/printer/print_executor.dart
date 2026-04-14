@@ -102,7 +102,7 @@ class PrintExecutor {
         return;
       }
 
-      final List<int> posContent = EscPosGenerator().printBillRestoGenerator(data.data!, helper);
+      final List<int> posContent = await EscPosGenerator().printBillRestoGenerator(data.data!, helper);
       await _execute(posContent);
       ApiRequest().updatePrintState(rcp, '1');
     }catch (e, stackTraces) {

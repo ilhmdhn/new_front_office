@@ -14,6 +14,7 @@ import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/page/style/custom_textfield.dart';
+import 'package:front_office_2/riverpod/feature_provider.dart';
 import 'package:front_office_2/riverpod/provider_container.dart';
 import 'package:front_office_2/riverpod/server_config_provider.dart';
 import 'package:front_office_2/tools/formatter.dart';
@@ -69,6 +70,8 @@ class _PaymentPageState extends State<PaymentPage> {
   num minusPay = 0;
 
   PreviewBillResponse? billData;
+
+  final ratingEnable = GlobalProviders.read(ratingFeatureProvider);
 
   void _setNominal(){
     minusPay = totalBill;
@@ -708,7 +711,10 @@ class _PaymentPageState extends State<PaymentPage> {
                             }
                             if(context.mounted){
                               Navigator.pushNamedAndRemoveUntil(context, MainPage.nameRoute, (route) => false);
-                              RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
+                              // fix before compile
+                              if(ratingEnable){
+                                RatingDialog.submitRate(context, invoiceCode, memberCode, memberName);
+                              }
                             }
                           }
                         },

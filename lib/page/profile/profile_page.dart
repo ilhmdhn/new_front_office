@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/auth/login_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/setting/feature/enable_feature_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_page.dart';
 import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
@@ -96,7 +97,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   Navigator.pushNamed(context, PrinterPage.nameRoute);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                   decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -137,7 +138,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   Navigator.pushNamed(context, PrinterStylePage.nameRoute);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -157,9 +158,57 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           width: 30,
                           child: Image.asset('assets/icon/edit_invoice.png')),
                       Expanded(
-                          child: Padding(
+                        child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                         child: AutoSizeText('Printer Style',
+                            style: CustomTextStyle.blackMediumSize(16),
+                            minFontSize: 12,
+                            wrapWords: false,
+                            maxLines: 2),
+                      )),
+                      const SizedBox(
+                          width: 26,
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.green,
+                            size: 14,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: () async {
+                  Navigator.pushNamed(context, EnableFeaturePage.nameRoute);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                          width: 30,
+                          child: Image.asset('assets/icon/settings_icon.png')),
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                        child: AutoSizeText('Fitur Diaktifkan',
                             style: CustomTextStyle.blackMediumSize(16),
                             minFontSize: 12,
                             wrapWords: false,
@@ -185,7 +234,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   getIt<NavigationService>().pushNamed(ChangePasswordPage.routeName);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                   decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -239,7 +288,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   }
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                   decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),

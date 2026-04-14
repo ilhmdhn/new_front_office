@@ -5,7 +5,6 @@ import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/model_helper/move_item_model.dart';
 import 'package:front_office_2/data/model/order_oldroom_response.dart';
-import 'package:front_office_2/data/model/order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
@@ -30,40 +29,25 @@ class DoneOrderPage extends StatefulWidget {
 
 class _DoneOrderPageState extends State<DoneOrderPage> {
 
-  OrderResponse? apiResult;
-  OrderOldRoomResponse? oldResult;
+  OrderOldRoomResponse? apiResult;
   bool isLoading = true;
-  List<OrderedModel> listOrder = List.empty(growable: true);
-  List<OldRoomOrderDataModel> oldRoomList = [];
+  List<OldRoomOrderDataModel> fnbList = [];
   
   void getData()async{
     setState(() {
       isLoading = true;
     });
-    apiResult = await ApiRequest().getOrder(widget.detailCheckin.roomCode);
-    oldResult = await ApiRequest().getOldOrder(widget.detailCheckin.invoice);
+    apiResult = await ApiRequest().getOldOrder(widget.detailCheckin.invoice);
 
     if(isNotNullOrEmpty(apiResult?.data)){
-
-      listOrder = apiResult!.data!.where((element) => element.orderState == '5' &&  (element.qty??0) - (element.cancelQty??0) >0).toList();
-
-      apiResult?.data?.sort((a, b) {
-        int solComparison = a.sol!.compareTo(b.sol!);
-        if (solComparison != 0) {
-          return solComparison;
-        }
-        return a.name!.compareTo(b.name!);
-      });
-    }
-    if(isNotNullOrEmpty(oldResult?.data)){
-      oldRoomList  =  oldResult!.data!.expand((order) => order.data).toList();
+      fnbList  =  apiResult!.data!.expand((order) => order.data).toList();
     }
 
     if(mounted){
       setState(() {
         isLoading = false;
         apiResult;
-        oldRoomList;
+        fnbList;
       });
     }
   }
@@ -76,83 +60,26 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final combinedList = [
-      ...listOrder.map((e) => {'type': 'new', 'data': e}),
-      ...oldRoomList.map((e) => {'type': 'old', 'data': e}),
-    ];
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body: 
-        apiResult == null || oldResult == null?
+        apiResult == null || apiResult == null?
           AddOnWidget.loading():
         apiResult?.state != true?
           AddOnWidget.error(apiResult?.message):
-        isNullOrEmpty(combinedList)?
+        isNullOrEmpty(apiResult?.data)?
           AddOnWidget.empty():
         Padding(
           padding: const EdgeInsets.all(8),
           child: ListView.builder(
-            itemCount: combinedList.length,
+            itemCount: fnbList.length,
             shrinkWrap: true,
             itemBuilder: (ctxList, index){
-              if(combinedList[index]['type'] == 'new'){
-                return _newListItem(combinedList[index]['data'] as OrderedModel);
-              }else{
-                return _oldListItem(combinedList[index]['data'] as OldRoomOrderDataModel);
-              }
+                return _oldListItem(fnbList[index]);
             }
           ),
         ),
     );
-  }
-
-  Widget _newListItem(OrderedModel order){
-    num price = (order.price??0) * ((order.qty??0) - (order.cancelQty??0));
-    int qty = (order.qty??0) - (order.cancelQty??0);
-    return Container(
-      decoration: CustomContainerStyle.whiteList(),
-      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                flex: 1,
-                child: AutoSizeText(order.sol??'sol null', style: CustomTextStyle .blackStandard(), maxLines: 1, minFontSize: 9,)
-              ),
-              Flexible(
-                flex: 1,
-                child: AutoSizeText(Formatter.formatRupiah(price), style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-              ),
-            ],
-          ),
-          const SizedBox(height: 12,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: AutoSizeText('${qty}x ${order.name} ', style: CustomTextStyle.blackStandard(), maxLines: 1, minFontSize: 9,)
-              ),
-              ElevatedButton(
-                onPressed: ()async{
-                  _showDialogNew(order);
-                },
-                style: CustomButtonStyle.cancel(),
-                child: Text('Manage', style: CustomTextStyle.whiteSize(16),),
-              )
-            ],
-          ),
-          isNotNullOrEmpty(order.notes)?
-          Row(
-            children: [
-              Flexible(child: AutoSizeText('note: ${order.notes??''}', style: CustomTextStyle.blackStandard(), maxLines: 3, minFontSize: 12,)),
-            ],
-          ): const SizedBox(),
-        ],
-      ),
-    );      
   }
   
   Widget _oldListItem(OldRoomOrderDataModel fnbNya){
@@ -202,174 +129,6 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
     );
   }
   
-  void _showDialogNew(OrderedModel order){
-    showDialog(
-      context: context,
-      builder: (ctxDialog) {  
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          backgroundColor: CustomColorStyle.background(), // Nuansa light blue utama
-          elevation: 4,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.blue.shade200, width: 1.5),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Bagian Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.receipt_long_rounded, color: Colors.blue.shade700),
-                        const SizedBox(width: 8),
-                        AutoSizeText(
-                          'Detail Order',
-                          style: CustomTextStyle.blackMedium(),
-                          maxLines: 1,
-                          minFontSize: 14,
-                        ),
-                      ],
-                    ),
-                        // Tombol Close (X)
-                    GestureDetector(
-                      onTap: () => Navigator.of(ctxDialog).pop(),
-                      child: Icon(Icons.close_rounded, color: Colors.blue.shade400, size: 22),
-                    ),
-                  ],
-                ),
-                    
-                const SizedBox(height: 12),
-                Divider(color: Colors.blue.shade200, thickness: 1),
-                const SizedBox(height: 16),
-              
-                _buildDetailRow('Terkirim', order.deliveredAt != null ? Formatter.formatDateTime(order.deliveredAt!) : '-'),
-                _buildDetailRow('User', order.user ?? '-'),
-                _buildDetailRow('Room', order.roomCode ?? '-'),
-                _buildDetailRow('SO', order.sol ?? '-'),
-                isNotNullOrEmpty(order.notes)?
-                _buildDetailRow('note:', order.notes ?? '-'):SizedBox.shrink(),
-                const SizedBox(height: 12),
-                Row(children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: CustomButtonStyle.cancel(),
-                      onPressed: () {
-                        final userLevel = GlobalProviders.read(userProvider).level;
-
-                        final pos = GlobalProviders.read(posTypeProvider);
-                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
-                        
-                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
-                        
-                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
-                          showToastWarning('$userLevel Tidak memiliki akses');
-                          return;
-                        }
-                        Navigator.pop(context);
-                        Navigator.pushNamed(
-                          context, 
-                          DestinationItemPage.nameRoute, 
-                          arguments: MoveItemModel(
-                            slipOrderCode: order.sol??'', 
-                            inventoryCode: order.invCode??'', 
-                            itemName: order.name??'', 
-                            qty: order.qty??0, 
-                            roomSource: widget.detailCheckin.roomCode,
-                            rcpSource: widget.detailCheckin.reception
-                          )
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.move_up_rounded),
-                          SizedBox(width: 4,),
-                          AutoSizeText('Pindahkan', style: CustomTextStyle.whiteStandard()),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 4,),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: CustomButtonStyle.cancel(),
-                      onPressed: ()async{
-                        final userLevel = GlobalProviders.read(userProvider).level;
-
-                        final pos = GlobalProviders.read(posTypeProvider);
-                        final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
-                        
-                        final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
-                        
-                        if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
-                          showToastWarning('$userLevel Tidak memiliki akses');
-                          return;
-                        }
-                        Navigator.pop(ctxDialog);
-                        final CancelModel cancelResult = await ConfirmationDialog.confirmationCancelDo(context, order.name.toString(), order.qty??0, widget.detailCheckin);
-                        if(cancelResult.qty > 0){
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          final cancelState = await ApiRequest().cancelDo(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
-                          
-                          if(cancelState.state !=true){
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }else{
-                            if(isSpecialOutlet){
-                              PrintExecutor.printVoidResto(widget.detailCheckin.roomCode, widget.detailCheckin.pax, order.sol??'', cancelResult.qty, order.name??'', cancelResult.reason, cancelResult.approver);
-                            }
-                            if(ctxDialog.mounted){
-                              Navigator.pop(ctxDialog);
-                            }
-                            getData();
-                          }
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.cancel_outlined),
-                          SizedBox(width: 4,),
-                          AutoSizeText('Void', style: CustomTextStyle.whiteStandard()),
-                        ],
-                      ),
-                   ),
-                 )
-                ],)
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: ElevatedButton(
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.blue.shade600,
-                //       foregroundColor: Colors.white,
-                //       elevation: 0,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(8),
-                //       ),
-                //     ),
-                //     onPressed: () => Navigator.of(ctxDialog).pop(),
-                //     child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
-                //   ),
-                // )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void _showDialogOld(OldRoomOrderDataModel order){
     showDialog(
       context: context,
@@ -473,8 +232,8 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
 
                         final pos = GlobalProviders.read(posTypeProvider);
                         final isSpecialOutlet = pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased;
-                        
                         final allowedRoles = ['KASIR', 'ACCOUNTING', 'SUPERVISOR', 'KAPTEN'];
+                        
                         
                         if (!isSpecialOutlet && !allowedRoles.contains(userLevel)) {
                           showToastWarning('$userLevel Tidak memiliki akses');
@@ -487,7 +246,7 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                             isLoading = true;
                           });
 
-                          final cancelState = await ApiRequest().cancelDoOld(widget.detailCheckin.roomCode, order, cancelResult.qty, reason: cancelResult.reason);
+                          final cancelState = await ApiRequest().cancelDoOld(order, cancelResult.qty, reason: cancelResult.reason);
                           
                           if(cancelState.state !=true){
                             setState(() {
