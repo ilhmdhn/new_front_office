@@ -115,20 +115,22 @@ class _PrinterPageState extends ConsumerState<PrinterPage> {
         ),
         backgroundColor: CustomColorStyle.appBarBackground(),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCurrentPrinterCard(printer),
-              const SizedBox(height: 20),
-              _buildPCPrinterCard(),
-              const SizedBox(height: 20),
-              // _buildLanPrinterCard(),
-              // const SizedBox(height: 20),
-              _buildBluetoothPrinterCard(printer),
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCurrentPrinterCard(printer),
+                const SizedBox(height: 20),
+                _buildPCPrinterCard(),
+                const SizedBox(height: 20),
+                // _buildLanPrinterCard(),
+                // const SizedBox(height: 20),
+                _buildBluetoothPrinterCard(printer),
+              ],
+            ),
           ),
         ),
       ),

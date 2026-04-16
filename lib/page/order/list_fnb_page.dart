@@ -81,173 +81,175 @@ class _ListFnbPageState extends State<ListFnbPage> {
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body:
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SizedBox(
-                height: ScreenSize.getHeightPercent(context, 10),
-                width: ScreenSize.getSizePercent(context, 100),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Flexible(
-                      child: SearchBar(
-                        hintText: 'Cari FnB',
-                        backgroundColor: WidgetStateColor.resolveWith((states) => Colors.white),
-                        surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
-                        shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
-                        onChanged: ((value){
-                          if(_searchFnb != value){
-                            _searchFnb = value;
-                            _fnbPagingController.refresh();
-                          }
-                        }),
-                        trailing: Iterable.generate(
-                          1, (index) => const Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child:  Icon(Icons.search)
-                          )
+      SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                  height: ScreenSize.getHeightPercent(context, 10),
+                  width: ScreenSize.getSizePercent(context, 100),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Flexible(
+                        child: SearchBar(
+                          hintText: 'Cari FnB',
+                          backgroundColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                          surfaceTintColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                          shadowColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                          onChanged: ((value){
+                            if(_searchFnb != value){
+                              _searchFnb = value;
+                              _fnbPagingController.refresh();
+                            }
+                          }),
+                          trailing: Iterable.generate(
+                            1, (index) => const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child:  Icon(Icons.search)
+                            )
+                          ),
                         ),
                       ),
-                    ),
-                    posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased?
-                    IconButton(onPressed: ()async{
-                      final currentStation = choosedStation;
-                      choosedStation = await FnBDialog.getStationModel(context, choosedStation);
-                      if(currentStation?.id != choosedStation?.id){
-                        _fnbPagingController.refresh();
-                      }
-                    }, icon: FaIcon(FontAwesomeIcons.filter, color: CustomColorStyle.bluePrimary())): SizedBox.shrink()
-                  ],
-                ),
-              ),
-            const SizedBox(height: 6),
-            choosedStation != null ?
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      choosedStation = null;
-                      _fnbPagingController.refresh();
-                    });
-                  },
-                  style: CustomButtonStyle.bluePrimary(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(Icons.close, size: 19, color: Colors.white, fill: 1,),
-                      SizedBox(width: 6,),
-                      AutoSizeText(choosedStation?.name ?? '', style: CustomTextStyle.whiteSizeMedium(16),),
+                      posType == PosType.restoOnlyOld || posType == PosType.restoOnlyWebBased?
+                      IconButton(onPressed: ()async{
+                        final currentStation = choosedStation;
+                        choosedStation = await FnBDialog.getStationModel(context, choosedStation);
+                        if(currentStation?.id != choosedStation?.id){
+                          _fnbPagingController.refresh();
+                        }
+                      }, icon: FaIcon(FontAwesomeIcons.filter, color: CustomColorStyle.bluePrimary())): SizedBox.shrink()
                     ],
                   ),
                 ),
-                SizedBox(height: 6,)
-              ],
-            ): SizedBox.shrink(),
-            Flexible(
-              child: PagedListView<int, FnBModel>(
-                shrinkWrap: true,
-                pagingController: _fnbPagingController,
-                builderDelegate: PagedChildBuilderDelegate(
-                  itemBuilder: (ctxPaging, item, index) {
-                    final fnb = item;
-                    final indexAdded = listOrder.indexWhere(((element) => element.invCode == item.invCode));
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white
+              const SizedBox(height: 6),
+              choosedStation != null ?
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        choosedStation = null;
+                        _fnbPagingController.refresh();
+                      });
+                    },
+                    style: CustomButtonStyle.bluePrimary(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.close, size: 19, color: Colors.white, fill: 1,),
+                        SizedBox(width: 6,),
+                        AutoSizeText(choosedStation?.name ?? '', style: CustomTextStyle.whiteSizeMedium(16),),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 6,)
+                ],
+              ): SizedBox.shrink(),
+              Flexible(
+                child: PagedListView<int, FnBModel>(
+                  shrinkWrap: true,
+                  pagingController: _fnbPagingController,
+                  builderDelegate: PagedChildBuilderDelegate(
+                    itemBuilder: (ctxPaging, item, index) {
+                      final fnb = item;
+                      final indexAdded = listOrder.indexWhere(((element) => element.invCode == item.invCode));
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AutoSizeText(fnb.name.toString(), style: CustomTextStyle.blackMedium(), minFontSize: 11, maxLines: 1,),
+                              const SizedBox(height: 8,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(Formatter.formatRupiah(fnb.price??0), style: CustomTextStyle.blackStandard(),),
+                                  fnb.soldOut == true ?
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    child:  Image.asset('assets/icon/sold_out.png', width: 64,),
+                                  ):
+                                  indexAdded != -1 ?
+                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: ()async{
+                                          if(listOrder[indexAdded].qty>1){
+                                            listOrder[indexAdded].qty = listOrder[indexAdded].qty - 1;
+                                          }else{
+                                              final state = await ConfirmationDialog.confirmation(ctxPaging, 'Hapus ${listOrder[indexAdded].name}?');
+                                              if(state == true){
+                                                listOrder.removeAt(indexAdded);
+                                              }
+                                          }
+                                          setState((){
+                                            listOrder;
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          height: 32,
+                                          width: 32,
+                                          child: Image.asset(
+                                            'assets/icon/minus.png'),
+                                        )
+                                      ),
+                                      const SizedBox(width: 9,),
+                                      AutoSizeText(listOrder[indexAdded].qty.toString(), style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 11,),
+                                      const SizedBox(width: 9,),
+                                      InkWell(
+                                        onTap: (){
+                                          setState((){
+                                              listOrder[indexAdded].qty = listOrder[indexAdded].qty + 1;
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          height: 32,
+                                          width: 32,
+                                          child: Image.asset(
+                                            'assets/icon/plus.png'),
+                                        )
+                                      ),
+                                    ],
+                                  ):
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      setState(() {
+                                      listOrder.add(
+                                        SendOrderModel(
+                                          invCode: item.invCode??'',
+                                          qty: 1,
+                                          note: '',
+                                          price: item.price??0,
+                                          name: item.name ??'',
+                                          location: item.location??0
+                                        )
+                                      );
+                                      });
+                                    },
+                                    style: CustomButtonStyle.confirm(),
+                                    child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AutoSizeText(fnb.name.toString(), style: CustomTextStyle.blackMedium(), minFontSize: 11, maxLines: 1,),
-                            const SizedBox(height: 8,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(Formatter.formatRupiah(fnb.price??0), style: CustomTextStyle.blackStandard(),),
-                                fnb.soldOut == true ?
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  child:  Image.asset('assets/icon/sold_out.png', width: 64,),
-                                ):
-                                indexAdded != -1 ?
-                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: ()async{
-                                        if(listOrder[indexAdded].qty>1){
-                                          listOrder[indexAdded].qty = listOrder[indexAdded].qty - 1;
-                                        }else{
-                                            final state = await ConfirmationDialog.confirmation(ctxPaging, 'Hapus ${listOrder[indexAdded].name}?');
-                                            if(state == true){
-                                              listOrder.removeAt(indexAdded);
-                                            }
-                                        }
-                                        setState((){
-                                          listOrder;
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        height: 32,
-                                        width: 32,
-                                        child: Image.asset(
-                                          'assets/icon/minus.png'),
-                                      )
-                                    ),
-                                    const SizedBox(width: 9,),
-                                    AutoSizeText(listOrder[indexAdded].qty.toString(), style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 11,),
-                                    const SizedBox(width: 9,),
-                                    InkWell(
-                                      onTap: (){
-                                        setState((){
-                                            listOrder[indexAdded].qty = listOrder[indexAdded].qty + 1;
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        height: 32,
-                                        width: 32,
-                                        child: Image.asset(
-                                          'assets/icon/plus.png'),
-                                      )
-                                    ),
-                                  ],
-                                ):
-                                ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                    listOrder.add(
-                                      SendOrderModel(
-                                        invCode: item.invCode??'',
-                                        qty: 1,
-                                        note: '',
-                                        price: item.price??0,
-                                        name: item.name ??'',
-                                        location: item.location??0
-                                      )
-                                    );
-                                    });
-                                  },
-                                  style: CustomButtonStyle.confirm(),
-                                  child: Text('TAMBAHKAN', style: CustomTextStyle.whiteStandard(),),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: 

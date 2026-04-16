@@ -484,27 +484,6 @@ class EscPosGenerator {
         maxRightChars: 11,
       );
     bytes += helper.divider();
-    final mergedType = groupBy<OrderRestoModel, String>(
-      data.order,
-      (fnbNya) => fnbNya.typeFnb
-    );
-
-    for(final category in mergedType.entries){
-      int totalCategoryPrice = 0;
-      for(final fnb in category.value){
-        totalCategoryPrice += ((fnb.price*fnb.qty) - (fnb.promo??0) ).round();
-      }
-      bytes += helper.tableWithMaxChars(
-        '    ',
-        'Subtotal ${category.key}',
-        Formatter.formatRupiah(totalCategoryPrice), 
-        leftAlign: PosAlign.center, 
-        centerAlign: PosAlign.left, 
-        maxLeftChars: 5, 
-        maxCenterChars: helper.maxCharsPerLine-16, 
-        maxRightChars: 11,
-      );
-    }
     bytes += helper.feed(1);
     bytes += helper.tableWithMaxChars(
         '     ',

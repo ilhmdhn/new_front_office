@@ -10,6 +10,7 @@ import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -80,6 +81,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

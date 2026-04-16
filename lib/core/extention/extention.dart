@@ -1,0 +1,1 @@
+export 'package:front_office_2/core/extention/extention.dart';
