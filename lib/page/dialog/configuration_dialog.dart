@@ -6,6 +6,7 @@ import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 
 class ConfigurationDialog {
   void setUrl(BuildContext ctx, WidgetRef ref) async {

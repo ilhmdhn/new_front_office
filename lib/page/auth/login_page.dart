@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:front_office_2/data/request/api_request.dart';
+import 'package:front_office_2/page/auth/login_potrait.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
+import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:front_office_2/core/extention/extention.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -81,11 +83,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: !context.isLandscape?
+          LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
@@ -93,31 +95,112 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               CustomColorStyle.background(),
               CustomColorStyle.appBarBackground().withAlpha(13),
             ],
-          ),
+          ): null,
+          color: context.isLandscape? CustomColorStyle.background():null
         ),
-        child: SafeArea(
-          child: isLoading == true
-              ? Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha(26),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+        child: isLoading == true
+            ? Center(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(26),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: CircularProgressIndicator(
+                    color: CustomColorStyle.appBarBackground(),
+                    strokeWidth: 3,
+                  ),
+                ),
+              )
+            : 
+            SafeArea(
+              child:       context.isLandscape?
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Text('Happy Puppy Group', style: CustomTextStyle.blackMedium()),
+                          Text('Poin Of Sale', style: CustomTextStyle.blackSemi(),),
+                          SizedBox(
+                            width: context.isLandscape,
+                            child: Wrap(
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: 1/1,
+                                  child: Image.asset('assets/hp_group/blackhole.png')),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      _configurationButton()
+                    ],
+                  )),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        LoginForm(
+                          tfUser: tfUser,
+                          tfPassword: tfPassword,
+                          showPassword: showPassword,
+                    
+                          onTogglePassword: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                    
+                          onLogin: () {
+                            if (isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)) {
+                              showToastWarning('Lengkapi User dan Password');
+                              return;
+                            }
+                    
+                            doLogin(tfUser.text, tfPassword.text);
+                          },
+                    
+                          onFingerprint: () async {
+                            final biometricState = ref.read(biometricLoginProvider);
+                    
+                            if (biometricState != true) {
+                              showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                              return;
+                            }
+                    
+                            final biometricRequest =
+                                await FingerpintAuth().requestFingerprintAuth();
+                    
+                            if (biometricRequest != true) return;
+                    
+                            final user = ref.read(userProvider);
+                            doLogin(user.userId, user.pass);
+                          },
                         ),
                       ],
                     ),
-                    child: CircularProgressIndicator(
-                      color: CustomColorStyle.appBarBackground(),
-                      strokeWidth: 3,
-                    ),
-                  ),
-                )
-              : Column(
+                  ))
+              ],
+            ):
+            
+            SizedBox(
+              width: double.infinity,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [            
                   Text(
@@ -156,330 +239,97 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                   // Login Form
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha(20),
-                          blurRadius: 30,
-                          offset: const Offset(0, 15),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Username Field
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Username',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(13),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: TextField(
-                                controller: tfUser,
-                                autofillHints: const [AutofillHints.username],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  prefixIcon: Icon(
-                                    Icons.person_outline,
-                                    color: CustomColorStyle.appBarBackground(),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                    horizontal: 20,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide(
-                                      color: CustomColorStyle.appBarBackground(),
-                                      width: 2,
-                                    ),
-                                  ),
-                                  hintText: 'Masukkan username',
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: Colors.grey[400],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-              
-                        const SizedBox(height: 24),
-              
-                        // Password Field
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Password',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(13),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: TextField(
-                                controller: tfPassword,
-                                autofillHints: const [AutofillHints.password],
-                                obscureText: !showPassword,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline,
-                                    color: CustomColorStyle.appBarBackground(),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        showPassword = !showPassword;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      showPassword
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                    horizontal: 20,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide(
-                                      color: CustomColorStyle.appBarBackground(),
-                                      width: 2,
-                                    ),
-                                  ),
-                                  hintText: 'Masukkan password',
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: Colors.grey[400],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-              
-                        const SizedBox(height: 32),
-              
-                        // Login Buttons
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      CustomColorStyle.appBarBackground(),
-                                      CustomColorStyle.appBarBackground().withAlpha(204),
-                                    ],
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: CustomColorStyle.appBarBackground().withAlpha(77),
-                                      blurRadius: 15,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (isNullOrEmpty(tfUser.text) ||
-                                          isNullOrEmpty(tfPassword.text)) {
-                                        showToastWarning('Lengkapi User dan Password');
-                                        return;
-                                      }
-                                      doLogin(tfUser.text, tfPassword.text);
-                                    },
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      child: Center(
-                                        child: Text(
-                                          'Login',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                            letterSpacing: 0.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-              
-                            const SizedBox(width: 16),
-              
-                            // Biometric Button
-                            Container(
-                              width: 56,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: CustomColorStyle.appBarBackground().withAlpha(51),
-                                  width: 1.5,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(13),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () async {
-                                    // Baca biometric state dari Riverpod
-                                    final biometricState = ref.read(biometricLoginProvider);
-                                    if (biometricState != true) {
-                                      showToastWarning(
-                                          'Autentikasi Biometric Belum Diaktifkan');
-                                      return;
-                                    }
-
-                                    final biometricRequest =
-                                        await FingerpintAuth().requestFingerprintAuth();
-                                    if (biometricRequest != true) {
-                                      return;
-                                    }
-
-                                    // Baca user dari Riverpod
-                                    final user = ref.read(userProvider);
-                                    doLogin(user.userId, user.pass);
-                                  },
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Center(
-                                    child: Image.asset(
-                                      'assets/icon/fingerprint.png',
-                                      width: 28,
-                                      height: 28,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  LoginForm(
+                    tfUser: tfUser,
+                    tfPassword: tfPassword,
+                    showPassword: showPassword,
+        
+                    onTogglePassword: () {
+                      setState(() {
+                        showPassword = !showPassword;
+                      });
+                    },
+        
+                    onLogin: () {
+                      if (isNullOrEmpty(tfUser.text) ||
+                          isNullOrEmpty(tfPassword.text)) {
+                        showToastWarning('Lengkapi User dan Password');
+                        return;
+                      }
+        
+                      doLogin(tfUser.text, tfPassword.text);
+                    },
+        
+                    onFingerprint: () async {
+                      final biometricState = ref.read(biometricLoginProvider);
+        
+                      if (biometricState != true) {
+                        showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                        return;
+                      }
+        
+                      final biometricRequest =
+                          await FingerpintAuth().requestFingerprintAuth();
+        
+                      if (biometricRequest != true) return;
+        
+                      final user = ref.read(userProvider);
+                      doLogin(user.userId, user.pass);
+                    },
                   ),
-              
                   const SizedBox(height: 20),
               
-                  // Configuration Link
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          ConfigurationDialog().setUrl(context, ref);
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(204),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: CustomColorStyle.appBarBackground().withAlpha(51),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.settings_outlined,
-                                size: 18,
-                                color: CustomColorStyle.appBarBackground(),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Konfigurasi',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: CustomColorStyle.appBarBackground(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),              
                 ],
               ),
+            ),
+      
+            )
+      ),
+    );
+  }
+
+  Widget _configurationButton(){
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            ConfigurationDialog().setUrl(context, ref);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 12,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(204),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: CustomColorStyle.appBarBackground().withAlpha(51),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.settings_outlined,
+                  size: 18,
+                  color: CustomColorStyle.appBarBackground(),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Konfigurasi',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: CustomColorStyle.appBarBackground(),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -97,7 +97,7 @@ static Future<List<FnBModel>> showSoldOutSelector(BuildContext context) async {
                 ),
               ),
               content: Container(
-                width: double.maxFinite,
+                width: double.infinity,
                 constraints: const BoxConstraints(
                   maxHeight: 400,
                   minHeight: 200,

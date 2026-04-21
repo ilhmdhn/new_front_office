@@ -28,7 +28,7 @@ class PaymentListDialog{
               ),
             ),
             content: SizedBox(
-              width: double.maxFinite, // Penting agar GridView tahu lebar maksimal
+              width: double.infinity, // Penting agar GridView tahu lebar maksimal
               child: GridView.builder(
                 shrinkWrap: true, // Penting: Menyesuaikan tinggi GridView dengan jumlah item
                 physics: const NeverScrollableScrollPhysics(), // Scroll diatur oleh dialog
