@@ -8,4 +8,8 @@ extension ScreenExt on BuildContext {
 
   bool get isTablet => width > 600;
   bool get isDesktop => width > 900;
+
+  // persen versi enak 😄
+  double wp(num percent) => width * (percent / 100);
+  double hp(num percent) => height * (percent / 100);
 }

@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/base_response.dart';
 import 'package:front_office_2/data/model/checkin_body.dart';
@@ -10,6 +11,7 @@ import 'package:front_office_2/page/checkin/edit_checkin_page.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/member_qr_scanner_dialog.dart';
 import 'package:front_office_2/page/dialog/room_type_selection_dialog.dart';
+import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/riverpod/room/room_provider.dart';
 import 'package:front_office_2/tools/toast.dart';
@@ -522,15 +524,37 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: _buildForm(),
+        child: context.isDesktop && context.isLandscape
+      ? Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(width: 30,),
+                  Expanded(
+                    child: _buildLeftFormDesktop(),
+                  ),
+                  SizedBox(width: 30,),
+                  Expanded(
+                    child: _buildRightFormDesktop(),
+                  ),
+                  SizedBox(width: 30,),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
+        )
+      : Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: _buildForm(),
+            ),
+          ],
         ),
+),
       ),
     );
   }
@@ -618,6 +642,74 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
               _buildSubmitButton(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeftFormDesktop(){
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+      decoration: BoxDecoration(
+        color: CustomColorStyle.background(),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        children: [
+          _buildRoomTypeDropdown(),
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final selectedRoomType = ref.watch(selectedRoomTypeProvider);
+                  if (selectedRoomType != null) {
+                    return Column(
+                      children: [
+                        _buildRoomSelector(),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightFormDesktop(){
+    final pos = GlobalProviders.read(posTypeProvider);
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+      decoration: BoxDecoration(
+        color: CustomColorStyle.background(),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _buildMemberToggle(),
+            const SizedBox(height: 24),
+            if (_isMember) _buildQRSection() else _buildNameField(),
+            const SizedBox(height: 20),
+            pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased ?
+            _buildDurationSection(): SizedBox.shrink(),
+            const SizedBox(height: 20),
+            _buildPaxField(),
+            const SizedBox(height: 32),
+            _buildSubmitButton(),
+          ],
         ),
       ),
     );
@@ -1047,24 +1139,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
   Widget _buildRoomSelector() {
     final roomState = ref.watch(roomReadyProvider);
     final selectedRoom = ref.watch(selectedRoomProvider);
-/*  
-    final selectedRoomType = ref.watch(selectedRoomTypeProvider);
-
-    // Debug: print room data
-    if (roomState.data.isNotEmpty) {
-      
-      for (var room in roomState.data) {
-        
-      }
-    }
-*/
-    // Tidak perlu filter lagi karena API sudah return room sesuai room type yang dipilih
-    // Room type "Lobby", "Table", "Bar" dll → semua punya isRoomCheckin = false
-    // Room type "Regular", "VIP", "Meeting Room" dll → semua punya isRoomCheckin = true
     final filteredRooms = roomState.data;
-
-    
-
+    final pos = GlobalProviders.read(posTypeProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -1149,8 +1225,12 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // ✅ 3 kolom
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 
+              context.isDesktop && context.isLandscape?5:
+              context.isLandscape?4:
+              3
+              ,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
               childAspectRatio: 1.7, // Adjusted untuk 3 kolom
@@ -1163,15 +1243,9 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
               return GestureDetector(
                 onTap: () {
                   ref.read(selectedRoomProvider.notifier).selectRoom(roomDisplay);
-
-                  // Set noDuration berdasarkan isRoomCheckin
-                  // isRoomCheckin = false → Lobby (no duration)
-                  // isRoomCheckin = true → Regular room (butuh duration)
                   setState(() {
                     _noDuration = room.isRoomCheckin == false;
                   });
-
-                  
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -1223,6 +1297,8 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                       ),
                       if (room.roomCapacity != null) ...[
                         const SizedBox(height: 1),
+                        pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased?
+                        SizedBox.shrink():
                         Flexible(
                           child: AutoSizeText(
                             'Capacity: ${room.roomCapacity}',

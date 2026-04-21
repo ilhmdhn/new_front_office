@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/checkin_params.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -41,7 +42,7 @@ class ButtonMenuWidget{
 
     return Column(
       children: [
-        buildGridMenu('Operasional', 2, menuItems),
+        buildGridMenu('Operasional', menuItems),
       ],
     );
   }
@@ -54,7 +55,6 @@ class ButtonMenuWidget{
       children: [
         buildGridMenu(
           'Operasional',
-          2, 
           [  
             checkinPage(),                
             editCheckin(),
@@ -72,7 +72,6 @@ class ButtonMenuWidget{
         SizedBox(height: 12,),
         buildGridMenu(
           'Verification',
-          2,
           [
             approval(approvalCount)
           ]
@@ -88,7 +87,6 @@ class ButtonMenuWidget{
       children: [
         buildGridMenu(
           'Operasional',
-          2, 
           [
             if(isRestoOnly) checkinPage(),
             order(),
@@ -108,7 +106,6 @@ class ButtonMenuWidget{
       children: [
         buildGridMenu(
           'Operasional',
-          2, 
           [  
             checkinPage(),                
             editCheckin(),
@@ -126,7 +123,6 @@ class ButtonMenuWidget{
         SizedBox(height: 12,),
         buildGridMenu(
           'Verification',
-          2,
           [
             approval(approvalCount)
           ]
@@ -476,10 +472,14 @@ class ButtonMenuWidget{
     );
   }
 
-  Widget buildGridMenu(String title, int columnCount, List<Widget> menuItems) {
+  Widget buildGridMenu(String title, List<Widget> menuItems, {int columnCount = 2}) {
     List<Widget> rows = [];
     List<Widget> currentRow = [];
-
+    if(context.isLandscape && context.isDesktop){
+      columnCount = 5;
+    }else if(context.isLandscape){
+      columnCount = 3;
+    }
     for (int i = 0; i < menuItems.length; i++) {
       Widget item;
 

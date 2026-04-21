@@ -49,6 +49,25 @@ class FnBModel{
   }
 }
 
+// class SendOrderModel{
+//   String invCode;
+//   int qty;
+//   String note;
+//   num price;
+//   String name;
+//   int location;
+//   bool dineIn = true;
+
+//   SendOrderModel({
+//     this.invCode = '',
+//     this.qty = 1,
+//     this.note = '',
+//     this.price = 0,
+//     this.name = '',
+//     this.location = 1,
+//   });
+// }
+
 class SendOrderModel{
   String invCode;
   int qty;
@@ -66,4 +85,22 @@ class SendOrderModel{
     this.name = '',
     this.location = 1,
   });
+
+  SendOrderModel copyWith({
+    int? qty,
+    String? note,
+    num? price,
+    String? name,
+    int? location,
+    bool? dineIn,
+  }) {
+    return SendOrderModel(
+      invCode: invCode,
+      qty: qty ?? this.qty,
+      note: note ?? this.note,
+      price: price ?? this.price,
+      name: name ?? this.name,
+      location: location ?? this.location,
+    )..dineIn = dineIn ?? this.dineIn;
+  }
 }

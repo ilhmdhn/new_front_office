@@ -131,68 +131,81 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     children: [
                       Column(
                         children: [
-                          Text('Happy Puppy Group', style: CustomTextStyle.blackMedium()),
-                          Text('Poin Of Sale', style: CustomTextStyle.blackSemi(),),
-                          SizedBox(
-                            width: context.isLandscape,
-                            child: Wrap(
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: 1/1,
-                                  child: Image.asset('assets/hp_group/blackhole.png')),
-                              ],
-                            ),
-                          )
+                          Text('Happy Puppy Group', style: CustomTextStyle.blackMedium().copyWith(fontSize: 48)),
+                          Text('Poin Of Sale', style: CustomTextStyle.blackSemi().copyWith(fontSize: 36),),
                         ],
                       ),
-                      _configurationButton()
+                      Column(
+                        children: [
+                          Wrap(
+                            direction: Axis.horizontal,
+                            alignment: WrapAlignment.center,
+                            runSpacing: 12,
+                            spacing: 12,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              _image('assets/hp_group/happy_puppy.png'),
+                              _image('assets/hp_group/happup.png'),
+                              _image('assets/hp_group/qqktv.png'),
+                              _image('assets/hp_group/sukasuka.png'),
+                              _image('assets/hp_group/blackhole.png'),
+                              _image('assets/hp_group/tutto.png'),
+                              _image('assets/hp_group/regentstraat.png'),
+                            ],
+                          ),
+                          _configurationButton(),
+                        ],
+                      )
                     ],
                   )),
                 Expanded(
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        LoginForm(
-                          tfUser: tfUser,
-                          tfPassword: tfPassword,
-                          showPassword: showPassword,
-                    
-                          onTogglePassword: () {
-                            setState(() {
-                              showPassword = !showPassword;
-                            });
-                          },
-                    
-                          onLogin: () {
-                            if (isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)) {
-                              showToastWarning('Lengkapi User dan Password');
-                              return;
-                            }
-                    
-                            doLogin(tfUser.text, tfPassword.text);
-                          },
-                    
-                          onFingerprint: () async {
-                            final biometricState = ref.read(biometricLoginProvider);
-                    
-                            if (biometricState != true) {
-                              showToastWarning('Autentikasi Biometric Belum Diaktifkan');
-                              return;
-                            }
-                    
-                            final biometricRequest =
-                                await FingerpintAuth().requestFingerprintAuth();
-                    
-                            if (biometricRequest != true) return;
-                    
-                            final user = ref.read(userProvider);
-                            doLogin(user.userId, user.pass);
-                          },
-                        ),
-                      ],
+                    child: SizedBox(
+                      width: context.isDesktop? context.wp(30): null,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          LoginForm(
+                            tfUser: tfUser,
+                            tfPassword: tfPassword,
+                            showPassword: showPassword,
+                      
+                            onTogglePassword: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                      
+                            onLogin: () {
+                              if (isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)) {
+                                showToastWarning('Lengkapi User dan Password');
+                                return;
+                              }
+                      
+                              doLogin(tfUser.text, tfPassword.text);
+                            },
+                      
+                            onFingerprint: () async {
+                              final biometricState = ref.read(biometricLoginProvider);
+                      
+                              if (biometricState != true) {
+                                showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                                return;
+                              }
+                      
+                              final biometricRequest =
+                                  await FingerpintAuth().requestFingerprintAuth();
+                      
+                              if (biometricRequest != true) return;
+                      
+                              final user = ref.read(userProvider);
+                              doLogin(user.userId, user.pass);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ))
               ],
@@ -278,7 +291,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-              
+                  _configurationButton()
                 ],
               ),
             ),
@@ -341,4 +354,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     tfPassword.dispose();
     super.dispose();
   }
+}
+
+Widget _image(String path) {
+  return SizedBox(
+    width: 125,
+    child: Image.asset(path, fit: BoxFit.cover),
+  );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -112,9 +113,8 @@ class _FnbMainPageState extends State<FnbMainPage> {
                       );
                     },
                     child: Container(
-                      height: ScreenSize.getHeightPercent(context, 10),
+                      width: context.wp(100/namePage.length),
                       decoration: activePageIndex == index? CustomContainerStyle.barActive(): CustomContainerStyle.barInactive(),
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                       child: Center(child: Text(namePage[index], style: activePageIndex == index? CustomTextStyle.whiteSize(16):CustomTextStyle.blackMedium(),)),
                     ),
                   );

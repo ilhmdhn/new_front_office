@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/room_checkin_response.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
@@ -151,19 +152,20 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
             const SizedBox(height: 11,),
             Flexible(
               child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints){
-                  int crossAxisCount = 3;   
-                  if (constraints.maxWidth < 580) {
-                    crossAxisCount = 2;
-                  }
-                        
+                builder: (BuildContext context, BoxConstraints constraints){                        
                   return GridView.builder(
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
+                      crossAxisCount:                       
+                        context.isLandscape&&context.isDesktop? 5:
+                        context.isLandscape? 3
+                        :2,
                       crossAxisSpacing: 8, // Spasi antar kolom
                       mainAxisSpacing: 8, // Spasi antar baris
-                      childAspectRatio: 6/3
+                      childAspectRatio: 
+                      context.isLandscape&&context.isDesktop? 6/3:
+                      context.isLandscape? 6/2:
+                      6/3
                     ),
                     itemCount: listRoomCheckin.length,
                     itemBuilder: (context, index){

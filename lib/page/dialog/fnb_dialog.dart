@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
-import 'package:front_office_2/data/model/fnb_model.dart';
 import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
@@ -103,267 +104,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
   );
 }
 
-/*
-  static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode, String custName)async{
-    Completer<bool?> completer = Completer<bool?>();
-    bool isLoading = false;
-    bool alreadyClosed = false;
-    showDialog(
-      context: ctx,
-      barrierDismissible: false,
-      builder: (BuildContext ctxDialog){
-        return PopScope(
-          canPop: false,
-          child: StatefulBuilder(
-            builder: (ctxWidget, StateSetter setState){
-              if(orderlist.isEmpty && !alreadyClosed){
-                alreadyClosed = true;
-                Future.microtask(() {
-                  if (ctxDialog.mounted && Navigator.canPop(ctxDialog)) {
-                    Navigator.pop(ctxDialog, true);
-                  }
-                });
-              }
-              return Dialog(
-                backgroundColor: Colors.white,
-                child: Container(
-                  width: ScreenSize.getSizePercent(ctxDialog, 85),
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: CustomColorStyle.background(),
-                  ),
-                  child: 
-                    isLoading == true?
-                    SizedBox(
-                      height: ScreenSize.getHeightPercent(ctxDialog, 50),
-                      child: Center(child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground(),),)):
-                    Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AutoSizeText('Konfirmasi Pesanan', style: CustomTextStyle.blackMediumSize(18), maxLines: 2, minFontSize: 12, textAlign: TextAlign.center,),
-                          const SizedBox(height: 12,),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: ListView.builder(
-                              itemCount: orderlist.length,
-                              shrinkWrap: true,
-                              itemBuilder: (ctxList, index){
-                                final order = orderlist[index];
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      decoration: CustomContainerStyle.whiteList(),
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(child: AutoSizeText(order.name, maxLines: 2, minFontSize: 9,)),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  InkWell(
-                                                    onTap: ()async{
-                                                      if(order.qty>1){
-                                                        order.qty = order.qty - 1;
-                                                      }else{
-                                                        final state = await ConfirmationDialog.confirmation(ctxList, 'Hapus ${order.name}?');
-                                                          if(state == true){
-                                                            orderlist.removeAt(index);
-                                                          }
-                                                      }
-                                                      setState((){
-                                                        orderlist;
-                                                        }
-                                                      );
-                                                    },
-                                                    child: SizedBox(
-                                                      height: 32,
-                                                      width: 32,
-                                                      child: Image.asset(
-                                                        'assets/icon/minus.png'),
-                                                    )
-                                                  ),
-                                                  const SizedBox(width: 9,),
-                                                  AutoSizeText(order.qty.toString(), style: CustomTextStyle.blackMediumSize(21), maxLines: 1, minFontSize: 11,),
-                                                  const SizedBox(width: 9,),
-                                                  InkWell(
-                                                    onTap: (){
-                                                      setState((){
-                                                        order.qty = order.qty + 1;
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: 32,
-                                                      width: 32,
-                                                      child: Image.asset(
-                                                        'assets/icon/plus.png'),
-                                                    )
-                                                  ),
-                                                ]
-                                              )
-                                            ],
-                                          ),
-                                          const SizedBox(height: 6,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: ()async{
-                                                  final noteResult = await note(ctxDialog, order.name, order.note);
-                                                  if(noteResult != null){
-                                                    setState((){
-                                                      orderlist[index].note = noteResult;
-                                                    });
-                                                  }
-                                                },
-                                                child: const Icon(Icons.notes),
-                                              ),
-                                              const SizedBox(width: 2,),
-                                              AutoSizeText(order.note, style: CustomTextStyle.blackStandard(), maxLines: 3,)
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6,)
-                                  ],
-                                );
-                            }),
-                          ),
-                          const SizedBox(height: 6,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: ElevatedButton(
-                                  onPressed: (){
-                                    if (ctxDialog.mounted && Navigator.canPop(ctxDialog)) {
-                                      Navigator.pop(ctxDialog, false);
-                                    }
-                                  },
-                                  style: CustomButtonStyle.cancelSoft(),
-                                  child: AutoSizeText('CANCEL', style: CustomTextStyle.whiteSizeMedium(16), maxLines: 1, textAlign: TextAlign.center,),
-                                ),
-                              ),
-                              const SizedBox(width: 9,),
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: ElevatedButton(
-                                  onPressed: ()async{
-                                    setState((){
-                                      isLoading = true;
-                                    });
-                                    final checkinDetail = await ApiRequest().getDetailRoomCheckin(roomCode);
-
-                                    if(checkinDetail.state != true){
-                                      setState((){
-                                        isLoading = false;
-                                      });
-                                      showToastError(checkinDetail.message);
-                                      if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                        Navigator.pop(ctxDialog, false);
-                                      }else{
-                                        showToastWarning('Gagal karena berpindah halaman');
-                                        return;
-                                      }
-                                    }
-
-                                    final rcp = checkinDetail.data?.reception??'';
-                                    final roomType = checkinDetail.data?.roomType??'';
-                                    final checkinMinute = checkinDetail.data?.checkinMinute??0;
-                                    bool finalState = false;
-                                    
-                                    final PostSoResponse orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
-                                    
-                                    if(!orderState.state){
-                                      showToastError('SO error ${orderState.message}');
-                                    }
-                                    
-                                    finalState = orderState.state;
-                                    final pos = GlobalProviders.read(posTypeProvider);
-                                    if (pos == PosType.restoOnlyOld || pos == PosType.restoOnlyWebBased) {
-                                      if(isNotNullOrEmpty(orderState.data)){
-                                        final lastSoState = await ApiRequest().latestSo(rcp);
-                                        
-                                        if (lastSoState.state == true) {
-                                          final soCode = lastSoState.data;
-                                          final filteredData = (orderState.data ?? []).where((dataSo) => dataSo.sol == soCode).toList();
-                                          final doState = await ApiRequest().confirmDo(roomCode, filteredData);
-                                          finalState = doState.state ?? false;
-
-                                          if (doState.state != true) {
-                                            showToastError('DO error ${doState.message}');
-                                          }else{
-                                            setState((){
-                                              isLoading = false;
-                                            });
-                                            
-                                            if(finalState != true){
-                                              if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                                Navigator.pop(ctxDialog, false);
-                                              }else{
-                                                showToastWarning('Gagal berpindah halaman');
-                                              }
-                                            }else{
-                                              if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                                Navigator.pop(ctxDialog, true);
-                                              }else{
-                                                showToastWarning('Gagal berpindah halaman');
-                                              }
-                                            }
-                                            Future.microtask(() {
-                                              PrintExecutor.printDoResto(orderState, roomCode, custName);
-                                            });
-                                          }
-                                        }
-                                      }
-                                    }else{
-                                      setState((){
-                                        isLoading = false;
-                                      });
-                                      
-                                      if(finalState != true){
-                                        if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                          Navigator.pop(ctxDialog, false);
-                                        }else{
-                                          showToastWarning('Gagal berpindah halaman');
-                                        }
-                                      }else{
-                                        if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                          Navigator.pop(ctxDialog, true);
-                                        }else{
-                                          showToastWarning('Gagal berpindah halaman');
-                                        }
-                                      }
-                                      Future.microtask(() {
-                                        PrintExecutor.printLastSo(rcp, roomCode, checkinDetail.data?.memberName??'Guest', checkinDetail.data?.pax??1);
-                                      });
-                                    }
-                                  },
-                                  style: CustomButtonStyle.confirm(),
-                                  child: AutoSizeText('SEND SO', style: CustomTextStyle.whiteSizeMedium(16), maxLines: 1, textAlign: TextAlign.center),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6,)
-                        ],
-                      )
-                ),
-              );
-            },
-          ));
-      }).then((value) => completer.complete(value));
-      return completer.future;
-  }
-*/
-
-  static Future<bool?> order(BuildContext ctx, List<SendOrderModel> orderlist, String roomCode, String custName,) async {
+  static Future<bool?> order(BuildContext ctx, String roomCode, String custName,) async {
     bool isLoading = false;
     return showDialog<bool>(
       context: ctx,
@@ -371,8 +112,9 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
       builder: (BuildContext ctxDialog) {
       return PopScope(
         canPop: false,
-        child: StatefulBuilder(
-          builder: (context, setState) {
+        child: Consumer(
+          builder: (context, ref, _) {
+            final orderProv = ref.watch(inputOrderProvider)??[];
             return Dialog(
               backgroundColor: Colors.white,
               child: Container(
@@ -405,10 +147,10 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                           Flexible(
                             fit: FlexFit.loose,
                             child: ListView.builder(
-                              itemCount: orderlist.length,
+                              itemCount: orderProv.length,
                               shrinkWrap: true,
                               itemBuilder: (ctxList, index) {
-                                final order = orderlist[index];
+                                final order = orderProv[index];
                                 return Column(
                                   children: [
                                     Container(
@@ -431,14 +173,13 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                                   InkWell(
                                                     onTap: () async {
                                                       if (order.qty > 1) {
-                                                        order.qty--;
+                                                        GlobalProviders.read(inputOrderProvider.notifier).updateQty(order.invCode, order.qty - 1);
                                                       } else {
                                                         final state = await ConfirmationDialog.confirmation(ctxList, 'Hapus ${order.name}?');
                                                         if (state == true) {
-                                                          orderlist.removeAt(index);
+                                                          GlobalProviders.read(inputOrderProvider.notifier).deleteAt(order.invCode);
                                                         }
                                                       }
-                                                      setState(() {});
                                                     },
                                                     child: SizedBox(
                                                       height: 32,
@@ -454,9 +195,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                                   const SizedBox(width: 9),
                                                   InkWell(
                                                     onTap: () {
-                                                      setState(() {
-                                                        order.qty++;
-                                                      });
+                                                      GlobalProviders.read(inputOrderProvider.notifier).updateQty(order.invCode, order.qty + 1);
                                                     },
                                                     child: SizedBox(
                                                       height: 32,
@@ -476,9 +215,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                                 onTap: () async {
                                                   final noteResult = await note(ctxDialog, order.name, order.note);
                                                   if (noteResult != null) {
-                                                    setState(() {
-                                                      order.note = noteResult;
-                                                    });
+                                                    GlobalProviders.read(inputOrderProvider.notifier).addNote(order.invCode, noteResult);
                                                   }
                                                 },
                                                 child: const Icon(Icons.notes),
@@ -527,10 +264,8 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                     style: CustomTextStyle.whiteSizeMedium(16),
                                   ),
                                   onPressed: () async {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    bool finalState = false;
+                                    isLoading = true;
+                                    
                                     try {
                                       final checkinDetail = await ApiRequest().getDetailRoomCheckin(roomCode);
                                       if (checkinDetail.state != true) {
@@ -543,14 +278,14 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                       final rcp = checkinDetail.data?.reception ?? '';
                                       final roomType = checkinDetail.data?.roomType ?? '';
                                       final checkinMinute = checkinDetail.data?.checkinMinute ?? 0;
-                                      final PostSoResponse orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderlist);
-                                      finalState = orderState.state;
+                                      final PostSoResponse orderState = await ApiRequest().sendOrder(roomCode, rcp, roomType, checkinMinute, orderProv);
                                       
                                       if (!orderState.state) {
                                         showToastError(orderState.message??'SO error');
                                       }
                                       if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
-                                        Navigator.pop(ctxDialog, finalState);
+                                        GlobalProviders.read(inputOrderProvider)?.clear();
+                                        Navigator.pop(ctxDialog);
                                       }
                                       Future.microtask(() async {
                                         final pos = GlobalProviders.read(posTypeProvider);
@@ -572,6 +307,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                           await PrintExecutor.printLastSo(rcp, roomCode, checkinDetail.data?.memberName ?? 'Guest', checkinDetail.data?.pax ?? 1);
                                         }
                                       });
+                                      isLoading = false;
                                     } catch (e) {
                                       showToastError('Error: $e');
                                       if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
@@ -594,7 +330,7 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
       );
     },
   );
-}
+  }
 
   static Future<StationModel?> getStationModel(BuildContext ctx, StationModel? choosed) async {
     // Tambahkan 'await' dan simpan hasilnya di dalam variabel
@@ -645,11 +381,17 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                             itemCount: stationList.length,
                             shrinkWrap: true,
                             physics: const BouncingScrollPhysics(), // Animasi scroll yang lebih halus
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,      // Jumlah kolom
-                              crossAxisSpacing: 10,   // Jarak horizontal antar kotak
-                              mainAxisSpacing: 10,    // Jarak vertikal antar kotak
-                              childAspectRatio: 2.8,  // Rasio ukuran kotak (Lebar vs Tinggi). Ubah angka ini jika kotak terlalu tinggi/ceper
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount:                       
+                                context.isLandscape&&context.isDesktop? 5:
+                                context.isLandscape? 3
+                                :2,
+                                crossAxisSpacing: 8, // Spasi antar kolom
+                                mainAxisSpacing: 8, // Spasi antar baris
+                                childAspectRatio: 
+                                context.isLandscape&&context.isDesktop? 6/3:
+                                context.isLandscape? 6/2:
+                                6/3 // Rasio ukuran kotak (Lebar vs Tinggi). Ubah angka ini jika kotak terlalu tinggi/ceper
                             ),
                             itemBuilder: (ctxList, index) {
                               final station = stationList[index];

@@ -1,4 +1,5 @@
 // Export semua providers untuk kemudahan import
+export 'package:front_office_2/riverpod/order/input_order_provider.dart';
 export 'app_settings_provider.dart';
 export 'device_info_provider.dart';
 export 'printer/printer_job_provider.dart';

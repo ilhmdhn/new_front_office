@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/model/status_room_checkin.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
@@ -7,7 +8,6 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/helper.dart';
-import 'package:front_office_2/tools/screen_size.dart';
 import 'package:lottie/lottie.dart';
 
 class StatePage extends StatefulWidget {
@@ -38,8 +38,6 @@ class _StatePageState extends State<StatePage> {
 
   @override
   Widget build(BuildContext context) {
-  final marginX = ScreenSize.getSizePercent(context, 2);
-  final width = ScreenSize.getSizePercent(context, 43);
 
     getData();
     return Scaffold(
@@ -55,21 +53,31 @@ class _StatePageState extends State<StatePage> {
         data == null? AddOnWidget.loading():
         data?.state == false? AddOnWidget.error(data?.message):
         isNullOrEmpty(data?.data)?AddOnWidget.empty():
-        ListView.builder(
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 
+              context.isLandscape && context.isDesktop? 3:
+              context.isLandscape? 2:
+              1,
+              childAspectRatio: 
+              context.isLandscape && context.isDesktop? 6/1:
+              context.isLandscape? 4/2:
+              6/2
+              ,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+          ),
           shrinkWrap: false,
           itemCount: data?.data?.length,
           itemBuilder: (context, index){
             final room = data!.data![index];
             return Container(
               decoration: CustomContainerStyle.whiteList(),
-              margin: EdgeInsets.symmetric(horizontal: marginX, vertical: 3),
-              padding: EdgeInsets.symmetric(horizontal: marginX),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: width*2,
-                    height: 105,
-                    child: Row(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Center(
+                child: Column(
+                  children: [
+                    Row(
                       children: [
                         Expanded(
                           child: Padding(
@@ -220,8 +228,8 @@ class _StatePageState extends State<StatePage> {
                         )
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

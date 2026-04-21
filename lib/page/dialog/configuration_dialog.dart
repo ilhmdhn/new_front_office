@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/network.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/helper.dart';
 import 'package:front_office_2/tools/toast.dart';
-import 'package:front_office_2/core/extention/extention.dart';
 
 class ConfigurationDialog {
   void setUrl(BuildContext ctx, WidgetRef ref) async {
@@ -146,7 +146,7 @@ class ConfigurationDialog {
                             crossAxisCount: 2,
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
-                            childAspectRatio: 2.8, // Sesuaikan jika kotak kerendahan/ketinggian
+                            childAspectRatio: context.isLandscape?10/2: 2.8, // Sesuaikan jika kotak kerendahan/ketinggian
                             padding: EdgeInsets.zero,
                             children: PosType.values.map((type) {
                               return _buildCustomRadio(
