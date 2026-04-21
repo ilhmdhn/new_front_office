@@ -509,52 +509,317 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopLandscape = context.isDesktop && context.isLandscape;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue.shade700,
-              Colors.blue.shade500,
-              Colors.white,
-            ],
-            stops: const [0.0, 0.3, 0.3],
+            colors: isDesktopLandscape
+              ? [
+                  Colors.blue.shade700,
+                  Colors.blue.shade600,
+                  CustomColorStyle.background(),
+                ]
+              : [
+                  Colors.blue.shade700,
+                  Colors.blue.shade500,
+                  Colors.white,
+                ],
+            stops: isDesktopLandscape
+              ? const [0.0, 0.12, 0.12]
+              : const [0.0, 0.3, 0.3],
           ),
         ),
         child: SafeArea(
-        child: context.isDesktop && context.isLandscape
-      ? Column(
-          children: [
-            _buildHeader(),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: isDesktopLandscape
+            ? _buildDesktopLandscapeLayout()
+            : Column(
                 children: [
-                  SizedBox(width: 30,),
-                  Expanded(
-                    child: _buildLeftFormDesktop(),
+                  _buildHeader(),
+                  Expanded(child: _buildForm()),
+                ],
+              ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopLandscapeLayout() {
+    return Column(
+      children: [
+        _buildCompactHeader(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Panel - Room Selection
+                Expanded(
+                  flex: 3,
+                  child: _buildLeftPanelDesktop(),
+                ),
+                const SizedBox(width: 20),
+                // Right Panel - Guest Info & Actions
+                Expanded(
+                  flex: 2,
+                  child: _buildRightPanelDesktop(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompactHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(30),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              tooltip: 'Back',
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Check-In',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  SizedBox(width: 30,),
-                  Expanded(
-                    child: _buildRightFormDesktop(),
+                ),
+                Text(
+                  'Welcome! Please fill in the details below',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white.withAlpha(180),
                   ),
-                  SizedBox(width: 30,),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(30),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.access_time, color: Colors.white.withAlpha(200), size: 16),
+                const SizedBox(width: 8),
+                StreamBuilder(
+                  stream: Stream.periodic(const Duration(seconds: 1)),
+                  builder: (context, snapshot) {
+                    final now = DateTime.now();
+                    return Text(
+                      '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLeftPanelDesktop() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Panel Header
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade700,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.meeting_room, color: Colors.white, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Select Room',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Room Type Dropdown
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: _buildRoomTypeDropdown(),
+          ),
+          // Room Grid
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final selectedRoomType = ref.watch(selectedRoomTypeProvider);
+                  if (selectedRoomType != null) {
+                    return _buildRoomSelector();
+                  }
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(40),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.touch_app_outlined,
+                            size: 64,
+                            color: Colors.grey.shade300,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Select a room type first',
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightPanelDesktop() {
+    final pos = GlobalProviders.read(posTypeProvider);
+    final showDuration = pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // Panel Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade700,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.person_add, color: Colors.white, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Guest Information',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade900,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        )
-      : Column(
-          children: [
-            _buildHeader(),
+            // Form Content
             Expanded(
-              child: _buildForm(),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildMemberToggle(),
+                    const SizedBox(height: 16),
+                    if (_isMember) _buildQRSection() else _buildNameField(),
+                    const SizedBox(height: 16),
+                    if (showDuration) ...[
+                      _buildDurationSection(),
+                      const SizedBox(height: 16),
+                    ],
+                    _buildPaxField(),
+                  ],
+                ),
+              ),
+            ),
+            // Submit Button
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: _buildSubmitButton(),
             ),
           ],
         ),
-),
       ),
     );
   }
@@ -642,74 +907,6 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
               _buildSubmitButton(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeftFormDesktop(){
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-      decoration: BoxDecoration(
-        color: CustomColorStyle.background(),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: Column(
-        children: [
-          _buildRoomTypeDropdown(),
-          const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final selectedRoomType = ref.watch(selectedRoomTypeProvider);
-                  if (selectedRoomType != null) {
-                    return Column(
-                      children: [
-                        _buildRoomSelector(),
-                        const SizedBox(height: 20),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRightFormDesktop(){
-    final pos = GlobalProviders.read(posTypeProvider);
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-      decoration: BoxDecoration(
-        color: CustomColorStyle.background(),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            _buildMemberToggle(),
-            const SizedBox(height: 24),
-            if (_isMember) _buildQRSection() else _buildNameField(),
-            const SizedBox(height: 20),
-            pos != PosType.restoOnlyOld && pos != PosType.restoOnlyWebBased ?
-            _buildDurationSection(): SizedBox.shrink(),
-            const SizedBox(height: 20),
-            _buildPaxField(),
-            const SizedBox(height: 32),
-            _buildSubmitButton(),
-          ],
         ),
       ),
     );

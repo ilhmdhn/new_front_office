@@ -13,7 +13,6 @@ import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
-import 'package:front_office_2/tools/screen_size.dart';
 
 class FnbMainPage extends StatefulWidget {
   const FnbMainPage({super.key});
@@ -95,30 +94,27 @@ class _FnbMainPageState extends State<FnbMainPage> {
           Container(
             color: CustomColorStyle.background(),
             width: double.infinity,
-            height: ScreenSize.getHeightPercent(context, 10),
-            child:
-            Align(
-              alignment: Alignment.center,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: namePage.length,
-                shrinkWrap: true,
-                itemBuilder: (ctxPager, index){
-                  return InkWell(
-                    onTap: (){
-                      slideController.animateToPage(
-                        index,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Container(
-                      width: context.wp(100/namePage.length),
-                      decoration: activePageIndex == index? CustomContainerStyle.barActive(): CustomContainerStyle.barInactive(),
-                      child: Center(child: Text(namePage[index], style: activePageIndex == index? CustomTextStyle.whiteSize(16):CustomTextStyle.blackMedium(),)),
-                    ),
-                  );
-                }),
+            height: 48,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: namePage.length,
+              shrinkWrap: true,
+              itemBuilder: (ctxPager, index){
+                return InkWell(
+                  onTap: (){
+                    slideController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.ease,
+                    );
+                  },
+                  child: Container(
+                    width: context.wp(100/namePage.length),
+                    decoration: activePageIndex == index? CustomContainerStyle.barActive(): CustomContainerStyle.barInactive(),
+                    child: Center(child: Text(namePage[index], style: activePageIndex == index? CustomTextStyle.whiteSize(14):CustomTextStyle.blackMediumSize(14),)),
+                  ),
+                );
+              },
             ),
           ),
           Flexible(

@@ -6,7 +6,6 @@ import 'package:front_office_2/page/auth/login_potrait.dart';
 import 'package:front_office_2/page/dialog/configuration_dialog.dart';
 import 'package:front_office_2/page/main_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
-import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
 import 'package:front_office_2/tools/di.dart';
 import 'package:front_office_2/tools/fingerprint.dart';
@@ -121,95 +120,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               )
             : 
             SafeArea(
-              child:       context.isLandscape?
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text('Happy Puppy Group', style: CustomTextStyle.blackMedium().copyWith(fontSize: 48)),
-                          Text('Poin Of Sale', style: CustomTextStyle.blackSemi().copyWith(fontSize: 36),),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Wrap(
-                            direction: Axis.horizontal,
-                            alignment: WrapAlignment.center,
-                            runSpacing: 12,
-                            spacing: 12,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              _image('assets/hp_group/happy_puppy.png'),
-                              _image('assets/hp_group/happup.png'),
-                              _image('assets/hp_group/qqktv.png'),
-                              _image('assets/hp_group/sukasuka.png'),
-                              _image('assets/hp_group/blackhole.png'),
-                              _image('assets/hp_group/tutto.png'),
-                              _image('assets/hp_group/regentstraat.png'),
-                            ],
-                          ),
-                          _configurationButton(),
-                        ],
-                      )
-                    ],
-                  )),
-                Expanded(
-                  child: Center(
-                    child: SizedBox(
-                      width: context.isDesktop? context.wp(30): null,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          LoginForm(
-                            tfUser: tfUser,
-                            tfPassword: tfPassword,
-                            showPassword: showPassword,
-                      
-                            onTogglePassword: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                      
-                            onLogin: () {
-                              if (isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)) {
-                                showToastWarning('Lengkapi User dan Password');
-                                return;
-                              }
-                      
-                              doLogin(tfUser.text, tfPassword.text);
-                            },
-                      
-                            onFingerprint: () async {
-                              final biometricState = ref.read(biometricLoginProvider);
-                      
-                              if (biometricState != true) {
-                                showToastWarning('Autentikasi Biometric Belum Diaktifkan');
-                                return;
-                              }
-                      
-                              final biometricRequest =
-                                  await FingerpintAuth().requestFingerprintAuth();
-                      
-                              if (biometricRequest != true) return;
-                      
-                              final user = ref.read(userProvider);
-                              doLogin(user.userId, user.pass);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ))
-              ],
-            ):
+              child: context.isLandscape
+                  ? _buildDesktopLandscapeLayout()
+                  :
             
             SizedBox(
               width: double.infinity,
@@ -301,6 +214,309 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
+  Widget _buildDesktopLandscapeLayout() {
+    return Row(
+      children: [
+        // Left Panel - Branding
+        Expanded(
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  CustomColorStyle.bluePrimary(),
+                  CustomColorStyle.bluePrimary().withAlpha(200),
+                  CustomColorStyle.appBarBackground(),
+                ],
+              ),
+            ),
+            child: Stack(
+              children: [
+                // Decorative circles
+                Positioned(
+                  top: -100,
+                  left: -100,
+                  child: Container(
+                    width: 300,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withAlpha(15),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -150,
+                  right: -150,
+                  child: Container(
+                    width: 400,
+                    height: 400,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withAlpha(10),
+                    ),
+                  ),
+                ),
+                // Content
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo/Icon
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(30),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Image.asset(
+                            'assets/icon/app_icon.png',
+                            width: 80,
+                            height: 80,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        // Title
+                        Text(
+                          'Happy Puppy Group',
+                          style: GoogleFonts.poppins(
+                            fontSize: context.isDesktop ? 36 : 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(30),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Point of Sale',
+                            style: GoogleFonts.poppins(
+                              fontSize: context.isDesktop ? 18 : 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withAlpha(230),
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 48),
+                        // Brand logos
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(20),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Our Brands',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white.withAlpha(180),
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 16,
+                                runSpacing: 12,
+                                children: [
+                                  _brandLogo('assets/hp_group/happy_puppy.png'),
+                                  _brandLogo('assets/hp_group/happup.png'),
+                                  _brandLogo('assets/hp_group/qqktv.png'),
+                                  _brandLogo('assets/hp_group/sukasuka.png'),
+                                  _brandLogo('assets/hp_group/blackhole.png'),
+                                  _brandLogo('assets/hp_group/tutto.png'),
+                                  _brandLogo('assets/hp_group/regentstraat.png'),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Configuration button
+                        _configurationButtonLight(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Right Panel - Login Form
+        Expanded(
+          flex: 1,
+          child: Container(
+            color: CustomColorStyle.background(),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(40),
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: context.isDesktop ? 420 : 360),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Welcome text
+                      Column(
+                        children: [
+                          Icon(
+                            Icons.login_rounded,
+                            size: 48,
+                            color: CustomColorStyle.bluePrimary(),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Selamat Datang',
+                            style: GoogleFonts.poppins(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Silakan masuk untuk melanjutkan',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      // Login Form Card
+                      Container(
+                        padding: const EdgeInsets.all(32),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withAlpha(10),
+                              blurRadius: 30,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: LoginForm(
+                          tfUser: tfUser,
+                          tfPassword: tfPassword,
+                          showPassword: showPassword,
+                          onTogglePassword: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                          onLogin: () {
+                            if (isNullOrEmpty(tfUser.text) || isNullOrEmpty(tfPassword.text)) {
+                              showToastWarning('Lengkapi User dan Password');
+                              return;
+                            }
+                            doLogin(tfUser.text, tfPassword.text);
+                          },
+                          onFingerprint: () async {
+                            final biometricState = ref.read(biometricLoginProvider);
+                            if (biometricState != true) {
+                              showToastWarning('Autentikasi Biometric Belum Diaktifkan');
+                              return;
+                            }
+                            final biometricRequest = await FingerpintAuth().requestFingerprintAuth();
+                            if (biometricRequest != true) return;
+                            final user = ref.read(userProvider);
+                            doLogin(user.userId, user.pass);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      // Footer
+                      Text(
+                        '© ${DateTime.now().year} Happy Puppy Group',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _brandLogo(String path) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Image.asset(
+        path,
+        width: 60,
+        height: 60,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget _configurationButtonLight() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          ConfigurationDialog().setUrl(context, ref);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white.withAlpha(30),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withAlpha(50)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.settings_outlined, size: 16, color: Colors.white),
+              const SizedBox(width: 8),
+              Text(
+                'Konfigurasi',
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _configurationButton(){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -354,11 +570,4 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     tfPassword.dispose();
     super.dispose();
   }
-}
-
-Widget _image(String path) {
-  return SizedBox(
-    width: 125,
-    child: Image.asset(path, fit: BoxFit.cover),
-  );
 }
