@@ -107,6 +107,7 @@ class _PaymentPageState extends State<PaymentPage> {
       body: Column(
         children: [
           _buildHeader(context, isDesktopLandscape),
+          Text('data'),
           Expanded(
             child: billData == null
                 ? _buildLoadingState()

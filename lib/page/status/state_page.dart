@@ -22,11 +22,8 @@ class _StatePageState extends State<StatePage> {
 
   void getData() async {
     if (data != null) return;
-
     data = await ApiRequest().checkinState();
-    if (mounted) {
-      setState(() {});
-    }
+    if (mounted) setState(() {});
   }
 
   List<RoomCheckinStateModel> get filteredData {
@@ -41,87 +38,71 @@ class _StatePageState extends State<StatePage> {
   @override
   Widget build(BuildContext context) {
     getData();
-
-    final isDesktopLandscape = context.isDesktop && context.isLandscape;
-
     return Scaffold(
       backgroundColor: CustomColorStyle.background(),
       body: Column(
         children: [
-          _buildHeader(context, isDesktopLandscape),
-          Expanded(
-            child: data == null
-                ? _buildLoadingState()
-                : data?.state == false
-                    ? _buildErrorState()
-                    : isNullOrEmpty(data?.data)
-                        ? _buildEmptyState()
-                        : _buildContent(context, isDesktopLandscape),
-          ),
+          _buildHeader(context),
+          Expanded(child: _buildBody(context)),
         ],
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, bool isDesktopLandscape) {
+  // ── HEADER ──────────────────────────────────────────────────────────────────
+  Widget _buildHeader(BuildContext context) {
+    final bool large = context.isDesktop || context.isLandscape;
     return Container(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + (isDesktopLandscape ? 12 : 8),
-        bottom: isDesktopLandscape ? 16 : 12,
-        left: isDesktopLandscape ? 24 : 16,
-        right: isDesktopLandscape ? 24 : 16,
+        top: MediaQuery.of(context).padding.top + (large ? 12 : 8),
+        bottom: large ? 16 : 12,
+        left: large ? 24 : 16,
+        right: large ? 24 : 16,
       ),
-      decoration: BoxDecoration(
-        color: CustomColorStyle.appBarBackground(),
-      ),
+      color: CustomColorStyle.appBarBackground(),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(9),
             decoration: BoxDecoration(
-              color: Colors.white.withAlpha(30),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.monitor_heart_outlined, color: Colors.white, size: 24),
+            child: const Icon(Icons.monitor_heart_outlined,
+                color: Colors.white, size: 22),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Status Checkin',
-                  style: GoogleFonts.poppins(
-                    fontSize: isDesktopLandscape ? 20 : 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  'Monitor status room aktif',
-                  style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
-                ),
+                Text('Status Checkin',
+                    style: GoogleFonts.poppins(
+                        fontSize: large ? 19 : 17,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                Text('Monitor status room aktif',
+                    style: GoogleFonts.poppins(
+                        fontSize: 12, color: Colors.white70)),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withAlpha(30),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               children: [
-                const Icon(Icons.door_front_door, color: Colors.white, size: 16),
-                const SizedBox(width: 6),
-                Text(
-                  '${filteredData.length}',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                const Icon(Icons.door_front_door,
+                    color: Colors.white, size: 15),
+                const SizedBox(width: 5),
+                Text('${filteredData.length}',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -130,297 +111,276 @@ class _StatePageState extends State<StatePage> {
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withAlpha(20), blurRadius: 20)],
+  // ── BODY ────────────────────────────────────────────────────────────────────
+  Widget _buildBody(BuildContext context) {
+    if (data == null) {
+      return Center(
+          child: CircularProgressIndicator(
+              color: CustomColorStyle.appBarBackground()));
+    }
+    if (data?.state == false) {
+      return Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.error_outline, size: 48, color: Colors.red.shade400),
+          const SizedBox(height: 12),
+          Text(data?.message ?? 'Gagal memuat data',
+              style: GoogleFonts.poppins(
+                  fontSize: 15, color: Colors.grey.shade700)),
+        ]),
+      );
+    }
+    if (isNullOrEmpty(data?.data)) {
+      return Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          LottieBuilder.asset('assets/animation/empty.json',
+              height: 180, width: 180),
+          const SizedBox(height: 12),
+          Text('Tidak Ada Room Aktif',
+              style: GoogleFonts.poppins(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade700)),
+          const SizedBox(height: 4),
+          Text('Belum ada room yang sedang checkin',
+              style: GoogleFonts.poppins(
+                  fontSize: 13, color: Colors.grey.shade500)),
+        ]),
+      );
+    }
+
+    final double pad = context.isDesktop ? 20 : 12;
+    final bool useGrid =
+        context.isDesktop || context.isTablet || context.isLandscape;
+
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(pad, pad, pad, 10),
+          child: _buildSearchBar(context),
         ),
-        child: CircularProgressIndicator(color: Colors.purple.shade600),
+        Expanded(
+          child: useGrid
+              ? _buildGrid(context, pad)
+              : _buildList(context, pad),
+        ),
+      ],
+    );
+  }
+
+  // ── SEARCH ───────────────────────────────────────────────────────────────────
+  Widget _buildSearchBar(BuildContext context) {
+    return TextField(
+      onChanged: (v) => setState(() => searchQuery = v),
+      decoration: InputDecoration(
+        hintText: 'Cari room atau guest...',
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+        prefixIcon:
+            Icon(Icons.search, color: CustomColorStyle.appBarBackground()),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade200)),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade200)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+                color: CustomColorStyle.appBarBackground(), width: 1.5)),
       ),
     );
   }
 
-  Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 48, color: Colors.red.shade400),
-          const SizedBox(height: 16),
-          Text(
-            data?.message ?? 'Error loading data',
-            style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey.shade700),
-          ),
+  // ── LIST (phone portrait) ────────────────────────────────────────────────────
+  Widget _buildList(BuildContext context, double pad) {
+    return ListView.separated(
+      padding: EdgeInsets.fromLTRB(pad, 0, pad, pad),
+      itemCount: filteredData.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (_, i) => _buildListTile(filteredData[i]),
+    );
+  }
+
+  Widget _buildListTile(RoomCheckinStateModel room) {
+    final bool isBilled = room.state != '0';
+    final Color accent =
+        isBilled ? Colors.orange.shade600 : CustomColorStyle.appBarBackground();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border(left: BorderSide(color: accent, width: 5)),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2)),
         ],
       ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LottieBuilder.asset('assets/animation/empty.json', height: 180, width: 180),
-          const SizedBox(height: 16),
-          Text(
-            'Tidak Ada Room Aktif',
-            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+          Row(
+            children: [
+              Expanded(
+                child: AutoSizeText(
+                  room.room,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87),
+                  maxLines: 1,
+                  minFontSize: 12,
+                ),
+              ),
+              const SizedBox(width: 8),
+              _statusBadge(isBilled),
+            ],
           ),
           const SizedBox(height: 4),
-          Text(
-            'Belum ada room yang sedang checkin',
-            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade500),
-          ),
+          _infoRow(Icons.person_outline, room.guest),
+          const SizedBox(height: 2),
+          _infoRow(Icons.access_time, room.timeRemain),
+          const SizedBox(height: 8),
+          _orderChips(room),
         ],
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, bool isDesktopLandscape) {
-    return Padding(
-      padding: EdgeInsets.all(isDesktopLandscape ? 20 : 12),
-      child: Column(
-        children: [
-          _buildSearchBar(isDesktopLandscape),
-          const SizedBox(height: 16),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                // Calculate optimal columns based on available width
-                int crossAxisCount;
-                double childAspectRatio;
-                if (isDesktopLandscape) {
-                  crossAxisCount = constraints.maxWidth > 1200 ? 4 : 3;
-                  childAspectRatio = 1.6;
-                } else if (context.isLandscape) {
-                  crossAxisCount = 2;
-                  childAspectRatio = 2.2;
-                } else if(context.isTablet){
-                  crossAxisCount = 1;
-                  childAspectRatio = 2.5;
-                }else {
-                  crossAxisCount = 1;
-                  childAspectRatio = 2.5;
-                }
+  // ── GRID (tablet / landscape / desktop) ──────────────────────────────────────
+  Widget _buildGrid(BuildContext context, double pad) {
+    final int columns = context.isDesktop && context.isLandscape
+        ? 4
+        : context.isDesktop
+            ? 3
+            : context.isLandscape
+                ? 3
+                : 2;
 
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    childAspectRatio: childAspectRatio,
-                    crossAxisSpacing: isDesktopLandscape ? 16 : 10,
-                    mainAxisSpacing: isDesktopLandscape ? 16 : 10,
-                  ),
-                  itemCount: filteredData.length,
-                  itemBuilder: (context, index) {
-                    final room = filteredData[index];
-                    return _buildRoomCard(room, isDesktopLandscape);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(pad, 0, pad, pad),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: context.isDesktop && context.isLandscape
+            ? 2.0
+            : context.isDesktop
+                ? 1.8
+                : 1.9,
       ),
+      itemCount: filteredData.length,
+      itemBuilder: (_, i) => _buildGridCard(filteredData[i]),
     );
   }
 
-  Widget _buildSearchBar(bool isDesktopLandscape) {
+  Widget _buildGridCard(RoomCheckinStateModel room) {
+    final bool isBilled = room.state != '0';
+    final Color accent =
+        isBilled ? Colors.orange.shade600 : CustomColorStyle.appBarBackground();
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2)),
         ],
       ),
-      child: TextField(
-        onChanged: (value) => setState(() => searchQuery = value),
-        decoration: InputDecoration(
-          hintText: 'Cari room atau guest...',
-          hintStyle: TextStyle(color: Colors.grey.shade400),
-          prefixIcon: Icon(Icons.search, color: Colors.purple.shade600),
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: isDesktopLandscape ? 16 : 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRoomCard(RoomCheckinStateModel room, bool isDesktopLandscape) {
-    final bool isBilled = room.state != '0';
-    final bool hasOrders = room.so > 0 || room.process > 0 || room.delivery > 0 || room.cancel > 0;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isBilled ? Colors.orange.shade200 : Colors.grey.shade200,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(8),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left Section - Room Info
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(isDesktopLandscape ? 16 : 12),
-              decoration: BoxDecoration(
-                color: isBilled ? Colors.orange.shade50 : Colors.blue.shade50,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                ),
+          // top accent bar
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.08),
+              border: Border(top: BorderSide(color: accent, width: 3)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
               ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AutoSizeText(
+                    room.room,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87),
+                    maxLines: 1,
+                    minFontSize: 10,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                _statusBadge(isBilled),
+              ],
+            ),
+          ),
+          // body
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Room Header
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: isBilled ? Colors.orange.shade400 : Colors.blue.shade400,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.meeting_room,
-                          size: isDesktopLandscape ? 18 : 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: AutoSizeText(
-                          room.room,
-                          style: GoogleFonts.poppins(
-                            fontSize: isDesktopLandscape ? 16 : 14,
-                            fontWeight: FontWeight.bold,
-                            color: isBilled ? Colors.orange.shade800 : Colors.blue.shade800,
-                          ),
-                          maxLines: 1,
-                          minFontSize: 10,
-                        ),
-                      ),
+                      _infoRow(Icons.person_outline, room.guest),
+                      const SizedBox(height: 3),
+                      _infoRow(Icons.access_time, room.timeRemain),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  // Guest
-                  _buildInfoRow(Icons.person_outline, room.guest, Colors.grey.shade700, isDesktopLandscape),
-                  const SizedBox(height: 4),
-                  // Time
-                  _buildInfoRow(Icons.access_time, room.timeRemain, Colors.grey.shade600, isDesktopLandscape),
-                  const SizedBox(height: 6),
-                  // Status Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isBilled ? Colors.orange.shade100 : Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      isBilled ? 'Bill' : 'Checkin',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: isBilled ? Colors.orange.shade800 : Colors.green.shade800,
-                      ),
-                    ),
-                  ),
+                  _orderChips(room),
                 ],
               ),
             ),
           ),
-          // Divider
-          Container(width: 1, color: Colors.grey.shade200),
-          // Right Section - Order Info
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(isDesktopLandscape ? 16 : 12),
-              child: hasOrders
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Order Info',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        _buildOrderRow('Order', room.so, Colors.green, Icons.inventory_outlined, isDesktopLandscape),
-                        const SizedBox(height: 4),
-                        _buildOrderRow('Process', room.process, Colors.amber, Icons.sync, isDesktopLandscape),
-                        const SizedBox(height: 4),
-                        _buildOrderRow('Delivery', room.delivery, Colors.blue, Icons.done_all, isDesktopLandscape),
-                        const SizedBox(height: 4),
-                        _buildOrderRow('Cancel', room.cancel, Colors.red, Icons.close, isDesktopLandscape),
-                      ],
-                    )
-                  : Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          LottieBuilder.asset(
-                            'assets/animation/zxz.json',
-                            height: isDesktopLandscape ? 60 : 50,
-                            width: isDesktopLandscape ? 60 : 50,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'No Orders',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text, Color color, bool isDesktop) {
+  // ── SHARED HELPERS ───────────────────────────────────────────────────────────
+  Widget _statusBadge(bool isBilled) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isBilled ? Colors.orange.shade100 : Colors.green.shade100,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        isBilled ? 'Bill' : 'Checkin',
+        style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: isBilled ? Colors.orange.shade800 : Colors.green.shade800),
+      ),
+    );
+  }
+
+  Widget _infoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: isDesktop ? 14 : 12, color: color),
-        const SizedBox(width: 6),
+        Icon(icon, size: 13, color: Colors.grey.shade400),
+        const SizedBox(width: 4),
         Expanded(
           child: AutoSizeText(
             text,
-            style: TextStyle(fontSize: isDesktop ? 13 : 12, color: color),
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             maxLines: 1,
             minFontSize: 9,
             overflow: TextOverflow.ellipsis,
@@ -430,40 +390,27 @@ class _StatePageState extends State<StatePage> {
     );
   }
 
-  Widget _buildOrderRow(String label, int count, Color color, IconData icon, bool isDesktop) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: color.withAlpha(30),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Icon(icon, size: isDesktop ? 14 : 12, color: color),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(fontSize: isDesktop ? 12 : 11, color: Colors.grey.shade700),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: count > 0 ? color.withAlpha(30) : Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            '$count',
-            style: TextStyle(
-              fontSize: isDesktop ? 12 : 11,
-              fontWeight: FontWeight.bold,
-              color: count > 0 ? color : Colors.grey.shade500,
-            ),
-          ),
-        ),
-      ],
+  Widget _orderChips(RoomCheckinStateModel room) {
+    final chips = <Widget>[];
+    if (room.so > 0) { chips.add(_chip('SO ${room.so}', Colors.green.shade700, Colors.green.shade50)); }
+    if (room.process > 0) { chips.add(_chip('Proses ${room.process}', Colors.amber.shade800, Colors.amber.shade50)); }
+    if (room.delivery > 0) { chips.add(_chip('Kirim ${room.delivery}', Colors.blue.shade700, Colors.blue.shade50)); }
+    if (room.cancel > 0) { chips.add(_chip('Batal ${room.cancel}', Colors.red.shade700, Colors.red.shade50)); }
+    if (chips.isEmpty) { chips.add(_chip('No Order', Colors.grey.shade500, Colors.grey.shade100)); }
+
+    return Wrap(spacing: 5, runSpacing: 4, children: chips);
+  }
+
+  Widget _chip(String label, Color textColor, Color bgColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+          color: bgColor, borderRadius: BorderRadius.circular(20)),
+      child: Text(label,
+          style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: textColor)),
     );
   }
 }
