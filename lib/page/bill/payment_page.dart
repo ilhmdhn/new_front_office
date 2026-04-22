@@ -107,7 +107,6 @@ class _PaymentPageState extends State<PaymentPage> {
       body: Column(
         children: [
           _buildHeader(context, isDesktopLandscape),
-          Text('data'),
           Expanded(
             child: billData == null
                 ? _buildLoadingState()
@@ -302,30 +301,28 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildMobileLayout() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildNominalField(),
-                    const SizedBox(height: 16),
-                    _buildPaymentMethods(isDesktop: false),
-                    const SizedBox(height: 12),
-                    _buildPaymentForm(),
-                    const SizedBox(height: 12),
-                    _buildAddButton(),
-                  ],
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildNominalField(),
+                  const SizedBox(height: 16),
+                  _buildPaymentMethods(isDesktop: false),
+                  const SizedBox(height: 12),
+                  _buildPaymentForm(),
+                  const SizedBox(height: 12),
+                  _buildAddButton(),
+                ],
               ),
             ),
-            _buildMobilePaymentSummary(),
-          ],
-        ),
+          ),
+          _buildMobilePaymentSummary(),
+        ],
       ),
     );
   }
@@ -427,6 +424,7 @@ class _PaymentPageState extends State<PaymentPage> {
         const SizedBox(height: 10),
         GridView.builder(
           shrinkWrap: true,
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: isDesktop || context.isTablet ? 3 : 2,
@@ -814,38 +812,62 @@ class _PaymentPageState extends State<PaymentPage> {
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 10)],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (paymentList.isNotEmpty)
-            Container(
-              constraints: const BoxConstraints(maxHeight: 120),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: paymentList.length,
-                itemBuilder: (context, index) => _buildPaymentItem(paymentList[index], index),
+          paymentList.isNotEmpty? Align(
+                    alignment: AlignmentGeometry.centerLeft,
+                    child: Text(
+                      'Pembayaran Ditambahkan',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                  ): SizedBox.shrink(),
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: context.hp(25)
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (paymentList.isNotEmpty) ...[
+                    for (int i = 0; i < paymentList.length; i++)
+                      _buildPaymentItem(paymentList[i], i),
+                    const SizedBox(height: 4),
+                  ],
+                ],
               ),
             ),
-          const SizedBox(height: 8),
-          _buildSummaryRow(minusPay < 0 ? 'KEMBALI' : 'KURANG', Formatter.formatRupiah(minusPay.abs()), isHighlight: true),
-          const SizedBox(height: 8),
-          Row(
+          ),
+          Column(
             children: [
-              Checkbox(
-                value: sendEmail,
-                activeColor: Colors.green.shade600,
-                onChanged: (value) => setState(() => sendEmail = !sendEmail),
-              ),
-              const Text('Email Invoice', style: TextStyle(fontSize: 12)),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _processPayment,
-                icon: const Icon(Icons.payments, size: 18),
-                label: const Text('BAYAR'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade600,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
+              _buildSummaryRow(minusPay < 0 ? 'KEMBALI' : 'KURANG', Formatter.formatRupiah(minusPay.abs()), isHighlight: true),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Checkbox(
+                    value: sendEmail,
+                    activeColor: Colors.green.shade600,
+                    onChanged: (value) => setState(() => sendEmail = !sendEmail),
+                  ),
+                  const Text('Email Invoice', style: TextStyle(fontSize: 12)),
+                  const Spacer(),
+                  ElevatedButton.icon(
+                    onPressed: _processPayment,
+                    icon: const Icon(Icons.payments, size: 18),
+                    label: const Text('BAYAR'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade600,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
