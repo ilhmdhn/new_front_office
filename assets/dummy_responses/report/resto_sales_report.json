@@ -1,0 +1,100 @@
+{
+  "state": true,
+  "message": "success",
+  "data": {
+    "outlet_name": "TUTTU BONO\nRESTO BAR",
+    "report_title": "X Sales Day Report",
+    "report_date": "2026-04-20T12:48:00",
+    "report_no": "10567",
+    "group": "All Pos",
+    "summary": {
+      "item_sales_qty": 560,
+      "item_sales_amount": 60128000,
+      "item_discount_qty": 0,
+      "item_discount_amount": 762750,
+      "bill_discount_qty": 0,
+      "bill_discount_amount": 0,
+      "foc_item_qty": 0,
+      "foc_item_amount": 0,
+      "foc_bill_qty": 0,
+      "foc_bill_amount": 400000,
+      "total_qty": 560,
+      "total_amount": 69016350,
+      "estimated_sales": 69016350
+    },
+    "payment_media": [
+      { "name": "CASH",          "qty": 20, "amount": 34500000 },
+      { "name": "BCA",           "qty": 46, "amount": 822750   },
+      { "name": "BRI",           "qty": 0,  "amount": 0        },
+      { "name": "MANDIRI",       "qty": 7,  "amount": 2415120  },
+      { "name": "TRANSFER",      "qty": 1,  "amount": 1175300  },
+      { "name": "VOUCHER",       "qty": 0,  "amount": 0        },
+      { "name": "COMPLIMENTARY", "qty": 0,  "amount": 0        },
+      { "name": "FOC ARIZONA",   "qty": 0,  "amount": 0        }
+    ],
+    "totals": {
+      "card_qty": 48,
+      "card_amount": 69449977,
+      "cash_qty": 1,
+      "cash_amount": 567100,
+      "voucher_qty": 0,
+      "voucher_amount": 0
+    },
+    "void": {
+      "pre_send_qty": 0,
+      "pre_send_amount": 4782000,
+      "post_send_qty": 18,
+      "post_send_amount": 1386000
+    },
+    "settlement": {
+      "ext_collection_qty": 53,
+      "ext_collection_amount": 70413977,
+      "ext_collection_foc_qty": 1,
+      "ext_collection_foc_amount": 70092777
+    },
+    "tax_net": {
+      "pb1_amount": 6328803,
+      "sc_amount": 2688950,
+      "net_sales": 59015250
+    },
+    "bills": {
+      "pending": 0,
+      "total_count": 23,
+      "total_amount": 1326905,
+      "total_covers": 79,
+      "avg_covers": 492532,
+      "best_receipt_no": "A260000097401",
+      "second_receipt_no": "A260000091807"
+    },
+    "group_sales": {
+      "items": [
+        { "name": "ALCOHOL",       "qty": 0,   "amount": 16987000 },
+        { "name": "BEVERAGE",      "qty": 119, "amount": 6314000  },
+        { "name": "FOOD",          "qty": 0,   "amount": 8474000  },
+        { "name": "EVENT TUTUBONO","qty": 0,   "amount": 35902000 },
+        { "name": "OTHER",         "qty": 0,   "amount": 25000    },
+        { "name": "SNORE",         "qty": 392, "amount": 1565000  }
+      ],
+      "total": 60118000
+    },
+    "group_foc": {
+      "items": [
+        { "name": "ALCOHOL",        "qty": 0, "amount": 90000  },
+        { "name": "BEVERAGE",       "qty": 0, "amount": 40000  },
+        { "name": "EVENT TUTUBONO", "qty": 0, "amount": 75000  },
+        { "name": "OTHER",          "qty": 0, "amount": 195000 }
+      ],
+      "total": 400000
+    },
+    "sales_category": [
+      { "name": "DINE IN", "qty": 560, "amount": 60118000 }
+    ],
+    "discount": {
+      "items": [
+        { "name": "M.DIAMOND 15%", "qty": 38, "amount": 702750 }
+      ],
+      "total": 702750
+    },
+    "sales_cash": 582100
+  }
+}

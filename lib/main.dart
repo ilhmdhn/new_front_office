@@ -21,6 +21,8 @@ import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/cash_detail/cash_detail_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
 import 'package:front_office_2/page/report/report_page.dart';
+import 'package:front_office_2/page/report/resto_report/cash_in_report.dart';
+import 'package:front_office_2/page/report/resto_report/item_production_report.dart';
 import 'package:front_office_2/page/report/sales/sales_report_page.dart';
 import 'package:front_office_2/page/report/sold_out/sold_out_page.dart';
 import 'package:front_office_2/page/room/list_room_page.dart';
@@ -136,7 +138,9 @@ class FrontOffice extends StatelessWidget {
         PrintJobPage.routeName: (context) => const PrintJobPage(),
         SoldOutPage.nameRoute: (context) => const SoldOutPage(),
         DestinationItemPage.nameRoute: (context) => const DestinationItemPage(),
-        EnableFeaturePage.nameRoute: (context) => const EnableFeaturePage()
+        EnableFeaturePage.nameRoute: (context) => const EnableFeaturePage(),
+        RestoCashInReportPage.nameRoute: (context) => const RestoCashInReportPage(),
+        RestoItemProductionReportPage.nameRoute: (context) => const RestoItemProductionReportPage(),
       },
     );
   }

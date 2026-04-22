@@ -1,0 +1,146 @@
+{
+  "state": true,
+  "message": "success",
+  "data": {
+    "outlet_name": "TUTTU BONO\nRESTO BAR",
+    "report_date": "2026-04-20T12:48:00",
+    "report_no": "P-20267",
+    "groups": [
+      {
+        "name": "BEVERAGE",
+        "depts": [
+          {
+            "name": "BEER",
+            "items": [
+              { "name": "Bintang Botol",    "qty": 25 },
+              { "name": "Bintang Draught",  "qty": 15 },
+              { "name": "Heineken Botol",   "qty": 8  },
+              { "name": "Corona Extra",     "qty": 6  },
+              { "name": "Hoegaarden",       "qty": 4  }
+            ]
+          },
+          {
+            "name": "COCKTAIL",
+            "items": [
+              { "name": "Mojito",                "qty": 12 },
+              { "name": "Margarita",             "qty": 8  },
+              { "name": "Cosmopolitan",          "qty": 5  },
+              { "name": "Long Island Ice Tea",   "qty": 9  },
+              { "name": "Blue Lagoon",           "qty": 3  }
+            ]
+          },
+          {
+            "name": "SOFT DRINK",
+            "items": [
+              { "name": "Coca Cola",        "qty": 30 },
+              { "name": "Sprite",           "qty": 18 },
+              { "name": "Fanta Merah",      "qty": 12 },
+              { "name": "Air Mineral 600ml","qty": 45 },
+              { "name": "Teh Botol",        "qty": 22 }
+            ]
+          },
+          {
+            "name": "JUICE",
+            "items": [
+              { "name": "Jus Alpukat",  "qty": 14 },
+              { "name": "Jus Mangga",   "qty": 10 },
+              { "name": "Jus Jeruk",    "qty": 8  },
+              { "name": "Jus Semangka", "qty": 6  }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ALCOHOL",
+        "depts": [
+          {
+            "name": "WINE",
+            "items": [
+              { "name": "Red Wine Glass",     "qty": 20 },
+              { "name": "White Wine Glass",   "qty": 15 },
+              { "name": "Rosé Wine Glass",    "qty": 8  },
+              { "name": "Sparkling Wine",     "qty": 5  }
+            ]
+          },
+          {
+            "name": "SPIRIT",
+            "items": [
+              { "name": "Vodka Shot",          "qty": 18 },
+              { "name": "Whiskey On The Rock", "qty": 12 },
+              { "name": "Rum & Coke",          "qty": 7  },
+              { "name": "Gin Tonic",           "qty": 9  }
+            ]
+          },
+          {
+            "name": "TEQUILA",
+            "items": [
+              { "name": "Tequila Shot",  "qty": 10 },
+              { "name": "Patron Silver", "qty": 5  },
+              { "name": "Jose Cuervo",   "qty": 4  }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "FOOD",
+        "depts": [
+          {
+            "name": "APPETIZER",
+            "items": [
+              { "name": "French Fries",  "qty": 20 },
+              { "name": "Chicken Wings", "qty": 15 },
+              { "name": "Spring Roll",   "qty": 8  },
+              { "name": "Calamari",      "qty": 6  }
+            ]
+          },
+          {
+            "name": "MAIN COURSE",
+            "items": [
+              { "name": "Nasi Goreng Special", "qty": 25 },
+              { "name": "Pasta Carbonara",     "qty": 10 },
+              { "name": "Grilled Chicken",     "qty": 12 },
+              { "name": "Beef Steak",          "qty": 7  },
+              { "name": "Mie Goreng",          "qty": 18 }
+            ]
+          },
+          {
+            "name": "DESSERT",
+            "items": [
+              { "name": "Ice Cream Scoop",       "qty": 12 },
+              { "name": "Chocolate Lava Cake",   "qty": 8  },
+              { "name": "Pudding Coklat",        "qty": 6  }
+            ]
+          },
+          {
+            "name": "SNACK",
+            "items": [
+              { "name": "Nachos & Salsa", "qty": 14 },
+              { "name": "Edamame",        "qty": 22 },
+              { "name": "Mixed Nuts",     "qty": 9  }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "SPECIAL",
+        "depts": [
+          {
+            "name": "PROMO",
+            "items": [
+              { "name": "Promo Happy Hour Package", "qty": 8 },
+              { "name": "Couple Deal Package",      "qty": 4 },
+              { "name": "Birthday Package",         "qty": 2 }
+            ]
+          },
+          {
+            "name": "EVENT",
+            "items": [
+              { "name": "Event Tutubono Package", "qty": 6 },
+              { "name": "Corporate Package",      "qty": 3 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

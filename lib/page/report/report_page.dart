@@ -3,6 +3,8 @@ import 'package:front_office_2/data/model/login_response.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
 import 'package:front_office_2/page/report/call/call_service_history_page.dart';
 import 'package:front_office_2/page/report/invoice/reprint_invoice.dart';
+import 'package:front_office_2/page/report/resto_report/cash_in_report.dart';
+import 'package:front_office_2/page/report/resto_report/item_production_report.dart';
 import 'package:front_office_2/page/report/sold_out/sold_out_page.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -45,6 +47,10 @@ class _ReportPageState extends State<ReportPage> {
             AddOnWidget.listButtonNavigation(context, CallServiceHistoryPage.nameRoute, 'assets/icon/call_service.png', 'Call Service'),
             const SizedBox(height: 9,),
             AddOnWidget.listButtonNavigation(context, SoldOutPage.nameRoute, 'assets/icon/sold_out.png', 'Sold Out Item'),
+            const SizedBox(height: 9,),
+            AddOnWidget.listButtonNavigation(context, RestoCashInReportPage.nameRoute, 'assets/icon/sold_out.png', 'Kas Masuk'),
+            const SizedBox(height: 9,),
+            AddOnWidget.listButtonNavigation(context, RestoItemProductionReportPage.nameRoute, 'assets/icon/sold_out.png', 'Laporan Produksi'),
             /*SizedBox(
               width: double.infinity,
               child: ElevatedButton(

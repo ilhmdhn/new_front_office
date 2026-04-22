@@ -428,7 +428,7 @@ class _PaymentPageState extends State<PaymentPage> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: isDesktop || context.isTablet ? 3 : 2,
-            childAspectRatio: isDesktop || context.isTablet ? 3.5 : 3,
+            childAspectRatio: isDesktop || context.isTablet ? 3.5 : 4.4,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
@@ -816,17 +816,28 @@ class _PaymentPageState extends State<PaymentPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           paymentList.isNotEmpty? Align(
-                    alignment: AlignmentGeometry.centerLeft,
-                    child: Text(
-                      'Pembayaran Ditambahkan',
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
-                      ),
-                    ),
-                  ): SizedBox.shrink(),
+            alignment: AlignmentGeometry.centerLeft,
+            child: Text(
+              'Pembayaran Ditambahkan',
+              textAlign: TextAlign.start,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.green.shade700,
+              ),
+            ),
+          ): Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+                'Belum ada Pembayaran',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+          ),
           Container(
             constraints: BoxConstraints(
               maxHeight: context.hp(25)
@@ -847,27 +858,32 @@ class _PaymentPageState extends State<PaymentPage> {
             children: [
               _buildSummaryRow(minusPay < 0 ? 'KEMBALI' : 'KURANG', Formatter.formatRupiah(minusPay.abs()), isHighlight: true),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  Checkbox(
-                    value: sendEmail,
-                    activeColor: Colors.green.shade600,
-                    onChanged: (value) => setState(() => sendEmail = !sendEmail),
-                  ),
-                  const Text('Email Invoice', style: TextStyle(fontSize: 12)),
-                  const Spacer(),
-                  ElevatedButton.icon(
-                    onPressed: _processPayment,
-                    icon: const Icon(Icons.payments, size: 18),
-                    label: const Text('BAYAR'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade600,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              SafeArea(
+                left: false,
+                right: false,
+                top: false,
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: sendEmail,
+                      activeColor: Colors.green.shade600,
+                      onChanged: (value) => setState(() => sendEmail = !sendEmail),
                     ),
-                  ),
-                ],
+                    const Text('Email Invoice', style: TextStyle(fontSize: 12)),
+                    const Spacer(),
+                    ElevatedButton.icon(
+                      onPressed: _processPayment,
+                      icon: const Icon(Icons.payments, size: 18),
+                      label: const Text('BAYAR'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade600,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
