@@ -186,7 +186,7 @@ class PreferencesData {
   }
 
   static bool getPrintSlipDeliveryOrder() {
-    return _prefs?.getBool('PRINT_SLIP_DELIVERY_ORDER') ?? false;
+    return _prefs?.getBool('PRINT_SLIP_DELIVERY_ORDER') ?? true;
   }
 
   static void setPrintBill(bool state) {
@@ -197,12 +197,28 @@ class PreferencesData {
     return _prefs?.getBool('PRINT_BILL') ?? true;
   }
 
+  static void setPrintBillDouble(bool state) {
+    _prefs?.setBool('PRINT_DOUBLE_BILL', state);
+  }
+
+  static bool getPrintBillDouble() {
+    return _prefs?.getBool('PRINT_DOUBLE_BILL') ?? true;
+  }
+
   static void setPrintInvoice(bool state) {
     _prefs?.setBool('PRINT_INVOICE', state);
   }
 
   static bool getPrintInvoice() {
     return _prefs?.getBool('PRINT_INVOICE') ?? true;
+  }
+
+  static void setPrintDoubleInvoice(bool state) {
+    _prefs?.setBool('PRINT_DOUBLE_INVOICE', state);
+  }
+
+  static bool getPrintDoubleInvoice() {
+    return _prefs?.getBool('PRINT_DOUBLE_INVOICE') ?? true;
   }
 
   static void setPrintLogo(bool state) {

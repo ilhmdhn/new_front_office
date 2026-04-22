@@ -113,6 +113,33 @@ class PrintBillNotifier extends StateNotifier<bool> {
   }
 }
 
+final printBillDoubleProvider = StateNotifierProvider<PrintBillDoubleNotifier, bool>((ref) {
+  return PrintBillDoubleNotifier();
+});
+
+class PrintBillDoubleNotifier extends StateNotifier<bool> {
+  PrintBillDoubleNotifier() : super(_initialState()) {
+    _loadState();
+  }
+
+  static bool _initialState() {
+    return PreferencesData.getPrintBillDouble();
+  }
+
+  void _loadState() {
+    state = PreferencesData.getPrintBillDouble();
+  }
+
+  void setPrintBillDouble(bool value) {
+    PreferencesData.setPrintBillDouble(value);
+    state = value;
+  }
+
+  void refresh() {
+    _loadState();
+  }
+}
+
 // Provider untuk Print Invoice
 final printInvoiceProvider = StateNotifierProvider<PrintInvoiceNotifier, bool>((ref) {
   return PrintInvoiceNotifier();
@@ -140,6 +167,34 @@ class PrintInvoiceNotifier extends StateNotifier<bool> {
     _loadState();
   }
 }
+
+final printDoubleInvoiceProvider = StateNotifierProvider<PrintDoubleInvoiceNotifier, bool>((ref) {
+  return PrintDoubleInvoiceNotifier();
+});
+
+class PrintDoubleInvoiceNotifier extends StateNotifier<bool> {
+  PrintDoubleInvoiceNotifier() : super(_initialState()) {
+    _loadState();
+  }
+
+  static bool _initialState() {
+    return PreferencesData.getPrintDoubleInvoice();
+  }
+
+  void _loadState() {
+    state = PreferencesData.getPrintDoubleInvoice();
+  }
+
+  void setPrintDoubleInvoice(bool value) {
+    PreferencesData.setPrintDoubleInvoice(value);
+    state = value;
+  }
+
+  void refresh() {
+    _loadState();
+  }
+}
+
 
 final printLogoProvider = StateNotifierProvider<PrintLogoNotifier, bool>((ref) {
   return PrintLogoNotifier();

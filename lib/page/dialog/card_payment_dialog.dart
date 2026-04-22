@@ -1,5 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:front_office_2/data/model/edc_response.dart';
 import 'package:front_office_2/page/bloc/edc_bloc.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
@@ -8,55 +10,79 @@ import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/tools/list.dart';
 
 class CardPaymentDialog {
-  
+
   // --- 1. FUNCTION: EDC MACHINE ---
-  Future<String?> edcMachine(BuildContext ctx) {
+  static Future<String?> edcMachine(BuildContext ctx) {
     String? chooseEdc;
     EdcCubit edcResponse = EdcCubit();
     edcResponse.getEdc();
 
-    return showDialog(
+    return showDialog<String?>(
       context: ctx,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: CustomColorStyle.white(),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Center(
-            child: Text('Pilih Mesin Edc', style: CustomTextStyle.titleAlertDialog()),
-          ),
-          content: BlocBuilder<EdcCubit, EdcResponse>(
-            bloc: edcResponse,
-            builder: (BuildContext ctxBloc, EdcResponse edc) {
-              if (edc.isLoading == true) {
-                return _buildLoadingState(ctx);
-              }
-              if (edc.state != true) {
-                return _buildErrorState(ctx, edc.message.toString());
-              }
+      builder: (BuildContext ctxDialog) {
+        final double dialogWidth = ctxDialog.isDesktop && ctxDialog.isLandscape
+            ? ctxDialog.wp(35)
+            : ctxDialog.isDesktop
+                ? ctxDialog.wp(45)
+                : ctxDialog.isLandscape
+                    ? ctxDialog.wp(60)
+                    : ctxDialog.wp(88);
 
-              List<String> edcList = edc.data.map((e) => e.edcName.toString()).toList();
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Container(
+            width: dialogWidth,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AutoSizeText(
+                  'Pilih Mesin EDC',
+                  style: CustomTextStyle.titleAlertDialog(),
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                Divider(color: Colors.grey.shade200),
+                const SizedBox(height: 8),
+                BlocBuilder<EdcCubit, EdcResponse>(
+                  bloc: edcResponse,
+                  builder: (BuildContext ctxBloc, EdcResponse edc) {
+                    if (edc.isLoading == true) {
+                      return _buildLoadingState();
+                    }
+                    if (edc.state != true) {
+                      return _buildErrorState(edc.message.toString());
+                    }
 
-              return StatefulBuilder(
-                builder: (ctxStfl, setState) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildGridSelector(
-                          items: edcList,
-                          selectedItem: chooseEdc,
-                          onTap: (val) => setState(() => chooseEdc = val),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildActionButtons(context, () => chooseEdc),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
+                    final List<String> edcList =
+                        edc.data.map((e) => e.edcName.toString()).toList();
+
+                    final int crossAxisCount = ctxDialog.isDesktop ? 3 : 2;
+
+                    return StatefulBuilder(
+                      builder: (ctxStfl, setState) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildGridSelector(
+                              items: edcList,
+                              selectedItem: chooseEdc,
+                              crossAxisCount: crossAxisCount,
+                              onTap: (val) => setState(() => chooseEdc = val),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildActionButtons(ctxDialog, () => chooseEdc),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -64,33 +90,55 @@ class CardPaymentDialog {
   }
 
   // --- 2. FUNCTION: CARD TYPE ---
-  Future<String?> cardType(BuildContext ctx) {
+  static Future<String?> cardType(BuildContext ctx) {
     String? chooseCardType;
-    
-    return showDialog(
+
+    return showDialog<String?>(
       context: ctx,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext ctxDialog) {
+        final double dialogWidth = ctxDialog.isDesktop && ctxDialog.isLandscape
+            ? ctxDialog.wp(35)
+            : ctxDialog.isDesktop
+                ? ctxDialog.wp(45)
+                : ctxDialog.isLandscape
+                    ? ctxDialog.wp(60)
+                    : ctxDialog.wp(88);
+
+        final int crossAxisCount = ctxDialog.isDesktop
+            ? 3
+            : ctxDialog.isLandscape
+                ? 3
+                : 2;
+
         return StatefulBuilder(
           builder: (ctxStfl, setState) {
-            return AlertDialog(
-              backgroundColor: CustomColorStyle.white(),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              title: Center(
-                child: Text('Pilih Tipe Kartu', style: CustomTextStyle.titleAlertDialog()),
-              ),
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Container(
+                width: dialogWidth,
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    AutoSizeText(
+                      'Pilih Tipe Kartu',
+                      style: CustomTextStyle.titleAlertDialog(),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Divider(color: Colors.grey.shade200),
+                    const SizedBox(height: 8),
                     _buildGridSelector(
-                      items: cardTypeList, // Pastikan cardTypeList terdefinisi secara global/di class
+                      items: cardTypeList,
                       selectedItem: chooseCardType,
+                      crossAxisCount: crossAxisCount,
                       onTap: (val) => setState(() => chooseCardType = val),
                     ),
-                    const SizedBox(height: 24),
-                    _buildActionButtons(context, () => chooseCardType),
+                    const SizedBox(height: 20),
+                    _buildActionButtons(ctxDialog, () => chooseCardType),
                   ],
                 ),
               ),
@@ -101,20 +149,21 @@ class CardPaymentDialog {
     );
   }
 
-  // --- PRIVATE HELPER WIDGETS (Untuk tampilan Minimalis) ---
+  // --- PRIVATE HELPERS ---
 
-  Widget _buildGridSelector({
+  static Widget _buildGridSelector({
     required List<String> items,
     required String? selectedItem,
     required Function(String) onTap,
+    int crossAxisCount = 2,
   }) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 2.8, // Mengatur kerampingan tombol (semakin besar semakin tipis)
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: crossAxisCount >= 3 ? 3.2 : 2.8,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
@@ -124,24 +173,39 @@ class CardPaymentDialog {
 
         return InkWell(
           onTap: () => onTap(label),
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
+          borderRadius: BorderRadius.circular(10),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: isSelected ? CustomColorStyle.appBarBackground() : Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: CustomColorStyle.appBarBackground(),
-                width: 1,
+                color: isSelected
+                    ? CustomColorStyle.appBarBackground()
+                    : Colors.grey.shade300,
+                width: isSelected ? 1.5 : 1,
               ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: CustomColorStyle.appBarBackground().withOpacity(0.25),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      )
+                    ]
+                  : null,
             ),
-            child: Text(
+            child: AutoSizeText(
               label,
               textAlign: TextAlign.center,
+              maxLines: 1,
+              minFontSize: 10,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected ? Colors.white : Colors.black87,
+                letterSpacing: isSelected ? 0.3 : 0,
               ),
             ),
           ),
@@ -150,43 +214,70 @@ class CardPaymentDialog {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, ValueGetter<String?> getValue) {
+  static Widget _buildActionButtons(
+      BuildContext context, ValueGetter<String?> getValue) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
           child: ElevatedButton(
             style: CustomButtonStyle.cancelSoft(),
-            onPressed: () => Navigator.pop(context),
-            child: Text('Batal', style: CustomTextStyle.whiteSize(16)),
+            onPressed: () {
+              if (context.mounted && Navigator.canPop(context)) {
+                Navigator.pop(context, null);
+              }
+            },
+            child: AutoSizeText(
+              'Batal',
+              style: CustomTextStyle.whiteSize(15),
+              maxLines: 1,
+            ),
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: ElevatedButton(
             style: CustomButtonStyle.confirm(),
-            onPressed: () => Navigator.pop(context, getValue()),
-            child: Text('Ganti', style: CustomTextStyle.whiteSize(16)),
+            onPressed: () {
+              if (context.mounted && Navigator.canPop(context)) {
+                Navigator.pop(context, getValue());
+              }
+            },
+            child: AutoSizeText(
+              'Pilih',
+              style: CustomTextStyle.whiteSize(15),
+              maxLines: 1,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoadingState(BuildContext ctx) {
+  static Widget _buildLoadingState() {
     return SizedBox(
-      height: 150,
+      height: 140,
       child: Center(
         child: CircularProgressIndicator(color: CustomColorStyle.appBarBackground()),
       ),
     );
   }
 
-  Widget _buildErrorState(BuildContext ctx, String message) {
+  static Widget _buildErrorState(String message) {
     return SizedBox(
-      height: 150,
+      height: 140,
       child: Center(
-        child: Text(message, textAlign: TextAlign.center),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, color: Colors.redAccent, size: 36),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black54, fontSize: 13),
+            ),
+          ],
+        ),
       ),
     );
   }

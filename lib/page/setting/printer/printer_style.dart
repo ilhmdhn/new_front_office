@@ -113,7 +113,7 @@ class PrinterStylePage extends ConsumerWidget {
                   checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   title: Text('Cetak Slip Order' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                   ),
-                  subtitle: Text('Slip Checkin', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  subtitle: Text('Cetak Slip order', style: const TextStyle(fontSize: 12), maxLines: 2,),
                   value: ref.watch(printSlipOrderProvider),
                   onChanged: (bool? value) async{
                     ref.read(printSlipOrderProvider.notifier).setPrintSlipOrder(value??false);
@@ -131,7 +131,7 @@ class PrinterStylePage extends ConsumerWidget {
                   checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   title: Text('Cetak Delivery Order' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                   ),
-                  subtitle: Text('Slip Checkin', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  subtitle: Text('Cetak Delivery Order', style: const TextStyle(fontSize: 12), maxLines: 2,),
                   value: ref.watch(printSlipDeliveryOrderProvider),
                   onChanged: (bool? value) async{
                     ref.read(printSlipDeliveryOrderProvider.notifier).setPrintSlipDeliveryOrder(value??false);
@@ -165,12 +165,48 @@ class PrinterStylePage extends ConsumerWidget {
                 child: CheckboxListTile(
                   activeColor: const Color(0xFF1976D2),
                   checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Bill Copy' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Buat Bill Tercetak 2x', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printBillDoubleProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printBillDoubleProvider.notifier).setPrintBillDouble(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   title: Text('Cetak Invoice' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                   ),
                   subtitle: Text('Slip Invoice', style: const TextStyle(fontSize: 12), maxLines: 2,),
                   value: ref.watch(printInvoiceProvider),
                   onChanged: (bool? value) async{
                     ref.read(printInvoiceProvider.notifier).setPrintInvoice(value??false);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9)
+                ),
+                child: CheckboxListTile(
+                  activeColor: const Color(0xFF1976D2),
+                  checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  title: Text('Cetak Invoice Copy' ,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  subtitle: Text('Buat Invoice Tercetak 2x', style: const TextStyle(fontSize: 12), maxLines: 2,),
+                  value: ref.watch(printDoubleInvoiceProvider),
+                  onChanged: (bool? value) async{
+                    ref.read(printDoubleInvoiceProvider.notifier).setPrintDoubleInvoice(value??false);
                   },
                 ),
               ),
