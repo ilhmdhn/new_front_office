@@ -495,6 +495,12 @@ class _BillPageState extends State<BillPage> {
                               showToastError('Room tidak diketahui');
                               return;
                             }
+                            final user = GlobalProviders.read(userProvider);
+                            if(user.level != 'KASIR' && user.level != 'ACCOUNTING' && user.level != 'KAPTEN' && user.level != 'IT' && user.level != 'SUPERVISOR'){
+                              showToastWarning('User tidak memiliki akses');
+                              return;
+                            }
+
                             Navigator.pushNamed(ctx, PaymentPage.nameRoute, arguments: roomInfo?.rcp.room??'');
                           },
                           style: CustomButtonStyle.confirm(),

@@ -287,8 +287,9 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
           // Grid
           Expanded(
             child: GridView.builder(
+              padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isDesktopLandscape ? 5 : (context.isLandscape ? 3 : 2),
+                crossAxisCount: isDesktopLandscape ? 5 : context.isTablet? 4: (context.isLandscape ? 3 : 2),
                 crossAxisSpacing: isDesktopLandscape ? 16 : 10,
                 mainAxisSpacing: isDesktopLandscape ? 16 : 10,
                 childAspectRatio: isDesktopLandscape ? 1.8 : (context.isLandscape ? 1.6 : 1.4),

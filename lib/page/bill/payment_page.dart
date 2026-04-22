@@ -40,7 +40,7 @@ class _PaymentPageState extends State<PaymentPage> {
   String piutangChoosed = 'PEMEGANG SAHAM OUTLET';
   String edcChoosed = '';
   String cardChoosed = '';
-  bool sendEmail = true;
+  bool sendEmail = false;
   final posType = GlobalProviders.read(posTypeProvider);
 
   final TextEditingController _nominalController = TextEditingController();
@@ -114,7 +114,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     ? _buildErrorState()
                     : isDesktopLandscape
                         ? _buildDesktopLayout()
-                        : _buildMobileLayout(),
+                        : 
+                        _buildMobileLayout(),
           ),
         ],
       ),
@@ -130,7 +131,8 @@ class _PaymentPageState extends State<PaymentPage> {
         right: isDesktopLandscape ? 24 : 16,
       ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        color: CustomColorStyle.appBarBackground()
+        /*gradient: LinearGradient(
           colors: [Colors.green.shade700, Colors.green.shade500],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -141,7 +143,7 @@ class _PaymentPageState extends State<PaymentPage> {
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
-        ],
+        ],*/
       ),
       child: Row(
         children: [
@@ -426,8 +428,8 @@ class _PaymentPageState extends State<PaymentPage> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isDesktop ? 3 : 2,
-            childAspectRatio: isDesktop ? 3.5 : 3,
+            crossAxisCount: isDesktop || context.isTablet ? 3 : 2,
+            childAspectRatio: isDesktop || context.isTablet ? 3.5 : 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
@@ -501,12 +503,12 @@ class _PaymentPageState extends State<PaymentPage> {
             Row(
               children: [
                 Expanded(child: _buildSelectorButton('EDC Mesin', edcChoosed, () async {
-                  final choosed = await CardPaymentDialog().edcMachine(context);
+                  final choosed = await CardPaymentDialog.edcMachine(context);
                   if (choosed != null) setState(() => edcChoosed = choosed);
                 })),
                 const SizedBox(width: 12),
                 Expanded(child: _buildSelectorButton('Tipe Kartu', cardChoosed, () async {
-                  final choosed = await CardPaymentDialog().cardType(context);
+                  final choosed = await CardPaymentDialog.cardType(context);
                   if (choosed != null) setState(() => cardChoosed = choosed);
                 })),
               ],

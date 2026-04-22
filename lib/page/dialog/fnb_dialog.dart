@@ -9,6 +9,7 @@ import 'package:front_office_2/data/model/post_so_response.dart';
 import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
+import 'package:front_office_2/page/dialog/loading_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_container.dart';
@@ -267,9 +268,9 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                     style: CustomTextStyle.whiteSizeMedium(16),
                                   ),
                                   onPressed: () async {
-                                    isLoading = true;
                                     
                                     try {
+                                      LoadingDialog.show();
                                       final checkinDetail = await ApiRequest().getDetailRoomCheckin(roomCode);
                                       if (checkinDetail.state != true) {
                                         showToastError(checkinDetail.message);
@@ -316,6 +317,8 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
                                       if(ctxDialog.mounted && Navigator.canPop(ctxDialog)){
                                         Navigator.pop(ctxDialog, false);
                                       }
+                                    }finally{
+                                      LoadingDialog.hide();
                                     }
                                   },
                                 ),

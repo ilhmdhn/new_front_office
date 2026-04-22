@@ -10,6 +10,21 @@ import 'package:local_auth/local_auth.dart';
 
 class FingerpintAuth{
 
+  Future<bool> haveBiometric()async{
+    try {
+      final LocalAuthentication auth = LocalAuthentication();
+      final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+      
+      if(availableBiometrics.isEmpty){
+        showToastWarning('Autentikasi biometrik tidak aktif');
+      }
+
+      final bool didAuthenticate = await auth.authenticate(localizedReason: 'Verifikasi Biometric Diperlukan',options: const AuthenticationOptions(biometricOnly: false));
+      return didAuthenticate;
+    } catch (e) {
+      return false;
+    }
+  }
 
   Future<bool> requestFingerprintAuth()async{
     try {

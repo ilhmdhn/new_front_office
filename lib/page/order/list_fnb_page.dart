@@ -11,6 +11,7 @@ import 'package:front_office_2/data/model/station_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/dialog/confirmation_dialog.dart';
 import 'package:front_office_2/page/dialog/fnb_dialog.dart';
+import 'package:front_office_2/page/dialog/loading_dialog.dart';
 import 'package:front_office_2/page/style/custom_button.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
@@ -842,6 +843,7 @@ class _ListFnbPageState extends ConsumerState<ListFnbPage> {
 
   Future<void> _sendOrder(List<SendOrderModel> orderProv) async {
     try {
+      LoadingDialog.show();
       final PostSoResponse orderState = await ApiRequest().sendOrder(
         widget.detailCheckin.roomCode,
         widget.detailCheckin.reception,
@@ -886,6 +888,8 @@ class _ListFnbPageState extends ConsumerState<ListFnbPage> {
       });
     } catch (e) {
       showToastError('Error: $e');
+    }finally{
+      LoadingDialog.hide();
     }
   }
 

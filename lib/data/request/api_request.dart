@@ -1086,7 +1086,8 @@ class ApiRequest{
 
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
-    }catch(e){
+    }catch(e, stackTrace){
+      debugPrint('Transfer Lobby To Lobby Failed $e\n$stackTrace');
       return BaseResponse(state: false, message: e.toString());
     }
   }

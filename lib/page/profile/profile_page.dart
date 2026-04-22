@@ -10,6 +10,7 @@ import 'package:front_office_2/page/setting/printer/printer_style.dart';
 import 'package:front_office_2/page/style/custom_color.dart';
 import 'package:front_office_2/page/style/custom_text.dart';
 import 'package:front_office_2/riverpod/providers.dart';
+import 'package:front_office_2/tools/fingerprint.dart';
 import 'package:front_office_2/tools/toast.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -80,8 +81,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         checkColor: CustomColorStyle.bluePrimary(),
                         activeColor: CustomColorStyle.background(),
                         value: biometricProv,
-                        onChanged: (value){
-                          ref.read(biometricLoginProvider.notifier).setBiometricLogin(value ?? false);
+                        onChanged: (value)async{
+                          if(value == true){
+                            final reqFinger = await FingerpintAuth().haveBiometric();
+                            if(!reqFinger){
+                              return;
+                            }
+                          }
+                            ref.read(biometricLoginProvider.notifier).setBiometricLogin(value ?? false);
                         }
                       )
                     ),

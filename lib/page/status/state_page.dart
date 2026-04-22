@@ -76,18 +76,6 @@ class _StatePageState extends State<StatePage> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(30),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-            ),
-          ),
-          const SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
