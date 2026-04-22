@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
@@ -144,6 +145,10 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
           backgroundColor: CustomColorStyle.background(), // Nuansa light blue utama
           elevation: 4,
           child: Container(
+          width: 
+            ctxDialog.isLandscape && ctxDialog.isDesktop? ctxDialog.wp(40):
+            ctxDialog.wp(80)
+            ,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -255,14 +260,15 @@ class _DoneOrderPageState extends State<DoneOrderPage> {
                               );
                           }, 
                           child: Row(
-                              children: [
-                                Icon(Icons.move_up_rounded),
-                                SizedBox(width: 4,),
-                                Flexible(
-                                  fit: FlexFit.loose,
-                                  child: AutoSizeText('Pindahkan', style: CustomTextStyle.whiteStandard(), maxLines: 1,)),
-                              ],
-                            )
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.move_up_rounded),
+                              SizedBox(width: 4,),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: AutoSizeText('Pindahkan', style: CustomTextStyle.whiteStandard(), maxLines: 1,)),
+                            ],
+                          )
                         ),
                       ),
                     ):

@@ -72,18 +72,7 @@ class _StatePageState extends State<StatePage> {
         right: isDesktopLandscape ? 24 : 16,
       ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.purple.shade700, Colors.purple.shade500],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.purple.shade700.withAlpha(50),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: CustomColorStyle.appBarBackground(),
       ),
       child: Row(
         children: [
@@ -209,24 +198,24 @@ class _StatePageState extends State<StatePage> {
       padding: EdgeInsets.all(isDesktopLandscape ? 20 : 12),
       child: Column(
         children: [
-          // Search Bar
           _buildSearchBar(isDesktopLandscape),
           const SizedBox(height: 16),
-          // Grid
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
                 // Calculate optimal columns based on available width
                 int crossAxisCount;
                 double childAspectRatio;
-
                 if (isDesktopLandscape) {
                   crossAxisCount = constraints.maxWidth > 1200 ? 4 : 3;
                   childAspectRatio = 1.6;
                 } else if (context.isLandscape) {
                   crossAxisCount = 2;
                   childAspectRatio = 2.2;
-                } else {
+                } else if(context.isTablet){
+                  crossAxisCount = 1;
+                  childAspectRatio = 2.5;
+                }else {
                   crossAxisCount = 1;
                   childAspectRatio = 2.5;
                 }

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/data/model/room_type_model.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
@@ -86,8 +87,11 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: transferReason.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,   // Membuat 2 kolom
+              gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 
+                context.isLandscape && context.isDesktop?
+                5:
+                context.isTablet?3:2,   // Membuat 2 kolom
                 childAspectRatio: 5.1,       // Rasio ramping (lebar : tinggi)
                 crossAxisSpacing: 10,        // Jarak antar tombol ke samping
                 mainAxisSpacing: 10,         // Jarak antar tombol ke bawah
@@ -132,17 +136,15 @@ class _TransferReasonPageState extends State<TransferReasonPage> {
             :listAvailableRoomType.isEmpty?
               AddOnWidget.empty():
             LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-                int crossAxisCount = 3;
-              
-                if (constraints.maxWidth < 580) {
-                  crossAxisCount = 2;
-                }
-        
                 return GridView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
+                    crossAxisCount: 
+                    context.isLandscape && context.isDesktop?
+                    5:
+                    context.isTablet?3
+                    :2,
                     crossAxisSpacing: 8, // Spasi antar kolom
                     mainAxisSpacing: 8, // Spasi antar baris
                     childAspectRatio: 10/3

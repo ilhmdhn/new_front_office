@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/model/cancel_order_response.dart';
 import 'package:front_office_2/data/request/api_request.dart';
 import 'package:front_office_2/page/add_on/add_on_widget.dart';
@@ -130,6 +131,9 @@ class _CancelOrderPageState extends State<CancelOrderPage> {
       elevation: 4,
       child: Container(
         padding: const EdgeInsets.all(20),
+          width: ctxDialog.isLandscape&&ctxDialog.isDesktop?
+                ctxDialog.wp(40): ctxDialog.wp(80)
+                ,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.redAccent, width: 1.5),

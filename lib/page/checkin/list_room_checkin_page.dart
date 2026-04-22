@@ -521,6 +521,7 @@ class _RoomCheckinListPageState extends State<RoomCheckinListPage> {
     }
 
     if(code == 4 && isNotNullOrEmpty(roomCode)){
+      GlobalProviders.read(inputOrderProvider)?.clear();
       Navigator.pushNamed(context, FnbMainPage.nameRoute, arguments: roomCode);
     }
 

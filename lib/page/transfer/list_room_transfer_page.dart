@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/enum/pos_type.dart';
 import 'package:front_office_2/data/model/room_list_model.dart';
 import 'package:front_office_2/data/model/transfer_params.dart';
@@ -62,15 +63,13 @@ class _ListRoomTransferPageState extends State<ListRoomTransferPage> {
         AddOnWidget.empty():
         LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints){
-            int crossAxisCount = 3;   
-            if (constraints.maxWidth < 580) {
-              crossAxisCount = 2;
-            }
             final listRoomItem = listRoomResponse.data;
-        
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
+                crossAxisCount: 
+                context.isLandscape && context.isDesktop?
+                5:
+                context.isTablet?3:2,
                 crossAxisSpacing: 8, // Spasi antar kolom
                 mainAxisSpacing: 8, // Spasi antar baris
                 childAspectRatio: 10/3

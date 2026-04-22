@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:front_office_2/core/extention/extention.dart';
 import 'package:front_office_2/data/model/cancel_model.dart';
 import 'package:front_office_2/data/model/detail_room_checkin_response.dart';
 import 'package:front_office_2/page/dialog/verification_dialog.dart';
@@ -91,10 +92,8 @@ class ConfirmationDialog{
       context: ctx,
       barrierDismissible: false,
       builder: (BuildContext ctxDialog) {
-
         return StatefulBuilder(
           builder: (context, setState) {
-
             return AlertDialog(
               backgroundColor: Colors.white,
               title: Center(
@@ -104,7 +103,6 @@ class ConfirmationDialog{
                   textAlign: TextAlign.center,
                 ),
               ),
-
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -194,9 +192,9 @@ class ConfirmationDialog{
                   )
                 ],
               ),
-
+            
               actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-
+            
               actions: [
                 Row(
                   children: [
@@ -226,12 +224,12 @@ class ConfirmationDialog{
                             dataCheckin.roomCode,
                             'Cancel order $itemName',
                           );
-
+            
                           if (confirmationState.state != true) {
                             showToastWarning('Cancel order dibatalkan');
                             return;
                           }
-
+            
                           if (ctx.mounted) {
                             Navigator.pop(ctx, CancelModel(qty: cancelQty, reason: tfreason.text, approver: confirmationState.approver));
                           }

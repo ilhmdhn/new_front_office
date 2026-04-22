@@ -32,7 +32,10 @@ static Future<String?> note(BuildContext ctx, String name, String note) {
       return Dialog(
         backgroundColor: Colors.white,
         child: Container(
-          width: ScreenSize.getSizePercent(ctxDialog, 80),
+          width: 
+          ctxDialog.isLandscape && ctxDialog.isDesktop? ctxDialog.wp(40):
+          ctxDialog.wp(80)
+          ,
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,

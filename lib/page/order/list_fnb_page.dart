@@ -631,7 +631,7 @@ class _ListFnbPageState extends ConsumerState<ListFnbPage> {
               children: [
                 const Icon(Icons.shopping_cart, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
-                Text('Keranjang', style: CustomTextStyle.whiteSizeMedium(16)),
+                Text('Cart', style: CustomTextStyle.whiteSizeMedium(16)),
                 const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -669,7 +669,7 @@ class _ListFnbPageState extends ConsumerState<ListFnbPage> {
                     children: [
                       Icon(Icons.shopping_cart_outlined, size: 48, color: Colors.grey.shade300),
                       const SizedBox(height: 8),
-                      Text('Keranjang Kosong', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                      Text('Empty Cart', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
                     ],
                   ),
                 )

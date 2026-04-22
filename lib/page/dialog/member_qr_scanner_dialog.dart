@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:front_office_2/core/extention/screen_extention.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -233,8 +234,11 @@ class _MemberQRScannerDialogState extends State<MemberQRScannerDialog> {
           Expanded(
             flex: 1,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(child: _buildCameraSection(isLandscape: true)),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: _buildCameraSection(isLandscape: true)),
                 const SizedBox(height: 12),
                 _buildInstructionBox(compact: true),
               ],
@@ -391,6 +395,7 @@ class _MemberQRScannerDialogState extends State<MemberQRScannerDialog> {
             )
           : null,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: isLandscape ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
